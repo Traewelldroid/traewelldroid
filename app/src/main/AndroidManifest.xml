@@ -10,14 +10,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Traewelling">
         <activity
-            android:name=".ui.login.LoginActivity"
-            android:windowSoftInputMode="stateVisible|adjustResize"
+            android:name=".ui.main.MainActivity"
             android:exported="true" />
+        <activity
+            android:name=".ui.login.LoginActivity"
+            android:exported="true"
+            android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
             android:name=".ui.launcher.LauncherActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

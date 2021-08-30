@@ -9,7 +9,8 @@ class LoginActivityViewModel : ViewModel() {
     val username = MutableLiveData<String>()
     val password = MutableLiveData<String>()
 
-    fun login() {
+    fun login(): Boolean {
         Log.d("LoginActivityViewModel", "${username.value} ${password.value}")
+        return true
     }
 }
