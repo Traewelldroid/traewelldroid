@@ -45,6 +45,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.core:core-splashscreen:1.0.0-alpha01'
 
     def nav_version_ktx = "2.3.5"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version_ktx"

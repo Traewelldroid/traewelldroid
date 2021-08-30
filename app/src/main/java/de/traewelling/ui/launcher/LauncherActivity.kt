@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import de.traewelling.ui.login.LoginActivity
 
 class LauncherActivity : AppCompatActivity() {
@@ -13,6 +14,7 @@ class LauncherActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val splashScreen = installSplashScreen()
         viewModel.launcherEvent.observe(this, { action ->
             when (action) {
                 LaunchAction.LOGIN -> {
