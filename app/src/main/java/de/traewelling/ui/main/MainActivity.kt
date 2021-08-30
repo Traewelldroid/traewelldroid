@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.navigation.NavController
 import androidx.navigation.NavHost
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.NavigationUI.setupWithNavController
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -28,6 +29,9 @@ class MainActivity : AppCompatActivity() {
         navController = navHostFragment.navController
 
         val bottomNavigationView = binding.bottomNavigationBar
-        setupActionBarWithNavController(navController)
+        bottomNavigationView.setupWithNavController(navController)
+        setupActionBarWithNavController(navController, AppBarConfiguration(
+            setOf(R.id.dashboard_fragment, R.id.active_checkins_fragment, R.id.user_fragment)
+        ))
     }
 }

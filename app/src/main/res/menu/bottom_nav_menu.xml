@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/nav_dashboard"
+        android:id="@+id/dashboard_fragment"
         android:icon="@drawable/ic_dashboard"
         android:title="@string/title_dashboard" />
     <item
-        android:id="@+id/nav_active_checkins"
+        android:id="@+id/active_checkins_fragment"
         android:icon="@drawable/ic_train"
         android:title="@string/title_active_checkins" />
+    <item
+        android:id="@+id/user_fragment"
+        android:icon="@drawable/ic_account"
+        android:title="@string/title_user" />
 </menu>
