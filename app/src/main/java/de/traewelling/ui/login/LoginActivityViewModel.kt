@@ -1,14 +1,15 @@
 package de.traewelling.ui.login
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class LoginActivityViewModel : ViewModel() {
-    private val _username = MutableLiveData<String>()
-    val username: LiveData<String> get() = _username
+    val username = MutableLiveData<String>()
+    val password = MutableLiveData<String>()
 
-    init {
-        _username.value = "Gertrud"
+    fun login() {
+        Log.d("LoginActivityViewModel", "${username.value} ${password.value}")
     }
 }

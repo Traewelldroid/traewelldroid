@@ -16,8 +16,13 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         binding.apply {
             viewModel = this@LoginActivity.viewModel
+            loginActivity = this@LoginActivity
             lifecycleOwner = this@LoginActivity
         }
         setContentView(binding.root)
+    }
+
+    fun login() {
+        viewModel.login()
     }
 }
