@@ -3,5 +3,6 @@
     <style name="Theme.Traewelling.Starting" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/traewelling</item>
         <item name="postSplashScreenTheme">@style/Theme.Traewelling</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_logo</item>
     </style>
 </resources>

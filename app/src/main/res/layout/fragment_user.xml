@@ -76,6 +76,29 @@
                         style="@style/TextAppearance.AppCompat.Headline"
                         android:layout_marginRight="8dp"/>
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textView_travelTime"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/textView_kilometres"
+                        tools:text="14h 5min"
+                        style="@style/TextAppearance.AppCompat.Headline"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginTop="16dp"
+                        android:text="@{@string/display_travel_time(viewModel.travelHours, viewModel.travelMinutes)}"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textView_averageSpeed"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/textView_travelTime"
+                        tools:text="123,45 km/h"
+                        style="@style/TextAppearance.AppCompat.Headline"
+                        android:layout_marginRight="8dp"
+                        android:text="@{@string/display_average_speed(viewModel.averageSpeed)}"/>
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 

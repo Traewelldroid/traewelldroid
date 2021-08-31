@@ -18,9 +18,22 @@ class UserFragmentViewModel : ViewModel() {
     private val _points = MutableLiveData<Int>()
     val points: LiveData<Int> get() = _points
 
+    private val _travelTime = MutableLiveData<Int>()
+    val travelHours: LiveData<Int> get() = map(_travelTime) { time ->
+        time / 60
+    }
+    val travelMinutes: LiveData<Int> get() = map(_travelTime) {time ->
+        time % 60
+    }
+
+    private val _averageSpeed = MutableLiveData<Double>()
+    val averageSpeed: LiveData<Double> get() = _averageSpeed
+
     init {
         _username.value = "@gertrud"
         _kilometres.value = 1234.567
         _points.value = 42
+        _travelTime.value = 317
+        _averageSpeed.value = 186.645
     }
 }
