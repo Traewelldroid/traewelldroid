@@ -12,4 +12,6 @@
     <string name="display_average_speed">%1$.2f km/h</string>
     <string name="where_are_you">Where are you?</string>
     <string name="search">Search</string>
+    <string name="next_station">Next station: %1$s</string>
+    <string name="check_in_user_time">%1$s at %2$s</string>
 </resources>

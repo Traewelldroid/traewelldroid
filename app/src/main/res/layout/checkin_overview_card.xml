@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="checkIn"
+            type="de.traewelling.models.CheckIn" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardElevation="3dp"
+        app:cardCornerRadius="8dp"
+        app:cardUseCompatPadding="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp">
+
+            <!--Perlschnur-->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/perlschnur_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:padding="4dp"
+                app:layout_constraintBottom_toBottomOf="@id/travel_layout"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/perlschnur_start"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_perlschnur_main"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:layout_width="2dp"
+                    android:layout_height="0dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_perlschnur_connection"
+                    app:layout_constraintBottom_toTopOf="@id/perlschnur_end"
+                    app:layout_constraintEnd_toEndOf="@id/perlschnur_start"
+                    app:layout_constraintStart_toStartOf="@id/perlschnur_start"
+                    app:layout_constraintTop_toBottomOf="@id/perlschnur_start"
+                    app:tint="#8A8A8A" />
+
+                <ImageView
+                    android:id="@+id/perlschnur_end"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_perlschnur_main"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <!--Travel connection-->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/travel_layout"
+                app:layout_constraintStart_toEndOf="@id/perlschnur_layout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/perlschnur_layout"
+                app:layout_constraintBottom_toBottomOf="@id/perlschnur_layout">
+
+                <TextView
+                    android:id="@+id/start_station"
+                    style="@style/Theme.Traewelling.StatisticTexts"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    tools:text="Start Hbf"
+                    android:text="@{checkIn.start}"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/departure_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="15:25"
+                    android:text="@{checkIn.departureTime}"
+                    android:textColor="@color/traewelling"
+                    android:textSize="18sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="@id/start_station"
+                    app:layout_constraintTop_toTopOf="@id/start_station"
+                    android:layout_marginRight="16dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/train_line"
+                    app:layout_constraintStart_toStartOf="@id/start_station"
+                    app:layout_constraintTop_toBottomOf="@id/start_station"
+                    android:layout_marginTop="3dp"
+                    tools:text="RB 73"
+                    android:text="@{checkIn.trainLine}" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/distance"
+                    app:layout_constraintStart_toEndOf="@id/train_line"
+                    app:layout_constraintTop_toTopOf="@id/train_line"
+                    android:layout_marginLeft="16dp"
+                    tools:text="64km"
+                    android:text="@{checkIn.distance}" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/travel_time"
+                    app:layout_constraintStart_toEndOf="@id/distance"
+                    app:layout_constraintTop_toTopOf="@id/distance"
+                    android:layout_marginLeft="16dp"
+                    tools:text="45min"
+                    android:text="@{checkIn.travelTime}"/>
+
+                <TextView
+                    android:id="@+id/next_station"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="25dp"
+                    tools:text="@string/next_station"
+                    android:text="@{@string/next_station(checkIn.nextStation)}"
+                    android:textColor="@color/traewelling"
+                    android:textStyle="italic"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toTopOf="@id/end_station"
+                    app:layout_constraintStart_toStartOf="@id/start_station"
+                    app:layout_constraintTop_toBottomOf="@id/train_line" />
+
+                <TextView
+                    android:id="@+id/end_station"
+                    style="@style/Theme.Traewelling.StatisticTexts"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Ende Hbf"
+                    android:text="@{checkIn.end}"
+                    app:layout_constraintStart_toStartOf="@id/start_station"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="parent" />
+
+                <TextView
+                    android:id="@+id/destination_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="15:25"
+                    android:text="@{checkIn.destinationTime}"
+                    android:textColor="@color/traewelling"
+                    android:textSize="18sp"
+                    app:layout_constraintEnd_toEndOf="@id/departure_time"
+                    app:layout_constraintBottom_toBottomOf="@id/end_station"
+                    app:layout_constraintTop_toTopOf="@id/end_station" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/travel_layout"
+                android:layout_marginTop="16dp"
+                android:id="@+id/footer_layout">
+
+            <ProgressBar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/travel_progress"
+                android:progress="30"
+                tools:progress="30"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:max="100" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/fav"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/travel_progress"
+                android:src="@{checkIn.faved ? @drawable/ic_faved : @drawable/ic_not_faved}"
+                tools:src="@drawable/ic_not_faved"
+                android:layout_marginTop="8dp"
+                app:tint="#FFC107" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/fav"
+                app:layout_constraintBottom_toBottomOf="@id/fav"
+                android:textSize="16sp"
+                tools:text="username um 15:25"
+                android:text="@{@string/check_in_user_time(checkIn.username, checkIn.checkInTime)}"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+</layout>

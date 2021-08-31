@@ -17,6 +17,7 @@
             android:padding="8dp">
 
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/search_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
@@ -67,6 +68,18 @@
 
             </com.google.android.material.card.MaterialCardView>
 
+
+            <include
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                layout="@layout/checkin_overview_card"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/search_card"
+                android:layout_marginTop="16dp"
+                android:id="@+id/test_check_in"
+                />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
+
     </ScrollView>
 </layout>
