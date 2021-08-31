@@ -53,51 +53,109 @@
                         style="@style/TextAppearance.AppCompat.Headline"
                         android:layout_marginTop="16dp" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <GridLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/textView_kilometres"
+                        android:columnCount="2"
+                        android:rowCount="2"
+                        android:stretchColumns="*"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/textView_username"
-                        tools:text="1234,56 km"
-                        android:text="@{viewModel.kilometres}"
-                        style="@style/TextAppearance.AppCompat.Headline"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginLeft="8dp"/>
+                        android:useDefaultMargins="true"
+                        android:layout_marginTop="16dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/textView_points"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/textView_kilometres"
-                        tools:text="123 points"
-                        android:text="@{@string/display_points(viewModel.points)}"
-                        style="@style/TextAppearance.AppCompat.Headline"
-                        android:layout_marginRight="8dp"/>
+                        <LinearLayout
+                            android:layout_rowWeight="1"
+                            android:layout_columnWeight="1"
+                            android:layout_row="0"
+                            android:layout_column="0"
+                            android:orientation="horizontal"
+                            android:gravity="center">
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:src="@drawable/ic_navigation"
+                                app:tint="@color/black"
+                                android:layout_marginRight="8dp"/>
+                            <TextView
+                                android:id="@+id/textView_kilometres"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:textSize="20sp"
+                                style="@style/Theme.Traewelling.StatisticTexts"
+                                android:text="@{viewModel.kilometres}"
+                                tools:text="1234,56 km" />
+                        </LinearLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/textView_travelTime"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/textView_kilometres"
-                        tools:text="14h 5min"
-                        style="@style/TextAppearance.AppCompat.Headline"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginTop="16dp"
-                        android:text="@{@string/display_travel_time(viewModel.travelHours, viewModel.travelMinutes)}"/>
+                        <LinearLayout
+                            android:layout_rowWeight="1"
+                            android:layout_columnWeight="1"
+                            android:layout_row="0"
+                            android:layout_column="1"
+                            android:orientation="horizontal"
+                            android:gravity="center">
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:src="@drawable/ic_score"
+                                app:tint="@color/black"
+                                android:layout_marginRight="8dp"/>
+                            <TextView
+                                android:id="@+id/textView_points"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                style="@style/Theme.Traewelling.StatisticTexts"
+                                android:text="@{@string/display_points(viewModel.points)}"
+                                tools:text="123 points" />
+                        </LinearLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/textView_averageSpeed"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/textView_travelTime"
-                        tools:text="123,45 km/h"
-                        style="@style/TextAppearance.AppCompat.Headline"
-                        android:layout_marginRight="8dp"
-                        android:text="@{@string/display_average_speed(viewModel.averageSpeed)}"/>
+                        <LinearLayout
+                            android:layout_rowWeight="1"
+                            android:layout_columnWeight="1"
+                            android:layout_row="1"
+                            android:layout_column="0"
+                            android:orientation="horizontal"
+                            android:gravity="center">
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:src="@drawable/ic_travel_time"
+                                app:tint="@color/black"
+                                android:layout_marginRight="8dp"/>
+                            <TextView
+                                android:id="@+id/textView_travelTime"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                style="@style/Theme.Traewelling.StatisticTexts"
+                                android:text="@{@string/display_travel_time(viewModel.travelHours, viewModel.travelMinutes)}"
+                                tools:text="14h 5min" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_rowWeight="1"
+                            android:layout_columnWeight="1"
+                            android:layout_row="1"
+                            android:layout_column="1"
+                            android:orientation="horizontal"
+                            android:gravity="center">
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:src="@drawable/ic_speed"
+                                    app:tint="@color/black"
+                                    android:layout_marginRight="8dp"/>
+                                <TextView
+                                    android:id="@+id/textView_averageSpeed"
+                                    style="@style/Theme.Traewelling.StatisticTexts"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:text="@{@string/display_average_speed(viewModel.averageSpeed)}"
+                                    tools:text="123,45 km/h" />
+                        </LinearLayout>
+                    </GridLayout>
+
+
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>

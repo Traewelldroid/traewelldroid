@@ -31,7 +31,7 @@ class UserFragmentViewModel : ViewModel() {
 
     init {
         _username.value = "@gertrud"
-        _kilometres.value = 1234.567
+        _kilometres.value = 123456.567
         _points.value = 42
         _travelTime.value = 317
         _averageSpeed.value = 186.645
