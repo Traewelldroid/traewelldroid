@@ -2,6 +2,7 @@
     <string name="app_name">Träwelling</string>
     <string name="input_username">Username</string>
     <string name="input_password">Password</string>
+    <string name="input_stop">Stop / DS100</string>
     <string name="login">Log in</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_active_checkins">Active Check-Ins</string>
@@ -9,4 +10,6 @@
     <string name="display_points">%1$d points</string>
     <string name="display_travel_time">%1$dh %2$dmin</string>
     <string name="display_average_speed">%1$.2f km/h</string>
+    <string name="where_are_you">Where are you?</string>
+    <string name="search">Search</string>
 </resources>

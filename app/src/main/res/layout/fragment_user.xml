@@ -22,7 +22,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBaseline_toTopOf="parent"
-                app:cardElevation="8dp"
+                app:cardElevation="3dp"
                 app:cardCornerRadius="8dp"
                 app:cardUseCompatPadding="true">
                 <androidx.constraintlayout.widget.ConstraintLayout
