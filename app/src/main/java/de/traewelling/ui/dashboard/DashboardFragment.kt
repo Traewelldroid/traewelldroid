@@ -39,11 +39,11 @@ class DashboardFragment : Fragment() {
                 "RE 75",
                 "35km",
                 "22min",
-                "14:02",
+                "1$it:02",
                 "Dietmannsried",
-                "14:24",
+                "1$it:24",
                 "der_heubi",
-                "14:00",
+                "1$it:00",
                 it % 2 == 0
             ))
         }
