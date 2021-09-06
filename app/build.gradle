@@ -48,7 +48,7 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.core:core-splashscreen:1.0.0-alpha01'
     implementation 'org.osmdroid:osmdroid-android:6.1.10'
-    implementation 'com.thoughtbot:expandablerecyclerview:1.4'
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
 
     def nav_version_ktx = "2.3.5"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version_ktx"

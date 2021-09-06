@@ -87,6 +87,10 @@ class DashboardFragment : Fragment(), LocationListener {
         binding.searchCard.expandableHistory.visibility = GONE
         binding.searchCard.expandableHistory.layoutManager = LinearLayoutManager(requireContext())
         binding.searchCard.expandableHistory.adapter = lastStationsAdapter
+        binding.swipeRefreshDashboardCheckIns.setOnRefreshListener {
+            showToast("Refreshed!")
+            binding.swipeRefreshDashboardCheckIns.isRefreshing = false
+        }
         val checkIns = mutableListOf<CheckIn>()
         repeat (5) {
             checkIns.add(CheckIn(
