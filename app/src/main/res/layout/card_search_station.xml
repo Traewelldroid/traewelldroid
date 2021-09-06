@@ -85,7 +85,7 @@
                 app:layout_constraintEnd_toStartOf="@id/btn_search"
                 app:layout_constraintTop_toTopOf="@id/btn_search"
                 android:layout_marginEnd="8dp"
-                android:text="Locate"
+                android:text="@string/locate"
                 android:onClick="@{() -> viewModel.findNearbyStations()}"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 

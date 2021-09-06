@@ -32,7 +32,7 @@
             android:text="@{title}"
             tools:text="Titel"
             android:layout_gravity="center"
-            android:textSize="15sp"
+            android:textSize="18sp"
             android:layout_marginLeft="16dp"/>
 
     </LinearLayout>

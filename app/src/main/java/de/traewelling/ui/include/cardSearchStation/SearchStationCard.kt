@@ -28,8 +28,6 @@ class SearchStationCard(private val parent: Fragment, private val binding: CardS
                 run {
                     if (isGranted) {
                         getCurrentLocation()
-                    } else {
-                        showToast("Permission not granted")
                     }
                 }
     }

@@ -16,4 +16,7 @@
     <string name="next_station">Next station: %1$s</string>
     <string name="check_in_user_time">%1$s at %2$s</string>
     <string name="logout">Log out</string>
+    <string name="previous">Previous</string>
+    <string name="next">Next</string>
+    <string name="locate">Locate</string>
 </resources>

@@ -20,14 +20,52 @@
                 app:layout_constraintTop_toTopOf="parent"
                 android:id="@+id/search_card"
                 layout="@layout/card_search_station" />
-            <androidx.recyclerview.widget.RecyclerView
+
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/card_connections"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/search_card"
-                android:id="@+id/recycler_view_connections"
-                tools:listitem="@layout/connection_list_item"
-                android:nestedScrollingEnabled="false"
-                tools:itemCount="5" />
+                app:cardElevation="3dp"
+                app:cardCornerRadius="8dp"
+                app:cardUseCompatPadding="true">
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="16dp"
+                    android:id="@+id/layout_card_connections">
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:id="@+id/recycler_view_connections"
+                        tools:listitem="@layout/connection_list_item"
+                        android:nestedScrollingEnabled="false"
+                        tools:itemCount="5" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/recycler_view_connections"
+                        android:layout_margin="16dp"
+                        app:icon="@drawable/ic_previous"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:text="@string/previous" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/recycler_view_connections"
+                        android:layout_margin="16dp"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        app:icon="@drawable/ic_next"
+                        app:iconGravity="end"
+                        android:text="@string/next" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 </layout>
