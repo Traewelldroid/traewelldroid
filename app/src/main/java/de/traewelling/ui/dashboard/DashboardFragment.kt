@@ -138,7 +138,7 @@ class DashboardFragment : Fragment(), LocationListener {
 
     override fun onLocationChanged(location: Location) {
         locationManager.removeUpdates(this)
-        showToast("${location?.latitude}, ${location?.longitude}")
-        binding.searchCard.editTextSearchStation.setText("${location?.latitude} ${location?.longitude}")
+        showToast("${location.latitude}, ${location.longitude}")
+        binding.searchCard.editTextSearchStation.setText("${location.latitude} ${location.longitude}")
     }
 }

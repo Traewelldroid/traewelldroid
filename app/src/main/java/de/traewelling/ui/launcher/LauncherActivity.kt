@@ -14,7 +14,7 @@ class LauncherActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val splashScreen = installSplashScreen()
+        installSplashScreen()
         viewModel.launcherEvent.observe(this, { action ->
             when (action) {
                 LaunchAction.LOGIN -> {
