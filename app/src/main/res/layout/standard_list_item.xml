@@ -23,7 +23,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@{imageId}"
+            imageResource="@{imageId}"
             tools:srcCompat="@drawable/ic_history" />
 
         <TextView
