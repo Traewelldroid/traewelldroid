@@ -20,6 +20,7 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/card_user"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBaseline_toTopOf="parent"
                 app:cardElevation="3dp"
@@ -159,6 +160,14 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/card_user"
+                tools:listitem="@layout/standard_list_item"
+                tools:itemCount="5"
+                android:id="@+id/recycler_view_menu" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
