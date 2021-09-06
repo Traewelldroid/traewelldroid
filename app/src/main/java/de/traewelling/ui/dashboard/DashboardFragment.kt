@@ -1,26 +1,30 @@
 package de.traewelling.ui.dashboard
 
+import StandardListItemAdapter
 import android.annotation.SuppressLint
 import android.content.Context.LOCATION_SERVICE
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import de.traewelling.R
 import de.traewelling.adapters.CheckInAdapter
 import de.traewelling.databinding.FragmentDashboardBinding
 import de.traewelling.models.CheckIn
 import de.traewelling.ui.include.cardSearchStation.CardSearchStationViewModel
-import java.util.jar.Manifest
 
 class DashboardFragment : Fragment(), LocationListener {
 
@@ -33,7 +37,7 @@ class DashboardFragment : Fragment(), LocationListener {
             if (isGranted) {
                 getCurrentLocation()
             } else {
-                Toast.makeText(requireContext(), "Too bad", Toast.LENGTH_SHORT).show()
+                showToast("Permission not granted")
             }
         }
     }
@@ -51,14 +55,13 @@ class DashboardFragment : Fragment(), LocationListener {
         }
 
         cardSearchStationViewModel.setRequestLocationListener {
-            binding.searchCard.btnLocateProgress.visibility = VISIBLE
             when (ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_FINE_LOCATION)) {
                 PackageManager.PERMISSION_GRANTED -> {
                     getCurrentLocation()
                 }
                 PackageManager.PERMISSION_DENIED -> {
                     if (shouldShowRequestPermissionRationale(android.Manifest.permission.ACCESS_FINE_LOCATION)) {
-                        Toast.makeText(requireContext(), "Just enable permission!", Toast.LENGTH_SHORT).show()
+                        showToast("Please enable the location permission.")
                     } else {
                         requestPermissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
                     }
@@ -72,6 +75,18 @@ class DashboardFragment : Fragment(), LocationListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val recyclerView = binding.recyclerViewCheckIn
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        val lastStations = listOf("Memmingen", "Kempten(Allgäu)Hbf", "München Hbf")
+        val lastStationsAdapter = StandardListItemAdapter(lastStations, {item, binding ->
+            binding.title = item
+            binding.imageId = R.drawable.ic_history
+            binding.executePendingBindings()
+        }, {
+            binding.searchCard.editTextSearchStation.setText(it)
+        })
+        binding.searchCard.expandableHistory.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
+        binding.searchCard.expandableHistory.visibility = GONE
+        binding.searchCard.expandableHistory.layoutManager = LinearLayoutManager(requireContext())
+        binding.searchCard.expandableHistory.adapter = lastStationsAdapter
         val checkIns = mutableListOf<CheckIn>()
         repeat (5) {
             checkIns.add(CheckIn(
@@ -89,16 +104,37 @@ class DashboardFragment : Fragment(), LocationListener {
             ))
         }
         recyclerView.adapter = CheckInAdapter(checkIns)
+        binding.searchCard.inputLayoutStop.setEndIconOnClickListener {
+            when (binding.searchCard.expandableHistory.visibility) {
+                VISIBLE -> {
+                    binding.searchCard.expandableHistory.visibility = GONE
+                }
+                else -> {
+                    binding.searchCard.expandableHistory.visibility = VISIBLE
+                }
+            }
+            binding.executePendingBindings()
+        }
+    }
+
+    private fun showToast(text: String) {
+        Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
     }
 
     @SuppressLint("MissingPermission")
     private fun getCurrentLocation() {
         locationManager = requireContext().getSystemService(LOCATION_SERVICE) as LocationManager
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0L, 0F, this)
+        val provider = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+            LocationManager.FUSED_PROVIDER
+        else
+            LocationManager.GPS_PROVIDER
+
+        locationManager.requestLocationUpdates(provider, 0L, 0F, this)
     }
 
     override fun onLocationChanged(location: Location) {
         locationManager.removeUpdates(this)
-        binding.searchCard.editTextStation.setText("${location?.latitude} ${location?.longitude}")
+        showToast("${location?.latitude}, ${location?.longitude}")
+        binding.searchCard.editTextSearchStation.setText("${location?.latitude} ${location?.longitude}")
     }
 }

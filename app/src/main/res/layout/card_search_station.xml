@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
         <variable
@@ -39,15 +40,31 @@
                 android:layout_height="0dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/text_where_are_you"
+                app:endIconMode="custom"
+                app:endIconDrawable="@drawable/ic_history"
+                app:endIconCheckable="true"
                 android:hint="@string/input_stop"
                 android:layout_marginTop="16dp">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/edit_text_station" />
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/edit_text_search_station" />
 
             </com.google.android.material.textfield.TextInputLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/expandable_history"
+                app:layout_constraintTop_toBottomOf="@id/input_layout_stop"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:listitem="@layout/standard_list_item"
+                tools:itemCount="5"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:isScrollContainer="false"
+                android:nestedScrollingEnabled="false"
+                android:layout_marginTop="8dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:layout_width="wrap_content"
@@ -56,7 +73,7 @@
                 app:icon="@drawable/ic_search"
                 android:text="@string/search"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/input_layout_stop"
+                app:layout_constraintTop_toBottomOf="@id/expandable_history"
                 android:layout_marginTop="4dp" />
 
             <com.google.android.material.button.MaterialButton
@@ -69,18 +86,7 @@
                 android:layout_marginEnd="8dp"
                 android:text="Locate"
                 android:onClick="@{() -> viewModel.findNearbyStations()}"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton">
-                <com.google.android.material.progressindicator.CircularProgressIndicator
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/btn_locate_progress"
-                    android:visibility="invisible"
-                    app:layout_constraintStart_toStartOf="@id/btn_locate"
-                    app:layout_constraintEnd_toEndOf="@id/btn_locate"
-                    app:layout_constraintTop_toTopOf="@id/btn_locate"
-                    app:layout_constraintBottom_toBottomOf="@id/btn_locate"
-                    android:indeterminate="true" />
-            </com.google.android.material.button.MaterialButton>
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
