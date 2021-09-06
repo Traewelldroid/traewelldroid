@@ -28,5 +28,10 @@
         android:id="@+id/searchConnectionFragment"
         android:name="de.traewelling.ui.searchConnection.SearchConnectionFragment"
         android:label="@string/title_search_connection"
-        tools:layout="@layout/fragment_search_connection" />
+        tools:layout="@layout/fragment_search_connection" >
+        <action
+            android:id="@+id/action_searchConnectionFragment_self"
+            app:destination="@id/searchConnectionFragment"
+            app:popUpTo="@id/dashboard_fragment" />
+    </fragment>
 </navigation>
