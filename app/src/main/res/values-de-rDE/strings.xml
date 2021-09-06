@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Träwelling</string>
+    <string name="input_username">Benutzername</string>
+    <string name="input_password">Passwort</string>
+    <string name="input_stop">Haltestelle / DS100</string>
+    <string name="login">Anmelden</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_active_checkins">Aktive Check-Ins</string>
+    <string name="title_user">Benutzerprofil</string>
+    <string name="title_search_connection">Verbindungssuche</string>
+    <string name="display_points">%1$d Punkte</string>
+    <string name="display_travel_time">%1$d Std. %2$d Min.</string>
+    <string name="display_average_speed">%1$.2f km/h</string>
+    <string name="where_are_you">Wo bist Du?</string>
+    <string name="search">Suche</string>
+    <string name="next_station">Nächste Station: %1$s</string>
+    <string name="check_in_user_time">%1$s um %2$s</string>
+    <string name="logout">Abmelden</string>
+    <string name="previous">Vorherige</string>
+    <string name="next">Nächste</string>
+    <string name="locate">Ortung</string>
+</resources>
