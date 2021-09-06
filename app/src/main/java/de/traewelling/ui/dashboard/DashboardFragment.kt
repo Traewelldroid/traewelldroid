@@ -75,13 +75,19 @@ class DashboardFragment : Fragment(), LocationListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val recyclerView = binding.recyclerViewCheckIn
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        val lastStations = listOf("Memmingen", "Kempten(Allgäu)Hbf", "München Hbf")
+        val lastStations = listOf(
+            Pair("Memmingen", R.drawable.ic_home),
+            Pair("Kempten(Allgäu)Hbf", R.drawable.ic_history),
+            Pair("München Hbf", R.drawable.ic_history),
+            Pair("Zürich HB", R.drawable.ic_history),
+            Pair("Lindau-Reutin", R.drawable.ic_history),
+        )
         val lastStationsAdapter = StandardListItemAdapter(lastStations, {item, binding ->
-            binding.title = item
-            binding.imageId = R.drawable.ic_history
+            binding.title = item.first
+            binding.imageId = item.second
             binding.executePendingBindings()
         }, {
-            binding.searchCard.editTextSearchStation.setText(it)
+            binding.searchCard.editTextSearchStation.setText(it.first)
         })
         binding.searchCard.expandableHistory.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
         binding.searchCard.expandableHistory.visibility = GONE

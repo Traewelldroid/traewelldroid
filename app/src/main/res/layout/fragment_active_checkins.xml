@@ -13,11 +13,20 @@
 
             <org.osmdroid.views.MapView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="0dp"
                 android:id="@+id/active_checkins_map"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/recycler_view_active_check_ins"
+                android:elevation="3dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:id="@+id/recycler_view_active_check_ins"
+                tools:listitem="@layout/card_checkin_overview"
+                app:layout_constraintTop_toBottomOf="@id/active_checkins_map"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
