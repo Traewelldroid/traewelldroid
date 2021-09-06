@@ -29,9 +29,13 @@ class MainActivity : AppCompatActivity() {
         navController = navHostFragment.navController
 
         val bottomNavigationView = binding.bottomNavigationBar
-        bottomNavigationView.setupWithNavController(navController)
+        setupWithNavController(bottomNavigationView, navController)
         setupActionBarWithNavController(navController, AppBarConfiguration(
             setOf(R.id.dashboard_fragment, R.id.active_checkins_fragment, R.id.user_fragment)
         ))
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp() || super.onSupportNavigateUp()
     }
 }

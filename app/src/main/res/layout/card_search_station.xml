@@ -74,7 +74,8 @@
                 android:text="@string/search"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/expandable_history"
-                android:layout_marginTop="4dp" />
+                android:layout_marginTop="4dp"
+                android:onClick="@{() -> viewModel.searchConnections()}" />
 
             <com.google.android.material.button.MaterialButton
                 android:layout_width="wrap_content"

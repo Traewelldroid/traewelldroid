@@ -9,7 +9,11 @@
         android:id="@+id/dashboard_fragment"
         android:name="de.traewelling.ui.dashboard.DashboardFragment"
         android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_dashboard" >
+        <action
+            android:id="@+id/action_dashboard_fragment_to_searchConnectionFragment"
+            app:destination="@id/searchConnectionFragment" />
+    </fragment>
     <fragment
         android:id="@+id/active_checkins_fragment"
         android:name="de.traewelling.ui.activeCheckins.ActiveCheckinsFragment"
@@ -20,4 +24,9 @@
         android:name="de.traewelling.ui.user.UserFragment"
         android:label="@string/title_user"
         tools:layout="@layout/fragment_user" />
+    <fragment
+        android:id="@+id/searchConnectionFragment"
+        android:name="de.traewelling.ui.searchConnection.SearchConnectionFragment"
+        android:label="@string/title_search_connection"
+        tools:layout="@layout/fragment_search_connection" />
 </navigation>

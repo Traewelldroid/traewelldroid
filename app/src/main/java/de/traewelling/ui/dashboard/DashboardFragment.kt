@@ -18,6 +18,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import de.traewelling.R
@@ -52,6 +53,10 @@ class DashboardFragment : Fragment(), LocationListener {
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
             searchCard.viewModel = cardSearchStationViewModel
+        }
+
+        cardSearchStationViewModel.setSearchConnectionsListener {
+            findNavController().navigate(R.id.action_dashboard_fragment_to_searchConnectionFragment)
         }
 
         cardSearchStationViewModel.setRequestLocationListener {
