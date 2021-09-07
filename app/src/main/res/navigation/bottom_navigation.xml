@@ -41,5 +41,9 @@
         android:id="@+id/selectDestinationFragment"
         android:name="de.traewelling.ui.selectDestination.SelectDestinationFragment"
         android:label="@string/title_select_destination"
-        tools:layout="@layout/fragment_select_destination" />
+        tools:layout="@layout/fragment_select_destination" >
+        <argument
+            android:name="transitionName"
+            app:argType="string" />
+    </fragment>
 </navigation>

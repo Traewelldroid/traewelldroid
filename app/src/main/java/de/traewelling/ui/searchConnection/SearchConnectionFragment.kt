@@ -6,9 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.transition.Hold
 import de.traewelling.R
 import de.traewelling.adapters.ConnectionAdapter
 import de.traewelling.databinding.FragmentSearchConnectionBinding
@@ -26,6 +29,11 @@ class SearchConnectionFragment : Fragment() {
         Connection(R.drawable.ic_train, "RB RS 7", "Ulm Hbf", "15:17"),
     )
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        exitTransition = Hold()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -35,9 +43,11 @@ class SearchConnectionFragment : Fragment() {
         searchStationCard = SearchStationCard(this, binding.searchCard)
         val connectionRecyclerView = binding.recyclerViewConnections
         connectionRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        connectionRecyclerView.adapter = ConnectionAdapter(connections) { connection ->
-            Toast.makeText(requireContext(), connection.destination, Toast.LENGTH_SHORT).show()
-            findNavController().navigate(R.id.action_searchConnectionFragment_to_selectDestinationFragment)
+        connectionRecyclerView.adapter = ConnectionAdapter(connections) { itemView, connection ->
+            val transitionName = "${connection.line}${connection.destination}${connection.departureTime}"
+            val extras = FragmentNavigatorExtras(itemView to transitionName)
+            val action = SearchConnectionFragmentDirections.actionSearchConnectionFragmentToSelectDestinationFragment(transitionName)
+            findNavController().navigate(action, extras)
         }
         connectionRecyclerView.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
         binding.apply {

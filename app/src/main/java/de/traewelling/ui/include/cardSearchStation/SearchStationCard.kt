@@ -18,7 +18,9 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import de.traewelling.R
 import de.traewelling.databinding.CardSearchStationBinding
+import de.traewelling.ui.dashboard.DashboardFragmentDirections
 import de.traewelling.ui.searchConnection.SearchConnectionFragment
+import de.traewelling.ui.searchConnection.SearchConnectionFragmentDirections
 
 class SearchStationCard(private val parent: Fragment, private val binding: CardSearchStationBinding) : LocationListener {
 
@@ -89,8 +91,8 @@ class SearchStationCard(private val parent: Fragment, private val binding: CardS
 
     fun searchConnections() {
         val action = when (parent is SearchConnectionFragment) {
-            true -> R.id.action_searchConnectionFragment_self
-            false -> R.id.action_dashboard_fragment_to_searchConnectionFragment
+            true -> SearchConnectionFragmentDirections.actionSearchConnectionFragmentSelf()
+            false -> DashboardFragmentDirections.actionDashboardFragmentToSearchConnectionFragment()
         }
         parent.findNavController().navigate(action)
     }
