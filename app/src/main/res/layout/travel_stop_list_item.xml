@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="travelStop"
+            type="de.traewelling.models.TravelStop" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?android:attr/selectableItemBackground">
+        <ImageView
+            android:layout_width="2dp"
+            android:layout_height="16dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_perlschnur_connection"
+            app:layout_constraintStart_toStartOf="@id/perlschnur_stop"
+            app:layout_constraintEnd_toEndOf="@id/perlschnur_stop"
+            app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/perlschnur_connection_top"
+            app:tint="#8A8A8A" />
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:id="@+id/perlschnur_stop"
+            android:src="@drawable/ic_perlschnur_main"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/perlschnur_connection_top"
+            android:layout_marginStart="16dp" />
+        <ImageView
+            android:layout_width="2dp"
+            android:layout_height="16dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_perlschnur_connection"
+            app:layout_constraintStart_toStartOf="@id/perlschnur_stop"
+            app:layout_constraintEnd_toEndOf="@id/perlschnur_stop"
+            app:layout_constraintTop_toBottomOf="@id/perlschnur_stop"
+            android:id="@+id/perlschnur_connection_bottom"
+            app:tint="#8A8A8A" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Bad Grönenbach"
+            android:text="@{travelStop.stationName}"
+            android:id="@+id/text_view_stop_name"
+            app:layout_constraintTop_toTopOf="@id/perlschnur_connection_top"
+            app:layout_constraintBottom_toBottomOf="@id/perlschnur_connection_bottom"
+            app:layout_constraintStart_toEndOf="@id/perlschnur_stop"
+            android:layout_marginStart="24dp"
+            android:textSize="18sp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="15:09"
+            android:text="@{travelStop.destinationTime}"
+            android:id="@+id/text_view_destination_time"
+            app:layout_constraintTop_toTopOf="@id/perlschnur_connection_top"
+            app:layout_constraintBottom_toBottomOf="@id/perlschnur_connection_bottom"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="16dp"
+            android:textSize="18sp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

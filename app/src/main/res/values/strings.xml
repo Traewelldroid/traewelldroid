@@ -20,4 +20,5 @@
     <string name="previous">Previous</string>
     <string name="next">Next</string>
     <string name="locate">Locate</string>
+    <string name="line_destination">%1$s to %2$s</string>
 </resources>
