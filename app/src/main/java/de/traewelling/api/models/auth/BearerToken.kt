@@ -1,4 +1,4 @@
-package de.traewelling.api.models
+package de.traewelling.api.models.auth
 
 import com.google.gson.annotations.SerializedName
 

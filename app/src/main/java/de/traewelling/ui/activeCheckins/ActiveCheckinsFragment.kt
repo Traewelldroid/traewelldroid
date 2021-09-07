@@ -53,7 +53,7 @@ class ActiveCheckinsFragment : Fragment() {
             )
             )
         }
-        recyclerView.adapter = CheckInAdapter(checkIns)
+        //recyclerView.adapter = CheckInAdapter(checkIns)
 
         return binding.root
     }

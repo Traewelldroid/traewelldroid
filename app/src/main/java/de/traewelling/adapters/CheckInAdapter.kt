@@ -4,10 +4,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.RecyclerView
+import de.traewelling.api.models.status.Status
 import de.traewelling.databinding.CardCheckinOverviewBinding
 import de.traewelling.models.CheckIn
 
-class CheckInAdapter(val checkIns: List<CheckIn>) : RecyclerView.Adapter<CheckInAdapter.CheckInViewHolder>() {
+class CheckInAdapter(val checkIns: List<Status>) : RecyclerView.Adapter<CheckInAdapter.CheckInViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CheckInViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -24,7 +25,7 @@ class CheckInAdapter(val checkIns: List<CheckIn>) : RecyclerView.Adapter<CheckIn
     }
 
     class CheckInViewHolder(val binding: CardCheckinOverviewBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(checkIn: CheckIn) {
+        fun bind(checkIn: Status) {
             binding.checkIn = checkIn
             binding.executePendingBindings()
         }

@@ -1,13 +1,12 @@
 package de.traewelling.ui.login
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import de.traewelling.api.TraewellingApi
-import de.traewelling.api.models.BearerToken
-import de.traewelling.api.models.LoginCredentials
-import kotlinx.coroutines.launch
+import de.traewelling.api.models.auth.BearerToken
+import de.traewelling.api.models.auth.LoginCredentials
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -27,6 +26,7 @@ class LoginActivityViewModel : ViewModel() {
                 override fun onResponse(call: Call<BearerToken>, response: Response<BearerToken>) {
                     if (response.isSuccessful) {
                         _jwt.value = response.body()?.jwt
+                        Log.d("Login", jwt.value!!)
                         _loginSuccessful.value = true
                     } else {
                         _loginSuccessful.value = false
