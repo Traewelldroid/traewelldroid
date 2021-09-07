@@ -22,7 +22,7 @@ class DashboardFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentDashboardBinding.inflate(inflater, container, false)
-        searchStationCard = SearchStationCard(this, binding.searchCard)
+        searchStationCard = SearchStationCard(this, binding.searchCard, "")
 
         binding.apply {
             lifecycleOwner = viewLifecycleOwner

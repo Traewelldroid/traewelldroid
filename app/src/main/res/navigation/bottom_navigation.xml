@@ -36,6 +36,9 @@
         <action
             android:id="@+id/action_searchConnectionFragment_to_selectDestinationFragment"
             app:destination="@id/selectDestinationFragment" />
+        <argument
+            android:name="stationName"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/selectDestinationFragment"
@@ -45,5 +48,22 @@
         <argument
             android:name="transitionName"
             app:argType="string" />
+        <action
+            android:id="@+id/action_selectDestinationFragment_to_checkInFragment"
+            app:destination="@id/checkInFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/checkInFragment"
+        android:name="de.traewelling.ui.checkIn.CheckInFragment"
+        android:label="@string/check_in"
+        tools:layout="@layout/fragment_check_in" >
+        <argument
+            android:name="transitionName"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_checkInFragment_to_dashboard_fragment"
+            app:destination="@id/dashboard_fragment"
+            app:popUpTo="@id/dashboard_fragment"
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>

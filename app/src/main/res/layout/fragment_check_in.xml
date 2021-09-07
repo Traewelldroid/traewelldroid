@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="line"
+            type="String" />
+        <variable
+            name="destination"
+            type="String" />
+        <variable
+            name="checkInFragment"
+            type="de.traewelling.ui.checkIn.CheckInFragment" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.checkIn.CheckInFragment"
+        android:id="@+id/layout_check_in"
+        android:padding="8dp">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:cardElevation="3dp"
+            app:cardCornerRadius="8dp"
+            app:cardUseCompatPadding="true">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="RE 75 nach Illertissen"
+                    android:id="@+id/text_view_line_final_destination"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    style="@style/TextAppearance.AppCompat.Headline"
+                    android:text="@{@string/line_destination(line, destination)}"/>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="75dp"
+                    android:id="@+id/text_input_status_message"
+                    android:hint="@string/status_message"
+                    app:layout_constraintTop_toBottomOf="@id/text_view_line_final_destination"
+                    android:layout_marginTop="16dp">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/edit_text_status_message" />
+                </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/check_in"
+                    app:layout_constraintTop_toBottomOf="@id/text_input_status_message"
+                    app:layout_constraintEnd_toEndOf="@id/text_input_status_message"
+                    android:layout_marginTop="4dp"
+                    app:icon="@drawable/ic_check_in"
+                    android:onClick="@{() -> checkInFragment.checkIn()}"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

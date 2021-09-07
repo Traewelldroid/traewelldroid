@@ -22,7 +22,7 @@ import de.traewelling.ui.dashboard.DashboardFragmentDirections
 import de.traewelling.ui.searchConnection.SearchConnectionFragment
 import de.traewelling.ui.searchConnection.SearchConnectionFragmentDirections
 
-class SearchStationCard(private val parent: Fragment, private val binding: CardSearchStationBinding) : LocationListener {
+class SearchStationCard(private val parent: Fragment, private val binding: CardSearchStationBinding, private val stationName: String) : LocationListener {
 
     private lateinit var locationManager: LocationManager
     private val requestPermissionLauncher = parent.registerForActivityResult(ActivityResultContracts.RequestPermission()) {
@@ -49,6 +49,7 @@ class SearchStationCard(private val parent: Fragment, private val binding: CardS
         }, {
             binding.editTextSearchStation.setText(it.first)
         })
+        binding.editTextSearchStation.setText(stationName)
         binding.expandableHistory.addItemDecoration(DividerItemDecoration(parent.requireContext(), DividerItemDecoration.VERTICAL))
         binding.expandableHistory.visibility = View.GONE
         binding.expandableHistory.layoutManager = LinearLayoutManager(parent.requireContext())
@@ -90,9 +91,10 @@ class SearchStationCard(private val parent: Fragment, private val binding: CardS
     }
 
     fun searchConnections() {
+        val stationName = binding.editTextSearchStation.text.toString()
         val action = when (parent is SearchConnectionFragment) {
-            true -> SearchConnectionFragmentDirections.actionSearchConnectionFragmentSelf()
-            false -> DashboardFragmentDirections.actionDashboardFragmentToSearchConnectionFragment()
+            true -> SearchConnectionFragmentDirections.actionSearchConnectionFragmentSelf(stationName)
+            false -> DashboardFragmentDirections.actionDashboardFragmentToSearchConnectionFragment(stationName)
         }
         parent.findNavController().navigate(action)
     }

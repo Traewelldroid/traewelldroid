@@ -21,4 +21,7 @@
     <string name="next">Next</string>
     <string name="locate">Locate</string>
     <string name="line_destination">%1$s to %2$s</string>
+    <string name="check_in">Check-In</string>
+    <string name="status_message">Status message</string>
+    <string name="departures_at">Departures at %1$s</string>
 </resources>

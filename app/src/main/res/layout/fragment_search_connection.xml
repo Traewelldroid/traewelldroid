@@ -4,7 +4,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
+        <variable
+            name="stationName"
+            type="String" />
     </data>
 
     <androidx.core.widget.NestedScrollView
@@ -22,12 +24,24 @@
                 android:id="@+id/search_card"
                 layout="@layout/card_search_station" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/TextAppearance.AppCompat.Headline"
+                tools:text="@string/departures_at"
+                app:layout_constraintTop_toBottomOf="@id/search_card"
+                app:layout_constraintStart_toStartOf="@id/search_card"
+                android:layout_margin="12dp"
+                app:layout_constraintBottom_toTopOf="@id/card_connections"
+                android:id="@+id/text_view_departures_at"
+                android:text="@{@string/departures_at(stationName)}"/>
+
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/card_connections"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/search_card"
+                app:layout_constraintTop_toBottomOf="@id/text_view_departures_at"
+                android:layout_marginTop="16dp"
                 app:cardElevation="3dp"
                 app:cardCornerRadius="8dp"
                 app:cardUseCompatPadding="true">

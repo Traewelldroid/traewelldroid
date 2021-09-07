@@ -22,6 +22,8 @@ class SearchConnectionFragment : Fragment() {
 
     private lateinit var binding: FragmentSearchConnectionBinding
     private lateinit var searchStationCard: SearchStationCard
+    private val args: SearchConnectionFragmentArgs by navArgs()
+
     private val connections = mutableListOf(
         Connection(R.drawable.ic_train, "RE 75", "Ulm Hbf", "15:02"),
         Connection(R.drawable.ic_train, "RE 75", "Kempten(Allgäu)Hbf", "15:04"),
@@ -40,7 +42,8 @@ class SearchConnectionFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentSearchConnectionBinding.inflate(inflater, container, false)
-        searchStationCard = SearchStationCard(this, binding.searchCard)
+        binding.stationName = args.stationName
+        searchStationCard = SearchStationCard(this, binding.searchCard, args.stationName)
         val connectionRecyclerView = binding.recyclerViewConnections
         connectionRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         connectionRecyclerView.adapter = ConnectionAdapter(connections) { itemView, connection ->

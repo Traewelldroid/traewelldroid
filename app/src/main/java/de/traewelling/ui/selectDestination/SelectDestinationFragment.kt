@@ -7,8 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.navigation.fragment.FragmentNavigatorExtras
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.transition.Hold
 import com.google.android.material.transition.MaterialContainerTransform
 import de.traewelling.R
 import de.traewelling.adapters.TravelStopAdapter
@@ -34,6 +37,7 @@ class SelectDestinationFragment : Fragment() {
             setAllContainerColors(resources.getColor(R.color.design_default_color_surface, requireContext().theme))
         }
         sharedElementEnterTransition = transition
+        exitTransition = Hold()
     }
 
     override fun onCreateView(
@@ -50,8 +54,16 @@ class SelectDestinationFragment : Fragment() {
 
         val recyclerView = binding.recyclerViewTravelStops
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.adapter = TravelStopAdapter(stops) {
-            Toast.makeText(requireContext(), it.stationName, Toast.LENGTH_SHORT).show()
+        recyclerView.adapter = TravelStopAdapter(stops) { itemView, stop ->
+            val transitionName = stop.stationName
+            val extras = FragmentNavigatorExtras(
+                itemView to transitionName
+            )
+            findNavController().navigate(
+                SelectDestinationFragmentDirections
+                    .actionSelectDestinationFragmentToCheckInFragment(transitionName),
+                extras
+            )
         }
 
         return binding.root

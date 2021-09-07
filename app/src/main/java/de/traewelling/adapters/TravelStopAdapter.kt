@@ -1,13 +1,14 @@
 package de.traewelling.adapters
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.View.INVISIBLE
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import de.traewelling.databinding.TravelStopListItemBinding
 import de.traewelling.models.TravelStop
 
-class TravelStopAdapter(val stops: List<TravelStop>, val onClick: (TravelStop) -> Unit) : RecyclerView.Adapter<TravelStopAdapter.TravelStopViewHolder>() {
+class TravelStopAdapter(val stops: List<TravelStop>, val onClick: (View, TravelStop) -> Unit) : RecyclerView.Adapter<TravelStopAdapter.TravelStopViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TravelStopViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -18,8 +19,9 @@ class TravelStopAdapter(val stops: List<TravelStop>, val onClick: (TravelStop) -
     override fun onBindViewHolder(holder: TravelStopViewHolder, position: Int) {
         holder.bind(stops[position], position == (itemCount - 1))
         holder.itemView.setOnClickListener {
-            onClick(stops[position])
+            onClick(it, stops[position])
         }
+        holder.itemView.transitionName = stops[position].stationName
     }
 
     override fun getItemCount() = stops.size
