@@ -33,5 +33,13 @@
             android:id="@+id/action_searchConnectionFragment_self"
             app:destination="@id/searchConnectionFragment"
             app:popUpTo="@id/dashboard_fragment" />
+        <action
+            android:id="@+id/action_searchConnectionFragment_to_selectDestinationFragment"
+            app:destination="@id/selectDestinationFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/selectDestinationFragment"
+        android:name="de.traewelling.ui.selectDestination.SelectDestinationFragment"
+        android:label="@string/title_select_destination"
+        tools:layout="@layout/fragment_select_destination" />
 </navigation>

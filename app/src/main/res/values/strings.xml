@@ -8,6 +8,7 @@
     <string name="title_active_checkins">Active Check-Ins</string>
     <string name="title_user">User profile</string>
     <string name="title_search_connection">Search connection</string>
+    <string name="title_select_destination">Select destination</string>
     <string name="display_points">%1$d points</string>
     <string name="display_travel_time">%1$dh %2$dmin</string>
     <string name="display_average_speed">%1$.2f km/h</string>

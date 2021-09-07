@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import de.traewelling.R
@@ -33,7 +35,10 @@ class SearchConnectionFragment : Fragment() {
         searchStationCard = SearchStationCard(this, binding.searchCard)
         val connectionRecyclerView = binding.recyclerViewConnections
         connectionRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        connectionRecyclerView.adapter = ConnectionAdapter(connections)
+        connectionRecyclerView.adapter = ConnectionAdapter(connections) { connection ->
+            Toast.makeText(requireContext(), connection.destination, Toast.LENGTH_SHORT).show()
+            findNavController().navigate(R.id.action_searchConnectionFragment_to_selectDestinationFragment)
+        }
         connectionRecyclerView.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
         binding.apply {
             searchCard.viewModel = searchStationCard

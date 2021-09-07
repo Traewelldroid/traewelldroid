@@ -20,4 +20,5 @@
     <string name="previous">Vorherige</string>
     <string name="next">Nächste</string>
     <string name="locate">Ortung</string>
+    <string name="title_select_destination">Ziel auswählen</string>
 </resources>
