@@ -3,16 +3,15 @@ package de.traewelling.ui.main
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.NavController
-import androidx.navigation.NavHost
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.NavigationUI.setupWithNavController
 import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.jcloquell.androidsecurestorage.SecureStorage
 import de.traewelling.R
+import de.traewelling.api.TraewellingApi
 import de.traewelling.databinding.ActivityMainBinding
+import de.traewelling.shared.SharedValues
 
 class MainActivity : AppCompatActivity() {
 
@@ -33,6 +32,9 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, AppBarConfiguration(
             setOf(R.id.dashboard_fragment, R.id.active_checkins_fragment, R.id.user_fragment)
         ))
+
+        val secureStorage = SecureStorage(this)
+        TraewellingApi.jwt = secureStorage.getObject(SharedValues.SS_JWT, String::class.java)!!
     }
 
     override fun onSupportNavigateUp(): Boolean {

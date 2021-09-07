@@ -24,4 +24,5 @@
     <string name="check_in">Check-In</string>
     <string name="status_message">Status message</string>
     <string name="departures_at">Departures at %1$s</string>
+    <string name="error_credentials">Please check your credentials</string>
 </resources>
