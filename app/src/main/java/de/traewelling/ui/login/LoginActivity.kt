@@ -53,6 +53,6 @@ class LoginActivity : AppCompatActivity() {
             false -> ""
         }
         binding.textInputPassword.error = errorText
-        binding.textInputUsername.error = errorText
+        binding.textInputEmail.error = errorText
     }
 }

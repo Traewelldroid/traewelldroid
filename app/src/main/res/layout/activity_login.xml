@@ -35,14 +35,14 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/text_input_username"
-                android:hint="@string/input_username">
+                android:id="@+id/text_input_email"
+                android:hint="@string/email">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/edit_text_username"
-                    android:text="@={viewModel.username}" />
+                    android:id="@+id/edit_text_email"
+                    android:text="@={viewModel.email}" />
 
             </com.google.android.material.textfield.TextInputLayout>
 

@@ -27,4 +27,5 @@
     <string name="departures_at">Abfahrten in %1$s</string>
     <string name="error_credentials">Bitte überprüfe deine Anmeldedaten</string>
     <string name="error_logout">Abmeldung nicht erfolgreich!</string>
+    <string name="email">E-Mail-Adresse</string>
 </resources>

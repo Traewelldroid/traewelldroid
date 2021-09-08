@@ -12,7 +12,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class LoginActivityViewModel : ViewModel() {
-    val username = MutableLiveData<String>()
+    val email = MutableLiveData<String>()
     val password = MutableLiveData<String>()
 
     private val _loginSuccessful = MutableLiveData<Boolean>()
@@ -21,7 +21,7 @@ class LoginActivityViewModel : ViewModel() {
     val jwt: LiveData<String> get() = _jwt
 
     fun login() {
-        TraewellingApi.authService.login(LoginCredentials(username.value!!, password.value!!))
+        TraewellingApi.authService.login(LoginCredentials(email.value!!, password.value!!))
             .enqueue(object: Callback<BearerToken> {
                 override fun onResponse(call: Call<BearerToken>, response: Response<BearerToken>) {
                     if (response.isSuccessful) {

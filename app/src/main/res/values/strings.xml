@@ -27,4 +27,5 @@
     <string name="departures_at">Departures at %1$s</string>
     <string name="error_credentials">Please check your credentials</string>
     <string name="error_logout">Logout was not successful!</string>
+    <string name="email">Email address</string>
 </resources>
