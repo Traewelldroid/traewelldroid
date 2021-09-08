@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import de.traewelling.adapters.CheckInAdapter
 import de.traewelling.databinding.FragmentActiveCheckinsBinding
@@ -17,6 +18,7 @@ import org.osmdroid.util.GeoPoint
 class ActiveCheckinsFragment : Fragment() {
 
     private lateinit var binding: FragmentActiveCheckinsBinding
+    private val viewModel: ActiveCheckinsViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -24,8 +26,8 @@ class ActiveCheckinsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         Configuration.getInstance().userAgentValue = requireContext().packageName
-
         binding = FragmentActiveCheckinsBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = viewLifecycleOwner
 
         binding.activeCheckinsMap.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE)
         binding.activeCheckinsMap.setMultiTouchControls(true)
@@ -35,27 +37,25 @@ class ActiveCheckinsFragment : Fragment() {
 
         val recyclerView = binding.recyclerViewActiveCheckIns
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        val checkIns = mutableListOf<CheckIn>()
-        repeat (5) {
-            checkIns.add(
-                CheckIn(
-                "Memmingen",
-                "Kempten(Allgäu)Hbf",
-                "RE 75",
-                "35km",
-                "22min",
-                "1$it:02",
-                "Dietmannsried",
-                "1$it:24",
-                "der_heubi",
-                "1$it:00",
-                it % 2 == 0
-            )
-            )
+
+        viewModel.statuses.observe(viewLifecycleOwner) { statusPage ->
+            if (statusPage != null) {
+                recyclerView.adapter = CheckInAdapter(statusPage.data)
+            }
+            binding.swipeRefreshCheckins.isRefreshing = false
         }
-        //recyclerView.adapter = CheckInAdapter(checkIns)
+        getActiveCheckins()
+
+        binding.swipeRefreshCheckins.setOnRefreshListener {
+            getActiveCheckins()
+        }
 
         return binding.root
+    }
+
+    fun getActiveCheckins() {
+        binding.swipeRefreshCheckins.isRefreshing = true
+        viewModel.getActiveCheckins()
     }
 
     override fun onPause() {
