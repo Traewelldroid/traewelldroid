@@ -4,6 +4,7 @@ import android.util.Log
 import com.google.gson.GsonBuilder
 import de.traewelling.api.models.auth.BearerToken
 import de.traewelling.api.models.auth.LoginCredentials
+import de.traewelling.api.models.station.StationData
 import de.traewelling.api.models.status.Status
 import de.traewelling.api.models.status.StatusPage
 import okhttp3.Interceptor
@@ -53,6 +54,10 @@ interface AuthApiService {
 interface CheckInService {
     @GET("dashboard")
     fun getPersonalDashboard(@Query("page") page: Int): Call<StatusPage>
+    @GET("statuses")
+    fun getStatuses(): Call<StatusPage>
+    @GET("trains/station/nearby")
+    fun getNearbyStation(@Query("latitude") latitude: Double, @Query("longitude") longitude: Double): Call<StationData>
 }
 
 object TraewellingApi {

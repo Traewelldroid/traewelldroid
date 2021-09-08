@@ -8,6 +8,7 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Build
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -17,10 +18,15 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import de.traewelling.R
+import de.traewelling.api.TraewellingApi
+import de.traewelling.api.models.station.StationData
 import de.traewelling.databinding.CardSearchStationBinding
 import de.traewelling.ui.dashboard.DashboardFragmentDirections
 import de.traewelling.ui.searchConnection.SearchConnectionFragment
 import de.traewelling.ui.searchConnection.SearchConnectionFragmentDirections
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class SearchStationCard(private val parent: Fragment, private val binding: CardSearchStationBinding, private val stationName: String) : LocationListener {
 
@@ -71,7 +77,24 @@ class SearchStationCard(private val parent: Fragment, private val binding: CardS
     // Location listener
     override fun onLocationChanged(location: Location) {
         locationManager.removeUpdates(this)
-        binding.editTextSearchStation.setText("${location.latitude}, ${location.longitude}")
+
+        TraewellingApi.checkInService.getNearbyStation(location.latitude, location.longitude)
+            .enqueue(object: Callback<StationData> {
+                override fun onResponse(call: Call<StationData>, response: Response<StationData>) {
+                    if (response.isSuccessful) {
+                        val station = response.body()?.data?.name
+                        if (station != null) {
+                            searchConnections(station)
+                        }
+                    } else {
+                        Log.e("SearchStationCard", response.toString())
+                    }
+                }
+
+                override fun onFailure(call: Call<StationData>, t: Throwable) {
+                    Log.e("SearchStationCard", t.stackTraceToString())
+                }
+            })
     }
 
     fun findNearbyStations() {
@@ -90,13 +113,17 @@ class SearchStationCard(private val parent: Fragment, private val binding: CardS
         }
     }
 
-    fun searchConnections() {
-        val stationName = binding.editTextSearchStation.text.toString()
+    fun searchConnections(station: String) {
         val action = when (parent is SearchConnectionFragment) {
-            true -> SearchConnectionFragmentDirections.actionSearchConnectionFragmentSelf(stationName)
-            false -> DashboardFragmentDirections.actionDashboardFragmentToSearchConnectionFragment(stationName)
+            true -> SearchConnectionFragmentDirections.actionSearchConnectionFragmentSelf(station)
+            false -> DashboardFragmentDirections.actionDashboardFragmentToSearchConnectionFragment(station)
         }
         parent.findNavController().navigate(action)
+    }
+
+    fun searchConnections() {
+        val stationName = binding.editTextSearchStation.text.toString()
+        searchConnections(stationName)
     }
 
 
