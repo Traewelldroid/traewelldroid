@@ -1,13 +1,10 @@
 package de.traewelling.ui.searchConnection
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.navigation.fragment.FragmentNavigatorExtras
-import androidx.navigation.fragment.findNavController
-import de.traewelling.adapters.ConnectionAdapter
 import de.traewelling.api.TraewellingApi
-import de.traewelling.api.models.trip.HafasTrip
 import de.traewelling.api.models.trip.HafasTripPage
 import retrofit2.Call
 import retrofit2.Callback
@@ -28,6 +25,7 @@ class SearchConnectionViewModel: ViewModel() {
                 ) {
                     if (response.isSuccessful) {
                         val trip = response.body()
+                        Log.d("SearchConnectionViewModel", trip?.meta?.times?.now.toString())
                         if (trip != null) {
                             _departures.value = trip!!
                         }

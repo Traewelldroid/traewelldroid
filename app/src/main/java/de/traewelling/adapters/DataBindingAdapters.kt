@@ -20,7 +20,7 @@ fun setImageResource(imageView: ImageView, resourceId: Int) {
 }
 
 @BindingAdapter("displayTime")
-fun setTimeText(textView: TextView, date: Date) {
+fun setTimeText(textView: TextView, date: Date?) {
     textView.text = getLocalTimeString(date)
 }
 
@@ -37,7 +37,8 @@ fun setDuration(textView: TextView, duration: Int) {
     textView.text = textView.resources.getString(R.string.display_travel_time, hours, minutes)
 }
 
-fun getLocalTimeString(date: Date): String {
+fun getLocalTimeString(date: Date?): String {
+    if (date == null) return ""
     return getTimeInstance(DateFormat.SHORT).format(date)
 }
 

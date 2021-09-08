@@ -44,6 +44,7 @@ class SearchConnectionFragment : Fragment() {
     ): View? {
 
         binding = FragmentSearchConnectionBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = viewLifecycleOwner
 
         val connectionRecyclerView = binding.recyclerViewConnections
         connectionRecyclerView.layoutManager = LinearLayoutManager(requireContext())

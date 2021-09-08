@@ -53,10 +53,39 @@
                     android:layout_height="wrap_content"
                     android:paddingBottom="16dp"
                     android:id="@+id/layout_card_connections">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_time"
+                        android:layout_margin="16dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:id="@+id/icon_time" />
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/divider_time_departures"
+                        app:layout_constraintTop_toBottomOf="@id/icon_time"
+                        android:layout_marginTop="16dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        app:layout_constraintStart_toEndOf="@id/icon_time"
+                        app:layout_constraintTop_toTopOf="@id/icon_time"
+                        app:layout_constraintBottom_toBottomOf="@id/icon_time"
+                        android:gravity="center"
+                        android:textSize="18sp"
+                        android:layout_marginLeft="8dp"
+                        tools:text="15:00"
+                        displayTime="@{viewModel.departures.meta.times.now}"/>
+
                     <androidx.recyclerview.widget.RecyclerView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/divider_time_departures"
                         android:id="@+id/recycler_view_connections"
                         tools:listitem="@layout/connection_list_item"
                         android:nestedScrollingEnabled="false"
