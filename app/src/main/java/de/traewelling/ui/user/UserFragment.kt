@@ -37,6 +37,9 @@ class UserFragment : Fragment() {
             lifecycleOwner = viewLifecycleOwner
             viewModel = this@UserFragment.viewModel
         }
+
+        viewModel.getUserInfo()
+
         return binding.root
     }
 

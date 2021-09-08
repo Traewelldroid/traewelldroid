@@ -2,12 +2,14 @@ package de.traewelling.api
 
 import android.util.Log
 import com.google.gson.GsonBuilder
+import de.traewelling.api.models.Data
 import de.traewelling.api.models.auth.BearerToken
 import de.traewelling.api.models.auth.LoginCredentials
 import de.traewelling.api.models.station.StationData
 import de.traewelling.api.models.status.Status
 import de.traewelling.api.models.status.StatusPage
 import de.traewelling.api.models.trip.HafasTripPage
+import de.traewelling.api.models.user.User
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Call
@@ -48,6 +50,8 @@ interface AuthApiService {
     fun login(@Body credentials: LoginCredentials): Call<BearerToken>
     @POST("auth/logout")
     fun logout(): Call<Unit>
+    @GET("auth/user")
+    fun getLoggedInUser(): Call<Data<User>>
 }
 
 interface CheckInService {

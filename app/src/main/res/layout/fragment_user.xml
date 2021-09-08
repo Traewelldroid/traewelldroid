@@ -162,12 +162,15 @@
             </com.google.android.material.card.MaterialCardView>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/card_user"
                 tools:listitem="@layout/standard_list_item"
                 tools:itemCount="5"
-                android:id="@+id/recycler_view_menu" />
+                android:id="@+id/recycler_view_menu"
+                app:layout_constraintStart_toStartOf="@id/card_user"
+                app:layout_constraintEnd_toEndOf="@id/card_user"
+                android:padding="16dp"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
