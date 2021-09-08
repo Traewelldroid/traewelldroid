@@ -78,7 +78,7 @@ class SearchStationCard(private val parent: Fragment, private val binding: CardS
     override fun onLocationChanged(location: Location) {
         locationManager.removeUpdates(this)
 
-        TraewellingApi.checkInService.getNearbyStation(location.latitude, location.longitude)
+        TraewellingApi.travelService.getNearbyStation(location.latitude, location.longitude)
             .enqueue(object: Callback<StationData> {
                 override fun onResponse(call: Call<StationData>, response: Response<StationData>) {
                     if (response.isSuccessful) {

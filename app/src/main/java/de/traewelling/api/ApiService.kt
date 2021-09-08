@@ -7,15 +7,14 @@ import de.traewelling.api.models.auth.LoginCredentials
 import de.traewelling.api.models.station.StationData
 import de.traewelling.api.models.status.Status
 import de.traewelling.api.models.status.StatusPage
+import de.traewelling.api.models.trip.HafasTripPage
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Query
+import retrofit2.http.*
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 private const val BASE_URL =
@@ -56,8 +55,12 @@ interface CheckInService {
     fun getPersonalDashboard(@Query("page") page: Int): Call<StatusPage>
     @GET("statuses")
     fun getStatuses(): Call<StatusPage>
+}
+interface TravelService {
     @GET("trains/station/nearby")
     fun getNearbyStation(@Query("latitude") latitude: Double, @Query("longitude") longitude: Double): Call<StationData>
+    @GET("trains/station/{station}/departures")
+    fun getDeparturesAtStation(@Path("station") station: String, @Query("when") time: Date): Call<HafasTripPage>
 }
 
 object TraewellingApi {
@@ -67,5 +70,8 @@ object TraewellingApi {
     }
     val checkInService: CheckInService by lazy {
         retrofit.create(CheckInService::class.java)
+    }
+    val travelService: TravelService by lazy {
+        retrofit.create(TravelService::class.java)
     }
 }

@@ -7,6 +7,9 @@
         <variable
             name="stationName"
             type="String" />
+        <variable
+            name="viewModel"
+            type="de.traewelling.ui.searchConnection.SearchConnectionViewModel" />
     </data>
 
     <androidx.core.widget.NestedScrollView
@@ -67,7 +70,8 @@
                         android:layout_margin="16dp"
                         app:icon="@drawable/ic_previous"
                         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        android:text="@string/previous" />
+                        android:text="@string/previous"
+                        android:onClick="@{() -> viewModel.searchConnections(stationName, viewModel.departures.meta.times.previous)}" />
 
                     <com.google.android.material.button.MaterialButton
                         android:layout_width="wrap_content"
@@ -78,7 +82,8 @@
                         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                         app:icon="@drawable/ic_next"
                         app:iconGravity="end"
-                        android:text="@string/next" />
+                        android:text="@string/next"
+                        android:onClick="@{() -> viewModel.searchConnections(stationName, viewModel.departures.meta.times.next)}" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,7 +6,7 @@
     <data>
         <variable
             name="connection"
-            type="de.traewelling.models.Connection" />
+            type="de.traewelling.api.models.trip.HafasTrip" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -31,7 +31,7 @@
                 android:layout_height="24dp"
                 android:id="@+id/icon_product_type"
                 tools:srcCompat="@drawable/ic_train"
-                imageResource="@{connection.product}" />
+                android:src="@drawable/ic_train" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -39,7 +39,7 @@
                 android:layout_gravity="center"
                 android:id="@+id/text_view_line_number"
                 android:layout_marginLeft="8dp"
-                android:text="@{connection.line}"
+                android:text="@{connection.line.name}"
                 android:textSize="18sp"
                 tools:text="RE 75" />
         </LinearLayout>
@@ -63,7 +63,7 @@
             app:layout_constraintBottom_toBottomOf="@id/layout_product_type"
             app:layout_constraintEnd_toEndOf="parent"
             android:id="@+id/text_view_departure_time"
-            android:text="@{connection.departureTime}"
+            displayTime="@{connection.departure ?? connection.plannedDeparture}"
             android:textSize="18sp"
             tools:text="15:02" />
     </androidx.constraintlayout.widget.ConstraintLayout>

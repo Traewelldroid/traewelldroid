@@ -4,10 +4,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import de.traewelling.api.models.trip.HafasTrip
 import de.traewelling.databinding.ConnectionListItemBinding
 import de.traewelling.models.Connection
 
-class ConnectionAdapter(val connections: List<Connection>, val onItemClick: (View, Connection) -> Unit) : RecyclerView.Adapter<ConnectionAdapter.ConnectionViewHolder>() {
+class ConnectionAdapter(val connections: List<HafasTrip>, val onItemClick: (View, HafasTrip) -> Unit) : RecyclerView.Adapter<ConnectionAdapter.ConnectionViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ConnectionViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -25,9 +26,9 @@ class ConnectionAdapter(val connections: List<Connection>, val onItemClick: (Vie
     override fun getItemCount() = connections.size
 
     class ConnectionViewHolder(val binding: ConnectionListItemBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(connection: Connection) {
-            binding.layoutConnectionListItem.transitionName = "${connection.line}${connection.destination}${connection.departureTime}"
-            binding.connection = connection
+        fun bind(trip: HafasTrip) {
+            binding.layoutConnectionListItem.transitionName = "${trip.tripId}"
+            binding.connection = trip
             binding.executePendingBindings()
         }
     }
