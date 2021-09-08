@@ -1,15 +1,11 @@
 package de.traewelling.api.models.status
 
 import com.google.gson.annotations.SerializedName
+import de.traewelling.api.models.meta.Links
+import de.traewelling.api.models.meta.PaginationData
 
 data class StatusPage(
-    @SerializedName("first_page_url") val firstPageUrl: String,
-    @SerializedName("next_page_url") val nextPageUrl: String,
-    @SerializedName("path") val path: String,
-    @SerializedName("current_page") val currentPage: Int,
-    @SerializedName("from") val from: Int,
-    @SerializedName("to") val to: Int,
-    @SerializedName("per_page") val perPage: Int,
-    @SerializedName("prev_page_url") val previousPageUrl: String,
-    @SerializedName("data") val statuses: List<Status>
+    @SerializedName("data") val data: List<Status>,
+    @SerializedName("links") val links: Links,
+    @SerializedName("meta") val pagination: PaginationData
 )
