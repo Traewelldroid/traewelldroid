@@ -51,6 +51,9 @@
         <action
             android:id="@+id/action_selectDestinationFragment_to_checkInFragment"
             app:destination="@id/checkInFragment" />
+        <argument
+            android:name="destination"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/checkInFragment"
@@ -65,5 +68,8 @@
             app:destination="@id/dashboard_fragment"
             app:popUpTo="@id/dashboard_fragment"
             app:popUpToInclusive="true" />
+        <argument
+            android:name="destination"
+            app:argType="string" />
     </fragment>
 </navigation>

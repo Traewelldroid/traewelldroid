@@ -1,6 +1,7 @@
 package de.traewelling.api.models.status
 
 import com.google.gson.annotations.SerializedName
+import de.traewelling.api.models.trip.HafasTrainTripStation
 
 data class Journey(
     @SerializedName("trip") val tripId: Int,
@@ -12,6 +13,6 @@ data class Journey(
     @SerializedName("delay") val delay: Int,
     @SerializedName("duration") val duration: Int,
     @SerializedName("speed") val averageSpeed: Double,
-    @SerializedName("origin") val origin: JourneyStation,
-    @SerializedName("destination") val destination: JourneyStation
+    @SerializedName("origin") val origin: HafasTrainTripStation,
+    @SerializedName("destination") val destination: HafasTrainTripStation
 )

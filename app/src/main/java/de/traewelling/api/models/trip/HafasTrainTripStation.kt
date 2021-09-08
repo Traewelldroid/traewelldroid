@@ -1,9 +1,9 @@
-package de.traewelling.api.models.status
+package de.traewelling.api.models.trip
 
 import com.google.gson.annotations.SerializedName
 import java.util.*
 
-data class JourneyStation(
+data class HafasTrainTripStation(
     @SerializedName("id") val id: Int,
     @SerializedName("name") val name: String,
     @SerializedName("rilIdentifier") val ds100: String,

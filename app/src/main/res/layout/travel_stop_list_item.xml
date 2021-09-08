@@ -6,7 +6,7 @@
     <data>
         <variable
             name="travelStop"
-            type="de.traewelling.models.TravelStop" />
+            type="de.traewelling.api.models.trip.HafasTrainTripStation" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -47,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="Bad Grönenbach"
-            android:text="@{travelStop.stationName}"
+            android:text="@{travelStop.name}"
             android:id="@+id/text_view_stop_name"
             app:layout_constraintTop_toTopOf="@id/perlschnur_connection_top"
             app:layout_constraintBottom_toBottomOf="@id/perlschnur_connection_bottom"
@@ -58,7 +58,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="15:09"
-            android:text="@{travelStop.destinationTime}"
+            displayTime="@{travelStop.arrivalReal ?? travelStop.arrivalPlanned}"
             android:id="@+id/text_view_destination_time"
             app:layout_constraintTop_toTopOf="@id/perlschnur_connection_top"
             app:layout_constraintBottom_toBottomOf="@id/perlschnur_connection_bottom"

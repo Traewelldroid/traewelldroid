@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
@@ -19,6 +20,7 @@ import de.traewelling.api.TraewellingApi
 import de.traewelling.api.models.trip.HafasTripPage
 import de.traewelling.databinding.FragmentSearchConnectionBinding
 import de.traewelling.models.Connection
+import de.traewelling.shared.CheckInViewModel
 import de.traewelling.ui.include.cardSearchStation.SearchStationCard
 import retrofit2.Call
 import retrofit2.Callback
@@ -31,6 +33,7 @@ class SearchConnectionFragment : Fragment() {
     private lateinit var searchStationCard: SearchStationCard
     private val args: SearchConnectionFragmentArgs by navArgs()
     private val viewModel: SearchConnectionViewModel by viewModels()
+    private val checkInViewModel: CheckInViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,11 +55,18 @@ class SearchConnectionFragment : Fragment() {
         viewModel.departures.observe(viewLifecycleOwner) { connections ->
             binding.recyclerViewConnections.adapter =
                 ConnectionAdapter(connections.data) { itemView, connection ->
+                    checkInViewModel.reset()
+                    checkInViewModel.lineName = connection.line.name
+                    checkInViewModel.tripId = connection.tripId
+                    checkInViewModel.startStationId = connection.station.id
+                    checkInViewModel.departureTime = connection.departure
+
                     val transitionName = connection.tripId
                     val extras = FragmentNavigatorExtras(itemView to transitionName)
                     val action =
                         SearchConnectionFragmentDirections.actionSearchConnectionFragmentToSelectDestinationFragment(
-                            transitionName
+                            transitionName,
+                            connection.destination
                         )
                     findNavController().navigate(action, extras)
                 }

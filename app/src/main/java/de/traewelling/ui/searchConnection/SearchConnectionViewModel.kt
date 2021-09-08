@@ -25,7 +25,6 @@ class SearchConnectionViewModel: ViewModel() {
                 ) {
                     if (response.isSuccessful) {
                         val trip = response.body()
-                        Log.d("SearchConnectionViewModel", trip?.meta?.times?.now.toString())
                         if (trip != null) {
                             _departures.value = trip!!
                         }

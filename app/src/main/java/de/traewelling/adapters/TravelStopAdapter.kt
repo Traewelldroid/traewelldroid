@@ -5,10 +5,12 @@ import android.view.View
 import android.view.View.INVISIBLE
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import de.traewelling.api.models.trip.HafasTrainTripStation
 import de.traewelling.databinding.TravelStopListItemBinding
 import de.traewelling.models.TravelStop
 
-class TravelStopAdapter(val stops: List<TravelStop>, val onClick: (View, TravelStop) -> Unit) : RecyclerView.Adapter<TravelStopAdapter.TravelStopViewHolder>() {
+class TravelStopAdapter(val stops: List<HafasTrainTripStation>, val onClick: (View, HafasTrainTripStation) -> Unit)
+    : RecyclerView.Adapter<TravelStopAdapter.TravelStopViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TravelStopViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -21,13 +23,13 @@ class TravelStopAdapter(val stops: List<TravelStop>, val onClick: (View, TravelS
         holder.itemView.setOnClickListener {
             onClick(it, stops[position])
         }
-        holder.itemView.transitionName = stops[position].stationName
+        holder.itemView.transitionName = stops[position].name
     }
 
     override fun getItemCount() = stops.size
 
     class TravelStopViewHolder(val binding: TravelStopListItemBinding): RecyclerView.ViewHolder(binding.root) {
-        fun bind(travelStop: TravelStop, isLast: Boolean) {
+        fun bind(travelStop: HafasTrainTripStation, isLast: Boolean) {
             if (isLast)
                 binding.perlschnurConnectionBottom.visibility = INVISIBLE
             binding.travelStop = travelStop

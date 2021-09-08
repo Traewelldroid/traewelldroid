@@ -30,10 +30,12 @@ class LoginActivityViewModel : ViewModel() {
                         _loginSuccessful.value = true
                     } else {
                         _loginSuccessful.value = false
+                        Log.e("LoginActivityViewModel", response.toString())
                     }
                 }
                 override fun onFailure(call: Call<BearerToken>, t: Throwable) {
                     _loginSuccessful.value = false
+                    Log.e("LoginActivityViewModel", t.stackTraceToString())
                 }
             })
     }

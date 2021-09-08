@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -17,17 +19,14 @@ import de.traewelling.R
 import de.traewelling.adapters.TravelStopAdapter
 import de.traewelling.databinding.FragmentSelectDestinationBinding
 import de.traewelling.models.TravelStop
+import de.traewelling.shared.CheckInViewModel
 
 class SelectDestinationFragment : Fragment() {
 
     private lateinit var binding: FragmentSelectDestinationBinding
-    private val stops = listOf(
-        TravelStop("Bad Grönenbach", "15:09"),
-        TravelStop("Dietmannsried", "15:17"),
-        TravelStop("Kempten(Allgäu)Ost", "15:22"),
-        TravelStop("Kempten(Allgäu)Hbf", "15:25")
-    )
     private val args: SelectDestinationFragmentArgs by navArgs()
+    private val viewModel: SelectDestinationViewModel by viewModels()
+    private val checkInViewModel: CheckInViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,23 +47,45 @@ class SelectDestinationFragment : Fragment() {
         binding = FragmentSelectDestinationBinding.inflate(inflater, container, false)
         binding.layoutSelectDestination.transitionName = args.transitionName
         binding.apply {
-            destination = stops.last().stationName
-            line = "RE 75"
+            destination = args.destination
+            line = checkInViewModel.lineName
         }
 
         val recyclerView = binding.recyclerViewTravelStops
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.adapter = TravelStopAdapter(stops) { itemView, stop ->
-            val transitionName = stop.stationName
-            val extras = FragmentNavigatorExtras(
-                itemView to transitionName
-            )
-            findNavController().navigate(
-                SelectDestinationFragmentDirections
-                    .actionSelectDestinationFragmentToCheckInFragment(transitionName),
-                extras
-            )
+        viewModel.trip.observe(viewLifecycleOwner) { trip ->
+
+            val relevantStations = trip.stopovers.subList(
+                trip.stopovers.indexOf(
+                    trip.stopovers.find {
+                        it.id == checkInViewModel.startStationId
+                    }
+                ) + 1, trip.stopovers.lastIndex + 1)
+
+            recyclerView.adapter = TravelStopAdapter(relevantStations) { itemView, stop ->
+
+                checkInViewModel.destinationStationId = stop.id
+                checkInViewModel.arrivalTime = stop.arrivalPlanned
+
+                val transitionName = stop.name
+                val extras = FragmentNavigatorExtras(
+                    itemView to transitionName
+                )
+                findNavController().navigate(
+                    SelectDestinationFragmentDirections
+                        .actionSelectDestinationFragmentToCheckInFragment(
+                            transitionName,
+                            stop.name
+                        ),
+                    extras
+                )
+            }
         }
+        viewModel.getTrip(
+            checkInViewModel.tripId,
+            checkInViewModel.lineName,
+            checkInViewModel.startStationId
+        )
 
         return binding.root
     }
