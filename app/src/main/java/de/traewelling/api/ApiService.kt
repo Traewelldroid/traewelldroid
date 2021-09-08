@@ -6,6 +6,8 @@ import de.traewelling.api.models.Data
 import de.traewelling.api.models.auth.BearerToken
 import de.traewelling.api.models.auth.LoginCredentials
 import de.traewelling.api.models.station.StationData
+import de.traewelling.api.models.status.CheckInRequest
+import de.traewelling.api.models.status.CheckInResponse
 import de.traewelling.api.models.status.Status
 import de.traewelling.api.models.status.StatusPage
 import de.traewelling.api.models.trip.HafasTrainTrip
@@ -43,7 +45,7 @@ private val retrofit =
         .client(client)
         .build()
 
-interface AuthApiService {
+interface AuthService {
     @POST("auth/login")
     fun login(
         @Body credentials: LoginCredentials
@@ -64,7 +66,13 @@ interface CheckInService {
 
     @GET("statuses")
     fun getStatuses(): Call<StatusPage>
+
+    @POST("trains/checkin")
+    fun checkIn(
+        @Body checkIn: CheckInRequest
+    ): Call<Data<CheckInResponse>>
 }
+
 interface TravelService {
     @GET("trains/trip")
     fun getTrip(
@@ -88,8 +96,8 @@ interface TravelService {
 
 object TraewellingApi {
     var jwt: String = ""
-    val authService: AuthApiService by lazy {
-        retrofit.create(AuthApiService::class.java)
+    val authService: AuthService by lazy {
+        retrofit.create(AuthService::class.java)
     }
     val checkInService: CheckInService by lazy {
         retrofit.create(CheckInService::class.java)

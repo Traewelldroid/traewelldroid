@@ -21,8 +21,12 @@ class Status(
 }
 
 enum class StatusVisibility(val visibility: Int) {
+    @SerializedName("0")
     PUBLIC(0),
+    @SerializedName("1")
     UNLISTED(1),
+    @SerializedName("2")
     FOLLOWERS(2),
+    @SerializedName("3")
     PRIVATE(3)
 }

@@ -2,6 +2,7 @@ package de.traewelling.ui.checkIn
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.TypedValue
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -27,13 +28,28 @@ class CheckInFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentCheckInBinding.inflate(inflater, container, false)
-        binding.layoutCheckIn.transitionName = args.transitionName
-        binding.line = checkInViewModel.lineName
-        binding.destination = args.destination
-        binding.checkInFragment = this
+
+        binding.apply {
+            lifecycleOwner = viewLifecycleOwner
+            layoutCheckIn.transitionName = args.transitionName
+            destination = args.destination
+            viewModel = checkInViewModel
+        }
+
         sharedElementEnterTransition = MaterialContainerTransform().apply {
             scrimColor = Color.TRANSPARENT
-            setAllContainerColors(resources.getColor(R.color.design_default_color_surface, requireContext().theme))
+            val color = TypedValue()
+            requireContext().theme.resolveAttribute(android.R.attr.windowBackground, color, true)
+            if (color.type >= TypedValue.TYPE_FIRST_COLOR_INT && color.type <= TypedValue.TYPE_LAST_COLOR_INT) {
+                setAllContainerColors(color.data)
+            }
+        }
+
+        checkInViewModel.checkInResponse.observe(viewLifecycleOwner) { response ->
+            if (response != null) {
+                Toast.makeText(requireContext(), "Check-In successful!", Toast.LENGTH_SHORT).show()
+                findNavController().navigate(CheckInFragmentDirections.actionCheckInFragmentToDashboardFragment())
+            }
         }
         return binding.root
     }

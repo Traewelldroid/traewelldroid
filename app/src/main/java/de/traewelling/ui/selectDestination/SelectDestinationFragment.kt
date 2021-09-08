@@ -2,6 +2,7 @@ package de.traewelling.ui.selectDestination
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.TypedValue
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -20,6 +21,7 @@ import de.traewelling.adapters.TravelStopAdapter
 import de.traewelling.databinding.FragmentSelectDestinationBinding
 import de.traewelling.models.TravelStop
 import de.traewelling.shared.CheckInViewModel
+import java.lang.reflect.Type
 
 class SelectDestinationFragment : Fragment() {
 
@@ -30,13 +32,6 @@ class SelectDestinationFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val transition = MaterialContainerTransform().apply {
-            scrimColor = Color.TRANSPARENT
-            setAllContainerColors(resources.getColor(R.color.design_default_color_surface, requireContext().theme))
-        }
-        sharedElementEnterTransition = transition
-        exitTransition = Hold()
     }
 
     override fun onCreateView(
@@ -45,6 +40,20 @@ class SelectDestinationFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentSelectDestinationBinding.inflate(inflater, container, false)
+
+
+
+        val transition = MaterialContainerTransform().apply {
+            scrimColor = Color.TRANSPARENT
+            val color = TypedValue()
+            requireContext().theme.resolveAttribute(android.R.attr.windowBackground, color, true)
+            if (color.type >= TypedValue.TYPE_FIRST_COLOR_INT && color.type <= TypedValue.TYPE_LAST_COLOR_INT) {
+                setAllContainerColors(color.data)
+            }
+        }
+        sharedElementEnterTransition = transition
+        exitTransition = Hold()
+
         binding.layoutSelectDestination.transitionName = args.transitionName
         binding.apply {
             destination = args.destination

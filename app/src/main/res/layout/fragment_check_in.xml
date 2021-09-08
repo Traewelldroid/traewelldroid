@@ -5,14 +5,11 @@
 
     <data>
         <variable
-            name="line"
-            type="String" />
-        <variable
             name="destination"
             type="String" />
         <variable
-            name="checkInFragment"
-            type="de.traewelling.ui.checkIn.CheckInFragment" />
+            name="viewModel"
+            type="de.traewelling.shared.CheckInViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -41,7 +38,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     style="@style/TextAppearance.AppCompat.Headline"
-                    android:text="@{@string/line_destination(line, destination)}"/>
+                    android:text="@{@string/line_destination(viewModel.lineName, destination)}"/>
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="75dp"
@@ -52,7 +49,8 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:id="@+id/edit_text_status_message" />
+                        android:id="@+id/edit_text_status_message"
+                        android:text="@={viewModel.message}" />
                 </com.google.android.material.textfield.TextInputLayout>
                 <com.google.android.material.button.MaterialButton
                     android:layout_width="wrap_content"
@@ -62,7 +60,7 @@
                     app:layout_constraintEnd_toEndOf="@id/text_input_status_message"
                     android:layout_marginTop="4dp"
                     app:icon="@drawable/ic_check_in"
-                    android:onClick="@{() -> checkInFragment.checkIn()}"/>
+                    android:onClick="@{() -> viewModel.checkIn()}"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
 
