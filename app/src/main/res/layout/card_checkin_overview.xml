@@ -42,6 +42,7 @@
                 <ImageView
                     android:layout_width="2dp"
                     android:layout_height="0dp"
+                    android:minHeight="20dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/ic_perlschnur_connection"
                     app:layout_constraintBottom_toTopOf="@id/perlschnur_end"
@@ -78,7 +79,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
                     tools:text="Start Hbf"
-                    android:text="@{checkIn.trainCheckIn.origin.name}"
+                    android:text="@{checkIn.journey.origin.name}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -87,13 +88,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     tools:text="15:25"
-                    android:text="@{checkIn.trainCheckIn.departureTime}"
+                    displayTime="@{checkIn.journey.origin.departurePlanned}"
                     android:textColor="@color/traewelling"
                     android:textSize="18sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toBottomOf="@id/start_station"
-                    app:layout_constraintTop_toTopOf="@id/start_station"
-                    android:layout_marginRight="16dp" />
+                    app:layout_constraintTop_toTopOf="@id/start_station" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -103,7 +103,7 @@
                     app:layout_constraintTop_toBottomOf="@id/start_station"
                     android:layout_marginTop="3dp"
                     tools:text="RB 73"
-                    android:text="@{checkIn.trainCheckIn.hafasTrip.lineName}" />
+                    android:text="@{checkIn.journey.line}" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -113,7 +113,7 @@
                     app:layout_constraintTop_toTopOf="@id/train_line"
                     android:layout_marginLeft="16dp"
                     tools:text="64km"
-                    android:text="@{Integer.valueOf(checkIn.trainCheckIn.distance).toString()}" />
+                    android:text="@{@string/display_kilometres(checkIn.journey.distance)}" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -123,7 +123,7 @@
                     app:layout_constraintTop_toTopOf="@id/distance"
                     android:layout_marginLeft="16dp"
                     tools:text="45min"
-                    android:text="@{Integer.valueOf(checkIn.trainCheckIn.duration).toString()}"/>
+                    duration="@{checkIn.journey.duration}"/>
 
                 <TextView
                     android:id="@+id/next_station"
@@ -131,9 +131,8 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="25dp"
                     tools:text="@string/next_station"
-                    android:text="@{@string/next_station(checkIn.trainCheckIn.origin.name)}"
+                    android:text="@{checkIn.body}"
                     android:textColor="@color/traewelling"
-                    android:textStyle="italic"
                     android:textSize="16sp"
                     app:layout_constraintBottom_toTopOf="@id/end_station"
                     app:layout_constraintStart_toStartOf="@id/start_station"
@@ -144,18 +143,18 @@
                     style="@style/Theme.Traewelling.StatisticTexts"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    tools:text="Ende Hbf"
-                    android:text="@{checkIn.trainCheckIn.destination.name}"
-                    app:layout_constraintStart_toStartOf="@id/start_station"
+                    android:text="@{checkIn.journey.destination.name}"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="parent" />
+                    app:layout_constraintStart_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/start_station"
+                    tools:text="Ende Hbf" />
 
                 <TextView
                     android:id="@+id/destination_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     tools:text="15:25"
-                    android:text="@{checkIn.trainCheckIn.arrivalTime}"
+                    displayTime="@{checkIn.journey.destination.arrivalPlanned}"
                     android:textColor="@color/traewelling"
                     android:textSize="18sp"
                     app:layout_constraintEnd_toEndOf="@id/departure_time"
@@ -177,13 +176,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/travel_progress"
-                android:progress="30"
                 tools:progress="30"
                 style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:max="100" />
+                departure="@{checkIn.journey.origin.departurePlanned}"
+                arrival="@{checkIn.journey.destination.arrivalPlanned}" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -191,7 +190,7 @@
                 android:id="@+id/fav"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/travel_progress"
-                android:src="@{checkIn.favorited ? @drawable/ic_faved : @drawable/ic_not_faved}"
+                android:src="@{checkIn.liked ? @drawable/ic_faved : @drawable/ic_not_faved}"
                 tools:src="@drawable/ic_not_faved"
                 android:layout_marginTop="8dp"
                 app:tint="#FFC107" />
@@ -204,7 +203,7 @@
                 app:layout_constraintBottom_toBottomOf="@id/fav"
                 android:textSize="16sp"
                 tools:text="username um 15:25"
-                android:text="@{checkIn.createdAt.toLocaleString()}"/>
+                android:text="@{@string/check_in_user_time(checkIn.username, checkIn.createdAt)}"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

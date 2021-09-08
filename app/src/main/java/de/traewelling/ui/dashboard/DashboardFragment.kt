@@ -60,7 +60,7 @@ class DashboardFragment : Fragment() {
             override fun onResponse(call: Call<StatusPage>, response: Response<StatusPage>) {
                 if (response.isSuccessful) {
                     binding.swipeRefreshDashboardCheckIns.isRefreshing = false
-                    binding.recyclerViewCheckIn.adapter = CheckInAdapter(response.body()?.statuses!!)
+                    binding.recyclerViewCheckIn.adapter = CheckInAdapter(response.body()?.data!!)
                 }
                 binding.swipeRefreshDashboardCheckIns.isRefreshing = false
             }

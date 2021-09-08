@@ -1,8 +1,10 @@
 package de.traewelling.adapters
 
 import android.view.LayoutInflater
+import android.view.View.GONE
 import android.view.ViewGroup
 import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.view.marginBottom
 import androidx.recyclerview.widget.RecyclerView
 import de.traewelling.api.models.status.Status
 import de.traewelling.databinding.CardCheckinOverviewBinding
@@ -27,6 +29,8 @@ class CheckInAdapter(val checkIns: List<Status>) : RecyclerView.Adapter<CheckInA
     class CheckInViewHolder(val binding: CardCheckinOverviewBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(checkIn: Status) {
             binding.checkIn = checkIn
+            if (checkIn.body == null || checkIn.body == "")
+                binding.nextStation.textSize = 0F
             binding.executePendingBindings()
         }
     }

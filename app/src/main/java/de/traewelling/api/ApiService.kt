@@ -18,7 +18,7 @@ import retrofit2.http.Query
 import java.util.concurrent.TimeUnit
 
 private const val BASE_URL =
-    "https://traewelling.de/api/v0/"
+    "https://traewelling.de/api/v1/"
 
 private val client = OkHttpClient.Builder().readTimeout(60, TimeUnit.SECONDS)
     .addInterceptor(Interceptor() { chain ->
@@ -51,7 +51,7 @@ interface AuthApiService {
 }
 
 interface CheckInService {
-    @GET("statuses?view=personal")
+    @GET("dashboard")
     fun getPersonalDashboard(@Query("page") page: Int): Call<StatusPage>
 }
 
