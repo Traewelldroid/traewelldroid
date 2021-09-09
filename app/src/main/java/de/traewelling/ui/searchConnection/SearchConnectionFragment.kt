@@ -59,7 +59,7 @@ class SearchConnectionFragment : Fragment() {
                     checkInViewModel.lineName = connection.line.name
                     checkInViewModel.tripId = connection.tripId
                     checkInViewModel.startStationId = connection.station.id
-                    checkInViewModel.departureTime = connection.departure
+                    checkInViewModel.departureTime = connection.plannedDeparture
 
                     val transitionName = connection.tripId
                     val extras = FragmentNavigatorExtras(itemView to transitionName)
