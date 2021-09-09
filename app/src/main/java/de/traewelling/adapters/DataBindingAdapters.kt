@@ -1,6 +1,7 @@
 package de.traewelling.adapters
 
 import android.util.Log
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView

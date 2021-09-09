@@ -52,13 +52,37 @@
                         android:id="@+id/edit_text_status_message"
                         android:text="@={viewModel.message}" />
                 </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.button.MaterialButtonToggleGroup
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="@+id/btn_check_in"
+                    app:layout_constraintStart_toStartOf="@+id/text_input_status_message"
+                    app:layout_constraintTop_toTopOf="@id/btn_check_in"
+                    android:id="@+id/toggle_group_social_media"
+                    app:selectionRequired="false"
+                    app:singleSelection="false">
+                    <Button
+                        style="@style/Widget.App.ToggleButton.OutlinedButton.IconOnly"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/btn_send_tweet"
+                        app:icon="@drawable/ic_twitter" />
+                    <Button
+                        style="@style/Widget.App.ToggleButton.OutlinedButton.IconOnly"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/btn_send_toot"
+                        app:icon="@drawable/ic_mastodon" />
+                </com.google.android.material.button.MaterialButtonToggleGroup>
                 <com.google.android.material.button.MaterialButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/check_in"
+                    android:id="@+id/btn_check_in"
                     app:layout_constraintTop_toBottomOf="@id/text_input_status_message"
                     app:layout_constraintEnd_toEndOf="@id/text_input_status_message"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="12dp"
                     app:icon="@drawable/ic_check_in"
                     android:onClick="@{() -> viewModel.checkIn()}"/>
             </androidx.constraintlayout.widget.ConstraintLayout>

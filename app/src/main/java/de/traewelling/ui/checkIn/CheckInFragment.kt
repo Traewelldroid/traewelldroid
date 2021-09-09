@@ -6,6 +6,8 @@ import android.util.TypedValue
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
@@ -15,6 +17,7 @@ import com.google.android.material.transition.MaterialContainerTransform
 import de.traewelling.R
 import de.traewelling.databinding.FragmentCheckInBinding
 import de.traewelling.shared.CheckInViewModel
+import de.traewelling.shared.LoggedInUserViewModel
 
 
 class CheckInFragment : Fragment() {
@@ -22,6 +25,7 @@ class CheckInFragment : Fragment() {
     private lateinit var binding: FragmentCheckInBinding
     private val args: CheckInFragmentArgs by navArgs()
     private val checkInViewModel: CheckInViewModel by activityViewModels()
+    private val loggedInUserViewModel: LoggedInUserViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,6 +38,22 @@ class CheckInFragment : Fragment() {
             layoutCheckIn.transitionName = args.transitionName
             destination = args.destination
             viewModel = checkInViewModel
+            btnSendToot.visibility =
+                when (loggedInUserViewModel.loggedInUser.value?.mastodonUrl != null) {
+                    true -> VISIBLE
+                    false -> GONE
+                }
+            btnSendTweet.visibility =
+                when (loggedInUserViewModel.loggedInUser.value?.twitterUrl != null) {
+                    true -> VISIBLE
+                    false -> GONE
+                }
+            toggleGroupSocialMedia.addOnButtonCheckedListener { group, checkedId, isChecked ->
+                when (checkedId) {
+                    R.id.btn_send_toot -> checkInViewModel.toot.value = isChecked
+                    R.id.btn_send_tweet -> checkInViewModel.tweet.value = isChecked
+                }
+            }
         }
 
         sharedElementEnterTransition = MaterialContainerTransform().apply {
