@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,6 +16,7 @@ import com.jcloquell.androidsecurestorage.SecureStorage
 import de.traewelling.R
 import de.traewelling.api.TraewellingApi
 import de.traewelling.databinding.FragmentUserBinding
+import de.traewelling.shared.LoggedInUserViewModel
 import de.traewelling.shared.SharedValues
 import de.traewelling.ui.login.LoginActivity
 import retrofit2.Call
@@ -25,7 +27,7 @@ import retrofit2.Response
 class UserFragment : Fragment() {
 
     private lateinit var binding: FragmentUserBinding
-    private val viewModel: UserFragmentViewModel by viewModels()
+    private val loggedInUserViewModel: LoggedInUserViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,10 +37,8 @@ class UserFragment : Fragment() {
         binding = FragmentUserBinding.inflate(inflater, container, false)
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
-            viewModel = this@UserFragment.viewModel
+            viewModel = this@UserFragment.loggedInUserViewModel
         }
-
-        viewModel.getUserInfo()
 
         return binding.root
     }

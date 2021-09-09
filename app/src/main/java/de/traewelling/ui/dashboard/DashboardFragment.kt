@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import de.traewelling.adapters.CheckInAdapter
@@ -14,6 +15,7 @@ import de.traewelling.api.models.status.Status
 import de.traewelling.api.models.status.StatusPage
 import de.traewelling.databinding.FragmentDashboardBinding
 import de.traewelling.models.CheckIn
+import de.traewelling.shared.LoggedInUserViewModel
 import de.traewelling.ui.include.cardSearchStation.SearchStationCard
 import de.traewelling.ui.include.status.StatusCardViewModel
 import retrofit2.Call
@@ -25,6 +27,7 @@ class DashboardFragment : Fragment() {
     private lateinit var binding: FragmentDashboardBinding
     private lateinit var searchStationCard: SearchStationCard
     private val statusCardViewModel: StatusCardViewModel by viewModels()
+    private val loggedInUserViewModel: LoggedInUserViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,6 +36,7 @@ class DashboardFragment : Fragment() {
     ): View? {
         binding = FragmentDashboardBinding.inflate(inflater, container, false)
         searchStationCard = SearchStationCard(this, binding.searchCard, "")
+        loggedInUserViewModel.getLoggedInUser()
 
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
@@ -52,6 +56,7 @@ class DashboardFragment : Fragment() {
 
         // Swipe to refresh
         binding.swipeRefreshDashboardCheckIns.setOnRefreshListener {
+            loggedInUserViewModel.getLoggedInUser()
             loadCheckins()
         }
     }

@@ -11,6 +11,7 @@ import com.jcloquell.androidsecurestorage.SecureStorage
 import de.traewelling.R
 import de.traewelling.api.TraewellingApi
 import de.traewelling.databinding.ActivityMainBinding
+import de.traewelling.shared.LoggedInUserViewModel
 import de.traewelling.shared.SharedValues
 
 class MainActivity : AppCompatActivity() {
