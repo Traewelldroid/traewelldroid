@@ -5,6 +5,7 @@ import android.view.View
 import android.view.View.INVISIBLE
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import de.traewelling.R
 import de.traewelling.api.models.trip.HafasTrainTripStation
 import de.traewelling.databinding.TravelStopListItemBinding
 import de.traewelling.models.TravelStop

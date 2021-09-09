@@ -7,6 +7,9 @@
         <variable
             name="checkIn"
             type="de.traewelling.api.models.status.Status" />
+        <variable
+            name="viewModel"
+            type="de.traewelling.ui.include.status.StatusCardViewModel" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
@@ -193,7 +196,9 @@
                 android:src="@{checkIn.liked ? @drawable/ic_faved : @drawable/ic_not_faved}"
                 tools:src="@drawable/ic_not_faved"
                 android:layout_marginTop="8dp"
-                app:tint="#FFC107" />
+                app:tint="#FFC107"
+                android:clickable="true"
+                android:onClick="@{() -> viewModel.handleFavoriteClick(checkIn)}"/>
 
             <TextView
                 android:layout_width="wrap_content"

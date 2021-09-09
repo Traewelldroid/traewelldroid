@@ -71,6 +71,16 @@ interface CheckInService {
     fun checkIn(
         @Body checkIn: CheckInRequest
     ): Call<Data<CheckInResponse>>
+
+    @POST("like/{statusId}")
+    fun createFavorite(
+        @Path("statusId") statusId: Int
+    ): Call<Unit>
+
+    @DELETE("like/{statusId}")
+    fun deleteFavorite(
+        @Path("statusId") statusId: Int
+    ): Call<Unit>
 }
 
 interface TravelService {

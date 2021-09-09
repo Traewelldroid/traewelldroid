@@ -4,4 +4,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="traewelling">#C72730</color>
     <color name="traewelling_dark">#A52128</color>
+    <color name="train_on_time">#00D809</color>
+    <color name="train_delayed">#FF0000</color>
 </resources>
