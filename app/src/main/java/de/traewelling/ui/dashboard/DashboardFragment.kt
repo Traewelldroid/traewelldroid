@@ -5,10 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import de.traewelling.adapters.CheckInAdapter
 import de.traewelling.api.TraewellingApi
 import de.traewelling.api.models.status.Status
@@ -28,6 +31,9 @@ class DashboardFragment : Fragment() {
     private lateinit var searchStationCard: SearchStationCard
     private val statusCardViewModel: StatusCardViewModel by viewModels()
     private val loggedInUserViewModel: LoggedInUserViewModel by activityViewModels()
+    private var currentPage = 1
+
+    private var checkInsLoading = MutableLiveData(false)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,36 +53,66 @@ class DashboardFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        // Swipe to refresh
+        checkInsLoading.observe(viewLifecycleOwner) { loading ->
+            binding.swipeRefreshDashboardCheckIns.isRefreshing = loading
+        }
+        binding.swipeRefreshDashboardCheckIns.setOnRefreshListener {
+            loggedInUserViewModel.getLoggedInUser()
+            currentPage = 1
+            loadCheckins(currentPage)
+        }
+
         // Init recycler view
         val recyclerView = binding.recyclerViewCheckIn
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = CheckInAdapter(mutableListOf(), statusCardViewModel)
+        binding.nestedScrollViewDashboard.setOnScrollChangeListener(object: NestedScrollView.OnScrollChangeListener {
+            override fun onScrollChange(
+                v: NestedScrollView?,
+                scrollX: Int,
+                scrollY: Int,
+                oldScrollX: Int,
+                oldScrollY: Int
+            ) {
+                val view = v?.getChildAt(v.childCount - 1)
+                val diff = (view?.bottom?.minus((v?.height + v.scrollY)))
+                if (diff!! == 0) {
+                    if (!checkInsLoading.value!!) {
+                        currentPage++
+                        loadCheckins(currentPage)
+                        checkInsLoading.value = true
+                    }
+                }
+            }
 
-        loadCheckins()
+        })
 
-        // Swipe to refresh
-        binding.swipeRefreshDashboardCheckIns.setOnRefreshListener {
-            loggedInUserViewModel.getLoggedInUser()
-            loadCheckins()
-        }
+        loadCheckins(currentPage)
     }
 
-    fun loadCheckins() {
-        binding.swipeRefreshDashboardCheckIns.isRefreshing = true
-        TraewellingApi.checkInService.getPersonalDashboard(1).enqueue(object:
+    private fun loadCheckins(page: Int) {
+        TraewellingApi.checkInService.getPersonalDashboard(page).enqueue(object:
             Callback<StatusPage> {
             override fun onResponse(call: Call<StatusPage>, response: Response<StatusPage>) {
                 if (response.isSuccessful) {
-                    binding.swipeRefreshDashboardCheckIns.isRefreshing = false
-                    binding.recyclerViewCheckIn.adapter = CheckInAdapter(
-                        response.body()?.data!!,
-                        statusCardViewModel
-                    )
+                    val checkInAdapter = binding.recyclerViewCheckIn.adapter as CheckInAdapter
+                    if (page == 1) {
+                        val itemCount = checkInAdapter.checkIns.size
+                        checkInAdapter.checkIns.clear()
+                        checkInAdapter.notifyItemRangeRemoved(0, itemCount - 1)
+                        checkInAdapter.checkIns.addAll(response.body()?.data!!)
+                        checkInAdapter.notifyItemRangeInserted(0, checkInAdapter.itemCount - 1)
+                    } else {
+                        val previousItemCount = checkInAdapter.itemCount
+                        checkInAdapter.checkIns.addAll(response.body()?.data!!)
+                        checkInAdapter.notifyItemRangeInserted(previousItemCount, checkInAdapter.itemCount - 1)
+                    }
                 }
-                binding.swipeRefreshDashboardCheckIns.isRefreshing = false
+                checkInsLoading.value = false
             }
             override fun onFailure(call: Call<StatusPage>, t: Throwable) {
-                binding.swipeRefreshDashboardCheckIns.isRefreshing = false
+                checkInsLoading.value = false
                 t.printStackTrace()
                 Toast.makeText(requireContext(), t.message, Toast.LENGTH_SHORT).show()
             }

@@ -12,7 +12,7 @@ import de.traewelling.databinding.CardCheckinOverviewBinding
 import de.traewelling.models.CheckIn
 import de.traewelling.ui.include.status.StatusCardViewModel
 
-class CheckInAdapter(val checkIns: List<Status>, private val viewModel: StatusCardViewModel)
+class CheckInAdapter(val checkIns: MutableList<Status>, private val viewModel: StatusCardViewModel)
     : RecyclerView.Adapter<CheckInAdapter.CheckInViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CheckInViewHolder {

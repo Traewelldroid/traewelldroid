@@ -43,7 +43,7 @@ class ActiveCheckinsFragment : Fragment() {
         viewModel.statuses.observe(viewLifecycleOwner) { statusPage ->
             if (statusPage != null) {
                 recyclerView.adapter = CheckInAdapter(
-                    statusPage.data,
+                    statusPage.data.toMutableList(),
                     statusCardViewModel
                 )
             }
