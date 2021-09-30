@@ -28,7 +28,10 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class SearchStationCard(private val parent: Fragment, private val binding: CardSearchStationBinding, private val stationName: String) : LocationListener {
+class SearchStationCard(
+    private val parent: Fragment,
+    private val binding: CardSearchStationBinding,
+    private val stationName: String) : LocationListener {
 
     private lateinit var locationManager: LocationManager
     private val requestPermissionLauncher = parent.registerForActivityResult(ActivityResultContracts.RequestPermission()) {

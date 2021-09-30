@@ -41,15 +41,17 @@
                     android:text="@{@string/line_destination(viewModel.lineName, destination)}"/>
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="75dp"
+                    android:layout_height="wrap_content"
                     android:id="@+id/text_input_status_message"
                     android:hint="@string/status_message"
                     app:layout_constraintTop_toBottomOf="@id/text_view_line_final_destination"
                     android:layout_marginTop="16dp">
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="75dp"
                         android:id="@+id/edit_text_status_message"
+                        android:inputType="text|textMultiLine"
                         android:text="@={viewModel.message}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
