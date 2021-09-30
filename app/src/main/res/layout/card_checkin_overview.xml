@@ -218,7 +218,8 @@
                 android:layout_marginTop="8dp"
                 app:tint="#FFC107"
                 android:clickable="true"
-                android:onClick="@{() -> viewModel.handleFavoriteClick(checkIn)}"/>
+                android:onClick="@{() -> viewModel.handleFavoriteClick(checkIn)}"
+                android:focusable="true" />
 
             <TextView
                 android:layout_width="wrap_content"
