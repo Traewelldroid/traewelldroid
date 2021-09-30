@@ -8,19 +8,14 @@ import android.widget.Toast
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import de.traewelling.adapters.CheckInAdapter
 import de.traewelling.api.TraewellingApi
-import de.traewelling.api.models.status.Status
 import de.traewelling.api.models.status.StatusPage
 import de.traewelling.databinding.FragmentDashboardBinding
-import de.traewelling.models.CheckIn
 import de.traewelling.shared.LoggedInUserViewModel
 import de.traewelling.ui.include.cardSearchStation.SearchStationCard
-import de.traewelling.ui.include.status.StatusCardViewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -29,7 +24,6 @@ class DashboardFragment : Fragment() {
 
     private lateinit var binding: FragmentDashboardBinding
     private lateinit var searchStationCard: SearchStationCard
-    private val statusCardViewModel: StatusCardViewModel by viewModels()
     private val loggedInUserViewModel: LoggedInUserViewModel by activityViewModels()
     private var currentPage = 1
 
@@ -66,7 +60,7 @@ class DashboardFragment : Fragment() {
         // Init recycler view
         val recyclerView = binding.recyclerViewCheckIn
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.adapter = CheckInAdapter(mutableListOf(), statusCardViewModel)
+        recyclerView.adapter = CheckInAdapter(mutableListOf())
         binding.nestedScrollViewDashboard.setOnScrollChangeListener(object: NestedScrollView.OnScrollChangeListener {
             override fun onScrollChange(
                 v: NestedScrollView?,

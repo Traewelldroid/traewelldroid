@@ -213,7 +213,7 @@
                 android:id="@+id/fav"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/travel_progress"
-                android:src="@{checkIn.liked ? @drawable/ic_faved : @drawable/ic_not_faved}"
+                android:src="@{viewModel.liked ? @drawable/ic_faved : @drawable/ic_not_faved}"
                 tools:src="@drawable/ic_not_faved"
                 android:layout_marginTop="8dp"
                 app:tint="#FFC107"

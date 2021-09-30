@@ -23,7 +23,9 @@ fun setTimeText(textView: TextView, date: Date?) {
 }
 
 @BindingAdapter(value = [ "departure", "arrival" ], requireAll = true)
-fun setTimeProgress(progressBar: ProgressBar, departure: Date, arrival: Date) {
+fun setTimeProgress(progressBar: ProgressBar, departure: Date?, arrival: Date?) {
+    if (departure == null || arrival == null)
+        return
     progressBar.max = getJourneyMinutes(departure, arrival).toInt()
     progressBar.progress = getJourneyProgress(departure, arrival).toInt()
 }
@@ -36,7 +38,9 @@ fun setDuration(textView: TextView, duration: Int) {
 }
 
 @BindingAdapter(value = [ "username", "timestamp" ], requireAll = true)
-fun setUsernameAndTimeOnCheckIn(textView: TextView, username: String, timestamp: String) {
+fun setUsernameAndTimeOnCheckIn(textView: TextView, username: String?, timestamp: String?) {
+    if (username == null || timestamp == null)
+        return
     val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
     val df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.getDefault())
     val date = dateFormat.parse(timestamp)
@@ -44,7 +48,7 @@ fun setUsernameAndTimeOnCheckIn(textView: TextView, username: String, timestamp:
 }
 
 @BindingAdapter("productType")
-fun setProductTypeImage(imageView: ImageView, productType: String) {
+fun setProductTypeImage(imageView: ImageView, productType: String?) {
     val drawable = when (productType) {
         "suburban" -> R.drawable.ic_suburban
         "bus" -> R.drawable.ic_bus

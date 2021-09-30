@@ -1,6 +1,5 @@
 package de.traewelling.ui.activeCheckins
 
-import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,8 +9,6 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import de.traewelling.adapters.CheckInAdapter
 import de.traewelling.databinding.FragmentActiveCheckinsBinding
-import de.traewelling.models.CheckIn
-import de.traewelling.ui.include.status.StatusCardViewModel
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
@@ -20,7 +17,6 @@ class ActiveCheckinsFragment : Fragment() {
 
     private lateinit var binding: FragmentActiveCheckinsBinding
     private val viewModel: ActiveCheckinsViewModel by viewModels()
-    private val statusCardViewModel: StatusCardViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,8 +39,7 @@ class ActiveCheckinsFragment : Fragment() {
         viewModel.statuses.observe(viewLifecycleOwner) { statusPage ->
             if (statusPage != null) {
                 recyclerView.adapter = CheckInAdapter(
-                    statusPage.data.toMutableList(),
-                    statusCardViewModel
+                    statusPage.data.toMutableList()
                 )
             }
             binding.swipeRefreshCheckins.isRefreshing = false

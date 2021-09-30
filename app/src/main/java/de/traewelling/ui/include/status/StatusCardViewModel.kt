@@ -1,6 +1,8 @@
 package de.traewelling.ui.include.status
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import de.traewelling.api.TraewellingApi
 import de.traewelling.api.models.status.Status
@@ -8,10 +10,15 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class StatusCardViewModel : ViewModel() {
+class StatusCardViewModel(
+    val status: Status
+) : ViewModel() {
+
+    private val _liked = MutableLiveData(status.liked)
+    val liked: LiveData<Boolean> get() = _liked
 
     fun handleFavoriteClick(status: Status) {
-        if (status.liked)
+        if (liked.value!!)
             deleteFavorite(status)
         else
             createFavorite(status)
@@ -22,7 +29,7 @@ class StatusCardViewModel : ViewModel() {
             .enqueue(object: Callback<Unit> {
                 override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
                     if (response.isSuccessful)
-                        status.liked = true
+                        _liked.value = true
                     else
                         Log.e("StatusCardViewModel", response.toString())
                 }
@@ -37,7 +44,7 @@ class StatusCardViewModel : ViewModel() {
             .enqueue(object: Callback<Unit> {
                 override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
                     if (response.isSuccessful)
-                        status.liked = false
+                        _liked.value = false
                     else
                         Log.e("StatusCardViewModel", response.toString())
                 }
