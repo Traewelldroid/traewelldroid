@@ -31,8 +31,8 @@
                 android:id="@+id/icon_product_type"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_train"
-                tools:srcCompat="@drawable/ic_train" />
+                productType="@{connection.line.product}"
+                tools:srcCompat="@drawable/ic_bus" />
 
             <TextView
                 android:id="@+id/text_view_line_number"

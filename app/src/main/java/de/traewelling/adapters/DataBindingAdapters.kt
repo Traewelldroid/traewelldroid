@@ -1,7 +1,5 @@
 package de.traewelling.adapters
 
-import android.util.Log
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -10,7 +8,6 @@ import de.traewelling.R
 import java.text.DateFormat
 import java.text.DateFormat.getTimeInstance
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
@@ -36,6 +33,26 @@ fun setDuration(textView: TextView, duration: Int) {
     val hours = duration / 60
     val minutes = duration % 60
     textView.text = textView.resources.getString(R.string.display_travel_time, hours, minutes)
+}
+
+@BindingAdapter(value = [ "username", "timestamp" ], requireAll = true)
+fun setUsernameAndTimeOnCheckIn(textView: TextView, username: String, timestamp: String) {
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+    val df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.getDefault())
+    val date = dateFormat.parse(timestamp)
+    textView.text = textView.resources.getString(R.string.check_in_user_time, username, df.format(date))
+}
+
+@BindingAdapter("productType")
+fun setProductTypeImage(imageView: ImageView, productType: String) {
+    val drawable = when (productType) {
+        "suburban" -> R.drawable.ic_suburban
+        "bus" -> R.drawable.ic_bus
+        "subway" -> R.drawable.ic_subway
+        "tram" -> R.drawable.ic_tram
+        else -> R.drawable.ic_train
+    }
+    imageView.setImageResource(drawable)
 }
 
 fun getLocalTimeString(date: Date?): String {

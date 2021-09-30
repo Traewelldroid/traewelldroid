@@ -100,13 +100,25 @@
                     app:layout_constraintBottom_toBottomOf="@id/start_station"
                     app:layout_constraintTop_toTopOf="@id/start_station" />
 
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:srcCompat="@drawable/ic_suburban"
+                    android:id="@+id/icon_product"
+                    app:layout_constraintStart_toStartOf="@id/start_station"
+                    app:layout_constraintTop_toBottomOf="@id/start_station"
+                    productType="@{checkIn.journey.category}"
+                    android:layout_marginTop="4dp" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/train_line"
-                    app:layout_constraintStart_toStartOf="@id/start_station"
-                    app:layout_constraintTop_toBottomOf="@id/start_station"
-                    android:layout_marginTop="3dp"
+                    android:layout_marginLeft="4dp"
+                    app:layout_constraintStart_toEndOf="@id/icon_product"
+                    app:layout_constraintTop_toTopOf="@id/icon_product"
+                    app:layout_constraintBottom_toBottomOf="@id/icon_product"
+                    android:textSize="16sp"
                     tools:text="RB 73"
                     android:text="@{checkIn.journey.line}" />
 
@@ -117,6 +129,7 @@
                     app:layout_constraintStart_toEndOf="@id/train_line"
                     app:layout_constraintTop_toTopOf="@id/train_line"
                     android:layout_marginLeft="16dp"
+                    android:textSize="16sp"
                     tools:text="64km"
                     android:text="@{@string/display_kilometres(checkIn.journey.distance)}" />
 
@@ -127,6 +140,7 @@
                     app:layout_constraintStart_toEndOf="@id/distance"
                     app:layout_constraintTop_toTopOf="@id/distance"
                     android:layout_marginLeft="16dp"
+                    android:textSize="16sp"
                     tools:text="45min"
                     duration="@{checkIn.journey.duration}"/>
 
@@ -137,7 +151,7 @@
                     android:layout_margin="25dp"
                     android:text="@{checkIn.body}"
                     android:textColor="@color/traewelling"
-                    android:textSize="16sp"
+                    android:textSize="18sp"
                     app:layout_constraintBottom_toTopOf="@id/end_station"
                     app:layout_constraintEnd_toStartOf="@+id/departure_time"
                     app:layout_constraintStart_toStartOf="@id/start_station"
@@ -214,7 +228,8 @@
                 app:layout_constraintBottom_toBottomOf="@id/fav"
                 android:textSize="16sp"
                 tools:text="username um 15:25"
-                android:text="@{@string/check_in_user_time(checkIn.username, checkIn.createdAt)}"/>
+                username="@{checkIn.username}"
+                timestamp="@{checkIn.createdAt}"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
