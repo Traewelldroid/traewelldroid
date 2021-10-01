@@ -1,6 +1,6 @@
 package de.traewelling.adapters
 
-import android.icu.text.RelativeDateTimeFormatter
+import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -18,6 +18,18 @@ fun setImageResource(imageView: ImageView, resourceId: Int?) {
     if (resourceId == null)
         return
     imageView.setImageResource(resourceId)
+}
+
+@BindingAdapter(value = ["planned", "real"], requireAll = true)
+fun setVisibilityForDelay(textView: TextView, planned: Date?, real: Date?) {
+    if (planned == null || real == null) {
+        textView.visibility = View.GONE
+        return
+    }
+    if (planned.compareTo(real) == 0)
+        textView.visibility = View.GONE
+    else
+        textView.visibility = View.VISIBLE
 }
 
 @BindingAdapter("displayTime")

@@ -82,18 +82,35 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
                     android:text="@{checkIn.journey.origin.name}"
-                    app:layout_constraintEnd_toStartOf="@+id/departure_time"
+                    app:layout_constraintEnd_toStartOf="@+id/departure_planned_time"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     android:gravity="start"
                     tools:text="Start Hbf" />
 
                 <TextView
+                    android:id="@+id/departure_planned_time"
+                    displayTime="@{checkIn.journey.origin.departurePlanned}"
+                    planned="@{checkIn.journey.origin.departurePlanned}"
+                    real="@{checkIn.journey.origin.departureReal ?? checkIn.journey.origin.departure}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="@id/departure_time"
+                    app:layout_constraintEnd_toStartOf="@id/departure_time"
+                    app:layout_constraintStart_toEndOf="@id/start_station"
+                    app:layout_constraintTop_toTopOf="@+id/departure_time"
+                    tools:text="15:22" />
+
+
+                <TextView
                     android:id="@+id/departure_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     tools:text="15:25"
-                    displayTime="@{checkIn.journey.origin.departure ?? checkIn.journey.origin.departurePlanned}"
+                    displayTime="@{checkIn.journey.origin.departureReal ?? checkIn.journey.origin.departurePlanned}"
                     android:textColor="@color/traewelling"
                     android:textSize="18sp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -163,14 +180,29 @@
                     style="@style/Theme.Traewelling.StatisticTexts"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
                     android:gravity="start"
                     android:text="@{checkIn.journey.destination.name}"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/destination_time"
+                    app:layout_constraintEnd_toStartOf="@+id/arrival_planned_time"
                     app:layout_constraintStart_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@id/start_station"
                     tools:text="Ende Hbf" />
+
+                <TextView
+                    android:id="@+id/arrival_planned_time"
+                    displayTime="@{checkIn.journey.destination.arrivalPlanned}"
+                    planned="@{checkIn.journey.destination.arrivalPlanned}"
+                    real="@{checkIn.journey.destination.arrivalReal ?? checkIn.journey.origin.arrival}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="@id/destination_time"
+                    app:layout_constraintEnd_toStartOf="@id/destination_time"
+                    app:layout_constraintStart_toEndOf="@id/end_station"
+                    app:layout_constraintTop_toTopOf="@+id/destination_time"
+                    tools:text="15:22" />
 
                 <TextView
                     android:id="@+id/destination_time"
