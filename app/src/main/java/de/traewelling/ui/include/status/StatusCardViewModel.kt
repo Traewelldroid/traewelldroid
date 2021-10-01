@@ -17,6 +17,9 @@ class StatusCardViewModel(
     private val _liked = MutableLiveData(status.liked)
     val liked: LiveData<Boolean> get() = _liked
 
+    private val _likes = MutableLiveData(status.likes)
+    val likes: LiveData<Int> get() = _likes
+
     fun handleFavoriteClick(status: Status) {
         if (liked.value!!)
             deleteFavorite(status)
@@ -28,8 +31,12 @@ class StatusCardViewModel(
         TraewellingApi.checkInService.createFavorite(status.id)
             .enqueue(object: Callback<Unit> {
                 override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
-                    if (response.isSuccessful)
-                        _liked.value = true
+                    if (response.isSuccessful) {
+                        _liked.postValue(true)
+                        _likes.postValue(_likes.value!! + 1)
+                        status.liked = true
+                        status.likes++
+                    }
                     else
                         Log.e("StatusCardViewModel", response.toString())
                 }
@@ -43,8 +50,12 @@ class StatusCardViewModel(
         TraewellingApi.checkInService.deleteFavorite(status.id)
             .enqueue(object: Callback<Unit> {
                 override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
-                    if (response.isSuccessful)
-                        _liked.value = false
+                    if (response.isSuccessful) {
+                        _liked.postValue(false)
+                        _likes.postValue(_likes.value!! - 1)
+                        status.liked = false
+                        status.likes--
+                    }
                     else
                         Log.e("StatusCardViewModel", response.toString())
                 }

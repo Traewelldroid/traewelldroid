@@ -224,11 +224,22 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@id/fav"
+                app:layout_constraintTop_toTopOf="@id/fav"
+                app:layout_constraintBottom_toBottomOf="@id/fav"
+                android:layout_marginStart="4dp"
+                android:textSize="16sp"
+                tools:text="3"
+                android:text="@{Integer.toString(viewModel.likes)}" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/fav"
                 app:layout_constraintBottom_toBottomOf="@id/fav"
                 android:textSize="16sp"
-                tools:text="username um 15:25"
+                tools:text="username, 31.01.2021 15:25"
                 username="@{checkIn.username}"
                 timestamp="@{checkIn.createdAt}"/>
 

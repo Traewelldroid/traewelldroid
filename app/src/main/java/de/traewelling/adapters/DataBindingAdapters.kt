@@ -1,5 +1,6 @@
 package de.traewelling.adapters
 
+import android.icu.text.RelativeDateTimeFormatter
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -13,7 +14,9 @@ import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 
 @BindingAdapter("imageResource")
-fun setImageResource(imageView: ImageView, resourceId: Int) {
+fun setImageResource(imageView: ImageView, resourceId: Int?) {
+    if (resourceId == null)
+        return
     imageView.setImageResource(resourceId)
 }
 
@@ -26,12 +29,16 @@ fun setTimeText(textView: TextView, date: Date?) {
 fun setTimeProgress(progressBar: ProgressBar, departure: Date?, arrival: Date?) {
     if (departure == null || arrival == null)
         return
+
     progressBar.max = getJourneyMinutes(departure, arrival).toInt()
     progressBar.progress = getJourneyProgress(departure, arrival).toInt()
 }
 
 @BindingAdapter("duration")
-fun setDuration(textView: TextView, duration: Int) {
+fun setDuration(textView: TextView, duration: Int?) {
+    if (duration == null)
+        return
+
     val hours = duration / 60
     val minutes = duration % 60
     textView.text = textView.resources.getString(R.string.display_travel_time, hours, minutes)
@@ -75,7 +82,10 @@ fun getJourneyProgress(departure: Date, arrival: Date): Long {
     val currentDateTime = Date()
     var progressMinutes = timeSpanMinutes
     if (currentDateTime < arrival) {
-        val progressMillis = abs(currentDateTime.time - departure.time)
+        val progressMillis = currentDateTime.time - departure.time
+        // Return 0% progress when journey hasn't started yet
+        if (progressMillis < 0)
+            return 0
         progressMinutes = TimeUnit.MINUTES.convert(progressMillis, TimeUnit.MILLISECONDS)
     }
 

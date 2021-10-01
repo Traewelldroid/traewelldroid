@@ -12,7 +12,7 @@ class Status(
     @SerializedName("username") val username: String,
     @SerializedName("visibility") val visibility: StatusVisibility,
     @SerializedName("business") val business: Int,
-    @SerializedName("likes") val likes: Int,
+    @SerializedName("likes") var likes: Int,
     @SerializedName("liked") var liked: Boolean,
     @SerializedName("train") val journey: Journey
     // TODO Event

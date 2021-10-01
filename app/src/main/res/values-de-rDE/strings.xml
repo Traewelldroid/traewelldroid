@@ -15,7 +15,6 @@
     <string name="where_are_you">Wo bist Du?</string>
     <string name="search">Suche</string>
     <string name="next_station">Nächste Station: %1$s</string>
-    <string name="check_in_user_time">%1$s um %2$s</string>
     <string name="logout">Abmelden</string>
     <string name="previous">Vorherige</string>
     <string name="next">Nächste</string>
