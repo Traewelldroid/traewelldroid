@@ -204,8 +204,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                departure="@{checkIn.journey.origin.departurePlanned}"
-                arrival="@{checkIn.journey.destination.arrivalPlanned}" />
+                departure="@{checkIn.journey.origin.departure ?? checkIn.journey.origin.departurePlanned}"
+                arrival="@{checkIn.journey.destination.arrival ?? checkIn.journey.destination.arrivalPlanned}" />
 
             <ImageView
                 android:layout_width="wrap_content"

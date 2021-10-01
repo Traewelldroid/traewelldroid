@@ -45,13 +45,11 @@ fun setDuration(textView: TextView, duration: Int?) {
 }
 
 @BindingAdapter(value = [ "username", "timestamp" ], requireAll = true)
-fun setUsernameAndTimeOnCheckIn(textView: TextView, username: String?, timestamp: String?) {
+fun setUsernameAndTimeOnCheckIn(textView: TextView, username: String?, timestamp: Date?) {
     if (username == null || timestamp == null)
         return
-    val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
     val df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.getDefault())
-    val date = dateFormat.parse(timestamp)
-    textView.text = textView.resources.getString(R.string.check_in_user_time, username, df.format(date))
+    textView.text = textView.resources.getString(R.string.check_in_user_time, username, df.format(timestamp))
 }
 
 @BindingAdapter("productType")

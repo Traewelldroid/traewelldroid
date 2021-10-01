@@ -7,7 +7,7 @@ class Status(
     @SerializedName("id") val id: Int,
     @SerializedName("body") val body: String?,
     @SerializedName("type") val type: String,
-    @SerializedName("createdAt") val createdAt: String,
+    @SerializedName("createdAt") val createdAt: Date,
     @SerializedName("user") val user: Int,
     @SerializedName("username") val username: String,
     @SerializedName("visibility") val visibility: StatusVisibility,
