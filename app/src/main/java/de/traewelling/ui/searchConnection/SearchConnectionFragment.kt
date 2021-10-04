@@ -21,6 +21,7 @@ import de.traewelling.api.models.trip.HafasTripPage
 import de.traewelling.databinding.FragmentSearchConnectionBinding
 import de.traewelling.models.Connection
 import de.traewelling.shared.CheckInViewModel
+import de.traewelling.shared.LoggedInUserViewModel
 import de.traewelling.ui.include.cardSearchStation.SearchStationCard
 import retrofit2.Call
 import retrofit2.Callback
@@ -34,6 +35,7 @@ class SearchConnectionFragment : Fragment() {
     private val args: SearchConnectionFragmentArgs by navArgs()
     private val viewModel: SearchConnectionViewModel by viewModels()
     private val checkInViewModel: CheckInViewModel by activityViewModels()
+    private val loggedInUserViewModel: LoggedInUserViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,6 +77,11 @@ class SearchConnectionFragment : Fragment() {
 
         binding.stationName = args.stationName
         searchStationCard = SearchStationCard(this, binding.searchCard, args.stationName)
+        loggedInUserViewModel.loggedInUser.observe(viewLifecycleOwner) { user ->
+            if (user != null) {
+                searchStationCard.homelandStation.postValue(user.home!!.name)
+            }
+        }
 
         binding.apply {
             searchCard.viewModel = searchStationCard

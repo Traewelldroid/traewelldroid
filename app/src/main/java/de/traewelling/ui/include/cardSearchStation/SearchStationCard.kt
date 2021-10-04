@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -29,9 +30,10 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class SearchStationCard(
-    private val parent: Fragment,
-    private val binding: CardSearchStationBinding,
-    private val stationName: String) : LocationListener {
+        private val parent: Fragment,
+        private val binding: CardSearchStationBinding,
+        private val stationName: String
+    ) : LocationListener {
 
     private lateinit var locationManager: LocationManager
     private val requestPermissionLauncher = parent.registerForActivityResult(ActivityResultContracts.RequestPermission()) {
@@ -42,37 +44,14 @@ class SearchStationCard(
                     }
                 }
     }
-    private val lastStations = listOf(
-        Pair("Memmingen", R.drawable.ic_home),
-        Pair("Kempten(Allgäu)Hbf", R.drawable.ic_history),
-        Pair("München Hbf", R.drawable.ic_history),
-        Pair("Zürich HB", R.drawable.ic_history),
-        Pair("Lindau-Reutin", R.drawable.ic_history),
-    )
+
+    val homelandStation = MutableLiveData("")
 
     init {
-        val lastStationsAdapter = StandardListItemAdapter(lastStations, {item, binding ->
-            binding.title = item.first
-            binding.imageId = item.second
-            binding.executePendingBindings()
-        }, {
-            binding.editTextSearchStation.setText(it.first)
-        })
         binding.editTextSearchStation.setText(stationName)
-        binding.expandableHistory.addItemDecoration(DividerItemDecoration(parent.requireContext(), DividerItemDecoration.VERTICAL))
-        binding.expandableHistory.visibility = View.GONE
-        binding.expandableHistory.layoutManager = LinearLayoutManager(parent.requireContext())
-        binding.expandableHistory.adapter = lastStationsAdapter
         binding.inputLayoutStop.setEndIconOnClickListener {
-            when (binding.expandableHistory.visibility) {
-                View.VISIBLE -> {
-                    binding.expandableHistory.visibility = View.GONE
-                }
-                else -> {
-                    binding.expandableHistory.visibility = View.VISIBLE
-                }
-            }
-            binding.executePendingBindings()
+            if (homelandStation.value != null && homelandStation.value!! != "")
+                searchConnections(homelandStation.value!!)
         }
         binding.executePendingBindings()
     }

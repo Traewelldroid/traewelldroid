@@ -41,7 +41,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/text_where_are_you"
                 app:endIconMode="custom"
-                app:endIconDrawable="@drawable/ic_history"
+                app:endIconDrawable="@drawable/ic_home"
                 app:endIconCheckable="true"
                 android:hint="@string/input_stop"
                 android:layout_marginTop="16dp">
@@ -53,19 +53,6 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/expandable_history"
-                app:layout_constraintTop_toBottomOf="@id/input_layout_stop"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:listitem="@layout/standard_list_item"
-                tools:itemCount="5"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:isScrollContainer="false"
-                android:nestedScrollingEnabled="false"
-                android:layout_marginTop="8dp" />
-
             <com.google.android.material.button.MaterialButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -73,7 +60,7 @@
                 app:icon="@drawable/ic_search"
                 android:text="@string/search"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/expandable_history"
+                app:layout_constraintTop_toBottomOf="@id/input_layout_stop"
                 android:layout_marginTop="4dp"
                 android:onClick="@{() -> viewModel.searchConnections()}" />
 

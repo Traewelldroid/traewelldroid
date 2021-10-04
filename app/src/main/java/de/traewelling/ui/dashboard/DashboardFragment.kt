@@ -35,7 +35,11 @@ class DashboardFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentDashboardBinding.inflate(inflater, container, false)
-        searchStationCard = SearchStationCard(this, binding.searchCard, "")
+        searchStationCard = SearchStationCard(
+            this,
+            binding.searchCard,
+            ""
+        )
         loggedInUserViewModel.getLoggedInUser()
 
         binding.apply {
@@ -55,6 +59,12 @@ class DashboardFragment : Fragment() {
             loggedInUserViewModel.getLoggedInUser()
             currentPage = 1
             loadCheckins(currentPage)
+        }
+
+        loggedInUserViewModel.loggedInUser.observe(viewLifecycleOwner) { user ->
+            if (user != null) {
+                searchStationCard.homelandStation.postValue(user.home!!.name)
+            }
         }
 
         // Init recycler view
