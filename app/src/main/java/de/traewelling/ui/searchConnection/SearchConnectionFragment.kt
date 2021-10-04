@@ -72,6 +72,8 @@ class SearchConnectionFragment : Fragment() {
                         )
                     findNavController().navigate(action, extras)
                 }
+            binding.stationName = connections.meta.station.name
+            binding.executePendingBindings()
         }
         viewModel.searchConnections(args.stationName, Date())
 
