@@ -9,7 +9,7 @@
             type="String" />
         <variable
             name="viewModel"
-            type="de.traewelling.ui.searchConnection.SearchConnectionViewModel" />
+            type="de.hbch.traewelling.ui.searchConnection.SearchConnectionViewModel" />
     </data>
 
     <androidx.core.widget.NestedScrollView

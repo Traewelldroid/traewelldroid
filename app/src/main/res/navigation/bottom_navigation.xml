@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/dashboard_fragment"
-        android:name="de.traewelling.ui.dashboard.DashboardFragment"
+        android:name="de.hbch.traewelling.ui.dashboard.DashboardFragment"
         android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_dashboard" >
         <action
@@ -16,17 +16,17 @@
     </fragment>
     <fragment
         android:id="@+id/active_checkins_fragment"
-        android:name="de.traewelling.ui.activeCheckins.ActiveCheckinsFragment"
+        android:name="de.hbch.traewelling.ui.activeCheckins.ActiveCheckinsFragment"
         android:label="@string/title_active_checkins"
         tools:layout="@layout/fragment_active_checkins" />
     <fragment
         android:id="@+id/user_fragment"
-        android:name="de.traewelling.ui.user.UserFragment"
+        android:name="de.hbch.traewelling.ui.user.UserFragment"
         android:label="@string/title_user"
         tools:layout="@layout/fragment_user" />
     <fragment
         android:id="@+id/searchConnectionFragment"
-        android:name="de.traewelling.ui.searchConnection.SearchConnectionFragment"
+        android:name="de.hbch.traewelling.ui.searchConnection.SearchConnectionFragment"
         android:label="@string/title_search_connection"
         tools:layout="@layout/fragment_search_connection" >
         <action
@@ -42,7 +42,7 @@
     </fragment>
     <fragment
         android:id="@+id/selectDestinationFragment"
-        android:name="de.traewelling.ui.selectDestination.SelectDestinationFragment"
+        android:name="de.hbch.traewelling.ui.selectDestination.SelectDestinationFragment"
         android:label="@string/title_select_destination"
         tools:layout="@layout/fragment_select_destination" >
         <argument
@@ -57,7 +57,7 @@
     </fragment>
     <fragment
         android:id="@+id/checkInFragment"
-        android:name="de.traewelling.ui.checkIn.CheckInFragment"
+        android:name="de.hbch.traewelling.ui.checkIn.CheckInFragment"
         android:label="@string/check_in"
         tools:layout="@layout/fragment_check_in" >
         <argument

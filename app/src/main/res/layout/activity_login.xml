@@ -6,10 +6,10 @@
     <data>
         <variable
             name="viewModel"
-            type="de.traewelling.ui.login.LoginActivityViewModel" />
+            type="de.hbch.traewelling.ui.login.LoginActivityViewModel" />
         <variable
             name="loginActivity"
-            type="de.traewelling.ui.login.LoginActivity" />
+            type="de.hbch.traewelling.ui.login.LoginActivity" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

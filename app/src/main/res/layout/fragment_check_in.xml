@@ -9,7 +9,7 @@
             type="String" />
         <variable
             name="viewModel"
-            type="de.traewelling.shared.CheckInViewModel" />
+            type="de.hbch.traewelling.shared.CheckInViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

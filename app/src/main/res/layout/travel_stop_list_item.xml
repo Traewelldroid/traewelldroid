@@ -6,7 +6,7 @@
     <data>
         <variable
             name="travelStop"
-            type="de.traewelling.api.models.trip.HafasTrainTripStation" />
+            type="de.hbch.traewelling.api.models.trip.HafasTrainTripStation" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -6,10 +6,10 @@
     <data>
         <variable
             name="checkIn"
-            type="de.traewelling.api.models.status.Status" />
+            type="de.hbch.traewelling.api.models.status.Status" />
         <variable
             name="viewModel"
-            type="de.traewelling.ui.include.status.StatusCardViewModel" />
+            type="de.hbch.traewelling.ui.include.status.StatusCardViewModel" />
     </data>
 
     <com.google.android.material.card.MaterialCardView

@@ -6,7 +6,7 @@
     <data>
         <variable
             name="connection"
-            type="de.traewelling.api.models.trip.HafasTrip" />
+            type="de.hbch.traewelling.api.models.trip.HafasTrip" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
