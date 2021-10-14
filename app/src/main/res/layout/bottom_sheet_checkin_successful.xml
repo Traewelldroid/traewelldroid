@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="checkIn"
+            type="de.hbch.traewelling.api.models.status.CheckInResponse" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <ImageView
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:id="@+id/icon_check_in_successful"
+            android:src="@drawable/ic_check_in"
+            app:tint="#4CAF50"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/text_check_in_successful"
+            style="@style/TextAppearance.AppCompat.Headline"
+            android:text="@string/check_in_successful"
+            app:layout_constraintTop_toBottomOf="@id/icon_check_in_successful"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_check_in_successful"
+            android:gravity="center"
+            android:layout_marginTop="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/train_line"
+                android:layout_marginStart="4dp"
+                app:layout_constraintStart_toEndOf="@id/icon_product"
+                app:layout_constraintTop_toTopOf="@id/icon_product"
+                app:layout_constraintBottom_toBottomOf="@id/icon_product"
+                android:textSize="16sp"
+                tools:text="RB 73"
+                android:text="@{checkIn.status.journey.line}" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/distance"
+                app:layout_constraintStart_toEndOf="@id/train_line"
+                app:layout_constraintTop_toTopOf="@id/train_line"
+                android:layout_marginStart="16dp"
+                android:textSize="16sp"
+                tools:text="64km"
+                android:text="@{@string/display_kilometres(checkIn.status.journey.distance / 1000)}" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/travel_time"
+                android:layout_marginStart="16dp"
+                android:textSize="16sp"
+                tools:text="45min"
+                duration="@{checkIn.status.journey.duration}"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/points"
+                android:layout_marginStart="16dp"
+                android:textSize="16sp"
+                tools:text="16 Pkt."
+                android:text="@{@string/display_points(checkIn.status.journey.points)}"/>
+        </LinearLayout>
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

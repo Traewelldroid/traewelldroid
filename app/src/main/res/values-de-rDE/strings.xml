@@ -27,4 +27,5 @@
     <string name="error_credentials">Bitte überprüfe deine Anmeldedaten</string>
     <string name="error_logout">Abmeldung nicht erfolgreich!</string>
     <string name="email">E-Mail-Adresse</string>
+    <string name="check_in_successful">Du bist eingecheckt!</string>
 </resources>

@@ -18,6 +18,8 @@ import de.hbch.traewelling.R
 import de.hbch.traewelling.databinding.FragmentCheckInBinding
 import de.hbch.traewelling.shared.CheckInViewModel
 import de.hbch.traewelling.shared.LoggedInUserViewModel
+import de.hbch.traewelling.ui.include.checkInSuccessful.CheckInSuccessfulBottomSheet
+import kotlinx.coroutines.*
 
 
 class CheckInFragment : Fragment() {
@@ -67,8 +69,16 @@ class CheckInFragment : Fragment() {
 
         checkInViewModel.checkInResponse.observe(viewLifecycleOwner) { response ->
             if (response != null) {
-                Toast.makeText(requireContext(), "Check-In successful!", Toast.LENGTH_SHORT).show()
-                findNavController().navigate(CheckInFragmentDirections.actionCheckInFragmentToDashboardFragment())
+                // Toast.makeText(requireContext(), "Check-In successful!", Toast.LENGTH_SHORT).show()
+                // findNavController().navigate(CheckInFragmentDirections.actionCheckInFragmentToDashboardFragment())
+
+                val checkInSuccessfulBottomSheet = CheckInSuccessfulBottomSheet(response)
+                checkInSuccessfulBottomSheet.show(parentFragmentManager, CheckInSuccessfulBottomSheet.TAG)
+                GlobalScope.launch(Dispatchers.Main) {
+                    delay(3000)
+                    findNavController().navigate(CheckInFragmentDirections.actionCheckInFragmentToDashboardFragment())
+                    checkInSuccessfulBottomSheet.dismiss()
+                }
             }
         }
         return binding.root

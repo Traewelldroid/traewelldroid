@@ -28,4 +28,5 @@
     <string name="error_credentials">Please check your credentials</string>
     <string name="error_logout">Logout was not successful!</string>
     <string name="email">Email address</string>
+    <string name="check_in_successful">You are checked in!</string>
 </resources>
