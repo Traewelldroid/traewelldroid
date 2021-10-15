@@ -42,6 +42,11 @@ class SearchConnectionFragment : Fragment() {
         exitTransition = Hold()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding.searchCard.viewModel.removeLocationUpdates()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

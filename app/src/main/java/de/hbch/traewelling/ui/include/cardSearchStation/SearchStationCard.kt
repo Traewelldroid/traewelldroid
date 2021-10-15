@@ -118,6 +118,9 @@ class SearchStationCard(
         searchConnections(stationName)
     }
 
+    fun removeLocationUpdates() {
+        locationManager.removeUpdates(this)
+    }
 
     @SuppressLint("MissingPermission")
     private fun getCurrentLocation() {

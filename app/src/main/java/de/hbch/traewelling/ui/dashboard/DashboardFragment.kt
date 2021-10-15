@@ -87,6 +87,11 @@ class DashboardFragment : Fragment() {
         loadCheckins(currentPage)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding.searchCard.viewModel.removeLocationUpdates()
+    }
+
     private fun loadCheckins(page: Int) {
         TraewellingApi.checkInService.getPersonalDashboard(page).enqueue(object:
             Callback<StatusPage> {
