@@ -12,6 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Traewelling">
+        <meta-data
+            android:name="io.sentry.dsn" android:value="${SENTRY_DSN}" />
         <activity
             android:name=".ui.main.MainActivity"
             android:exported="true" />

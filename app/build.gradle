@@ -5,6 +5,19 @@ plugins {
     id 'androidx.navigation.safeargs.kotlin'
 }
 
+def properties = new Properties()
+def localKeyProperties = rootProject.file('key.properties')
+if (localKeyProperties.exists()) {
+    localKeyProperties.withReader('UTF-8') {
+        properties.load(it)
+    }
+}
+def sentryDsn = properties.getProperty('SENTRY_DSN')
+if (sentryDsn == null) {
+    sentryDsn = ""
+    project.logger.error('Sentry DSN was not set!')
+}
+
 android {
     compileSdk 31
 
@@ -14,6 +27,10 @@ android {
         targetSdk 31
         versionCode 4
         versionName "0.4.0"
+
+        manifestPlaceholders = [
+                SENTRY_DSN: sentryDsn
+        ]
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -66,6 +83,9 @@ dependencies {
 
     // Retrofit
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
+
+    // Sentry
+    implementation 'io.sentry:sentry-android:5.2.2'
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
