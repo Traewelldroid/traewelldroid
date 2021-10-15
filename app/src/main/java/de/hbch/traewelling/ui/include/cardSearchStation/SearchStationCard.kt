@@ -18,6 +18,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.textfield.TextInputLayout.END_ICON_CUSTOM
+import com.google.android.material.textfield.TextInputLayout.END_ICON_NONE
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.api.models.station.StationData
@@ -54,6 +56,14 @@ class SearchStationCard(
                 searchConnections(homelandStation.value!!)
         }
         binding.executePendingBindings()
+
+        homelandStation.observe(parent.viewLifecycleOwner) { stationName ->
+            binding.inputLayoutStop.endIconMode =
+                when (stationName == null || stationName == "") {
+                    true -> END_ICON_NONE
+                    false -> END_ICON_CUSTOM
+                }
+        }
     }
 
     // Location listener
