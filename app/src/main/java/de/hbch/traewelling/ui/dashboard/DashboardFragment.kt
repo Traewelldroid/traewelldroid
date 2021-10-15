@@ -72,25 +72,16 @@ class DashboardFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter =
             CheckInAdapter(mutableListOf())
-        binding.nestedScrollViewDashboard.setOnScrollChangeListener(object: NestedScrollView.OnScrollChangeListener {
-            override fun onScrollChange(
-                v: NestedScrollView?,
-                scrollX: Int,
-                scrollY: Int,
-                oldScrollX: Int,
-                oldScrollY: Int
-            ) {
-                val view = v?.getChildAt(v.childCount - 1)
-                val diff = (view?.bottom?.minus((v?.height + v.scrollY)))
-                if (diff!! == 0) {
-                    if (!checkInsLoading.value!!) {
-                        currentPage++
-                        loadCheckins(currentPage)
-                        checkInsLoading.value = true
-                    }
+        binding.nestedScrollViewDashboard.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+            val view = v?.getChildAt(v.childCount - 1)
+            val diff = (view?.bottom?.minus((v?.height + v.scrollY)))
+            if (diff!! == 0) {
+                if (!checkInsLoading.value!!) {
+                    currentPage++
+                    loadCheckins(currentPage)
+                    checkInsLoading.value = true
                 }
             }
-
         })
 
         loadCheckins(currentPage)

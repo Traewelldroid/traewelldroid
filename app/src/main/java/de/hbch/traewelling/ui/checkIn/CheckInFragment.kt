@@ -69,14 +69,11 @@ class CheckInFragment : Fragment() {
 
         checkInViewModel.checkInResponse.observe(viewLifecycleOwner) { response ->
             if (response != null) {
-                // Toast.makeText(requireContext(), "Check-In successful!", Toast.LENGTH_SHORT).show()
-                // findNavController().navigate(CheckInFragmentDirections.actionCheckInFragmentToDashboardFragment())
-
                 val checkInSuccessfulBottomSheet = CheckInSuccessfulBottomSheet(response)
                 checkInSuccessfulBottomSheet.show(parentFragmentManager, CheckInSuccessfulBottomSheet.TAG)
                 GlobalScope.launch(Dispatchers.Main) {
-                    delay(3000)
                     findNavController().navigate(CheckInFragmentDirections.actionCheckInFragmentToDashboardFragment())
+                    delay(3000)
                     checkInSuccessfulBottomSheet.dismiss()
                 }
             }
