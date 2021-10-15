@@ -44,7 +44,7 @@ class SearchConnectionFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        binding.searchCard.viewModel.removeLocationUpdates()
+        binding.searchCard.viewModel?.removeLocationUpdates()
     }
 
     override fun onCreateView(

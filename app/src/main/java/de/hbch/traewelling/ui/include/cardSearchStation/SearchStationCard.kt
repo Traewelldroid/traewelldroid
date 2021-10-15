@@ -37,7 +37,7 @@ class SearchStationCard(
         private val stationName: String
     ) : LocationListener {
 
-    private lateinit var locationManager: LocationManager
+    private var locationManager: LocationManager? = null
     private val requestPermissionLauncher = parent.registerForActivityResult(ActivityResultContracts.RequestPermission()) {
             isGranted ->
                 run {
@@ -51,24 +51,23 @@ class SearchStationCard(
 
     init {
         binding.editTextSearchStation.setText(stationName)
-        binding.inputLayoutStop.setEndIconOnClickListener {
-            if (homelandStation.value != null && homelandStation.value!! != "")
-                searchConnections(homelandStation.value!!)
-        }
-        binding.executePendingBindings()
 
         homelandStation.observe(parent.viewLifecycleOwner) { stationName ->
-            binding.inputLayoutStop.endIconMode =
-                when (stationName == null || stationName == "") {
-                    true -> END_ICON_NONE
-                    false -> END_ICON_CUSTOM
+            if (stationName == null || stationName == "")
+                binding.inputLayoutStop.endIconMode = END_ICON_NONE
+            else {
+                binding.inputLayoutStop.endIconMode = END_ICON_CUSTOM
+                binding.inputLayoutStop.setEndIconOnClickListener {
+                    searchConnections(homelandStation.value!!)
                 }
+            }
+            binding.executePendingBindings()
         }
     }
 
     // Location listener
     override fun onLocationChanged(location: Location) {
-        locationManager.removeUpdates(this)
+        locationManager?.removeUpdates(this)
 
         TraewellingApi.travelService.getNearbyStation(location.latitude, location.longitude)
             .enqueue(object: Callback<StationData> {
@@ -119,7 +118,7 @@ class SearchStationCard(
     }
 
     fun removeLocationUpdates() {
-        locationManager.removeUpdates(this)
+        locationManager?.removeUpdates(this)
     }
 
     @SuppressLint("MissingPermission")
@@ -130,7 +129,7 @@ class SearchStationCard(
         else
             LocationManager.GPS_PROVIDER
 
-        locationManager.requestLocationUpdates(provider, 0L, 0F, this)
+        locationManager?.requestLocationUpdates(provider, 0L, 0F, this)
     }
 
     private fun showToast(text: String) {
