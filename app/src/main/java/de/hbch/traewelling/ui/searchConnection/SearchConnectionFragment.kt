@@ -86,7 +86,7 @@ class SearchConnectionFragment : Fragment() {
         searchStationCard = SearchStationCard(this, binding.searchCard, args.stationName)
         loggedInUserViewModel.loggedInUser.observe(viewLifecycleOwner) { user ->
             if (user != null) {
-                searchStationCard.homelandStation.postValue(user.home!!.name)
+                searchStationCard?.homelandStation?.postValue(user.home?.name)
             }
         }
 
