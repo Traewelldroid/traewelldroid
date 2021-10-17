@@ -9,6 +9,7 @@ import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.trip.HafasTrip
 import de.hbch.traewelling.databinding.ConnectionListItemBinding
 import de.hbch.traewelling.models.Connection
+import java.util.*
 
 class ConnectionAdapter(val connections: List<HafasTrip>, val onItemClick: (View, HafasTrip) -> Unit) : RecyclerView.Adapter<ConnectionAdapter.ConnectionViewHolder>() {
 
@@ -33,7 +34,7 @@ class ConnectionAdapter(val connections: List<HafasTrip>, val onItemClick: (View
             binding.textViewDepartureTime.setTextColor(
                 ContextCompat.getColor(
                     binding.root.context,
-                    when(trip.departure > trip.plannedDeparture) {
+                    when(trip.departure ?: Date() > trip.plannedDeparture) {
                         true -> R.color.train_delayed
                         false -> R.color.train_on_time
                     }

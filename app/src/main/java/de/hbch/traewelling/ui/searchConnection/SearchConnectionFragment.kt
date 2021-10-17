@@ -1,6 +1,8 @@
 package de.hbch.traewelling.ui.searchConnection
 
 import android.os.Bundle
+import android.text.format.DateFormat.is24HourFormat
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +15,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
 import com.google.android.material.transition.Hold
 import de.hbch.traewelling.R
 import de.hbch.traewelling.adapters.ConnectionAdapter
@@ -54,6 +59,7 @@ class SearchConnectionFragment : Fragment() {
     ): View? {
 
         binding = FragmentSearchConnectionBinding.inflate(inflater, container, false)
+        binding.searchConnectionFragment = this
         binding.lifecycleOwner = viewLifecycleOwner
 
         val connectionRecyclerView = binding.recyclerViewConnections
@@ -97,5 +103,45 @@ class SearchConnectionFragment : Fragment() {
         return binding.root
     }
 
+    fun requestDepartureTimeAndSearchConnections() {
+        val datePicker = MaterialDatePicker
+            .Builder
+            .datePicker()
+            .setTitleText(R.string.title_select_date)
+            .setSelection(Date().time)
+            .build()
 
+        datePicker.addOnPositiveButtonClickListener { selectedDateLong ->
+            val selectedDate = Date(selectedDateLong)
+
+            val currentDate = Calendar.getInstance()
+            currentDate.time = Date()
+
+            val timePickerBuilder = MaterialTimePicker
+                .Builder()
+                .setTitleText(R.string.title_select_time)
+                .setHour(currentDate.get(Calendar.HOUR_OF_DAY))
+                .setMinute(currentDate.get(Calendar.MINUTE))
+
+            timePickerBuilder.setTimeFormat(when (is24HourFormat(requireContext())) {
+                true -> TimeFormat.CLOCK_24H
+                false -> TimeFormat.CLOCK_12H
+            })
+
+            val timePicker = timePickerBuilder.build()
+
+            timePicker.addOnPositiveButtonClickListener {
+                val cal = Calendar.getInstance()
+                cal.time = selectedDate
+                cal.set(Calendar.HOUR, timePicker.hour)
+                cal.set(Calendar.MINUTE, timePicker.minute)
+
+                viewModel.searchConnections(args.stationName, cal.time)
+            }
+
+            timePicker.show(childFragmentManager, "SearchConnectionTimePicker")
+        }
+
+        datePicker.show(childFragmentManager, "SearchConnectionDatePicker")
+    }
 }

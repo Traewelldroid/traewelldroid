@@ -6,7 +6,7 @@ import java.util.*
 
 data class HafasTrip(
     @SerializedName("tripId") val tripId: String,
-    @SerializedName("when") val departure: Date,
+    @SerializedName("when") val departure: Date?,
     @SerializedName("plannedWhen") val plannedDeparture: Date,
     @SerializedName("delay") val delay: Int,
     @SerializedName("platform") val platform: String,
