@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder
 import de.hbch.traewelling.api.models.Data
 import de.hbch.traewelling.api.models.auth.BearerToken
 import de.hbch.traewelling.api.models.auth.LoginCredentials
+import de.hbch.traewelling.api.models.station.Station
 import de.hbch.traewelling.api.models.station.StationData
 import de.hbch.traewelling.api.models.status.CheckInRequest
 import de.hbch.traewelling.api.models.status.CheckInResponse
@@ -102,6 +103,11 @@ interface TravelService {
         @Path("station") station: String,
         @Query("when") time: Date
     ): Call<HafasTripPage>
+
+    @GET("trains/station/autocomplete/{station}")
+    fun autoCompleteStationSearch(
+        @Path("station") station: String
+    ): Call<Data<List<Station>>>
 }
 
 object TraewellingApi {

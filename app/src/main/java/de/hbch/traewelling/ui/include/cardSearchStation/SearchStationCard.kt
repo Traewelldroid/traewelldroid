@@ -8,11 +8,15 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Build
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.widget.doAfterTextChanged
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
@@ -22,11 +26,14 @@ import com.google.android.material.textfield.TextInputLayout.END_ICON_CUSTOM
 import com.google.android.material.textfield.TextInputLayout.END_ICON_NONE
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.TraewellingApi
+import de.hbch.traewelling.api.models.Data
+import de.hbch.traewelling.api.models.station.Station
 import de.hbch.traewelling.api.models.station.StationData
 import de.hbch.traewelling.databinding.CardSearchStationBinding
 import de.hbch.traewelling.ui.dashboard.DashboardFragmentDirections
 import de.hbch.traewelling.ui.searchConnection.SearchConnectionFragment
 import de.hbch.traewelling.ui.searchConnection.SearchConnectionFragmentDirections
+import io.sentry.Sentry
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -48,9 +55,49 @@ class SearchStationCard(
     }
 
     val homelandStation = MutableLiveData("")
+    private val autocompleteOptions = MutableLiveData<List<String>>(listOf())
 
     init {
         binding.editTextSearchStation.setText(stationName)
+        val adapter = ArrayAdapter<String>(
+            parent.requireContext(),
+            android.R.layout.simple_dropdown_item_1line
+        )
+        adapter.setNotifyOnChange(true)
+        binding.editTextSearchStation.setAdapter(adapter)
+        autocompleteOptions.observe(parent.viewLifecycleOwner) { options ->
+            if (options != null) {
+                adapter.clear()
+                adapter.addAll(options)
+                adapter.notifyDataSetChanged()
+            }
+        }
+        binding.editTextSearchStation.doOnTextChanged { text, _, _, count ->
+            if (count >= 3) {
+                TraewellingApi.travelService.autoCompleteStationSearch(text?.toString() ?: "")
+                    .enqueue(object : Callback<Data<List<Station>>> {
+                        override fun onResponse(
+                            call: Call<Data<List<Station>>>,
+                            response: Response<Data<List<Station>>>
+                        ) {
+                            if (response.isSuccessful) {
+                                val list = response.body()
+                                if (list != null) {
+                                    val stationNames = list.data.map {
+                                        it.name
+                                    }
+                                    autocompleteOptions.postValue(stationNames)
+                                }
+                            }
+                        }
+
+                        override fun onFailure(call: Call<Data<List<Station>>>, t: Throwable) {
+                            Log.e("SearchStationCard", t.stackTraceToString())
+                            Sentry.captureException(t)
+                        }
+                    })
+            }
+        }
 
         homelandStation.observe(parent.viewLifecycleOwner) { stationName ->
             if (stationName == null || stationName == "")
@@ -84,6 +131,7 @@ class SearchStationCard(
 
                 override fun onFailure(call: Call<StationData>, t: Throwable) {
                     Log.e("SearchStationCard", t.stackTraceToString())
+                    Sentry.captureException(t)
                 }
             })
     }
