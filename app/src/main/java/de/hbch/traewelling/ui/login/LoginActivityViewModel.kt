@@ -21,6 +21,10 @@ class LoginActivityViewModel : ViewModel() {
     val jwt: LiveData<String> get() = _jwt
 
     fun login() {
+        if (email.value == null || password.value == null) {
+            _loginSuccessful.value = false
+            return
+        }
         TraewellingApi.authService.login(LoginCredentials(email.value!!, password.value!!))
             .enqueue(object: Callback<BearerToken> {
                 override fun onResponse(call: Call<BearerToken>, response: Response<BearerToken>) {
