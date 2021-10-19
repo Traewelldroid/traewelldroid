@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.google.android.material.button.MaterialButton
 import de.hbch.traewelling.R
+import de.hbch.traewelling.api.models.status.StatusBusiness
 import de.hbch.traewelling.api.models.status.StatusVisibility
 import java.text.DateFormat
 import java.text.DateFormat.getTimeInstance
@@ -93,6 +94,22 @@ fun setStatusVisibility(button: MaterialButton, statusVisibility: StatusVisibili
         StatusVisibility.UNLISTED -> R.string.visibility_unlisted
         StatusVisibility.FOLLOWERS -> R.string.visibility_followers
         StatusVisibility.PRIVATE -> R.string.visibility_private
+    })
+}
+
+@BindingAdapter("business")
+fun setStatusBusiness(button: MaterialButton, business: StatusBusiness?) {
+    if (business == null)
+        return
+    button.setIconResource(when (business) {
+        StatusBusiness.PRIVATE -> R.drawable.ic_person
+        StatusBusiness.BUSINESS -> R.drawable.ic_business
+        StatusBusiness.COMMUTE -> R.drawable.ic_commute
+    })
+    button.text = button.resources.getString(when (business) {
+        StatusBusiness.PRIVATE -> R.string.business_private
+        StatusBusiness.BUSINESS -> R.string.business
+        StatusBusiness.COMMUTE -> R.string.business_commute
     })
 }
 

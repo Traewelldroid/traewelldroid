@@ -59,15 +59,35 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.button.MaterialButton
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/btn_select_visibility"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     app:layout_constraintTop_toBottomOf="@id/text_input_status_message"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/btn_select_business_type"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginTop="8dp"
                     statusVisibility="@{viewModel.statusVisibility}"
                     tools:text="@string/visibility_public"
                     tools:icon="@drawable/ic_public"
                     android:onClick="@{() -> checkInFragment.selectStatusVisibility()}" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/btn_select_business_type"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    app:layout_constraintTop_toTopOf="@id/btn_select_visibility"
+                    app:layout_constraintBottom_toBottomOf="@id/btn_select_visibility"
+                    app:layout_constraintStart_toEndOf="@id/btn_select_visibility"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginStart="4dp"
+                    tools:text="@string/business_private"
+                    tools:icon="@drawable/ic_person"
+                    android:onClick="@{() -> checkInFragment.selectStatusBusiness()}"
+                    business="@{viewModel.statusBusiness}" />
+
 
                 <com.google.android.material.button.MaterialButtonToggleGroup
                     android:layout_width="wrap_content"

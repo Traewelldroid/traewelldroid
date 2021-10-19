@@ -35,4 +35,8 @@
     <string name="visibility_unlisted">Ungelistet</string>
     <string name="visibility_followers">Nur für Follower</string>
     <string name="visibility_private">Privat</string>
+    <string name="title_select_business">Wähle den gewünschten Fahrttyp:</string>
+    <string name="business_private">Privat</string>
+    <string name="business">Geschäftlich</string>
+    <string name="business_commute">Arbeitsweg</string>
 </resources>

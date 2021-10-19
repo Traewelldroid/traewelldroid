@@ -19,6 +19,7 @@ import de.hbch.traewelling.databinding.FragmentCheckInBinding
 import de.hbch.traewelling.shared.CheckInViewModel
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.ui.include.checkInSuccessful.CheckInSuccessfulBottomSheet
+import de.hbch.traewelling.ui.include.selectBusinessType.SelectBusinessTypeBottomSheet
 import de.hbch.traewelling.ui.include.selectStatusVisibility.SelectStatusVisibilityBottomSheet
 import kotlinx.coroutines.*
 
@@ -88,5 +89,12 @@ class CheckInFragment : Fragment() {
             checkInViewModel.statusVisibility.postValue(statusVisibility)
         }
         bottomSheet.show(parentFragmentManager, SelectStatusVisibilityBottomSheet.TAG)
+    }
+
+    fun selectStatusBusiness() {
+        val bottomSheet = SelectBusinessTypeBottomSheet { business ->
+            checkInViewModel.statusBusiness.postValue(business)
+        }
+        bottomSheet.show(parentFragmentManager, SelectBusinessTypeBottomSheet.TAG)
     }
 }
