@@ -6,7 +6,7 @@ import java.util.*
 
 data class CheckInRequest(
     @SerializedName("body") val body: String,
-    @SerializedName("business") val business: Int,
+    @SerializedName("business") val business: StatusBusiness,
     @SerializedName("visibility") val visibility: StatusVisibility,
     @SerializedName("event") val eventId: Int,
     @SerializedName("tweet") val sendTweet: Boolean,

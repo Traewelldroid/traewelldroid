@@ -3,7 +3,7 @@ package de.hbch.traewelling.api.models.status
 import com.google.gson.annotations.SerializedName
 import java.util.*
 
-class Status(
+data class Status(
     @SerializedName("id") val id: Int,
     @SerializedName("body") val body: String?,
     @SerializedName("type") val type: String,
@@ -11,7 +11,7 @@ class Status(
     @SerializedName("user") val user: Int,
     @SerializedName("username") val username: String,
     @SerializedName("visibility") val visibility: StatusVisibility,
-    @SerializedName("business") val business: Int,
+    @SerializedName("business") val business: StatusBusiness,
     @SerializedName("likes") var likes: Int,
     @SerializedName("liked") var liked: Boolean,
     @SerializedName("train") val journey: Journey
@@ -29,4 +29,13 @@ enum class StatusVisibility(val visibility: Int) {
     FOLLOWERS(2),
     @SerializedName("3")
     PRIVATE(3)
+}
+
+enum class StatusBusiness(val business: Int) {
+    @SerializedName("0")
+    PRIVATE(0),
+    @SerializedName("1")
+    BUSINESS(1),
+    @SerializedName("2")
+    COMMUTE(2)
 }

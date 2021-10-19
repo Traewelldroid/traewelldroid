@@ -8,6 +8,7 @@ import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.api.models.Data
 import de.hbch.traewelling.api.models.status.CheckInRequest
 import de.hbch.traewelling.api.models.status.CheckInResponse
+import de.hbch.traewelling.api.models.status.StatusBusiness
 import de.hbch.traewelling.api.models.status.StatusVisibility
 import retrofit2.Call
 import retrofit2.Callback
@@ -26,6 +27,7 @@ class CheckInViewModel : ViewModel() {
     val tweet = MutableLiveData(false)
     val toot = MutableLiveData(false)
     val statusVisibility = MutableLiveData(StatusVisibility.PUBLIC)
+    val statusBusiness = MutableLiveData(StatusBusiness.PRIVATE)
 
     private val _checkInResponse = MutableLiveData<CheckInResponse?>()
     val checkInResponse: LiveData<CheckInResponse?> get() = _checkInResponse
@@ -50,12 +52,12 @@ class CheckInViewModel : ViewModel() {
 
     fun checkIn() {
         val checkInRequest = CheckInRequest(
-            message.value!!,
-            0,
+            message.value ?: "",
+            statusBusiness.value ?: StatusBusiness.PRIVATE,
             statusVisibility.value ?: StatusVisibility.PUBLIC,
             0,
-            tweet.value!!,
-            toot.value!!,
+            tweet.value ?: false,
+            toot.value ?: false,
             tripId,
             lineName,
             startStationId,
