@@ -25,6 +25,7 @@ class CheckInViewModel : ViewModel() {
     val message = MutableLiveData<String>()
     val tweet = MutableLiveData(false)
     val toot = MutableLiveData(false)
+    val statusVisibility = MutableLiveData(StatusVisibility.PUBLIC)
 
     private val _checkInResponse = MutableLiveData<CheckInResponse?>()
     val checkInResponse: LiveData<CheckInResponse?> get() = _checkInResponse
@@ -44,13 +45,14 @@ class CheckInViewModel : ViewModel() {
         _checkInResponse.value = null
         tweet.value = false
         toot.value = false
+        statusVisibility.value = StatusVisibility.PUBLIC
     }
 
     fun checkIn() {
         val checkInRequest = CheckInRequest(
             message.value!!,
             0,
-            StatusVisibility.PUBLIC,
+            statusVisibility.value ?: StatusVisibility.PUBLIC,
             0,
             tweet.value!!,
             toot.value!!,

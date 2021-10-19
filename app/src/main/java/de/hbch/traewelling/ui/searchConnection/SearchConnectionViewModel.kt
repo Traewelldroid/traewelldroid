@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.api.models.trip.HafasTripPage
+import io.sentry.Sentry
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -28,10 +29,12 @@ class SearchConnectionViewModel: ViewModel() {
                         if (trip != null) {
                             _departures.value = trip!!
                         }
+                    } else {
+                        Sentry.captureMessage(response.errorBody()?.string() ?: "SearchConnectionViewModel:searchConnections error")
                     }
                 }
                 override fun onFailure(call: Call<HafasTripPage>, t: Throwable) {
-
+                    Sentry.captureException(t)
                 }
             })
     }

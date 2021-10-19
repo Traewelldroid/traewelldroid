@@ -31,4 +31,9 @@
     <string name="check_in_successful">You are checked in!</string>
     <string name="title_select_date">Select the departure date</string>
     <string name="title_select_time">Select the departure time</string>
+    <string name="title_select_visibility">Select the desired status visibility:</string>
+    <string name="visibility_public">Public</string>
+    <string name="visibility_unlisted">Unlisted</string>
+    <string name="visibility_followers">Just for followers</string>
+    <string name="visibility_private">Private</string>
 </resources>

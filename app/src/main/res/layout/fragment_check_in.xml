@@ -10,6 +10,9 @@
         <variable
             name="viewModel"
             type="de.hbch.traewelling.shared.CheckInViewModel" />
+        <variable
+            name="checkInFragment"
+            type="de.hbch.traewelling.ui.checkIn.CheckInFragment" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -55,6 +58,17 @@
                         android:text="@={viewModel.message}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/btn_select_visibility"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    app:layout_constraintTop_toBottomOf="@id/text_input_status_message"
+                    statusVisibility="@{viewModel.statusVisibility}"
+                    tools:text="@string/visibility_public"
+                    tools:icon="@drawable/ic_public"
+                    android:onClick="@{() -> checkInFragment.selectStatusVisibility()}" />
+
                 <com.google.android.material.button.MaterialButtonToggleGroup
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -82,7 +96,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/check_in"
                     android:id="@+id/btn_check_in"
-                    app:layout_constraintTop_toBottomOf="@id/text_input_status_message"
+                    app:layout_constraintTop_toBottomOf="@id/btn_select_visibility"
                     app:layout_constraintEnd_toEndOf="@id/text_input_status_message"
                     android:layout_marginTop="12dp"
                     app:icon="@drawable/ic_check_in"

@@ -5,7 +5,9 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
+import com.google.android.material.button.MaterialButton
 import de.hbch.traewelling.R
+import de.hbch.traewelling.api.models.status.StatusVisibility
 import java.text.DateFormat
 import java.text.DateFormat.getTimeInstance
 import java.text.SimpleDateFormat
@@ -74,6 +76,24 @@ fun setProductTypeImage(imageView: ImageView, productType: String?) {
         else -> R.drawable.ic_train
     }
     imageView.setImageResource(drawable)
+}
+
+@BindingAdapter("statusVisibility")
+fun setStatusVisibility(button: MaterialButton, statusVisibility: StatusVisibility?) {
+    if (statusVisibility == null)
+        return
+    button.setIconResource(when (statusVisibility) {
+        StatusVisibility.PUBLIC -> R.drawable.ic_public
+        StatusVisibility.UNLISTED -> R.drawable.ic_lock_open
+        StatusVisibility.FOLLOWERS -> R.drawable.ic_people
+        StatusVisibility.PRIVATE -> R.drawable.ic_lock
+    })
+    button.text = button.resources.getString(when (statusVisibility) {
+        StatusVisibility.PUBLIC -> R.string.visibility_public
+        StatusVisibility.UNLISTED -> R.string.visibility_unlisted
+        StatusVisibility.FOLLOWERS -> R.string.visibility_followers
+        StatusVisibility.PRIVATE -> R.string.visibility_private
+    })
 }
 
 fun getLocalTimeString(date: Date?): String {

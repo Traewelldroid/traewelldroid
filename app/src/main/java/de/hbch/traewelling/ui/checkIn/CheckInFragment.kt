@@ -19,6 +19,7 @@ import de.hbch.traewelling.databinding.FragmentCheckInBinding
 import de.hbch.traewelling.shared.CheckInViewModel
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.ui.include.checkInSuccessful.CheckInSuccessfulBottomSheet
+import de.hbch.traewelling.ui.include.selectStatusVisibility.SelectStatusVisibilityBottomSheet
 import kotlinx.coroutines.*
 
 
@@ -40,6 +41,7 @@ class CheckInFragment : Fragment() {
             layoutCheckIn.transitionName = args.transitionName
             destination = args.destination
             viewModel = checkInViewModel
+            checkInFragment = this@CheckInFragment
             btnSendToot.visibility =
                 when (loggedInUserViewModel.loggedInUser.value?.mastodonUrl != null) {
                     true -> VISIBLE
@@ -79,5 +81,12 @@ class CheckInFragment : Fragment() {
             }
         }
         return binding.root
+    }
+
+    fun selectStatusVisibility() {
+        val bottomSheet = SelectStatusVisibilityBottomSheet { statusVisibility ->
+            checkInViewModel.statusVisibility.postValue(statusVisibility)
+        }
+        bottomSheet.show(parentFragmentManager, SelectStatusVisibilityBottomSheet.TAG)
     }
 }
