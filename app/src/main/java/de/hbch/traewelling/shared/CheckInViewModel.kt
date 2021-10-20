@@ -47,7 +47,8 @@ class CheckInViewModel : ViewModel() {
         _checkInResponse.value = null
         tweet.value = false
         toot.value = false
-        statusVisibility.value = StatusVisibility.PUBLIC
+        statusVisibility.postValue(StatusVisibility.PUBLIC)
+        statusBusiness.postValue(StatusBusiness.PRIVATE)
     }
 
     fun checkIn() {
