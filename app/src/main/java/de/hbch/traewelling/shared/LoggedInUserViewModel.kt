@@ -23,7 +23,7 @@ class LoggedInUserViewModel : ViewModel() {
 
     val kilometres: LiveData<String> get() = Transformations.map(_loggedInUser) { user ->
         when (user != null) {
-            true -> "${user.distance} km"
+            true -> "${user.distance / 1000} km"
             false -> ""
         }
     }
@@ -40,7 +40,7 @@ class LoggedInUserViewModel : ViewModel() {
     }
 
     val averageSpeed: LiveData<Double> get() = Transformations.map(_loggedInUser) { user ->
-        user?.averageSpeed ?: 0.0
+        (user?.averageSpeed?.div(1000)) ?: 0.0
     }
 
     fun getLoggedInUser() {
