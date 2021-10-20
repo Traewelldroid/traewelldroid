@@ -9,9 +9,6 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import de.hbch.traewelling.adapters.CheckInAdapter
 import de.hbch.traewelling.databinding.FragmentActiveCheckinsBinding
-import org.osmdroid.config.Configuration
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory
-import org.osmdroid.util.GeoPoint
 
 class ActiveCheckinsFragment : Fragment() {
 
@@ -23,15 +20,8 @@ class ActiveCheckinsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Configuration.getInstance().userAgentValue = requireContext().packageName
         binding = FragmentActiveCheckinsBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
-
-        binding.activeCheckinsMap.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE)
-        binding.activeCheckinsMap.setMultiTouchControls(true)
-        val controller = binding.activeCheckinsMap.controller
-        controller.setZoom(12.0)
-        controller.setCenter(GeoPoint(47.98, 10.18))
 
         val recyclerView = binding.recyclerViewActiveCheckIns
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -61,11 +51,9 @@ class ActiveCheckinsFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-        binding.activeCheckinsMap.onPause()
     }
 
     override fun onResume() {
         super.onResume()
-        binding.activeCheckinsMap.onResume()
     }
 }
