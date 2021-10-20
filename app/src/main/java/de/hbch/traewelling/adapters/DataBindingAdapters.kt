@@ -97,6 +97,18 @@ fun setStatusVisibility(button: MaterialButton, statusVisibility: StatusVisibili
     })
 }
 
+@BindingAdapter("statusVisibility")
+fun setStatusVisibility(imageView: ImageView, statusVisibility: StatusVisibility?) {
+    if (statusVisibility == null)
+        return
+    imageView.setImageResource(when (statusVisibility) {
+        StatusVisibility.PUBLIC -> R.drawable.ic_public
+        StatusVisibility.UNLISTED -> R.drawable.ic_lock_open
+        StatusVisibility.FOLLOWERS -> R.drawable.ic_people
+        StatusVisibility.PRIVATE -> R.drawable.ic_lock
+    })
+}
+
 @BindingAdapter("business")
 fun setStatusBusiness(button: MaterialButton, business: StatusBusiness?) {
     if (business == null)
@@ -110,6 +122,21 @@ fun setStatusBusiness(button: MaterialButton, business: StatusBusiness?) {
         StatusBusiness.PRIVATE -> R.string.business_private
         StatusBusiness.BUSINESS -> R.string.business
         StatusBusiness.COMMUTE -> R.string.business_commute
+    })
+}
+
+@BindingAdapter("business")
+fun setStatusBusiness(imageView: ImageView, business: StatusBusiness?) {
+    if (business == null)
+        return
+    if (business == StatusBusiness.PRIVATE) {
+        imageView.visibility = View.GONE
+        return
+    }
+    imageView.setImageResource(when (business) {
+        StatusBusiness.PRIVATE -> R.drawable.ic_person
+        StatusBusiness.BUSINESS -> R.drawable.ic_business
+        StatusBusiness.COMMUTE -> R.drawable.ic_commute
     })
 }
 

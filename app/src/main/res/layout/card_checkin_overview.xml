@@ -80,7 +80,7 @@
                     style="@style/Theme.Traewelling.StatisticTexts"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
                     android:text="@{checkIn.journey.origin.name}"
                     app:layout_constraintEnd_toStartOf="@+id/departure_planned_time"
                     app:layout_constraintStart_toStartOf="parent"
@@ -131,7 +131,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/train_line"
-                    android:layout_marginLeft="4dp"
+                    android:layout_marginStart="4dp"
                     app:layout_constraintStart_toEndOf="@id/icon_product"
                     app:layout_constraintTop_toTopOf="@id/icon_product"
                     app:layout_constraintBottom_toBottomOf="@id/icon_product"
@@ -145,7 +145,7 @@
                     android:id="@+id/distance"
                     app:layout_constraintStart_toEndOf="@id/train_line"
                     app:layout_constraintTop_toTopOf="@id/train_line"
-                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
                     android:textSize="16sp"
                     tools:text="64km"
                     android:text="@{@string/display_kilometres(checkIn.journey.distance / 1000)}" />
@@ -156,10 +156,21 @@
                     android:id="@+id/travel_time"
                     app:layout_constraintStart_toEndOf="@id/distance"
                     app:layout_constraintTop_toTopOf="@id/distance"
-                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
                     android:textSize="16sp"
                     tools:text="45min"
                     duration="@{checkIn.journey.duration}"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/icon_business_type"
+                    android:layout_marginStart="8dp"
+                    app:layout_constraintStart_toEndOf="@id/travel_time"
+                    app:layout_constraintTop_toTopOf="@id/distance"
+                    app:layout_constraintBottom_toBottomOf="@id/distance"
+                    tools:srcCompat="@drawable/ic_commute"
+                    business="@{checkIn.business}" />
 
                 <TextView
                     android:id="@+id/next_station"
@@ -264,9 +275,22 @@
                 tools:text="3"
                 android:text="@{Integer.toString(viewModel.likes)}" />
 
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/icon_status_visibility"
+                app:layout_constraintEnd_toStartOf="@id/status_info"
+                app:layout_constraintTop_toTopOf="@id/status_info"
+                app:layout_constraintBottom_toBottomOf="@id/status_info"
+                android:layout_marginEnd="8dp"
+                tools:srcCompat="@drawable/ic_lock_open"
+                statusVisibility="@{checkIn.visibility}" />
+
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:id="@+id/status_info"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/fav"
                 app:layout_constraintBottom_toBottomOf="@id/fav"
