@@ -19,3 +19,9 @@ data class User(
     @SerializedName("prevent_index") val preventIndex: Boolean,
     @SerializedName("language") val language: String
 )
+
+data class ForeignUser(
+    @SerializedName("id") val id: Int,
+    @SerializedName("displayName") val displayName: String,
+    @SerializedName("username") val username: String,
+)

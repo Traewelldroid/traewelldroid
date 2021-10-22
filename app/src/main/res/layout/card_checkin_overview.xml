@@ -296,7 +296,7 @@
                 app:layout_constraintBottom_toBottomOf="@id/fav"
                 android:textSize="16sp"
                 tools:text="username, 31.01.2021 15:25"
-                username="@{checkIn.username}"
+                username="@{checkIn.user.displayName}"
                 timestamp="@{checkIn.createdAt}"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
