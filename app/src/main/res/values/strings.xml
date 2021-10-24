@@ -40,4 +40,6 @@
     <string name="business_private">Private</string>
     <string name="business">Business</string>
     <string name="business_commute">Commute</string>
+    <string name="set_homeland">Set homeland station</string>
+    <string name="set_homeland_success">Your homeland station now is set to %1$s.</string>
 </resources>

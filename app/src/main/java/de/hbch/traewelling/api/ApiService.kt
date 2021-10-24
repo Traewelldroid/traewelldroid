@@ -57,6 +57,11 @@ interface AuthService {
 
     @GET("auth/user")
     fun getLoggedInUser(): Call<Data<User>>
+
+    @PUT("trains/station/{stationName}/home")
+    fun setUserHomelandStation(
+        @Path("stationName") stationName: String
+    ): Call<Data<Station>>
 }
 
 interface CheckInService {

@@ -7,6 +7,7 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.api.models.Data
+import de.hbch.traewelling.api.models.station.Station
 import de.hbch.traewelling.api.models.user.User
 import retrofit2.Call
 import retrofit2.Callback
@@ -41,6 +42,10 @@ class LoggedInUserViewModel : ViewModel() {
 
     val averageSpeed: LiveData<Double> get() = Transformations.map(_loggedInUser) { user ->
         (user?.averageSpeed?.div(1000)) ?: 0.0
+    }
+
+    fun setHomelandStation(station: Station) {
+        _loggedInUser.value?.home = station
     }
 
     fun getLoggedInUser() {

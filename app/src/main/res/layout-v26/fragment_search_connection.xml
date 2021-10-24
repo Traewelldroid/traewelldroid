@@ -78,7 +78,8 @@
                         android:layout_margin="16dp"
                         android:src="@drawable/ic_home"
                         app:tint="@color/traewelling"
-                        android:onClick="@{() -> searchConnectionFragment.setHomelandStation()}"/>
+                        android:tooltipText="@string/set_homeland"
+                        android:onClick="@{() -> searchConnectionFragment.setHomelandStation()}" />
 
                     <com.google.android.material.divider.MaterialDivider
                         android:layout_width="match_parent"

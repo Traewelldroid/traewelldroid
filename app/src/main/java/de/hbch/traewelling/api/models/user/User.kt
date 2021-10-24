@@ -15,7 +15,7 @@ data class User(
     @SerializedName("twitterUrl") val twitterUrl: String,
     @SerializedName("mastodonUrl") val mastodonUrl: String,
     @SerializedName("privateProfile") val privateProfile: Boolean,
-    @SerializedName("home") val home: Station?,
+    @SerializedName("home") var home: Station?,
     @SerializedName("prevent_index") val preventIndex: Boolean,
     @SerializedName("language") val language: String
 )

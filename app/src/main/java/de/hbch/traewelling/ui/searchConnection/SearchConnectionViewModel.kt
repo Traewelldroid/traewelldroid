@@ -5,6 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import de.hbch.traewelling.api.TraewellingApi
+import de.hbch.traewelling.api.models.Data
+import de.hbch.traewelling.api.models.station.Station
 import de.hbch.traewelling.api.models.trip.HafasTripPage
 import io.sentry.Sentry
 import retrofit2.Call
@@ -36,6 +38,27 @@ class SearchConnectionViewModel: ViewModel() {
                 override fun onFailure(call: Call<HafasTripPage>, t: Throwable) {
                     Sentry.captureException(t)
                 }
+            })
+    }
+
+    fun setUserHomelandStation(stationName: String, callback: (Station?) -> Unit) {
+        TraewellingApi.authService.setUserHomelandStation(stationName)
+            .enqueue(object: Callback<Data<Station>> {
+                override fun onResponse(
+                    call: Call<Data<Station>>,
+                    response: Response<Data<Station>>
+                ) {
+                    if (response.isSuccessful) {
+                        callback(response.body()?.data);
+                    } else {
+                        Sentry.captureMessage(response.errorBody()?.toString() ?: "")
+                    }
+                }
+
+                override fun onFailure(call: Call<Data<Station>>, t: Throwable) {
+                    Sentry.captureException(t)
+                }
+
             })
     }
 }

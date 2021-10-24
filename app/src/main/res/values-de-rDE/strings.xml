@@ -39,4 +39,6 @@
     <string name="business_private">Privatreise</string>
     <string name="business">Geschäftsreise</string>
     <string name="business_commute">Arbeitsweg</string>
+    <string name="set_homeland">Heimatstation festlegen</string>
+    <string name="set_homeland_success">Du hast nun %1$s als Heimatstation festgelegt.</string>
 </resources>

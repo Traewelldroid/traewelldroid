@@ -23,11 +23,18 @@ import de.hbch.traewelling.R
 import de.hbch.traewelling.adapters.ConnectionAdapter
 import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.api.models.trip.HafasTripPage
+import de.hbch.traewelling.databinding.BottomSheetHomelandStationBinding
 import de.hbch.traewelling.databinding.FragmentSearchConnectionBinding
 import de.hbch.traewelling.models.Connection
 import de.hbch.traewelling.shared.CheckInViewModel
 import de.hbch.traewelling.shared.LoggedInUserViewModel
+import de.hbch.traewelling.ui.checkIn.CheckInFragmentDirections
 import de.hbch.traewelling.ui.include.cardSearchStation.SearchStationCard
+import de.hbch.traewelling.ui.include.homelandStation.HomelandStationBottomSheet
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -101,6 +108,20 @@ class SearchConnectionFragment : Fragment() {
             viewModel = (this@SearchConnectionFragment).viewModel
         }
         return binding.root
+    }
+
+    fun setHomelandStation() {
+        viewModel.setUserHomelandStation(binding.stationName ?: "") { station ->
+            if (station != null) {
+                loggedInUserViewModel.setHomelandStation(station)
+                val bottomSheet = HomelandStationBottomSheet(station.name)
+                bottomSheet.show(parentFragmentManager, "SetHomelandStationBottomSheet")
+                GlobalScope.launch(Dispatchers.Main) {
+                    delay(3000)
+                    bottomSheet.dismiss()
+                }
+            }
+        }
     }
 
     fun requestDepartureTimeAndSearchConnections() {
