@@ -1,5 +1,6 @@
 package de.hbch.traewelling.adapters
 
+import android.os.Build
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
@@ -83,61 +84,71 @@ fun setProductTypeImage(imageView: ImageView, productType: String?) {
 fun setStatusVisibility(button: MaterialButton, statusVisibility: StatusVisibility?) {
     if (statusVisibility == null)
         return
-    button.setIconResource(when (statusVisibility) {
-        StatusVisibility.PUBLIC -> R.drawable.ic_public
-        StatusVisibility.UNLISTED -> R.drawable.ic_lock_open
-        StatusVisibility.FOLLOWERS -> R.drawable.ic_people
-        StatusVisibility.PRIVATE -> R.drawable.ic_lock
-    })
-    button.text = button.resources.getString(when (statusVisibility) {
-        StatusVisibility.PUBLIC -> R.string.visibility_public
-        StatusVisibility.UNLISTED -> R.string.visibility_unlisted
-        StatusVisibility.FOLLOWERS -> R.string.visibility_followers
-        StatusVisibility.PRIVATE -> R.string.visibility_private
-    })
+    button.setIconResource(getStatusVisibilityImageResource(statusVisibility))
+    button.text = button.resources.getString(getStatusVisibilityTextResource(statusVisibility))
 }
 
 @BindingAdapter("statusVisibility")
 fun setStatusVisibility(imageView: ImageView, statusVisibility: StatusVisibility?) {
     if (statusVisibility == null)
         return
-    imageView.setImageResource(when (statusVisibility) {
+    imageView.setImageResource(getStatusVisibilityImageResource(statusVisibility))
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        imageView.tooltipText =
+            imageView.resources.getString(getStatusVisibilityTextResource(statusVisibility))
+}
+
+fun getStatusVisibilityImageResource(visibility: StatusVisibility): Int {
+    return when (visibility) {
         StatusVisibility.PUBLIC -> R.drawable.ic_public
         StatusVisibility.UNLISTED -> R.drawable.ic_lock_open
         StatusVisibility.FOLLOWERS -> R.drawable.ic_people
         StatusVisibility.PRIVATE -> R.drawable.ic_lock
-    })
+    }
+}
+
+fun getStatusVisibilityTextResource(visibility: StatusVisibility): Int {
+    return when (visibility) {
+        StatusVisibility.PUBLIC -> R.string.visibility_public
+        StatusVisibility.UNLISTED -> R.string.visibility_unlisted
+        StatusVisibility.FOLLOWERS -> R.string.visibility_followers
+        StatusVisibility.PRIVATE -> R.string.visibility_private
+    }
 }
 
 @BindingAdapter("business")
 fun setStatusBusiness(button: MaterialButton, business: StatusBusiness?) {
     if (business == null)
         return
-    button.setIconResource(when (business) {
-        StatusBusiness.PRIVATE -> R.drawable.ic_person
-        StatusBusiness.BUSINESS -> R.drawable.ic_business
-        StatusBusiness.COMMUTE -> R.drawable.ic_commute
-    })
-    button.text = button.resources.getString(when (business) {
-        StatusBusiness.PRIVATE -> R.string.business_private
-        StatusBusiness.BUSINESS -> R.string.business
-        StatusBusiness.COMMUTE -> R.string.business_commute
-    })
+    button.setIconResource(getBusinessImageResource(business))
+    button.text = button.resources.getString(getBusinessTextResource(business))
 }
 
 @BindingAdapter("business")
 fun setStatusBusiness(imageView: ImageView, business: StatusBusiness?) {
     if (business == null)
         return
-    if (business == StatusBusiness.PRIVATE) {
-        imageView.visibility = View.GONE
-        return
-    }
-    imageView.setImageResource(when (business) {
+
+    imageView.setImageResource(getBusinessImageResource(business))
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        imageView.tooltipText = imageView.resources.getString(getBusinessTextResource(business))
+}
+
+fun getBusinessImageResource(business: StatusBusiness): Int {
+    return when (business) {
         StatusBusiness.PRIVATE -> R.drawable.ic_person
         StatusBusiness.BUSINESS -> R.drawable.ic_business
         StatusBusiness.COMMUTE -> R.drawable.ic_commute
-    })
+    }
+}
+
+fun getBusinessTextResource(business: StatusBusiness): Int {
+    return when (business) {
+        StatusBusiness.PRIVATE -> R.string.business_private
+        StatusBusiness.BUSINESS -> R.string.business
+        StatusBusiness.COMMUTE -> R.string.business_commute
+    }
 }
 
 fun getLocalTimeString(date: Date?): String {

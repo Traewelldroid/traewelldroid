@@ -1,8 +1,6 @@
 package de.hbch.traewelling.api.models.status
 
 import com.google.gson.annotations.SerializedName
-import de.hbch.traewelling.api.models.user.ForeignUser
-import de.hbch.traewelling.api.models.user.User
 import java.util.*
 
 data class Status(
@@ -10,7 +8,9 @@ data class Status(
     @SerializedName("body") val body: String?,
     @SerializedName("type") val type: String,
     @SerializedName("createdAt") val createdAt: Date,
-    @SerializedName("user") val user: ForeignUser,
+    @SerializedName("user") val userId: Int,
+    @SerializedName("username") val username: String,
+    @SerializedName("preventIndex") val preventIndex: Boolean,
     @SerializedName("visibility") val visibility: StatusVisibility,
     @SerializedName("business") val business: StatusBusiness,
     @SerializedName("likes") var likes: Int,
