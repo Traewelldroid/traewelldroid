@@ -41,4 +41,8 @@
     <string name="business_commute">Arbeitsweg</string>
     <string name="set_homeland">Heimatstation festlegen</string>
     <string name="set_homeland_success">Du hast nun %1$s als Heimatstation festgelegt.</string>
+    <string name="delete_status">Bist du dir sicher, dass du diesen Check-In löschen möchtest?</string>
+    <string name="delete">Löschen</string>
+    <string name="status_delete_success">Dein Check-In wurde erfolgreich gelöscht.</string>
+    <string name="status_delete_failure">Beim Löschen des Check-Ins ist ein Fehler aufgetreten.</string>
 </resources>

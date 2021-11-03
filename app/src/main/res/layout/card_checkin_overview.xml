@@ -10,6 +10,11 @@
         <variable
             name="viewModel"
             type="de.hbch.traewelling.ui.include.status.StatusCardViewModel" />
+        <variable
+            name="checkInCard"
+            type="de.hbch.traewelling.ui.include.status.CardCheckInOverview" />
+        <import
+            type="android.view.View" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
@@ -261,12 +266,13 @@
                 android:layout_marginTop="8dp"
                 app:tint="#FFC107"
                 android:clickable="true"
-                android:onClick="@{() -> viewModel.handleFavoriteClick(checkIn)}"
+                android:onClick="@{() -> viewModel.handleFavoriteClick()}"
                 android:focusable="true" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:id="@+id/like_count"
                 app:layout_constraintStart_toEndOf="@id/fav"
                 app:layout_constraintTop_toTopOf="@id/fav"
                 app:layout_constraintBottom_toBottomOf="@id/fav"
@@ -274,6 +280,19 @@
                 android:textSize="16sp"
                 tools:text="3"
                 android:text="@{Integer.toString(viewModel.likes)}" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_delete_status"
+                app:layout_constraintStart_toEndOf="@id/like_count"
+                app:layout_constraintTop_toTopOf="@id/like_count"
+                app:layout_constraintBottom_toBottomOf="@id/like_count"
+                android:layout_marginStart="16dp"
+                android:src="@drawable/ic_delete"
+                app:tint="@color/traewelling"
+                android:visibility="@{viewModel.isOwnStatus ? View.VISIBLE : View.GONE}"
+                android:onClick="@{() -> checkInCard.handleDeleteClicked()}"/>
 
             <ImageView
                 android:layout_width="wrap_content"

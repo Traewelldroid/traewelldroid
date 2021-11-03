@@ -5,15 +5,18 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import de.hbch.traewelling.adapters.CheckInAdapter
 import de.hbch.traewelling.databinding.FragmentActiveCheckinsBinding
+import de.hbch.traewelling.shared.LoggedInUserViewModel
 
 class ActiveCheckinsFragment : Fragment() {
 
     private lateinit var binding: FragmentActiveCheckinsBinding
     private val viewModel: ActiveCheckinsViewModel by viewModels()
+    private val loggedInUserViewModel: LoggedInUserViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,7 +33,8 @@ class ActiveCheckinsFragment : Fragment() {
             if (statusPage != null) {
                 recyclerView.adapter =
                     CheckInAdapter(
-                        statusPage.data.toMutableList()
+                        statusPage.data.toMutableList(),
+                        loggedInUserViewModel.userId
                     )
             }
             binding.swipeRefreshCheckins.isRefreshing = false

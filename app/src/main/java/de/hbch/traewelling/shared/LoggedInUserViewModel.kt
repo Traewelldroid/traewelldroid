@@ -18,6 +18,10 @@ class LoggedInUserViewModel : ViewModel() {
     private val _loggedInUser = MutableLiveData<User?>()
     val loggedInUser: LiveData<User?> get() = _loggedInUser
 
+    val userId: LiveData<Int> get() = Transformations.map(_loggedInUser) { user ->
+        user?.id ?: -1
+    }
+
     val username: LiveData<String> get() = Transformations.map(_loggedInUser) { user ->
         user?.username ?: ""
     }

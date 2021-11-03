@@ -6,6 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.api.models.status.Status
+import de.hbch.traewelling.ui.include.deleteStatus.DeleteStatusBottomSheet
+import io.sentry.Sentry
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -20,14 +22,37 @@ class StatusCardViewModel(
     private val _likes = MutableLiveData(status.likes)
     val likes: LiveData<Int> get() = _likes
 
-    fun handleFavoriteClick(status: Status) {
+    val isOwnStatus = MutableLiveData(false)
+
+    fun handleFavoriteClick() {
         if (liked.value!!)
-            deleteFavorite(status)
+            deleteFavorite()
         else
-            createFavorite(status)
+            createFavorite()
     }
 
-    private fun createFavorite(status: Status) {
+    fun deleteStatus(
+        successCallback: () -> Unit,
+        failureCallback: () -> Unit
+    ) {
+        TraewellingApi.checkInService.deleteStatus(status.id)
+            .enqueue(object: Callback<Any> {
+                override fun onResponse(call: Call<Any>, response: Response<Any>) {
+                    if (response.isSuccessful)
+                        successCallback()
+                    else {
+                        Sentry.captureMessage(response.errorBody().toString())
+                        failureCallback()
+                    }
+                }
+                override fun onFailure(call: Call<Any>, t: Throwable) {
+                    Sentry.captureException(t)
+                    failureCallback()
+                }
+            })
+    }
+
+    private fun createFavorite() {
         TraewellingApi.checkInService.createFavorite(status.id)
             .enqueue(object: Callback<Unit> {
                 override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
@@ -46,7 +71,7 @@ class StatusCardViewModel(
             })
     }
 
-    private fun deleteFavorite(status: Status) {
+    private fun deleteFavorite() {
         TraewellingApi.checkInService.deleteFavorite(status.id)
             .enqueue(object: Callback<Unit> {
                 override fun onResponse(call: Call<Unit>, response: Response<Unit>) {

@@ -71,7 +71,11 @@ class DashboardFragment : Fragment() {
         val recyclerView = binding.recyclerViewCheckIn
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter =
-            CheckInAdapter(mutableListOf())
+            CheckInAdapter(
+                mutableListOf(),
+                loggedInUserViewModel.userId
+            )
+
         binding.nestedScrollViewDashboard.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
             val view = v?.getChildAt(v.childCount - 1)
             val diff = (view?.bottom?.minus((v?.height + v.scrollY)))

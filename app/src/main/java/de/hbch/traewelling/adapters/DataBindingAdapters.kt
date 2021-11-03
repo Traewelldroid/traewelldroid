@@ -24,6 +24,22 @@ fun setImageResource(imageView: ImageView, resourceId: Int?) {
     imageView.setImageResource(resourceId)
 }
 
+@BindingAdapter("alertIcon")
+fun setAlertIcon(imageView: ImageView, alertType: String?) {
+    if (alertType == null)
+        return
+    imageView.setImageResource(when(alertType) {
+        "error" -> R.drawable.ic_error
+        "success" -> R.drawable.ic_check_in
+        else -> R.drawable.ic_error
+    })
+    imageView.setColorFilter(imageView.resources.getColor(when(alertType) {
+        "error" -> R.color.traewelling
+        "success" -> R.color.success
+        else -> R.color.traewelling
+    }, null))
+}
+
 @BindingAdapter(value = ["planned", "real"], requireAll = true)
 fun setVisibilityForDelay(textView: TextView, planned: Date?, real: Date?) {
     if (planned == null || real == null) {

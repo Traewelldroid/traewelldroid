@@ -2,21 +2,23 @@ package de.hbch.traewelling.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import de.hbch.traewelling.api.models.status.Status
 import de.hbch.traewelling.databinding.CardCheckinOverviewBinding
+import de.hbch.traewelling.ui.include.status.CardCheckInOverview
 import de.hbch.traewelling.ui.include.status.StatusCardViewModel
 
-class CheckInAdapter(val checkIns: MutableList<Status>)
+class CheckInAdapter(val checkIns: MutableList<Status>, private val loggedInUserId: LiveData<Int>)
     : RecyclerView.Adapter<CheckInAdapter.CheckInViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CheckInViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val binding = CardCheckinOverviewBinding.inflate(inflater, parent, false)
-        binding.lifecycleOwner = parent.findViewTreeLifecycleOwner()
+        val checkInCard = CardCheckInOverview(parent.context, null, this)
+        checkInCard.binding.lifecycleOwner = parent.findViewTreeLifecycleOwner()
         return CheckInViewHolder(
-            binding
+            checkInCard,
+            loggedInUserId
         )
     }
 
@@ -28,10 +30,20 @@ class CheckInAdapter(val checkIns: MutableList<Status>)
         holder.bind(checkIns[position])
     }
 
-    class CheckInViewHolder(val binding: CardCheckinOverviewBinding) : RecyclerView.ViewHolder(binding.root) {
+    class CheckInViewHolder(
+        private val checkInCard: CardCheckInOverview,
+        private val loggedInUserId: LiveData<Int>
+    ) : RecyclerView.ViewHolder(checkInCard.binding.root) {
         fun bind(checkIn: Status) {
+            val binding = checkInCard.binding
+            binding.checkInCard = checkInCard
             binding.checkIn = checkIn
-            binding.viewModel = StatusCardViewModel(checkIn)
+            binding.viewModel = StatusCardViewModel(
+                checkIn
+            )
+            loggedInUserId.observe(binding.lifecycleOwner!!) {
+                binding.viewModel!!.isOwnStatus.postValue(it == checkIn.userId)
+            }
             if (checkIn.body == null || checkIn.body == "")
                 binding.nextStation.textSize = 0F
             binding.executePendingBindings()
