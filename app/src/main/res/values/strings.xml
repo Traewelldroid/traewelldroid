@@ -48,4 +48,5 @@
     <string name="delete">Delete</string>
     <string name="status_delete_success">Your check-in was successfully deleted.</string>
     <string name="status_delete_failure">There was an error when deleting your check-in.</string>
+    <string name="co_travellers">Also in your connection:</string>
 </resources>

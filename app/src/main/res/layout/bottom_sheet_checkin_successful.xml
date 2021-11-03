@@ -38,6 +38,7 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:id="@+id/check_in_detail_layout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/text_check_in_successful"
@@ -86,7 +87,30 @@
                 android:text="@{@string/display_points(checkIn.status.journey.points)}"/>
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/co_travellers_layout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/check_in_detail_layout"
+            android:layout_marginTop="32dp"
+            android:orientation="vertical">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/co_travellers"
+                android:layout_gravity="center"
+                style="@style/TextAppearance.AppCompat.Headline" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/recycler_view_co_travellers"
+                tools:listitem="@android:layout/simple_list_item_1"
+                tools:itemCount="3"
+                android:layout_gravity="center" />
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

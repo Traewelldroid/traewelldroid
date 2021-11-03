@@ -21,5 +21,5 @@ data class CheckInRequest(
 
 data class CheckInResponse(
     @SerializedName("status") val status: Status,
-    @SerializedName("alsoOnThisConnection") val coTravellers: List<User>
+    @SerializedName("alsoOnThisConnection") val coTravellers: List<Status>
 )
