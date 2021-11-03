@@ -18,6 +18,8 @@ import de.hbch.traewelling.R
 import de.hbch.traewelling.databinding.FragmentCheckInBinding
 import de.hbch.traewelling.shared.CheckInViewModel
 import de.hbch.traewelling.shared.LoggedInUserViewModel
+import de.hbch.traewelling.ui.include.alert.AlertBottomSheet
+import de.hbch.traewelling.ui.include.alert.AlertType
 import de.hbch.traewelling.ui.include.checkInSuccessful.CheckInSuccessfulBottomSheet
 import de.hbch.traewelling.ui.include.selectBusinessType.SelectBusinessTypeBottomSheet
 import de.hbch.traewelling.ui.include.selectStatusVisibility.SelectStatusVisibilityBottomSheet
@@ -53,7 +55,7 @@ class CheckInFragment : Fragment() {
                     true -> VISIBLE
                     false -> GONE
                 }
-            toggleGroupSocialMedia.addOnButtonCheckedListener { group, checkedId, isChecked ->
+            toggleGroupSocialMedia.addOnButtonCheckedListener { _, checkedId, isChecked ->
                 when (checkedId) {
                     R.id.btn_send_toot -> checkInViewModel.toot.value = isChecked
                     R.id.btn_send_tweet -> checkInViewModel.tweet.value = isChecked
@@ -67,18 +69,6 @@ class CheckInFragment : Fragment() {
             requireContext().theme.resolveAttribute(android.R.attr.windowBackground, color, true)
             if (color.type >= TypedValue.TYPE_FIRST_COLOR_INT && color.type <= TypedValue.TYPE_LAST_COLOR_INT) {
                 setAllContainerColors(color.data)
-            }
-        }
-
-        checkInViewModel.checkInResponse.observe(viewLifecycleOwner) { response ->
-            if (response != null) {
-                val checkInSuccessfulBottomSheet = CheckInSuccessfulBottomSheet(response)
-                checkInSuccessfulBottomSheet.show(parentFragmentManager, CheckInSuccessfulBottomSheet.TAG)
-                GlobalScope.launch(Dispatchers.Main) {
-                    findNavController().navigate(CheckInFragmentDirections.actionCheckInFragmentToDashboardFragment())
-                    delay(3000)
-                    checkInSuccessfulBottomSheet.dismiss()
-                }
             }
         }
         return binding.root
@@ -96,5 +86,33 @@ class CheckInFragment : Fragment() {
             checkInViewModel.statusBusiness.postValue(business)
         }
         bottomSheet.show(parentFragmentManager, SelectBusinessTypeBottomSheet.TAG)
+    }
+
+    fun checkIn() {
+        checkInViewModel.checkIn({ response ->
+            if (response != null) {
+                val checkInSuccessfulBottomSheet = CheckInSuccessfulBottomSheet(response)
+                checkInSuccessfulBottomSheet.show(
+                    parentFragmentManager,
+                    CheckInSuccessfulBottomSheet.TAG
+                )
+                GlobalScope.launch(Dispatchers.Main) {
+                    findNavController().navigate(CheckInFragmentDirections.actionCheckInFragmentToDashboardFragment())
+                    delay(3000)
+                    checkInSuccessfulBottomSheet.dismiss()
+                }
+                checkInViewModel.reset()
+            }
+        }, { statusCode ->
+            val alertBottomSheet = AlertBottomSheet(
+                AlertType.ERROR,
+                requireContext().getString(when(statusCode) {
+                    409 -> R.string.check_in_conflict
+                    else -> R.string.check_in_failure
+                }),
+                3000
+            )
+            alertBottomSheet.show(parentFragmentManager, AlertBottomSheet.TAG)
+        })
     }
 }

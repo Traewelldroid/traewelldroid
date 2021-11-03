@@ -48,7 +48,7 @@ class AlertBottomSheet(
     }
 }
 
-enum class AlertType(alertType: Int) {
-    SUCCESS(0),
-    ERROR(1)
+enum class AlertType {
+    SUCCESS,
+    ERROR
 }

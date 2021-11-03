@@ -10,6 +10,7 @@ import de.hbch.traewelling.api.models.status.CheckInRequest
 import de.hbch.traewelling.api.models.status.CheckInResponse
 import de.hbch.traewelling.api.models.status.StatusBusiness
 import de.hbch.traewelling.api.models.status.StatusVisibility
+import io.sentry.Sentry
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -29,9 +30,6 @@ class CheckInViewModel : ViewModel() {
     val statusVisibility = MutableLiveData(StatusVisibility.PUBLIC)
     val statusBusiness = MutableLiveData(StatusBusiness.PRIVATE)
 
-    private val _checkInResponse = MutableLiveData<CheckInResponse?>()
-    val checkInResponse: LiveData<CheckInResponse?> get() = _checkInResponse
-
     init {
         reset()
     }
@@ -44,14 +42,16 @@ class CheckInViewModel : ViewModel() {
         arrivalTime = null
         departureTime = null
         message.value = ""
-        _checkInResponse.value = null
         tweet.value = false
         toot.value = false
         statusVisibility.postValue(StatusVisibility.PUBLIC)
         statusBusiness.postValue(StatusBusiness.PRIVATE)
     }
 
-    fun checkIn() {
+    fun checkIn(
+        successCallback: (CheckInResponse?) -> Unit,
+        failureCallback: (Int) -> Unit
+    ) {
         val checkInRequest = CheckInRequest(
             message.value ?: "",
             statusBusiness.value ?: StatusBusiness.PRIVATE,
@@ -63,8 +63,8 @@ class CheckInViewModel : ViewModel() {
             lineName,
             startStationId,
             destinationStationId,
-            departureTime!!,
-            arrivalTime!!
+            departureTime ?: Date(),
+            arrivalTime ?: Date()
         )
         TraewellingApi.checkInService.checkIn(checkInRequest)
             .enqueue(object: Callback<Data<CheckInResponse>> {
@@ -73,18 +73,15 @@ class CheckInViewModel : ViewModel() {
                     response: Response<Data<CheckInResponse>>
                 ) {
                     if (response.isSuccessful) {
-                        _checkInResponse.value = response.body()?.data
+                        successCallback(response.body()?.data)
                     } else {
-                        _checkInResponse.value = null
-                        Log.e("CheckInViewModel", response.toString())
-                        Log.e("CheckInViewModel", response.errorBody()?.charStream()?.readText()!!)
+                        failureCallback(response.code())
+                        Sentry.captureMessage(response.errorBody()?.charStream()?.readText()!!)
                     }
-                    reset()
                 }
                 override fun onFailure(call: Call<Data<CheckInResponse>>, t: Throwable) {
-                    _checkInResponse.value = null
-                    Log.e("CheckInViewModel", t.stackTraceToString())
-                    reset()
+                    failureCallback(-1)
+                    Sentry.captureException(t)
                 }
             })
     }

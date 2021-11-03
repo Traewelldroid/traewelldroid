@@ -26,13 +26,13 @@ class SelectBusinessTypeBottomSheet(private val callback: (StatusBusiness) -> Un
 
         binding.recyclerViewStatusBusinesses.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerViewStatusBusinesses.adapter = StandardListItemAdapter(
-            StatusBusiness.values().asList(), { business, binding ->
-                binding.imageId = when (business) {
+            StatusBusiness.values().asList(), { business, bdg ->
+                bdg.imageId = when (business) {
                     StatusBusiness.PRIVATE -> R.drawable.ic_person
                     StatusBusiness.BUSINESS -> R.drawable.ic_business
                     StatusBusiness.COMMUTE -> R.drawable.ic_commute
                 }
-                binding.title = getString(when(business) {
+                bdg.title = getString(when(business) {
                     StatusBusiness.PRIVATE -> R.string.business_private
                     StatusBusiness.BUSINESS -> R.string.business
                     StatusBusiness.COMMUTE -> R.string.business_commute

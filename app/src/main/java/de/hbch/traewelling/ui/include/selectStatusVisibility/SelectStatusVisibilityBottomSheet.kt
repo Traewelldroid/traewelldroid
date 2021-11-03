@@ -29,14 +29,14 @@ class SelectStatusVisibilityBottomSheet(
         binding.recyclerViewStatusVisibilities.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerViewStatusVisibilities.adapter = StandardListItemAdapter(
             StatusVisibility.values().asList(),
-            { visibility, binding ->
-                binding.imageId = when (visibility) {
+            { visibility, bdg ->
+                bdg.imageId = when (visibility) {
                     StatusVisibility.PUBLIC -> R.drawable.ic_public
                     StatusVisibility.UNLISTED -> R.drawable.ic_lock_open
                     StatusVisibility.FOLLOWERS -> R.drawable.ic_people
                     StatusVisibility.PRIVATE -> R.drawable.ic_lock
                 }
-                binding.title = getString(when (visibility) {
+                bdg.title = getString(when (visibility) {
                     StatusVisibility.PUBLIC -> R.string.visibility_public
                     StatusVisibility.UNLISTED -> R.string.visibility_unlisted
                     StatusVisibility.FOLLOWERS -> R.string.visibility_followers

@@ -28,6 +28,8 @@
     <string name="error_logout">Abmeldung nicht erfolgreich!</string>
     <string name="email">E-Mail-Adresse</string>
     <string name="check_in_successful">Du bist eingecheckt!</string>
+    <string name="check_in_failure">Beim Einchecken ist ein Fehler aufgetreten</string>
+    <string name="check_in_conflict">Du bist bereits in einer anderen Verbindung eingecheckt!</string>
     <string name="title_select_date">Wähle das Abfahrtsdatum</string>
     <string name="title_select_time">Wähle die Abfahrtszeit</string>
     <string name="title_select_visibility">Wähle die gewünschte Sichtbarkeit des Status:</string>

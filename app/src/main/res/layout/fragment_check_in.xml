@@ -120,7 +120,7 @@
                     app:layout_constraintEnd_toEndOf="@id/text_input_status_message"
                     android:layout_marginTop="12dp"
                     app:icon="@drawable/ic_check_in"
-                    android:onClick="@{() -> viewModel.checkIn()}"/>
+                    android:onClick="@{() -> checkInFragment.checkIn()}"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
 

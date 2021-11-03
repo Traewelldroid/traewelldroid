@@ -28,8 +28,8 @@ class SearchConnectionViewModel: ViewModel() {
                 ) {
                     if (response.isSuccessful) {
                         val trip = response.body()
-                        if (trip != null) {
-                            _departures.value = trip!!
+                        trip?.let {
+                            _departures.value = it
                         }
                     } else {
                         Sentry.captureMessage(response.errorBody()?.string() ?: "SearchConnectionViewModel:searchConnections error")

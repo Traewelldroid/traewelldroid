@@ -29,6 +29,8 @@
     <string name="error_logout">Logout was not successful!</string>
     <string name="email">Email address</string>
     <string name="check_in_successful">You are checked in!</string>
+    <string name="check_in_failure">There was an error when checking you in.</string>
+    <string name="check_in_conflict">You are already checked in another connection!</string>
     <string name="title_select_date">Select the departure date</string>
     <string name="title_select_time">Select the departure time</string>
     <string name="title_select_visibility">Select the desired status visibility:</string>
