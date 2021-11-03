@@ -11,6 +11,10 @@ class DeleteStatusBottomSheet(
     private val onSubmitCallback: (DeleteStatusBottomSheet) -> Unit
 ): BottomSheetDialogFragment() {
 
+    companion object {
+        const val TAG = "DeleteStatusBottomSheet"
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

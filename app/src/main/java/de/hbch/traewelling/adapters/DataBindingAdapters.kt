@@ -10,6 +10,7 @@ import com.google.android.material.button.MaterialButton
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.status.StatusBusiness
 import de.hbch.traewelling.api.models.status.StatusVisibility
+import de.hbch.traewelling.ui.include.alert.AlertType
 import java.text.DateFormat
 import java.text.DateFormat.getTimeInstance
 import java.text.SimpleDateFormat
@@ -25,18 +26,16 @@ fun setImageResource(imageView: ImageView, resourceId: Int?) {
 }
 
 @BindingAdapter("alertIcon")
-fun setAlertIcon(imageView: ImageView, alertType: String?) {
+fun setAlertIcon(imageView: ImageView, alertType: AlertType?) {
     if (alertType == null)
         return
     imageView.setImageResource(when(alertType) {
-        "error" -> R.drawable.ic_error
-        "success" -> R.drawable.ic_check_in
-        else -> R.drawable.ic_error
+        AlertType.ERROR -> R.drawable.ic_error
+        AlertType.SUCCESS -> R.drawable.ic_check_in
     })
     imageView.setColorFilter(imageView.resources.getColor(when(alertType) {
-        "error" -> R.color.traewelling
-        "success" -> R.color.success
-        else -> R.color.traewelling
+        AlertType.ERROR -> R.color.traewelling
+        AlertType.SUCCESS -> R.color.success
     }, null))
 }
 
@@ -108,7 +107,12 @@ fun setStatusVisibility(button: MaterialButton, statusVisibility: StatusVisibili
 fun setStatusVisibility(imageView: ImageView, statusVisibility: StatusVisibility?) {
     if (statusVisibility == null)
         return
+
     imageView.setImageResource(getStatusVisibilityImageResource(statusVisibility))
+
+    if (statusVisibility == StatusVisibility.PUBLIC)
+        imageView.visibility = View.GONE
+
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
         imageView.tooltipText =
             imageView.resources.getString(getStatusVisibilityTextResource(statusVisibility))
@@ -146,6 +150,9 @@ fun setStatusBusiness(imageView: ImageView, business: StatusBusiness?) {
         return
 
     imageView.setImageResource(getBusinessImageResource(business))
+
+    if (business == StatusBusiness.PRIVATE)
+        imageView.visibility = View.GONE
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
         imageView.tooltipText = imageView.resources.getString(getBusinessTextResource(business))

@@ -9,7 +9,7 @@
             type="String" />
         <variable
             name="alertType"
-            type="String" />
+            type="de.hbch.traewelling.ui.include.alert.AlertType" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
