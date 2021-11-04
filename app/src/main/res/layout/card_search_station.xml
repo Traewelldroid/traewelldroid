@@ -32,6 +32,7 @@
                 style="@style/TextAppearance.AppCompat.Headline"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                android:textColor="@color/traewelling"
                 android:text="@string/where_are_you" />
 
             <com.google.android.material.textfield.TextInputLayout

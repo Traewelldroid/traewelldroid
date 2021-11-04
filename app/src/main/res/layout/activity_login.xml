@@ -25,12 +25,14 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="40dp"
-                android:src="@drawable/ic_traewelling"
-                app:tint="@color/traewelling" />
+                android:textSize="50sp"
+                android:text="@string/app_name"
+                android:layout_gravity="center"
+                android:textColor="@color/traewelling"
+                android:layout_margin="40dp" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
