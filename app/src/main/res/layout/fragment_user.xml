@@ -51,7 +51,7 @@
                         app:layout_constraintTop_toBottomOf="@id/image_profile"
                         tools:text="username"
                         android:text="@{viewModel.username}"
-                        style="@style/TextAppearance.AppCompat.Headline"
+                        style="@style/TextAppearance.Traewelling.Headline"
                         android:layout_marginTop="16dp" />
 
                     <GridLayout
@@ -77,8 +77,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:src="@drawable/ic_navigation"
-                                app:tint="@color/black"
-                                android:layout_marginRight="8dp"/>
+                                android:layout_marginEnd="8dp"
+                                app:tint="@color/traewelling"/>
                             <TextView
                                 android:id="@+id/textView_kilometres"
                                 android:layout_width="wrap_content"
@@ -107,8 +107,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:src="@drawable/ic_score"
-                                app:tint="@color/black"
-                                android:layout_marginLeft="8dp"/>
+                                app:tint="@color/traewelling"
+                                android:layout_marginStart="8dp"/>
                         </LinearLayout>
 
                         <LinearLayout
@@ -122,8 +122,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:src="@drawable/ic_travel_time"
-                                app:tint="@color/black"
-                                android:layout_marginRight="8dp"/>
+                                app:tint="@color/traewelling"
+                                android:layout_marginEnd="8dp"/>
                             <TextView
                                 android:id="@+id/textView_travelTime"
                                 android:layout_width="wrap_content"
@@ -151,8 +151,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:src="@drawable/ic_speed"
-                                app:tint="@color/black"
-                                android:layout_marginLeft="8dp"/>
+                                app:tint="@color/traewelling"
+                                android:layout_marginStart="8dp"/>
                         </LinearLayout>
                     </GridLayout>
 
@@ -160,17 +160,6 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/card_user"
-                tools:listitem="@layout/standard_list_item"
-                tools:itemCount="5"
-                android:id="@+id/recycler_view_menu"
-                app:layout_constraintStart_toStartOf="@id/card_user"
-                app:layout_constraintEnd_toEndOf="@id/card_user"
-                android:padding="16dp"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

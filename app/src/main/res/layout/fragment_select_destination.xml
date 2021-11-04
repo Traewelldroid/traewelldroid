@@ -38,7 +38,7 @@
                         app:layout_constraintTop_toTopOf="parent"
                         tools:text="RE 75 nach Ulm Hbf"
                         android:text="@{@string/line_destination(line, destination)}"
-                        style="@style/TextAppearance.AppCompat.Headline"
+                        style="@style/TextAppearance.Traewelling.Headline"
                         android:id="@+id/text_view_line_destination" />
                     <androidx.recyclerview.widget.RecyclerView
                         android:layout_width="match_parent"

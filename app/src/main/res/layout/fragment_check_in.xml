@@ -40,7 +40,7 @@
                     android:id="@+id/text_view_line_final_destination"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    style="@style/TextAppearance.AppCompat.Headline"
+                    style="@style/TextAppearance.Traewelling.Headline"
                     android:text="@{@string/line_destination(viewModel.lineName, destination)}"/>
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"

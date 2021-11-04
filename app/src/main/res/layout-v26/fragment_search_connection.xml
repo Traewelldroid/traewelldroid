@@ -33,7 +33,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/TextAppearance.AppCompat.Headline"
+                style="@style/TextAppearance.Traewelling.Headline"
                 tools:text="@string/departures_at"
                 app:layout_constraintTop_toBottomOf="@id/search_card"
                 app:layout_constraintStart_toStartOf="@id/search_card"
