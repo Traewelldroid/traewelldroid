@@ -7,10 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import de.hbch.traewelling.databinding.BottomSheetAlertBinding
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class AlertBottomSheet(
     private val alertType: AlertType,
@@ -40,7 +37,7 @@ class AlertBottomSheet(
     override fun show(manager: FragmentManager, tag: String?) {
         super.show(manager, tag)
         if (dismissTimeInMillis > 0) {
-            GlobalScope.launch(Dispatchers.Main) {
+            CoroutineScope(Dispatchers.Main).launch {
                 delay(dismissTimeInMillis)
                 dismiss()
             }

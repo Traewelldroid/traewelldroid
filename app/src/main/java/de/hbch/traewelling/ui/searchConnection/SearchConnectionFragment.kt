@@ -31,10 +31,7 @@ import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.ui.checkIn.CheckInFragmentDirections
 import de.hbch.traewelling.ui.include.cardSearchStation.SearchStationCard
 import de.hbch.traewelling.ui.include.homelandStation.HomelandStationBottomSheet
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -116,7 +113,7 @@ class SearchConnectionFragment : Fragment() {
                 loggedInUserViewModel.setHomelandStation(station)
                 val bottomSheet = HomelandStationBottomSheet(station.name)
                 bottomSheet.show(parentFragmentManager, "SetHomelandStationBottomSheet")
-                GlobalScope.launch(Dispatchers.Main) {
+                CoroutineScope(Dispatchers.Main).launch {
                     delay(3000)
                     bottomSheet.dismiss()
                 }

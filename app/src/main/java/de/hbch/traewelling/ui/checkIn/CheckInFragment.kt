@@ -96,7 +96,7 @@ class CheckInFragment : Fragment() {
                     parentFragmentManager,
                     CheckInSuccessfulBottomSheet.TAG
                 )
-                GlobalScope.launch(Dispatchers.Main) {
+                CoroutineScope(Dispatchers.Main).launch {
                     findNavController().navigate(CheckInFragmentDirections.actionCheckInFragmentToDashboardFragment())
                     delay(3000)
                     checkInSuccessfulBottomSheet.dismiss()
