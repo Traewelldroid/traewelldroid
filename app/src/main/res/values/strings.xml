@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Träwelling</string>
+    <string name="app_name" translatable="false">Träwelldroid</string>
     <string name="input_username">Username</string>
     <string name="input_password">Password</string>
     <string name="input_stop">Stop / DS100</string>

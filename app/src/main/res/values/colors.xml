@@ -2,8 +2,8 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="traewelling">#C72730</color>
-    <color name="traewelling_dark">#A52128</color>
+    <color name="traewelling">#3F51B5</color>
+    <color name="traewelling_dark">#3F51B5</color>
     <color name="train_on_time">#00D809</color>
     <color name="train_delayed">#FF0000</color>
     <color name="success">#4CAF50</color>
