@@ -19,11 +19,13 @@ import de.hbch.traewelling.ui.include.deleteStatus.DeleteStatusBottomSheet
 class CardCheckInOverview(context: Context?, attrs: AttributeSet?, private val adapter: CheckInAdapter) :
     MaterialCardView(context, attrs, 0) {
 
-        val binding: CardCheckinOverviewBinding =
-            CardCheckinOverviewBinding
-                .inflate(LayoutInflater.from(context), this, false)
+    val binding: CardCheckinOverviewBinding =
+        CardCheckinOverviewBinding
+            .inflate(LayoutInflater.from(context), this, false)
 
-        val fragmentManager = (context as FragmentActivity).supportFragmentManager
+    private val fragmentManager = (context as FragmentActivity).supportFragmentManager
+
+    private var onStationNameClickedListener: (String) -> Unit = {}
 
     fun handleDeleteClicked() {
         val bottomSheet = DeleteStatusBottomSheet { bottomSheet ->
@@ -52,4 +54,11 @@ class CardCheckInOverview(context: Context?, attrs: AttributeSet?, private val a
         }
     }
 
+    fun onStationNameClicked(stationName: String) {
+        onStationNameClickedListener(stationName)
+    }
+
+    fun setOnStationNameClickedListener(listener: (String) -> Unit) {
+        onStationNameClickedListener = listener
+    }
 }

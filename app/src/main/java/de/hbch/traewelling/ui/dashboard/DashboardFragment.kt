@@ -74,7 +74,9 @@ class DashboardFragment : Fragment() {
             CheckInAdapter(
                 mutableListOf(),
                 loggedInUserViewModel.userId
-            )
+            ) {
+                stationName -> searchStationCard.searchConnections(stationName)
+            }
 
         binding.nestedScrollViewDashboard.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, _, _, _, _ ->
             val vw = v?.getChildAt(v.childCount - 1)

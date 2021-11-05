@@ -91,7 +91,8 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     android:gravity="start"
-                    tools:text="Start Hbf" />
+                    tools:text="Start Hbf"
+                    android:onClick="@{() -> checkInCard.onStationNameClicked(checkIn.journey.origin.name)}"/>
 
                 <TextView
                     android:id="@+id/departure_planned_time"
@@ -202,7 +203,9 @@
                     app:layout_constraintEnd_toStartOf="@+id/arrival_planned_time"
                     app:layout_constraintStart_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@id/start_station"
-                    tools:text="Ende Hbf" />
+                    tools:text="Ende Hbf"
+
+                    android:onClick="@{() -> checkInCard.onStationNameClicked(checkIn.journey.destination.name)}" />
 
                 <TextView
                     android:id="@+id/arrival_planned_time"

@@ -73,9 +73,9 @@ class SearchConnectionFragment : Fragment() {
             binding.recyclerViewConnections.adapter =
                 ConnectionAdapter(connections.data) { itemView, connection ->
                     checkInViewModel.reset()
-                    checkInViewModel.lineName = connection.line.name
+                    checkInViewModel.lineName = connection.line?.name ?: ""
                     checkInViewModel.tripId = connection.tripId
-                    checkInViewModel.startStationId = connection.station.id
+                    checkInViewModel.startStationId = connection.station?.id ?: -1
                     checkInViewModel.departureTime = connection.plannedDeparture
 
                     val transitionName = connection.tripId
@@ -83,7 +83,7 @@ class SearchConnectionFragment : Fragment() {
                     val action =
                         SearchConnectionFragmentDirections.actionSearchConnectionFragmentToSelectDestinationFragment(
                             transitionName,
-                            connection.destination
+                            connection.destination ?: ""
                         )
                     findNavController().navigate(action, extras)
                 }

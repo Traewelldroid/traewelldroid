@@ -10,12 +10,17 @@ import de.hbch.traewelling.databinding.CardCheckinOverviewBinding
 import de.hbch.traewelling.ui.include.status.CardCheckInOverview
 import de.hbch.traewelling.ui.include.status.StatusCardViewModel
 
-class CheckInAdapter(val checkIns: MutableList<Status>, private val loggedInUserId: LiveData<Int>)
+class CheckInAdapter(
+    val checkIns: MutableList<Status>,
+    private val loggedInUserId: LiveData<Int>,
+    private val onStationNameClickedListener: (String) -> Unit
+    )
     : RecyclerView.Adapter<CheckInAdapter.CheckInViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CheckInViewHolder {
         val checkInCard = CardCheckInOverview(parent.context, null, this)
         checkInCard.binding.lifecycleOwner = parent.findViewTreeLifecycleOwner()
+        checkInCard.setOnStationNameClickedListener(onStationNameClickedListener)
         return CheckInViewHolder(
             checkInCard,
             loggedInUserId

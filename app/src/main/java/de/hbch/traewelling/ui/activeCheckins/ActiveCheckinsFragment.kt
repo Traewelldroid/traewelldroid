@@ -35,7 +35,7 @@ class ActiveCheckinsFragment : Fragment() {
                     CheckInAdapter(
                         statusPage.data.toMutableList(),
                         loggedInUserViewModel.userId
-                    )
+                    ) { }
             }
             binding.swipeRefreshCheckins.isRefreshing = false
         }
