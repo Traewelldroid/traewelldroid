@@ -28,23 +28,27 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setError(false)
-        viewModel.loginSuccessful.observe(this) { success ->
-            if (success != null) {
-                if (success) {
-                    val secureStorage = SecureStorage(this)
-                    secureStorage.storeObject(SharedValues.SS_JWT, viewModel.jwt.value!!)
-                    startActivity(Intent(this, MainActivity::class.java))
-                    finish()
-                } else {
-                    setError(true)
-                }
-            }
-        }
     }
 
     fun login() {
         setError(false)
-        viewModel.login()
+        viewModel.login(
+            binding.editTextLogin.text.toString(),
+            binding.editTextPassword.text.toString(),
+            { jwt ->
+                if (jwt == null) {
+                    setError(true)
+                } else {
+                    val secureStorage = SecureStorage(this)
+                    secureStorage.storeObject(SharedValues.SS_JWT, jwt)
+                    startActivity(Intent(this, MainActivity::class.java))
+                    finish()
+                }
+            },
+            {
+                setError(true)
+            }
+        )
     }
 
     private fun setError(error: Boolean) {
@@ -53,6 +57,6 @@ class LoginActivity : AppCompatActivity() {
             false -> ""
         }
         binding.textInputPassword.error = errorText
-        binding.textInputEmail.error = errorText
+        binding.textInputLogin.error = errorText
     }
 }

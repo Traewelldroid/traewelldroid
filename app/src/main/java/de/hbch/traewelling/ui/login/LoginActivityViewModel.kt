@@ -1,45 +1,30 @@
 package de.hbch.traewelling.ui.login
 
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import de.hbch.traewelling.api.TraewellingApi
+import de.hbch.traewelling.api.models.Data
 import de.hbch.traewelling.api.models.auth.BearerToken
 import de.hbch.traewelling.api.models.auth.LoginCredentials
+import io.sentry.Sentry
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class LoginActivityViewModel : ViewModel() {
-    val email = MutableLiveData<String>()
-    val password = MutableLiveData<String>()
-
-    private val _loginSuccessful = MutableLiveData<Boolean>()
-    val loginSuccessful: LiveData<Boolean> get() = _loginSuccessful
-    private val _jwt = MutableLiveData<String>()
-    val jwt: LiveData<String> get() = _jwt
-
-    fun login() {
-        if (email.value == null || password.value == null) {
-            _loginSuccessful.value = false
-            return
-        }
-        TraewellingApi.authService.login(LoginCredentials(email.value!!, password.value!!))
-            .enqueue(object: Callback<BearerToken> {
-                override fun onResponse(call: Call<BearerToken>, response: Response<BearerToken>) {
+    fun login(login: String, password: String, successCallback: (String?) -> Unit, failureCallback: () -> Unit) {
+        TraewellingApi.authService.login(LoginCredentials(login, password))
+            .enqueue(object: Callback<Data<BearerToken>> {
+                override fun onResponse(call: Call<Data<BearerToken>>, response: Response<Data<BearerToken>>) {
                     if (response.isSuccessful) {
-                        _jwt.value = response.body()?.jwt
-                        Log.d("Login", jwt.value!!)
-                        _loginSuccessful.value = true
-                    } else {
-                        _loginSuccessful.value = false
-                        Log.e("LoginActivityViewModel", response.toString())
+                        successCallback(response.body()?.data?.jwt)
+                        return
                     }
+                    failureCallback()
                 }
-                override fun onFailure(call: Call<BearerToken>, t: Throwable) {
-                    _loginSuccessful.value = false
-                    Log.e("LoginActivityViewModel", t.stackTraceToString())
+
+                override fun onFailure(call: Call<Data<BearerToken>>, t: Throwable) {
+                    failureCallback()
+                    Sentry.captureException(t)
                 }
             })
     }

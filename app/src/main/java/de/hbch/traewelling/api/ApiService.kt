@@ -50,7 +50,7 @@ interface AuthService {
     @POST("auth/login")
     fun login(
         @Body credentials: LoginCredentials
-    ): Call<BearerToken>
+    ): Call<Data<BearerToken>>
 
     @POST("auth/logout")
     fun logout(): Call<Unit>
