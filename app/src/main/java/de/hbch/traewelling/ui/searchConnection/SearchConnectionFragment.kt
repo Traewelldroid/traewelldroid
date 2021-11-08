@@ -61,6 +61,7 @@ class SearchConnectionFragment : Fragment() {
             searchStationCard.onPermissionResult(isGranted)
         }
     }
+    private lateinit var currentSearchDate: Date
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,7 +78,6 @@ class SearchConnectionFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         binding = FragmentSearchConnectionBinding.inflate(inflater, container, false)
         searchStationCard = binding.searchCard
         searchStationCard.viewModel = searchStationCardViewModel
@@ -85,7 +85,7 @@ class SearchConnectionFragment : Fragment() {
         searchStationCard.setOnStationSelectedCallback { station ->
             searchConnections(
                 station,
-                Date()
+                currentSearchDate
             )
         }
         searchStationCard.requestPermissionCallback = { permission ->
@@ -127,9 +127,13 @@ class SearchConnectionFragment : Fragment() {
             viewModel = (this@SearchConnectionFragment).viewModel
         }
 
+        val cal = Calendar.getInstance()
+        cal.time = Date()
+        cal.add(Calendar.MINUTE, -5)
+        currentSearchDate = cal.time
         searchConnections(
             args.stationName,
-            Date()
+            currentSearchDate
         )
         return binding.root
     }
