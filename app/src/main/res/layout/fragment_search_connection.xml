@@ -23,12 +23,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="8dp">
-            <include
+            <de.hbch.traewelling.ui.include.cardSearchStation.SearchStationCard
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent"
                 android:id="@+id/search_card"
-                layout="@layout/card_search_station" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout="@layout/card_search_station"
+                app:cardUseCompatPadding="true"
+                app:cardElevation="3dp"
+                app:cardCornerRadius="8dp"
+                android:padding="16dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -62,11 +67,11 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/btn_select_time"
                         app:icon="@drawable/ic_time"
-                        displayTime="@{viewModel.departures.meta.times.now}"
                         tools:text="15:00"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         android:layout_margin="8dp"
+                        displayTime="@{viewModel.pageTimes.now}"
                         android:onClick="@{() -> searchConnectionFragment.requestDepartureTimeAndSearchConnections()}"/>
 
                     <ImageView
@@ -105,7 +110,7 @@
                         app:icon="@drawable/ic_previous"
                         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                         android:text="@string/previous"
-                        android:onClick="@{() -> viewModel.searchConnections(stationName, viewModel.departures.meta.times.previous)}" />
+                        android:onClick="@{() -> searchConnectionFragment.searchConnections(stationName, viewModel.pageTimes.previous)}"/>
 
                     <com.google.android.material.button.MaterialButton
                         android:layout_width="wrap_content"
@@ -117,7 +122,7 @@
                         app:icon="@drawable/ic_next"
                         app:iconGravity="end"
                         android:text="@string/next"
-                        android:onClick="@{() -> viewModel.searchConnections(stationName, viewModel.departures.meta.times.next)}" />
+                        android:onClick="@{() -> searchConnectionFragment.searchConnections(stationName, viewModel.pageTimes.next)}"/>
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
         </androidx.constraintlayout.widget.ConstraintLayout>

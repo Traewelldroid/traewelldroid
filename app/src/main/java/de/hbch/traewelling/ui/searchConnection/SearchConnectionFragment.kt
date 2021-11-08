@@ -2,11 +2,10 @@ package de.hbch.traewelling.ui.searchConnection
 
 import android.os.Bundle
 import android.text.format.DateFormat.is24HourFormat
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -30,11 +29,9 @@ import de.hbch.traewelling.shared.CheckInViewModel
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.ui.checkIn.CheckInFragmentDirections
 import de.hbch.traewelling.ui.include.cardSearchStation.SearchStationCard
+import de.hbch.traewelling.ui.include.cardSearchStation.SearchStationCardViewModel
 import de.hbch.traewelling.ui.include.homelandStation.HomelandStationBottomSheet
 import kotlinx.coroutines.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.util.*
 
 class SearchConnectionFragment : Fragment() {
@@ -45,6 +42,25 @@ class SearchConnectionFragment : Fragment() {
     private val viewModel: SearchConnectionViewModel by viewModels()
     private val checkInViewModel: CheckInViewModel by activityViewModels()
     private val loggedInUserViewModel: LoggedInUserViewModel by activityViewModels()
+    private val searchStationCardViewModel: SearchStationCardViewModel by viewModels()
+    private val onFoundConnectionsCallback: (HafasTripPage) -> Unit = { connections ->
+        binding.stationName = connections.meta.station.name
+        binding.searchCard.binding.editTextSearchStation.clearFocus()
+        binding.searchCard.binding.editTextSearchStation.setText(connections.meta.station.name)
+        val adapter = binding.recyclerViewConnections.adapter as ConnectionAdapter
+        adapter.notifyItemRangeRemoved(0, adapter.connections.size)
+        adapter.connections.clear()
+        adapter.connections.addAll(connections.data)
+        adapter.notifyItemRangeInserted(0, adapter.connections.size)
+        binding.executePendingBindings()
+    }
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()) {
+            isGranted ->
+        run {
+            searchStationCard.onPermissionResult(isGranted)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,7 +69,7 @@ class SearchConnectionFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        binding.searchCard.viewModel?.removeLocationUpdates()
+        binding.searchCard.removeLocationUpdates()
     }
 
     override fun onCreateView(
@@ -63,37 +79,44 @@ class SearchConnectionFragment : Fragment() {
     ): View? {
 
         binding = FragmentSearchConnectionBinding.inflate(inflater, container, false)
+        searchStationCard = binding.searchCard
+        searchStationCard.viewModel = searchStationCardViewModel
+        searchStationCard.binding.card = searchStationCard
+        searchStationCard.setOnStationSelectedCallback { station ->
+            searchConnections(
+                station,
+                Date()
+            )
+        }
+        searchStationCard.requestPermissionCallback = { permission ->
+            requestPermissionLauncher.launch(permission)
+        }
+        searchStationCard.binding.editTextSearchStation.setText(args.stationName)
         binding.searchConnectionFragment = this
         binding.lifecycleOwner = viewLifecycleOwner
 
         val connectionRecyclerView = binding.recyclerViewConnections
         connectionRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         connectionRecyclerView.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
-        viewModel.departures.observe(viewLifecycleOwner) { connections ->
-            binding.recyclerViewConnections.adapter =
-                ConnectionAdapter(connections.data) { itemView, connection ->
-                    checkInViewModel.reset()
-                    checkInViewModel.lineName = connection.line?.name ?: ""
-                    checkInViewModel.tripId = connection.tripId
-                    checkInViewModel.startStationId = connection.station?.id ?: -1
-                    checkInViewModel.departureTime = connection.plannedDeparture
+        binding.recyclerViewConnections.adapter =
+            ConnectionAdapter(mutableListOf()) { itemView, connection ->
+                checkInViewModel.reset()
+                checkInViewModel.lineName = connection.line?.name ?: ""
+                checkInViewModel.tripId = connection.tripId
+                checkInViewModel.startStationId = connection.station?.id ?: -1
+                checkInViewModel.departureTime = connection.plannedDeparture
 
-                    val transitionName = connection.tripId
-                    val extras = FragmentNavigatorExtras(itemView to transitionName)
-                    val action =
-                        SearchConnectionFragmentDirections.actionSearchConnectionFragmentToSelectDestinationFragment(
-                            transitionName,
-                            connection.destination ?: ""
-                        )
-                    findNavController().navigate(action, extras)
-                }
-            binding.stationName = connections.meta.station.name
-            binding.executePendingBindings()
-        }
-        viewModel.searchConnections(args.stationName, Date())
+                val transitionName = connection.tripId
+                val extras = FragmentNavigatorExtras(itemView to transitionName)
+                val action =
+                    SearchConnectionFragmentDirections.actionSearchConnectionFragmentToSelectDestinationFragment(
+                        transitionName,
+                        connection.destination ?: ""
+                    )
+                findNavController().navigate(action, extras)
+            }
 
         binding.stationName = args.stationName
-        searchStationCard = SearchStationCard(this, binding.searchCard, args.stationName)
         loggedInUserViewModel.loggedInUser.observe(viewLifecycleOwner) { user ->
             if (user != null) {
                 searchStationCard.homelandStation.postValue(user.home?.name)
@@ -101,15 +124,20 @@ class SearchConnectionFragment : Fragment() {
         }
 
         binding.apply {
-            searchCard.viewModel = searchStationCard
             viewModel = (this@SearchConnectionFragment).viewModel
         }
+
+        searchConnections(
+            args.stationName,
+            Date()
+        )
         return binding.root
     }
 
     fun setHomelandStation() {
-        viewModel.setUserHomelandStation(binding.stationName ?: "") { station ->
-            if (station != null) {
+        viewModel.setUserHomelandStation(
+            binding.stationName ?: "",
+            { station ->
                 loggedInUserViewModel.setHomelandStation(station)
                 val bottomSheet = HomelandStationBottomSheet(station.name)
                 bottomSheet.show(parentFragmentManager, "SetHomelandStationBottomSheet")
@@ -117,8 +145,21 @@ class SearchConnectionFragment : Fragment() {
                     delay(3000)
                     bottomSheet.dismiss()
                 }
-            }
-        }
+            },
+            {}
+        )
+    }
+
+    fun searchConnections(
+        stationName: String,
+        timestamp: Date
+    ) {
+        viewModel.searchConnections(
+            stationName,
+            timestamp,
+            onFoundConnectionsCallback,
+            {}
+        )
     }
 
     fun requestDepartureTimeAndSearchConnections() {
@@ -154,7 +195,10 @@ class SearchConnectionFragment : Fragment() {
                 cal.set(Calendar.HOUR, timePicker.hour)
                 cal.set(Calendar.MINUTE, timePicker.minute)
 
-                viewModel.searchConnections(args.stationName, cal.time)
+                searchConnections(
+                    args.stationName,
+                    cal.time
+                )
             }
 
             timePicker.show(childFragmentManager, "SearchConnectionTimePicker")

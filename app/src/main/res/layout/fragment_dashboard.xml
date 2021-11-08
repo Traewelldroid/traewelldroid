@@ -20,13 +20,17 @@
                 android:layout_height="match_parent"
                 android:padding="8dp">
 
-                <include
+                <de.hbch.traewelling.ui.include.cardSearchStation.SearchStationCard
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    layout="@layout/card_search_station"
                     android:id="@+id/search_card"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:layout="@layout/card_search_station"
+                    app:cardUseCompatPadding="true"
+                    app:cardElevation="3dp"
+                    app:cardCornerRadius="8dp"
+                    android:padding="16dp" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:layout_width="match_parent"

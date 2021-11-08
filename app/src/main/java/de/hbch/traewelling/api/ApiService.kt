@@ -98,6 +98,7 @@ interface TravelService {
     @GET("trains/trip")
     fun getTrip(
         @Query("tripID") tripId: String,
+        @Query("tripId") tripId2: String,
         @Query("lineName") lineName: String,
         @Query("start") start: Int
     ): Call<Data<HafasTrainTrip>>

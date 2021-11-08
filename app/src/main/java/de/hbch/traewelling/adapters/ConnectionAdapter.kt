@@ -11,7 +11,7 @@ import de.hbch.traewelling.databinding.ConnectionListItemBinding
 import de.hbch.traewelling.models.Connection
 import java.util.*
 
-class ConnectionAdapter(val connections: List<HafasTrip>, val onItemClick: (View, HafasTrip) -> Unit) : RecyclerView.Adapter<ConnectionAdapter.ConnectionViewHolder>() {
+class ConnectionAdapter(val connections: MutableList<HafasTrip>, val onItemClick: (View, HafasTrip) -> Unit) : RecyclerView.Adapter<ConnectionAdapter.ConnectionViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ConnectionViewHolder {
         val inflater = LayoutInflater.from(parent.context)

@@ -16,7 +16,7 @@ class SelectDestinationViewModel : ViewModel() {
     val trip: LiveData<HafasTrainTrip> get() = _trip
 
     fun getTrip(tripId: String, lineName: String, start: Int) {
-        TraewellingApi.travelService.getTrip(tripId, lineName, start)
+        TraewellingApi.travelService.getTrip(tripId, tripId, lineName, start)
             .enqueue(object: Callback<Data<HafasTrainTrip>> {
                 override fun onResponse(
                     call: Call<Data<HafasTrainTrip>>,

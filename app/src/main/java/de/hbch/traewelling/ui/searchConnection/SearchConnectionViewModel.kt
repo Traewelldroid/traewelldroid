@@ -1,11 +1,11 @@
 package de.hbch.traewelling.ui.searchConnection
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.api.models.Data
+import de.hbch.traewelling.api.models.meta.Times
 import de.hbch.traewelling.api.models.station.Station
 import de.hbch.traewelling.api.models.trip.HafasTripPage
 import io.sentry.Sentry
@@ -16,10 +16,15 @@ import java.util.*
 
 class SearchConnectionViewModel: ViewModel() {
 
-    private val _departures = MutableLiveData<HafasTripPage>()
-    val departures: LiveData<HafasTripPage> get() = _departures
+    private val _pageTimes = MutableLiveData<Times>()
+    val pageTimes: LiveData<Times> get() = _pageTimes
 
-    fun searchConnections(stationName: String, departureTime: Date) {
+    fun searchConnections(
+        stationName: String,
+        departureTime: Date,
+        successCallback: (HafasTripPage) -> Unit,
+        failureCallback: () -> Unit
+    ) {
         TraewellingApi.travelService.getDeparturesAtStation(stationName, departureTime)
             .enqueue(object: Callback<HafasTripPage> {
                 override fun onResponse(
@@ -28,20 +33,27 @@ class SearchConnectionViewModel: ViewModel() {
                 ) {
                     if (response.isSuccessful) {
                         val trip = response.body()
-                        trip?.let {
-                            _departures.value = it
+                        if (trip != null) {
+                            successCallback(trip)
+                            _pageTimes.postValue(trip.meta.times)
+                            return
                         }
-                    } else {
-                        Sentry.captureMessage(response.errorBody()?.string() ?: "SearchConnectionViewModel:searchConnections error")
                     }
+                    failureCallback()
+                    Sentry.captureMessage(response.errorBody()?.string() ?: "")
                 }
                 override fun onFailure(call: Call<HafasTripPage>, t: Throwable) {
+                    failureCallback()
                     Sentry.captureException(t)
                 }
             })
     }
 
-    fun setUserHomelandStation(stationName: String, callback: (Station?) -> Unit) {
+    fun setUserHomelandStation(
+        stationName: String,
+        successCallback: (Station) -> Unit,
+        failureCallback: () -> Unit
+    ) {
         TraewellingApi.authService.setUserHomelandStation(stationName)
             .enqueue(object: Callback<Data<Station>> {
                 override fun onResponse(
@@ -49,16 +61,20 @@ class SearchConnectionViewModel: ViewModel() {
                     response: Response<Data<Station>>
                 ) {
                     if (response.isSuccessful) {
-                        callback(response.body()?.data);
-                    } else {
-                        Sentry.captureMessage(response.errorBody()?.toString() ?: "")
+                        val station = response.body()?.data
+                        if (station != null) {
+                            successCallback(station)
+                            return
+                        }
                     }
+                    failureCallback()
+                    Sentry.captureMessage(response.errorBody()?.string() ?: "")
                 }
 
                 override fun onFailure(call: Call<Data<Station>>, t: Throwable) {
+                    failureCallback()
                     Sentry.captureException(t)
                 }
-
             })
     }
 }

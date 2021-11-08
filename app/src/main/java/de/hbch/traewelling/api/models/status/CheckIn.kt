@@ -17,7 +17,9 @@ data class CheckInRequest(
     @SerializedName("destination") val destinationStationId: Int,
     @SerializedName("departure") val departureTime: Date,
     @SerializedName("arrival") val arrivalTime: Date
-)
+) {
+    @SerializedName("tripId") val tripId2 = tripId
+}
 
 data class CheckInResponse(
     @SerializedName("status") val status: Status,

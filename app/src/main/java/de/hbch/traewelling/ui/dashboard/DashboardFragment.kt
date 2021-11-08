@@ -5,10 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import de.hbch.traewelling.adapters.CheckInAdapter
 import de.hbch.traewelling.api.TraewellingApi
@@ -16,6 +19,7 @@ import de.hbch.traewelling.api.models.status.StatusPage
 import de.hbch.traewelling.databinding.FragmentDashboardBinding
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.ui.include.cardSearchStation.SearchStationCard
+import de.hbch.traewelling.ui.include.cardSearchStation.SearchStationCardViewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -25,7 +29,15 @@ class DashboardFragment : Fragment() {
     private lateinit var binding: FragmentDashboardBinding
     private lateinit var searchStationCard: SearchStationCard
     private val loggedInUserViewModel: LoggedInUserViewModel by activityViewModels()
+    private val searchStationCardViewModel: SearchStationCardViewModel by viewModels()
     private var currentPage = 1
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()) {
+            isGranted ->
+            run {
+                searchStationCard.onPermissionResult(isGranted)
+            }
+    }
 
     private var checkInsLoading = MutableLiveData(false)
 
@@ -35,16 +47,16 @@ class DashboardFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentDashboardBinding.inflate(inflater, container, false)
-        searchStationCard = SearchStationCard(
-            this,
-            binding.searchCard,
-            ""
-        )
+        searchStationCard = binding.searchCard
+        searchStationCard.viewModel = searchStationCardViewModel
+        searchStationCard.binding.card = searchStationCard
+        searchStationCard.requestPermissionCallback = { permission ->
+            requestPermissionLauncher.launch(permission)
+        }
         loggedInUserViewModel.getLoggedInUser()
 
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
-            searchCard.viewModel = searchStationCard
         }
 
         return binding.root
@@ -59,6 +71,10 @@ class DashboardFragment : Fragment() {
             loggedInUserViewModel.getLoggedInUser()
             currentPage = 1
             loadCheckins(currentPage)
+        }
+        binding.searchCard.setOnStationSelectedCallback { station ->
+            findNavController()
+                .navigate(DashboardFragmentDirections.actionDashboardFragmentToSearchConnectionFragment(station))
         }
 
         loggedInUserViewModel.loggedInUser.observe(viewLifecycleOwner) { user ->
@@ -85,7 +101,7 @@ class DashboardFragment : Fragment() {
                 if (!checkInsLoading.value!!) {
                     currentPage++
                     loadCheckins(currentPage)
-                    checkInsLoading.value = true
+                    checkInsLoading.postValue(true)
                 }
             }
         })
@@ -95,7 +111,7 @@ class DashboardFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        binding.searchCard.viewModel?.removeLocationUpdates()
+        binding.searchCard.removeLocationUpdates()
     }
 
     private fun loadCheckins(page: Int) {
@@ -116,10 +132,10 @@ class DashboardFragment : Fragment() {
                         checkInAdapter.notifyItemRangeInserted(previousItemCount, checkInAdapter.itemCount - 1)
                     }
                 }
-                checkInsLoading.value = false
+                checkInsLoading.postValue(false)
             }
             override fun onFailure(call: Call<StatusPage>, t: Throwable) {
-                checkInsLoading.value = false
+                checkInsLoading.postValue(false)
                 t.printStackTrace()
                 Toast.makeText(requireContext(), t.message, Toast.LENGTH_SHORT).show()
             }
