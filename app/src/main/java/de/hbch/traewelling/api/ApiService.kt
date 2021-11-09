@@ -73,6 +73,12 @@ interface CheckInService {
     @GET("statuses")
     fun getStatuses(): Call<StatusPage>
 
+    @GET("user/{username}/statuses")
+    fun getStatusesForUser(
+        @Path("username") username: String,
+        @Query("page") page: Int
+    ): Call<StatusPage>
+
     @DELETE("statuses/{statusId}")
     fun deleteStatus(
         @Path("statusId") statusId: Int

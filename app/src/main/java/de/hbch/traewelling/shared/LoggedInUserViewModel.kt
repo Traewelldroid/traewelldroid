@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.api.models.Data
 import de.hbch.traewelling.api.models.station.Station
+import de.hbch.traewelling.api.models.status.StatusPage
 import de.hbch.traewelling.api.models.user.User
 import io.sentry.Sentry
 import retrofit2.Call
@@ -66,6 +67,29 @@ class LoggedInUserViewModel : ViewModel() {
                 override fun onFailure(call: Call<Data<User>>, t: Throwable) {
                     Log.e("LoggedInUserViewModel", t.stackTraceToString())
                 }
+            })
+    }
+
+    fun getPersonalCheckIns(page: Int, successCallback: (StatusPage) -> Unit, failureCallback: () -> Unit) {
+        TraewellingApi.checkInService.getStatusesForUser(_loggedInUser.value?.username ?: "", page)
+            .enqueue(object: Callback<StatusPage> {
+                override fun onResponse(call: Call<StatusPage>, response: Response<StatusPage>) {
+                    if (response.isSuccessful) {
+                        val statusPage = response.body()
+                        if (statusPage != null) {
+                            successCallback(statusPage)
+                            return
+                        }
+                    }
+                    failureCallback()
+                    Sentry.captureMessage(response.errorBody()?.string() ?: "")
+                }
+
+                override fun onFailure(call: Call<StatusPage>, t: Throwable) {
+                    failureCallback()
+                    Sentry.captureException(t)
+                }
+
             })
     }
 
