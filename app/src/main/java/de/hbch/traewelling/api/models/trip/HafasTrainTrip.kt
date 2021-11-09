@@ -5,7 +5,7 @@ import de.hbch.traewelling.api.models.station.Station
 
 data class HafasTrainTrip(
     @SerializedName("id") val id: Int,
-    @SerializedName("category") val category: String,
+    @SerializedName("category") val category: ProductType,
     @SerializedName("lineName") val lineName: String,
     @SerializedName("origin") val origin: Station,
     @SerializedName("destination") val destination: Station,

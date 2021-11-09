@@ -88,14 +88,89 @@
                     <com.google.android.material.divider.MaterialDivider
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/divider_time_departures"
+                        android:id="@+id/divider_time_filter"
                         app:layout_constraintTop_toBottomOf="@id/btn_select_time"
                         android:layout_marginTop="8dp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/layout_filter_text"
+                        app:layout_constraintTop_toBottomOf="@id/divider_time_filter"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/text_no_departures"
+                            android:text="@string/no_departures"
+                            android:layout_margin="16dp"
+                            android:textAlignment="center"
+                            android:visibility="gone"
+                            android:textSize="16sp"/>
+
+                        <com.google.android.material.chip.ChipGroup
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/chip_group_filter"
+                            android:visibility="gone"
+                            app:singleSelection="true">
+                            <com.google.android.material.chip.Chip
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/chip_filter_regional"
+                                style="@style/Widget.MaterialComponents.Chip.Choice"
+                                android:text="@string/product_type_regional" />
+                            <com.google.android.material.chip.Chip
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/chip_filter_express"
+                                style="@style/Widget.MaterialComponents.Chip.Choice"
+                                android:text="@string/product_type_express" />
+                            <com.google.android.material.chip.Chip
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/chip_filter_suburban"
+                                style="@style/Widget.MaterialComponents.Chip.Choice"
+                                android:text="@string/product_type_suburban" />
+                            <com.google.android.material.chip.Chip
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/chip_filter_subway"
+                                style="@style/Widget.MaterialComponents.Chip.Choice"
+                                android:text="@string/product_type_subway" />
+                            <com.google.android.material.chip.Chip
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/chip_filter_bus"
+                                style="@style/Widget.MaterialComponents.Chip.Choice"
+                                android:text="@string/product_type_bus" />
+                            <com.google.android.material.chip.Chip
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/chip_filter_tram"
+                                style="@style/Widget.MaterialComponents.Chip.Choice"
+                                android:text="@string/product_type_tram" />
+                            <com.google.android.material.chip.Chip
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/chip_filter_ferry"
+                                style="@style/Widget.MaterialComponents.Chip.Choice"
+                                android:text="@string/product_type_ferry" />
+                        </com.google.android.material.chip.ChipGroup>
+                    </LinearLayout>
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/divider_filter_departures"
+                        app:layout_constraintTop_toBottomOf="@id/layout_filter_text"/>
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:layout_constraintTop_toBottomOf="@id/divider_time_departures"
+                        app:layout_constraintTop_toBottomOf="@id/divider_filter_departures"
                         android:id="@+id/recycler_view_connections"
                         tools:listitem="@layout/connection_list_item"
                         android:nestedScrollingEnabled="false"

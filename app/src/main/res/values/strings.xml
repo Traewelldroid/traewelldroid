@@ -49,4 +49,12 @@
     <string name="status_delete_success">Your check-in was successfully deleted.</string>
     <string name="status_delete_failure">There was an error when deleting your check-in.</string>
     <string name="co_travellers">Also in your connection:</string>
+    <string name="no_departures">There are no available departures for this time.</string>
+    <string name="product_type_regional">Regional</string>
+    <string name="product_type_express">Express</string>
+    <string name="product_type_bus">Bus</string>
+    <string name="product_type_suburban">Suburban</string>
+    <string name="product_type_subway">Subway</string>
+    <string name="product_type_tram">Tram</string>
+    <string name="product_type_ferry">Ferry</string>
 </resources>

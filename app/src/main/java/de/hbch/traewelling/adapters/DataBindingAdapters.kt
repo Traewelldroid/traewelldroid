@@ -10,6 +10,7 @@ import com.google.android.material.button.MaterialButton
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.status.StatusBusiness
 import de.hbch.traewelling.api.models.status.StatusVisibility
+import de.hbch.traewelling.api.models.trip.ProductType
 import de.hbch.traewelling.ui.include.alert.AlertType
 import java.text.DateFormat
 import java.text.DateFormat.getTimeInstance
@@ -84,12 +85,14 @@ fun setUsernameAndTimeOnCheckIn(textView: TextView, username: String?, timestamp
 }
 
 @BindingAdapter("productType")
-fun setProductTypeImage(imageView: ImageView, productType: String?) {
+fun setProductTypeImage(imageView: ImageView, productType: ProductType?) {
+    if (productType == null)
+        return
     val drawable = when (productType) {
-        "suburban" -> R.drawable.ic_suburban
-        "bus" -> R.drawable.ic_bus
-        "subway" -> R.drawable.ic_subway
-        "tram" -> R.drawable.ic_tram
+        ProductType.SUBURBAN -> R.drawable.ic_suburban
+        ProductType.BUS -> R.drawable.ic_bus
+        ProductType.SUBWAY -> R.drawable.ic_subway
+        ProductType.TRAM -> R.drawable.ic_tram
         else -> R.drawable.ic_train
     }
     imageView.setImageResource(drawable)

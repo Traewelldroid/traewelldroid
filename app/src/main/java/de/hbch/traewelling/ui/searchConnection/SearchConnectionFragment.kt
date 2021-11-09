@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.text.format.DateFormat.is24HourFormat
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
@@ -22,6 +24,7 @@ import de.hbch.traewelling.R
 import de.hbch.traewelling.adapters.ConnectionAdapter
 import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.api.models.trip.HafasTripPage
+import de.hbch.traewelling.api.models.trip.ProductType
 import de.hbch.traewelling.databinding.BottomSheetHomelandStationBinding
 import de.hbch.traewelling.databinding.FragmentSearchConnectionBinding
 import de.hbch.traewelling.models.Connection
@@ -48,11 +51,35 @@ class SearchConnectionFragment : Fragment() {
         binding.searchCard.binding.editTextSearchStation.clearFocus()
         binding.searchCard.binding.editTextSearchStation.setText(connections.meta.station.name)
         val adapter = binding.recyclerViewConnections.adapter as ConnectionAdapter
-        adapter.notifyItemRangeRemoved(0, adapter.connections.size)
-        adapter.connections.clear()
-        adapter.connections.addAll(connections.data)
-        adapter.notifyItemRangeInserted(0, adapter.connections.size)
+        adapter.addNewConnections(connections.data)
         binding.executePendingBindings()
+        binding.chipFilterBus.visibility = if (connections.data.any {
+            it.line?.product == ProductType.BUS
+            })  VISIBLE else GONE
+        binding.chipFilterTram.visibility = if (connections.data.any {
+                it.line?.product == ProductType.TRAM
+            })  VISIBLE else GONE
+        binding.chipFilterFerry.visibility = if (connections.data.any {
+                it.line?.product == ProductType.FERRY
+            })  VISIBLE else GONE
+        binding.chipFilterRegional.visibility = if (connections.data.any {
+                it.line?.product == ProductType.REGIONAL
+            })  VISIBLE else GONE
+        binding.chipFilterSuburban.visibility = if (connections.data.any {
+                it.line?.product == ProductType.SUBURBAN
+            })  VISIBLE else GONE
+        binding.chipFilterSubway.visibility = if (connections.data.any {
+                it.line?.product == ProductType.SUBWAY
+            })  VISIBLE else GONE
+        binding.chipFilterExpress.visibility = if (connections.data.any {
+                it.line?.product == ProductType.NATIONAL
+                        || it.line?.product == ProductType.NATIONAL_EXPRESS
+            })  VISIBLE else GONE
+
+        binding.chipGroupFilter.visibility = if (connections.data.isNotEmpty())
+            VISIBLE else GONE
+        binding.textNoDepartures.visibility = if (connections.data.isEmpty())
+            VISIBLE else GONE
     }
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()) {
@@ -94,6 +121,19 @@ class SearchConnectionFragment : Fragment() {
         searchStationCard.binding.editTextSearchStation.setText(args.stationName)
         binding.searchConnectionFragment = this
         binding.lifecycleOwner = viewLifecycleOwner
+        binding.chipGroupFilter.setOnCheckedChangeListener { _, checkedId ->
+            val adapter = binding.recyclerViewConnections.adapter as ConnectionAdapter
+            adapter.applyFilter(when(checkedId) {
+                R.id.chip_filter_bus -> ProductType.BUS
+                R.id.chip_filter_express -> ProductType.LONG_DISTANCE
+                R.id.chip_filter_ferry -> ProductType.FERRY
+                R.id.chip_filter_regional -> ProductType.REGIONAL
+                R.id.chip_filter_suburban -> ProductType.SUBURBAN
+                R.id.chip_filter_subway -> ProductType.SUBWAY
+                R.id.chip_filter_tram -> ProductType.TRAM
+                else -> null
+            })
+        }
 
         val connectionRecyclerView = binding.recyclerViewConnections
         connectionRecyclerView.layoutManager = LinearLayoutManager(requireContext())

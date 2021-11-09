@@ -7,6 +7,29 @@ data class HafasLine(
     @SerializedName("id") val id: String,
     @SerializedName("fahrtNr") val travelId: String,
     @SerializedName("name") val name: String,
-    @SerializedName("product") val product: String,
+    @SerializedName("product") val product: ProductType,
     @SerializedName("operator") val operator: HafasOperator
 )
+
+enum class ProductType {
+    @SerializedName("ferry")
+    FERRY,
+    @SerializedName("bus")
+    BUS,
+    @SerializedName("suburban")
+    SUBURBAN,
+    @SerializedName("subway")
+    SUBWAY,
+    @SerializedName("tram")
+    TRAM,
+    // RE, RB, RS
+    @SerializedName("regional")
+    REGIONAL,
+    // ICE, ECE
+    @SerializedName("nationalExpress")
+    NATIONAL_EXPRESS,
+    // IC, EC
+    @SerializedName("national")
+    NATIONAL,
+    LONG_DISTANCE
+}

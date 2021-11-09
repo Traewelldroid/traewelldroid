@@ -47,4 +47,12 @@
     <string name="status_delete_success">Dein Check-In wurde erfolgreich gelöscht.</string>
     <string name="status_delete_failure">Beim Löschen des Check-Ins ist ein Fehler aufgetreten.</string>
     <string name="co_travellers">Auch in deiner Verbindung:</string>
+    <string name="no_departures">Für diese Zeit gibt es keine verfügbaren Abfahrten.</string>
+    <string name="product_type_regional">Regional</string>
+    <string name="product_type_express">Fernverkehr</string>
+    <string name="product_type_bus">Bus</string>
+    <string name="product_type_suburban">S-Bahn</string>
+    <string name="product_type_subway">U-Bahn</string>
+    <string name="product_type_tram">Tram</string>
+    <string name="product_type_ferry">Schiff</string>
 </resources>
