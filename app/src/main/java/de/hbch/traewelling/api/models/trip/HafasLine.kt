@@ -25,6 +25,9 @@ enum class ProductType {
     // RE, RB, RS
     @SerializedName("regional")
     REGIONAL,
+    // IRE, IR
+    @SerializedName("regionalExp")
+    REGIONAL_EXPRESS,
     // ICE, ECE
     @SerializedName("nationalExpress")
     NATIONAL_EXPRESS,

@@ -86,8 +86,6 @@ fun setUsernameAndTimeOnCheckIn(textView: TextView, username: String?, timestamp
 
 @BindingAdapter("productType")
 fun setProductTypeImage(imageView: ImageView, productType: ProductType?) {
-    if (productType == null)
-        return
     val drawable = when (productType) {
         ProductType.SUBURBAN -> R.drawable.ic_suburban
         ProductType.BUS -> R.drawable.ic_bus
