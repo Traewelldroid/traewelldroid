@@ -50,6 +50,10 @@ class LoggedInUserViewModel : ViewModel() {
         (user?.averageSpeed?.div(1000)) ?: 0.0
     }
 
+    val profilePictureSrc: LiveData<String> get() = Transformations.map(_loggedInUser) { user ->
+        "https://traewelling.de/profile/${user?.username ?: ""}/profilepicture"
+    }
+
     fun setHomelandStation(station: Station) {
         _loggedInUser.value?.home = station
     }
