@@ -168,7 +168,7 @@ class SearchConnectionFragment : Fragment() {
         cal.add(Calendar.MINUTE, -5)
         currentSearchDate = cal.time
         searchConnections(
-            args.stationName,
+            binding.stationName.toString(),
             currentSearchDate
         )
         return binding.root
@@ -194,6 +194,7 @@ class SearchConnectionFragment : Fragment() {
         stationName: String,
         timestamp: Date
     ) {
+        binding.stationName = stationName
         viewModel.searchConnections(
             stationName,
             timestamp,
@@ -236,7 +237,7 @@ class SearchConnectionFragment : Fragment() {
                 cal.set(Calendar.MINUTE, timePicker.minute)
 
                 searchConnections(
-                    args.stationName,
+                    binding.stationName.toString(),
                     cal.time
                 )
             }
