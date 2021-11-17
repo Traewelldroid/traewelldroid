@@ -39,7 +39,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     style="@style/Widget.MaterialComponents.AutoCompleteTextView.OutlinedBox"
-                    android:id="@+id/edit_text_search_station" />
+                    android:id="@+id/edit_text_search_station"
+                    android:imeOptions="actionSearch"
+                    android:maxLines="1"
+                    android:inputType="text" />
 
         </com.google.android.material.textfield.TextInputLayout>
 

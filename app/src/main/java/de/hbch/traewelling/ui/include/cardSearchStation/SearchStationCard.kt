@@ -10,6 +10,7 @@ import android.os.Build
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.Menu
+import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.view.menu.MenuBuilder
@@ -65,6 +66,14 @@ class SearchStationCard(
             android.R.layout.simple_dropdown_item_1line
         )
         adapter.setNotifyOnChange(true)
+        binding.editTextSearchStation.clearFocus()
+        binding.editTextSearchStation.setOnEditorActionListener { _, editorAction, _ ->
+            if (editorAction == EditorInfo.IME_ACTION_SEARCH) {
+                searchConnections()
+                true
+            } else
+                false
+        }
         binding.editTextSearchStation.setAdapter(adapter)
         autocompleteOptions.observe(context as FragmentActivity) { options ->
             if (options != null) {
