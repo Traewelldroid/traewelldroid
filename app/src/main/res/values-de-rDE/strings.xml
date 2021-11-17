@@ -25,6 +25,7 @@
     <string name="departures_at">Abfahrten in %1$s</string>
     <string name="error_credentials">Bitte überprüfe deine Anmeldedaten</string>
     <string name="error_logout">Abmeldung nicht erfolgreich!</string>
+    <string name="error_missing_location_permission">Um diese Funktion zu nutzen, musst du die Standortberechtigung in deinen Geräteeinstellungen aktivieren.</string>
     <string name="username_or_email">Username oder E-Mail-Adresse</string>
     <string name="check_in_successful">Du bist eingecheckt!</string>
     <string name="check_in_failure">Beim Einchecken ist ein Fehler aufgetreten</string>

@@ -62,6 +62,9 @@ interface AuthService {
     fun setUserHomelandStation(
         @Path("stationName") stationName: String
     ): Call<Data<Station>>
+
+    @GET("trains/station/history")
+    fun getLastVisitedStations(): Call<Data<List<Station>>>
 }
 
 interface CheckInService {

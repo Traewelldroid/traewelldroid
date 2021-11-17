@@ -49,11 +49,13 @@ class DashboardFragment : Fragment() {
         binding = FragmentDashboardBinding.inflate(inflater, container, false)
         searchStationCard = binding.searchCard
         searchStationCard.viewModel = searchStationCardViewModel
+        searchStationCard.loggedInUserViewModel = loggedInUserViewModel
         searchStationCard.binding.card = searchStationCard
         searchStationCard.requestPermissionCallback = { permission ->
             requestPermissionLauncher.launch(permission)
         }
         loggedInUserViewModel.getLoggedInUser()
+        loggedInUserViewModel.getLastVisitedStations()
 
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
@@ -75,12 +77,6 @@ class DashboardFragment : Fragment() {
         binding.searchCard.setOnStationSelectedCallback { station ->
             findNavController()
                 .navigate(DashboardFragmentDirections.actionDashboardFragmentToSearchConnectionFragment(station))
-        }
-
-        loggedInUserViewModel.loggedInUser.observe(viewLifecycleOwner) { user ->
-            if (user != null) {
-                searchStationCard.homelandStation.postValue(user.home?.name)
-            }
         }
 
         // Init recycler view

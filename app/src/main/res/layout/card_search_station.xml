@@ -31,8 +31,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/text_where_are_you"
             app:endIconMode="custom"
-            app:endIconDrawable="@drawable/ic_home"
-            app:endIconCheckable="true"
+            app:endIconDrawable="@drawable/ic_expand_more"
             android:hint="@string/input_stop"
             android:layout_marginTop="16dp">
 

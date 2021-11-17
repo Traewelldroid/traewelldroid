@@ -20,6 +20,9 @@ class LoggedInUserViewModel : ViewModel() {
     private val _loggedInUser = MutableLiveData<User?>()
     val loggedInUser: LiveData<User?> get() = _loggedInUser
 
+    private val _lastVisitedStations = MutableLiveData<List<Station>?>(null)
+    val lastVisitedStations: LiveData<List<Station>?> get() = _lastVisitedStations
+
     val userId: LiveData<Int> get() = Transformations.map(_loggedInUser) { user ->
         user?.id ?: -1
     }
@@ -50,6 +53,10 @@ class LoggedInUserViewModel : ViewModel() {
         (user?.averageSpeed?.div(1000)) ?: 0.0
     }
 
+    val homelandStation: LiveData<String> get() = Transformations.map(_loggedInUser) { user ->
+        user?.home?.name ?: ""
+    }
+
     fun setHomelandStation(station: Station) {
         _loggedInUser.value?.home = station
     }
@@ -66,6 +73,27 @@ class LoggedInUserViewModel : ViewModel() {
                 }
                 override fun onFailure(call: Call<Data<User>>, t: Throwable) {
                     Log.e("LoggedInUserViewModel", t.stackTraceToString())
+                }
+            })
+    }
+
+    fun getLastVisitedStations() {
+        TraewellingApi.authService.getLastVisitedStations()
+            .enqueue(object: Callback<Data<List<Station>>> {
+                override fun onResponse(
+                    call: Call<Data<List<Station>>>,
+                    response: Response<Data<List<Station>>>
+                ) {
+                    if (response.isSuccessful) {
+                        val stations = response.body()
+                        if (stations != null) {
+                            _lastVisitedStations.postValue(stations.data)
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<Data<List<Station>>>, t: Throwable) {
+                    Sentry.captureException(t)
                 }
             })
     }

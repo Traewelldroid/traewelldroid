@@ -9,8 +9,11 @@ import android.location.LocationManager
 import android.os.Build
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.Menu
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.appcompat.view.menu.MenuBuilder
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doOnTextChanged
@@ -19,8 +22,12 @@ import androidx.lifecycle.MutableLiveData
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textfield.TextInputLayout.END_ICON_CUSTOM
 import com.google.android.material.textfield.TextInputLayout.END_ICON_NONE
+import de.hbch.traewelling.R
 import de.hbch.traewelling.databinding.CardSearchStationBinding
+import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.shared.PermissionResultReceiver
+import de.hbch.traewelling.ui.include.alert.AlertBottomSheet
+import de.hbch.traewelling.ui.include.alert.AlertType
 
 class SearchStationCard(
         context: Context,
@@ -31,13 +38,24 @@ class SearchStationCard(
     var requestPermissionCallback: (String) -> Unit = {}
 
     private var onStationSelectedCallback: (String) -> Unit = {}
+    private lateinit var _loggedInUserViewModel: LoggedInUserViewModel
 
     val binding = CardSearchStationBinding.inflate(
         LayoutInflater.from(context)
     )
     lateinit var viewModel: SearchStationCardViewModel
+    var loggedInUserViewModel: LoggedInUserViewModel
+        get() = _loggedInUserViewModel
+        set(value) {
+            _loggedInUserViewModel = value
+            loggedInUserViewModel.homelandStation.observe(context as FragmentActivity) {
+                setSearchEndIconAndDisplayMode()
+            }
+            loggedInUserViewModel.lastVisitedStations.observe(context as FragmentActivity) {
+                setSearchEndIconAndDisplayMode()
+            }
+        }
 
-    val homelandStation = MutableLiveData("")
     private val autocompleteOptions = MutableLiveData<List<String>>(listOf())
 
     init {
@@ -66,17 +84,69 @@ class SearchStationCard(
                 )
             }
         }
+    }
 
-        homelandStation.observe(context) { stationName ->
-            if (stationName == null || stationName == "")
-                binding.inputLayoutStop.endIconMode = END_ICON_NONE
-            else {
-                binding.inputLayoutStop.endIconMode = END_ICON_CUSTOM
-                binding.inputLayoutStop.setEndIconOnClickListener {
-                    searchConnections(homelandStation.value!!)
+    @SuppressLint("RestrictedApi")
+    fun setSearchEndIconAndDisplayMode() {
+        var hasHomelandStation = false
+        var hasLastVisitedStations = false
+        if (loggedInUserViewModel.loggedInUser.value?.home != null)
+            hasHomelandStation = true
+        if (loggedInUserViewModel.lastVisitedStations.value != null &&
+                loggedInUserViewModel.lastVisitedStations.value?.size!! > 0)
+                    hasLastVisitedStations = true
+
+        if (hasLastVisitedStations) {
+            // Show dropdown
+            binding.inputLayoutStop.endIconDrawable =
+                ContextCompat.getDrawable(context, R.drawable.ic_expand_more)
+            binding.inputLayoutStop.endIconMode = END_ICON_CUSTOM
+            binding.inputLayoutStop.setEndIconOnClickListener { button ->
+                val popupMenu = PopupMenu(context, button)
+                var menuIndex = Menu.FIRST
+                if (hasHomelandStation) {
+                    popupMenu.menu.add(
+                        0,
+                        menuIndex,
+                        Menu.NONE,
+                        loggedInUserViewModel.loggedInUser.value?.home?.name ?: ""
+                    )
+                    popupMenu.menu.findItem(menuIndex)?.setIcon(R.drawable.ic_home)
+                    menuIndex++
                 }
+                if (hasLastVisitedStations) {
+                    loggedInUserViewModel
+                        .lastVisitedStations
+                        .value!!
+                        .forEachIndexed { index, station ->
+                            popupMenu.menu.add(
+                                0,
+                                menuIndex + index,
+                                Menu.NONE,
+                                station.name
+                            )
+                            popupMenu.menu.findItem(menuIndex + index)?.setIcon(R.drawable.ic_history)
+                        }
+                }
+                popupMenu.setOnMenuItemClickListener { item ->
+                    searchConnections(item.title.toString())
+                    true
+                }
+                if (popupMenu.menu is MenuBuilder)
+                    (popupMenu.menu as MenuBuilder).setOptionalIconsVisible(true)
+                popupMenu.show()
             }
-            binding.executePendingBindings()
+        } else if (hasHomelandStation) {
+            // Show house icon
+            binding.inputLayoutStop.endIconDrawable =
+                ContextCompat.getDrawable(context, R.drawable.ic_home)
+            // binding.inputLayoutStop.setEndIconDrawable(R.drawable.ic_home)
+            binding.inputLayoutStop.endIconMode = END_ICON_CUSTOM
+            binding.inputLayoutStop.setEndIconOnClickListener {
+                searchConnections(loggedInUserViewModel.homelandStation.value!!)
+            }
+        } else {
+            binding.inputLayoutStop.endIconMode = END_ICON_NONE
         }
     }
 
@@ -105,7 +175,15 @@ class SearchStationCard(
                             android.Manifest.permission.ACCESS_FINE_LOCATION
                         )
                     ) {
-                        showToast("Please enable the location permission.")
+                        val alertBottomSheet = AlertBottomSheet(
+                            AlertType.ERROR,
+                            context.getString(R.string.error_missing_location_permission),
+                            3000
+                        )
+                        alertBottomSheet.show(
+                            (context as FragmentActivity).supportFragmentManager,
+                            AlertBottomSheet.TAG
+                        )
                     } else {
                         requestPermissionCallback(android.Manifest.permission.ACCESS_FINE_LOCATION)
                     }
@@ -135,10 +213,6 @@ class SearchStationCard(
             LocationManager.GPS_PROVIDER
 
         locationManager?.requestLocationUpdates(provider, 0L, 0F, this)
-    }
-
-    private fun showToast(text: String) {
-        Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
     }
 
     fun setOnStationSelectedCallback(callback: (String) -> Unit) {

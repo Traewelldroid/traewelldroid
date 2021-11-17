@@ -49,6 +49,7 @@ class SearchConnectionFragment : Fragment() {
     private val onFoundConnectionsCallback: (HafasTripPage) -> Unit = { connections ->
         binding.stationName = connections.meta.station.name
         binding.searchCard.binding.editTextSearchStation.clearFocus()
+        binding.searchCard.loggedInUserViewModel = loggedInUserViewModel
         binding.searchCard.binding.editTextSearchStation.setText(connections.meta.station.name)
         val adapter = binding.recyclerViewConnections.adapter as ConnectionAdapter
         adapter.addNewConnections(connections.data)
@@ -157,11 +158,6 @@ class SearchConnectionFragment : Fragment() {
             }
 
         binding.stationName = args.stationName
-        loggedInUserViewModel.loggedInUser.observe(viewLifecycleOwner) { user ->
-            if (user != null) {
-                searchStationCard.homelandStation.postValue(user.home?.name)
-            }
-        }
 
         binding.apply {
             viewModel = (this@SearchConnectionFragment).viewModel
