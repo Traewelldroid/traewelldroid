@@ -7,6 +7,8 @@ import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import coil.load
+import coil.transform.CircleCropTransformation
 import com.jcloquell.androidsecurestorage.SecureStorage
 import de.hbch.traewelling.R
 import de.hbch.traewelling.adapters.CheckInAdapter
@@ -52,6 +54,14 @@ class UserFragment : Fragment() {
         binding.swipeRefreshDashboardCheckIns.setOnRefreshListener {
             page = 1
             loadCheckIns()
+        }
+
+        loggedInUserViewModel.profilePictureSrc.observe(viewLifecycleOwner) { src ->
+            binding.imageProfile.load(src) {
+                crossfade(true)
+                placeholder(R.drawable.ic_new_user)
+                transformations(CircleCropTransformation())
+            }
         }
 
         loadCheckIns()
