@@ -35,6 +35,19 @@ class CheckInAdapter(
         holder.bind(checkIns[position])
     }
 
+    fun clearAndAddCheckIns(statuses: List<Status>) {
+        notifyItemRangeRemoved(0, itemCount)
+        checkIns.clear()
+        checkIns.addAll(statuses)
+        notifyItemRangeInserted(0, itemCount)
+    }
+
+    fun concatCheckIns(statuses: List<Status>) {
+        val itemCountBeforeAdding = itemCount
+        checkIns.addAll(statuses)
+        notifyItemRangeInserted(itemCountBeforeAdding, statuses.size)
+    }
+
     class CheckInViewHolder(
         private val checkInCard: CardCheckInOverview,
         private val loggedInUserId: LiveData<Int>

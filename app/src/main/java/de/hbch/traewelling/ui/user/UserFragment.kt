@@ -39,7 +39,10 @@ class UserFragment : Fragment() {
             viewModel = this@UserFragment.loggedInUserViewModel
         }
         binding.recyclerViewCheckIn.layoutManager = LinearLayoutManager(requireContext())
-        binding.recyclerViewCheckIn.adapter = CheckInAdapter(mutableListOf(), loggedInUserViewModel.userId) {}
+        binding.recyclerViewCheckIn.adapter = CheckInAdapter(
+            mutableListOf(),
+            loggedInUserViewModel.userId
+        ) {}
         binding.nestedScrollViewUser.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, _, _, _, _ ->
             val vw = v?.getChildAt(v.childCount - 1)
             val diff = (vw?.bottom?.minus((v.height + v.scrollY)))
@@ -124,14 +127,9 @@ class UserFragment : Fragment() {
                 binding.swipeRefreshDashboardCheckIns.isRefreshing = false
                 val adapter = binding.recyclerViewCheckIn.adapter as CheckInAdapter
                 if (page == 1) {
-                    adapter.notifyItemRangeRemoved(0, adapter.checkIns.size)
-                    adapter.checkIns.clear()
-                    adapter.checkIns.addAll(statusPage.data)
-                    adapter.notifyItemRangeInserted(0, adapter.checkIns.size)
+                    adapter.clearAndAddCheckIns(statusPage.data)
                 } else {
-                    val currentCount = adapter.checkIns.size
-                    adapter.checkIns.addAll(statusPage.data)
-                    adapter.notifyItemRangeInserted(currentCount, adapter.checkIns.size)
+                    adapter.concatCheckIns(statusPage.data)
                 }
             },
             {

@@ -30,6 +30,7 @@ class DashboardFragment : Fragment() {
     private lateinit var searchStationCard: SearchStationCard
     private val loggedInUserViewModel: LoggedInUserViewModel by activityViewModels()
     private val searchStationCardViewModel: SearchStationCardViewModel by viewModels()
+    private val dashboardFragmentViewModel: DashboardFragmentViewModel by viewModels()
     private var currentPage = 1
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()) {
@@ -111,30 +112,20 @@ class DashboardFragment : Fragment() {
     }
 
     private fun loadCheckins(page: Int) {
-        TraewellingApi.checkInService.getPersonalDashboard(page).enqueue(object:
-            Callback<StatusPage> {
-            override fun onResponse(call: Call<StatusPage>, response: Response<StatusPage>) {
-                if (response.isSuccessful) {
-                    val checkInAdapter = binding.recyclerViewCheckIn.adapter as CheckInAdapter
-                    if (page == 1) {
-                        val itemCount = checkInAdapter.checkIns.size
-                        checkInAdapter.checkIns.clear()
-                        checkInAdapter.notifyItemRangeRemoved(0, itemCount - 1)
-                        checkInAdapter.checkIns.addAll(response.body()?.data!!)
-                        checkInAdapter.notifyItemRangeInserted(0, checkInAdapter.itemCount - 1)
-                    } else {
-                        val previousItemCount = checkInAdapter.itemCount
-                        checkInAdapter.checkIns.addAll(response.body()?.data!!)
-                        checkInAdapter.notifyItemRangeInserted(previousItemCount, checkInAdapter.itemCount - 1)
-                    }
+        dashboardFragmentViewModel.loadCheckIns(
+            page,
+            { statuses ->
+                val checkInAdapter = binding.recyclerViewCheckIn.adapter as CheckInAdapter
+                if (page == 1) {
+                    checkInAdapter.clearAndAddCheckIns(statuses)
+                } else {
+                    checkInAdapter.concatCheckIns(statuses)
                 }
                 checkInsLoading.postValue(false)
-            }
-            override fun onFailure(call: Call<StatusPage>, t: Throwable) {
+            },
+            {
                 checkInsLoading.postValue(false)
-                t.printStackTrace()
-                Toast.makeText(requireContext(), t.message, Toast.LENGTH_SHORT).show()
             }
-        })
+        )
     }
 }

@@ -28,17 +28,11 @@ class ActiveCheckinsFragment : Fragment() {
 
         val recyclerView = binding.recyclerViewActiveCheckIns
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.adapter = CheckInAdapter(
+            mutableListOf(),
+            loggedInUserViewModel.userId
+        ) { }
 
-        viewModel.statuses.observe(viewLifecycleOwner) { statusPage ->
-            if (statusPage != null) {
-                recyclerView.adapter =
-                    CheckInAdapter(
-                        statusPage.data.toMutableList(),
-                        loggedInUserViewModel.userId
-                    ) { }
-            }
-            binding.swipeRefreshCheckins.isRefreshing = false
-        }
         getActiveCheckins()
 
         binding.swipeRefreshCheckins.setOnRefreshListener {
@@ -50,14 +44,15 @@ class ActiveCheckinsFragment : Fragment() {
 
     fun getActiveCheckins() {
         binding.swipeRefreshCheckins.isRefreshing = true
-        viewModel.getActiveCheckins()
-    }
-
-    override fun onPause() {
-        super.onPause()
-    }
-
-    override fun onResume() {
-        super.onResume()
+        viewModel.getActiveCheckins(
+            { statuses ->
+                val checkInAdapter = binding.recyclerViewActiveCheckIns.adapter as CheckInAdapter
+                checkInAdapter.clearAndAddCheckIns(statuses)
+                binding.swipeRefreshCheckins.isRefreshing = false
+            },
+            {
+                binding.swipeRefreshCheckins.isRefreshing = false
+            }
+        )
     }
 }
