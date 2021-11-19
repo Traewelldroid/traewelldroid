@@ -69,6 +69,10 @@ class DashboardFragment : Fragment() {
         // Swipe to refresh
         checkInsLoading.observe(viewLifecycleOwner) { loading ->
             binding.swipeRefreshDashboardCheckIns.isRefreshing = loading
+            binding.layoutDataLoading.root.visibility = when (loading) {
+                true -> View.VISIBLE
+                false -> View.GONE
+            }
         }
         binding.swipeRefreshDashboardCheckIns.setOnRefreshListener {
             loggedInUserViewModel.getLoggedInUser()
