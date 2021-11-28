@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -30,9 +31,7 @@ class SelectDestinationFragment : Fragment() {
     private val viewModel: SelectDestinationViewModel by viewModels()
     private val checkInViewModel: CheckInViewModel by activityViewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+    private val dataLoading = MutableLiveData<Boolean>(false)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,7 +40,12 @@ class SelectDestinationFragment : Fragment() {
     ): View? {
         binding = FragmentSelectDestinationBinding.inflate(inflater, container, false)
 
-
+        dataLoading.observe(viewLifecycleOwner) { loading ->
+            binding.viewConnectionDataLoading.root.visibility = when (loading) {
+                true -> View.VISIBLE
+                false -> View.GONE
+            }
+        }
 
         val transition = MaterialContainerTransform().apply {
             scrimColor = Color.TRANSPARENT
@@ -62,38 +66,42 @@ class SelectDestinationFragment : Fragment() {
 
         val recyclerView = binding.recyclerViewTravelStops
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        viewModel.trip.observe(viewLifecycleOwner) { trip ->
-
-            val relevantStations = trip.stopovers.subList(
-                trip.stopovers.indexOf(
-                    trip.stopovers.find {
-                        it.id == checkInViewModel.startStationId
-                    }
-                ) + 1, trip.stopovers.lastIndex + 1)
-
-            recyclerView.adapter = TravelStopAdapter(relevantStations) { itemView, stop ->
-
-                checkInViewModel.destinationStationId = stop.id
-                checkInViewModel.arrivalTime = stop.arrivalPlanned
-
-                val transitionName = stop.name
-                val extras = FragmentNavigatorExtras(
-                    itemView to transitionName
-                )
-                findNavController().navigate(
-                    SelectDestinationFragmentDirections
-                        .actionSelectDestinationFragmentToCheckInFragment(
-                            transitionName,
-                            stop.name
-                        ),
-                    extras
-                )
-            }
-        }
+        dataLoading.postValue(true)
         viewModel.getTrip(
             checkInViewModel.tripId,
             checkInViewModel.lineName,
-            checkInViewModel.startStationId
+            checkInViewModel.startStationId,
+            { trip ->
+                dataLoading.postValue(false)
+                val relevantStations = trip.stopovers.subList(
+                    trip.stopovers.indexOf(
+                        trip.stopovers.find {
+                            it.id == checkInViewModel.startStationId
+                        }
+                    ) + 1, trip.stopovers.lastIndex + 1)
+
+                recyclerView.adapter = TravelStopAdapter(relevantStations) { itemView, stop ->
+
+                    checkInViewModel.destinationStationId = stop.id
+                    checkInViewModel.arrivalTime = stop.arrivalPlanned
+
+                    val transitionName = stop.name
+                    val extras = FragmentNavigatorExtras(
+                        itemView to transitionName
+                    )
+                    findNavController().navigate(
+                        SelectDestinationFragmentDirections
+                            .actionSelectDestinationFragmentToCheckInFragment(
+                                transitionName,
+                                stop.name
+                            ),
+                        extras
+                    )
+                }
+            },
+            {
+                dataLoading.postValue(false)
+            }
         )
 
         return binding.root

@@ -11,6 +11,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -47,6 +48,7 @@ class SearchConnectionFragment : Fragment() {
     private val loggedInUserViewModel: LoggedInUserViewModel by activityViewModels()
     private val searchStationCardViewModel: SearchStationCardViewModel by viewModels()
     private val onFoundConnectionsCallback: (HafasTripPage) -> Unit = { connections ->
+        dataLoading.postValue(false)
         binding.stationName = connections.meta.station.name
         binding.searchCard.binding.editTextSearchStation.clearFocus()
         binding.searchCard.loggedInUserViewModel = loggedInUserViewModel
@@ -91,6 +93,8 @@ class SearchConnectionFragment : Fragment() {
     }
     private lateinit var currentSearchDate: Date
 
+    private val dataLoading = MutableLiveData<Boolean>(false)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         exitTransition = Hold()
@@ -107,6 +111,20 @@ class SearchConnectionFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentSearchConnectionBinding.inflate(inflater, container, false)
+
+        dataLoading.observe(viewLifecycleOwner) { loading ->
+            when (loading) {
+                true -> {
+                    binding.cardConnections.visibility = View.GONE
+                    binding.connectionDataLoadingView.root.visibility = View.VISIBLE
+                }
+                false -> {
+                    binding.cardConnections.visibility = View.VISIBLE
+                    binding.connectionDataLoadingView.root.visibility = View.GONE
+                }
+            }
+        }
+
         searchStationCard = binding.searchCard
         searchStationCard.viewModel = searchStationCardViewModel
         searchStationCard.binding.card = searchStationCard
@@ -195,11 +213,14 @@ class SearchConnectionFragment : Fragment() {
         timestamp: Date
     ) {
         binding.stationName = stationName
+        dataLoading.postValue(true)
         viewModel.searchConnections(
             stationName,
             timestamp,
             onFoundConnectionsCallback,
-            {}
+            {
+                dataLoading.postValue(false)
+            }
         )
     }
 

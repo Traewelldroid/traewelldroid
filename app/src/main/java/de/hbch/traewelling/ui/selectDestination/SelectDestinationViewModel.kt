@@ -7,15 +7,20 @@ import androidx.lifecycle.ViewModel
 import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.api.models.Data
 import de.hbch.traewelling.api.models.trip.HafasTrainTrip
+import io.sentry.Sentry
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class SelectDestinationViewModel : ViewModel() {
-    private val _trip = MutableLiveData<HafasTrainTrip>()
-    val trip: LiveData<HafasTrainTrip> get() = _trip
 
-    fun getTrip(tripId: String, lineName: String, start: Int) {
+    fun getTrip(
+        tripId: String,
+        lineName: String,
+        start: Int,
+        successfulCallback: (HafasTrainTrip) -> Unit,
+        failureCallback: () -> Unit
+    ) {
         TraewellingApi.travelService.getTrip(tripId, tripId, lineName, start)
             .enqueue(object: Callback<Data<HafasTrainTrip>> {
                 override fun onResponse(
@@ -23,13 +28,17 @@ class SelectDestinationViewModel : ViewModel() {
                     response: Response<Data<HafasTrainTrip>>
                 ) {
                     if (response.isSuccessful) {
-                        _trip.value = response.body()?.data!!
-                    } else {
-                        Log.e("SelectDestinationViewModel", response.toString())
+                        val trip = response.body()?.data
+                        if (trip != null) {
+                            successfulCallback(trip)
+                            return
+                        }
                     }
+                    failureCallback()
+                    Sentry.captureMessage(response.errorBody()?.string() ?: "")
                 }
                 override fun onFailure(call: Call<Data<HafasTrainTrip>>, t: Throwable) {
-                    Log.e("SelectDestinationViewModel", t.stackTraceToString())
+                    Sentry.captureException(t)
                 }
             })
     }

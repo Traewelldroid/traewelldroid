@@ -116,6 +116,7 @@ class DashboardFragment : Fragment() {
     }
 
     private fun loadCheckins(page: Int) {
+        checkInsLoading.postValue(true)
         dashboardFragmentViewModel.loadCheckIns(
             page,
             { statuses ->

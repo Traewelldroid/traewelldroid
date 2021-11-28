@@ -40,6 +40,18 @@
                         android:text="@{@string/line_destination(line, destination)}"
                         style="@style/TextAppearance.Traewelling.Headline"
                         android:id="@+id/text_view_line_destination" />
+
+                    <include
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/view_connection_data_loading"
+                        layout="@layout/view_data_loading"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/text_view_line_destination"
+                        android:layout_marginTop="32dp"
+                        android:visibility="gone" />
+
                     <androidx.recyclerview.widget.RecyclerView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
