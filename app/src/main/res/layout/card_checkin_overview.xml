@@ -34,7 +34,7 @@
                 android:id="@+id/perlschnur_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:padding="4dp"
+                android:padding="2dp"
                 app:layout_constraintBottom_toBottomOf="@id/travel_layout"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -85,14 +85,15 @@
                     style="@style/Theme.Traewelling.StatisticTexts"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="8dp"
+                    android:gravity="start"
+                    android:onClick="@{() -> checkInCard.onStationNameClicked(checkIn.journey.origin.name)}"
                     android:text="@{checkIn.journey.origin.name}"
                     app:layout_constraintEnd_toStartOf="@+id/departure_planned_time"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:gravity="start"
-                    tools:text="Start Hbf"
-                    android:onClick="@{() -> checkInCard.onStationNameClicked(checkIn.journey.origin.name)}"/>
+                    tools:text="Start Hbf" />
 
                 <TextView
                     android:id="@+id/departure_planned_time"
@@ -106,7 +107,6 @@
                     android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="@id/departure_time"
                     app:layout_constraintEnd_toStartOf="@id/departure_time"
-                    app:layout_constraintStart_toEndOf="@id/start_station"
                     app:layout_constraintTop_toTopOf="@+id/departure_time"
                     tools:text="15:22" />
 
@@ -180,14 +180,13 @@
 
                 <TextView
                     android:id="@+id/next_station"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="25dp"
                     android:text="@{checkIn.body}"
                     android:textColor="@color/traewelling"
                     android:textSize="18sp"
                     app:layout_constraintBottom_toTopOf="@id/end_station"
-                    app:layout_constraintEnd_toStartOf="@+id/departure_time"
                     app:layout_constraintStart_toStartOf="@id/start_station"
                     app:layout_constraintTop_toBottomOf="@id/train_line"
                     tools:text="@string/next_station" />
@@ -198,14 +197,14 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:gravity="start"
+                    android:onClick="@{() -> checkInCard.onStationNameClicked(checkIn.journey.destination.name)}"
                     android:text="@{checkIn.journey.destination.name}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/arrival_planned_time"
                     app:layout_constraintStart_toEndOf="parent"
+                    android:layout_marginEnd="8dp"
                     app:layout_constraintStart_toStartOf="@id/start_station"
-                    tools:text="Ende Hbf"
-
-                    android:onClick="@{() -> checkInCard.onStationNameClicked(checkIn.journey.destination.name)}" />
+                    tools:text="Ende Hbf" />
 
                 <TextView
                     android:id="@+id/arrival_planned_time"
@@ -219,7 +218,6 @@
                     android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="@id/destination_time"
                     app:layout_constraintEnd_toStartOf="@id/destination_time"
-                    app:layout_constraintStart_toEndOf="@id/end_station"
                     app:layout_constraintTop_toTopOf="@+id/destination_time"
                     tools:text="15:22" />
 
