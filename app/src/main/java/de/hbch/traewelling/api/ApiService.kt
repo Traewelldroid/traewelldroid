@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder
 import de.hbch.traewelling.api.models.Data
 import de.hbch.traewelling.api.models.auth.BearerToken
 import de.hbch.traewelling.api.models.auth.LoginCredentials
+import de.hbch.traewelling.api.models.polyline.FeatureCollection
 import de.hbch.traewelling.api.models.station.Station
 import de.hbch.traewelling.api.models.station.StationData
 import de.hbch.traewelling.api.models.status.CheckInRequest
@@ -75,6 +76,16 @@ interface CheckInService {
 
     @GET("statuses")
     fun getStatuses(): Call<StatusPage>
+
+    @GET("statuses/{id}")
+    fun getStatusById(
+        @Path("id") id: Int
+    ): Call<Data<Status>>
+
+    @GET("polyline/{ids}")
+    fun getPolylinesForStatuses(
+        @Path("ids") statusIds: String
+    ): Call<Data<FeatureCollection>>
 
     @GET("user/{username}/statuses")
     fun getStatusesForUser(
