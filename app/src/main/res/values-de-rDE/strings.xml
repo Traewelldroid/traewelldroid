@@ -57,4 +57,5 @@
     <string name="product_type_tram">Tram</string>
     <string name="product_type_ferry">Schiff</string>
     <string name="data_loading" tools:ignore="TypographyEllipsis">Daten werden geladen...</string>
+    <string name="status_details">Statusdetails</string>
 </resources>

@@ -22,7 +22,8 @@
         android:layout_height="wrap_content"
         app:cardElevation="3dp"
         app:cardCornerRadius="8dp"
-        app:cardUseCompatPadding="true">
+        app:cardUseCompatPadding="true"
+        android:onClick="@{() -> checkInCard.handleCheckInSelected()}">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

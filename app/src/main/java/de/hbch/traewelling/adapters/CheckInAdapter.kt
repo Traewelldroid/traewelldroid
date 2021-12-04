@@ -18,7 +18,11 @@ class CheckInAdapter(
     : RecyclerView.Adapter<CheckInAdapter.CheckInViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CheckInViewHolder {
-        val checkInCard = CardCheckInOverview(parent.context, null, this)
+        val checkInCard = CardCheckInOverview(
+            parent.context,
+            null,
+            this
+        )
         checkInCard.binding.lifecycleOwner = parent.findViewTreeLifecycleOwner()
         checkInCard.setOnStationNameClickedListener(onStationNameClickedListener)
         return CheckInViewHolder(

@@ -13,17 +13,28 @@
         <action
             android:id="@+id/action_dashboard_fragment_to_searchConnectionFragment"
             app:destination="@id/searchConnectionFragment" />
+        <action
+            android:id="@+id/action_dashboard_fragment_to_statusDetailFragment"
+            app:destination="@id/statusDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/active_checkins_fragment"
         android:name="de.hbch.traewelling.ui.activeCheckins.ActiveCheckinsFragment"
         android:label="@string/title_active_checkins"
-        tools:layout="@layout/fragment_active_checkins" />
+        tools:layout="@layout/fragment_active_checkins" >
+        <action
+            android:id="@+id/action_active_checkins_fragment_to_statusDetailFragment"
+            app:destination="@id/statusDetailFragment" />
+    </fragment>
     <fragment
         android:id="@+id/user_fragment"
         android:name="de.hbch.traewelling.ui.user.UserFragment"
         android:label="@string/title_user"
-        tools:layout="@layout/fragment_user" />
+        tools:layout="@layout/fragment_user" >
+        <action
+            android:id="@+id/action_user_fragment_to_statusDetailFragment"
+            app:destination="@id/statusDetailFragment" />
+    </fragment>
     <fragment
         android:id="@+id/searchConnectionFragment"
         android:name="de.hbch.traewelling.ui.searchConnection.SearchConnectionFragment"
@@ -71,5 +82,13 @@
         <argument
             android:name="destination"
             app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/statusDetailFragment"
+        android:name="de.hbch.traewelling.ui.statusDetail.StatusDetailFragment"
+        android:label="@string/status_details">
+        <argument
+            android:name="statusId"
+            app:argType="integer" />
     </fragment>
 </navigation>
