@@ -65,6 +65,13 @@ class StatusDetailFragment : Fragment() {
             { }
         )
 
+        viewModel.getStatusById(
+            args.statusId,
+            { status ->
+                binding.status = status
+            },
+            { }
+        )
 
         return binding.root
     }

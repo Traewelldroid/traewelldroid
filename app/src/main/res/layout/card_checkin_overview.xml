@@ -181,13 +181,14 @@
 
                 <TextView
                     android:id="@+id/next_station"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="25dp"
                     android:text="@{checkIn.body}"
                     android:textColor="@color/traewelling"
                     android:textSize="18sp"
                     app:layout_constraintBottom_toTopOf="@id/end_station"
+                    app:layout_constraintEnd_toStartOf="@+id/departure_time"
                     app:layout_constraintStart_toStartOf="@id/start_station"
                     app:layout_constraintTop_toBottomOf="@id/train_line"
                     tools:text="@string/next_station" />
