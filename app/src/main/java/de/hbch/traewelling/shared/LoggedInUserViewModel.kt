@@ -58,7 +58,7 @@ class LoggedInUserViewModel : ViewModel() {
     }
 
     val profilePictureSrc: LiveData<String> get() = Transformations.map(_loggedInUser) { user ->
-        "https://traewelling.de/profile/${user?.username ?: ""}/profilepicture"
+        "https://traewelling.de/@${user?.username ?: ""}/picture"
     }
 
     fun setHomelandStation(station: Station) {
