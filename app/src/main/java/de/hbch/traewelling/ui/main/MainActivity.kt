@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         val bottomNavigationView = binding.bottomNavigationBar
         setupWithNavController(bottomNavigationView, navController)
         setupActionBarWithNavController(navController, AppBarConfiguration(
-            setOf(R.id.dashboard_fragment, R.id.active_checkins_fragment, R.id.user_fragment)
+            setOf(R.id.dashboard_fragment, R.id.active_checkins_fragment, R.id.statisticsFragment, R.id.user_fragment)
         ))
 
         val secureStorage = SecureStorage(this)

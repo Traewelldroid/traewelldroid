@@ -9,6 +9,10 @@
         android:icon="@drawable/ic_train"
         android:title="@string/title_active_checkins" />
     <item
+        android:id="@+id/statisticsFragment"
+        android:icon="@drawable/ic_statistics"
+        android:title="@string/title_statistics" />
+    <item
         android:id="@+id/user_fragment"
         android:icon="@drawable/ic_account"
         android:title="@string/title_user" />

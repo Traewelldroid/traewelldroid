@@ -36,6 +36,12 @@
             app:destination="@id/statusDetailFragment" />
     </fragment>
     <fragment
+        android:id="@+id/statisticsFragment"
+        android:name="de.hbch.traewelling.ui.statistics.StatisticsFragment"
+        android:label="@string/title_statistics"
+        tools:layout="@layout/fragment_statistics" />
+
+    <fragment
         android:id="@+id/searchConnectionFragment"
         android:name="de.hbch.traewelling.ui.searchConnection.SearchConnectionFragment"
         android:label="@string/title_search_connection"
