@@ -8,6 +8,7 @@ import de.hbch.traewelling.api.models.auth.LoginCredentials
 import de.hbch.traewelling.api.models.polyline.FeatureCollection
 import de.hbch.traewelling.api.models.station.Station
 import de.hbch.traewelling.api.models.station.StationData
+import de.hbch.traewelling.api.models.statistics.PersonalStatistics
 import de.hbch.traewelling.api.models.status.CheckInRequest
 import de.hbch.traewelling.api.models.status.CheckInResponse
 import de.hbch.traewelling.api.models.status.Status
@@ -66,6 +67,14 @@ interface AuthService {
 
     @GET("trains/station/history")
     fun getLastVisitedStations(): Call<Data<List<Station>>>
+}
+
+interface StatisticsService {
+    @GET("statistics")
+    fun getPersonalStatistics(
+        @Query("from") from: Date,
+        @Query("until") until: Date
+    ): Call<Data<PersonalStatistics>>
 }
 
 interface CheckInService {
@@ -145,6 +154,9 @@ object TraewellingApi {
     var jwt: String = ""
     val authService: AuthService by lazy {
         retrofit.create(AuthService::class.java)
+    }
+    val statisticsService: StatisticsService by lazy {
+        retrofit.create(StatisticsService::class.java)
     }
     val checkInService: CheckInService by lazy {
         retrofit.create(CheckInService::class.java)
