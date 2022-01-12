@@ -61,4 +61,6 @@
     <string name="data_loading" tools:ignore="TypographyEllipsis">Loading data...</string>
     <string name="status_details">Status details</string>
     <string name="title_statistics">Statistics</string>
+    <string name="date_range" translatable="false">%1$s - %2$s</string>
+    <string name="title_select_statistics_date_range">Select the date range for your statistics</string>
 </resources>

@@ -57,6 +57,19 @@ fun setTimeText(textView: TextView, date: Date?) {
     textView.text = getLocalTimeString(date)
 }
 
+@BindingAdapter(value = ["dateRangeFrom", "dateRangeUntil"], requireAll = true)
+fun setDisplayTimeRange(button: MaterialButton, dateRangeFrom: Date?, dateRangeUntil: Date?) {
+    if (dateRangeFrom == null || dateRangeUntil == null)
+        return
+
+    val dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault())
+    button.text = button.resources.getString(
+        R.string.date_range,
+        dateFormat.format(dateRangeFrom),
+        dateFormat.format(dateRangeUntil)
+    )
+}
+
 @BindingAdapter(value = [ "departure", "arrival" ], requireAll = true)
 fun setTimeProgress(progressBar: ProgressBar, departure: Date?, arrival: Date?) {
     if (departure == null || arrival == null)

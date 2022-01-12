@@ -59,4 +59,5 @@
     <string name="data_loading" tools:ignore="TypographyEllipsis">Daten werden geladen...</string>
     <string name="status_details">Statusdetails</string>
     <string name="title_statistics">Statistiken</string>
+    <string name="title_select_statistics_date_range">Wähle den Zeitraum für die Statistiken</string>
 </resources>
