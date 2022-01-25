@@ -57,16 +57,16 @@ fun setTimeText(textView: TextView, date: Date?) {
     textView.text = getLocalTimeString(date)
 }
 
-@BindingAdapter(value = ["dateRangeFrom", "dateRangeUntil"], requireAll = true)
-fun setDisplayTimeRange(button: MaterialButton, dateRangeFrom: Date?, dateRangeUntil: Date?) {
-    if (dateRangeFrom == null || dateRangeUntil == null)
+@BindingAdapter("dateRange")
+fun setDisplayTimeRange(button: MaterialButton, dateRange: Pair<Date, Date>?) {
+    if (dateRange == null)
         return
 
     val dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault())
     button.text = button.resources.getString(
         R.string.date_range,
-        dateFormat.format(dateRangeFrom),
-        dateFormat.format(dateRangeUntil)
+        dateFormat.format(dateRange.first),
+        dateFormat.format(dateRange.second)
     )
 }
 

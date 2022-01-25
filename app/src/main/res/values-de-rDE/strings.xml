@@ -56,6 +56,9 @@
     <string name="product_type_subway">U-Bahn</string>
     <string name="product_type_tram">Tram</string>
     <string name="product_type_ferry">Schiff</string>
+    <string name="product_type_regional_express">Interregio</string>
+    <string name="product_type_national_express">Fernverkehr (ICE/ECE)</string>
+    <string name="product_type_national">Fernverkehr (IC/EC)</string>
     <string name="data_loading" tools:ignore="TypographyEllipsis">Daten werden geladen...</string>
     <string name="status_details">Statusdetails</string>
     <string name="title_statistics">Statistiken</string>

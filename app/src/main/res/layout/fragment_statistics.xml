@@ -21,8 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/select_date_range"
-            dateRangeFrom="@{viewModel.fromDate}"
-            dateRangeUntil="@{viewModel.untilDate}"
+            dateRange="@{viewModel.dateRange}"
             tools:text="@string/date_range"
             app:icon="@drawable/ic_calendar"
             android:onClick="@{() -> statisticsFragment.selectDateRange()}"
@@ -30,6 +29,61 @@
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:id="@+id/layout_chart_product_type"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/select_date_range"
+            app:layout_constraintBottom_toTopOf="@id/layout_chart_operators"
+            android:orientation="vertical"
+            android:layout_margin="16dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/title_stats_product_type"
+                style="@style/Theme.Traewelling.StatisticTexts"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:text="Verkehrsmittel" />
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/chart_stats_product_type"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title_stats_product_type"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="16dp"
+            android:id="@+id/layout_chart_operators"
+            app:layout_constraintTop_toBottomOf="@id/layout_chart_product_type"
+            app:layout_constraintBottom_toBottomOf="parent">
+            <TextView
+                android:id="@+id/title_stats_operators"
+                style="@style/Theme.Traewelling.StatisticTexts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Betreiber"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/chart_stats_operators"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/title_stats_operators" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

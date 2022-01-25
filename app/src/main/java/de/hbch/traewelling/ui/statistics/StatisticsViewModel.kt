@@ -13,16 +13,14 @@ import java.util.*
 
 class StatisticsViewModel : ViewModel() {
 
-    var fromDate = MutableLiveData<Date>()
-    var untilDate = MutableLiveData<Date>()
+    var dateRange = MutableLiveData<Pair<Date, Date>>()
 
     init {
         val calendar = GregorianCalendar()
         calendar.time = Date()
         calendar.set(Calendar.DATE, 1)
 
-        fromDate.postValue(calendar.time)
-        untilDate.postValue(Date())
+        dateRange.postValue(Pair(calendar.time, Date()))
     }
 
 
@@ -32,8 +30,7 @@ class StatisticsViewModel : ViewModel() {
         successfulCallback: (PersonalStatistics) -> Unit,
         failureCallback: () -> Unit
     ) {
-        fromDate.postValue(from)
-        untilDate.postValue(until)
+        dateRange.postValue(Pair(from, until))
         getPersonalStatisticsForSelectedTimeRange(
             successfulCallback,
             failureCallback
@@ -44,11 +41,10 @@ class StatisticsViewModel : ViewModel() {
         successfulCallback: (PersonalStatistics) -> Unit,
         failureCallback: () -> Unit
     ) {
-        val from = fromDate.value
-        val until = untilDate.value
+        val range = dateRange.value ?: return
 
-        if (from == null || until == null)
-            return
+        val from = range.first
+        val until = range.second
 
         TraewellingApi
             .statisticsService

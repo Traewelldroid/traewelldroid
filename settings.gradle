@@ -3,8 +3,11 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven {
+            url 'https://jitpack.io'
+        }
         jcenter() // Warning: this repository is going to shut down soon
     }
 }
-rootProject.name = "Träwelling"
+rootProject.name = "Träwelldroid"
 include ':app'
