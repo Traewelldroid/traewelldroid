@@ -1,5 +1,8 @@
 package de.hbch.traewelling.ui.statistics
 
+import android.graphics.Color
+import android.os.Build
+import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -18,6 +21,7 @@ import java.util.*
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.statistics.PersonalStatistics
 import de.hbch.traewelling.api.models.trip.ProductType
+import okhttp3.internal.Version
 
 
 class StatisticsFragment : Fragment() {
@@ -89,6 +93,13 @@ class StatisticsFragment : Fragment() {
         chart.animateY(500)
         chart.setDrawGridBackground(false)
         chart.xAxis.isEnabled = false
+
+        if (SDK_INT >= Build.VERSION_CODES.R && resources.configuration.isNightModeActive) {
+            chart.legend.textColor = Color.WHITE
+            chart.xAxis.textColor = Color.WHITE
+            chart.axisLeft.textColor = Color.WHITE
+            chart.axisRight.textColor = Color.WHITE
+        }
     }
 
     private fun requestAndDisplayStatistics() {

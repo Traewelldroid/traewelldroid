@@ -46,7 +46,7 @@
                 style="@style/Theme.Traewelling.StatisticTexts"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:text="Verkehrsmittel" />
+                android:text="@string/transport_types" />
 
             <com.github.mikephil.charting.charts.BarChart
                 android:id="@+id/chart_stats_product_type"
@@ -70,7 +70,7 @@
                 style="@style/Theme.Traewelling.StatisticTexts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Betreiber"
+                android:text="@string/operators"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 

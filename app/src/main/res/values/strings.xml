@@ -66,4 +66,6 @@
     <string name="title_statistics">Statistics</string>
     <string name="date_range" translatable="false">%1$s - %2$s</string>
     <string name="title_select_statistics_date_range">Select the date range for your statistics</string>
+    <string name="transport_types">Transport types</string>
+    <string name="operators">Operators</string>
 </resources>
