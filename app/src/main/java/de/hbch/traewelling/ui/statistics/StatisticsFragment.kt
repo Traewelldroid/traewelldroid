@@ -1,5 +1,6 @@
 package de.hbch.traewelling.ui.statistics
 
+import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Build
 import android.os.Build.VERSION.SDK_INT
@@ -94,7 +95,7 @@ class StatisticsFragment : Fragment() {
         chart.setDrawGridBackground(false)
         chart.xAxis.isEnabled = false
 
-        if (SDK_INT >= Build.VERSION_CODES.R && resources.configuration.isNightModeActive) {
+        if ((resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES) {
             chart.legend.textColor = Color.WHITE
             chart.xAxis.textColor = Color.WHITE
             chart.axisLeft.textColor = Color.WHITE
