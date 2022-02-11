@@ -74,12 +74,22 @@ class StatisticsFragment : Fragment() {
             .build()
 
         picker.addOnPositiveButtonClickListener { dateRange ->
+            val startCalendar =  GregorianCalendar()
+            startCalendar.time = Date(dateRange.first)
+            val endCalendar = GregorianCalendar()
+            endCalendar.time = Date(dateRange.second)
+
+            startCalendar.set(Calendar.HOUR_OF_DAY, 0)
+            startCalendar.set(Calendar.MINUTE, 0)
+            endCalendar.set(Calendar.HOUR_OF_DAY, 23)
+            endCalendar.set(Calendar.MINUTE, 59)
+
             viewModel
                 .dateRange
                 .postValue(
                     Pair(
-                        Date(dateRange.first),
-                        Date(dateRange.second)
+                        startCalendar.time,
+                        endCalendar.time
                     )
                 )
         }
