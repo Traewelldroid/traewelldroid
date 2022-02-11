@@ -94,6 +94,7 @@ class StatisticsFragment : Fragment() {
         chart.animateY(500)
         chart.setDrawGridBackground(false)
         chart.xAxis.isEnabled = false
+        chart.setScaleEnabled(false)
 
         if ((resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES) {
             chart.legend.textColor = Color.WHITE
