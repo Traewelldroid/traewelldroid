@@ -29,8 +29,7 @@
                 app:cardUseCompatPadding="true">
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="16dp">
+                    android:layout_height="wrap_content">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -39,7 +38,8 @@
                         tools:text="RE 75 nach Ulm Hbf"
                         android:text="@{@string/line_destination(line, destination)}"
                         style="@style/TextAppearance.Traewelling.Headline"
-                        android:id="@+id/text_view_line_destination" />
+                        android:id="@+id/text_view_line_destination"
+                        android:layout_margin="16dp"/>
 
                     <include
                         android:layout_width="wrap_content"
