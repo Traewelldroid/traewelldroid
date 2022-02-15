@@ -46,7 +46,8 @@
                     android:layout_height="20dp"
                     android:src="@drawable/ic_perlschnur_main"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/traewelling" />
 
                 <ImageView
                     android:layout_width="2dp"
@@ -66,7 +67,8 @@
                     android:layout_height="20dp"
                     android:src="@drawable/ic_perlschnur_main"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:tint="@color/traewelling" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
