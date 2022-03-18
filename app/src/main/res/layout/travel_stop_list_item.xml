@@ -33,7 +33,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/perlschnur_connection_top"
             android:layout_marginStart="16dp"
-            app:tint="@color/traewelling" />
+            style="@style/Theme.Traewelling.PrimaryColorIcons"  />
         <ImageView
             android:layout_width="2dp"
             android:layout_height="16dp"

@@ -20,9 +20,9 @@
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardElevation="3dp"
-        app:cardCornerRadius="8dp"
         app:cardUseCompatPadding="true"
+        android:clickable="true"
+        android:focusable="true"
         android:onClick="@{() -> checkInCard.handleCheckInSelected()}">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -47,7 +47,7 @@
                     android:src="@drawable/ic_perlschnur_main"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:tint="@color/traewelling" />
+                    style="@style/Theme.Traewelling.PrimaryColorIcons" />
 
                 <ImageView
                     android:layout_width="2dp"
@@ -68,7 +68,7 @@
                     android:src="@drawable/ic_perlschnur_main"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:tint="@color/traewelling" />
+                    style="@style/Theme.Traewelling.PrimaryColorIcons" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -120,7 +120,7 @@
                     android:layout_height="wrap_content"
                     tools:text="15:25"
                     displayTime="@{checkIn.journey.origin.departureReal ?? checkIn.journey.origin.departurePlanned}"
-                    android:textColor="@color/traewelling"
+                    style="@style/Theme.Traewelling.PrimaryColorTexts"
                     android:textSize="18sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toBottomOf="@id/start_station"
@@ -187,7 +187,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="25dp"
                     android:text="@{checkIn.body}"
-                    android:textColor="@color/traewelling"
+                    style="@style/Theme.Traewelling.PrimaryColorTexts"
                     android:textSize="18sp"
                     app:layout_constraintBottom_toTopOf="@id/end_station"
                     app:layout_constraintEnd_toStartOf="@+id/departure_time"
@@ -231,7 +231,7 @@
                     android:layout_height="wrap_content"
                     tools:text="15:25"
                     displayTime="@{checkIn.journey.destination.arrival ?? checkIn.journey.destination.arrivalPlanned}"
-                    android:textColor="@color/traewelling"
+                    style="@style/Theme.Traewelling.PrimaryColorTexts"
                     android:textSize="18sp"
                     app:layout_constraintEnd_toEndOf="@id/departure_time"
                     app:layout_constraintBottom_toBottomOf="@id/end_station"
@@ -295,7 +295,7 @@
                 app:layout_constraintBottom_toBottomOf="@id/like_count"
                 android:layout_marginStart="16dp"
                 android:src="@drawable/ic_delete"
-                app:tint="@color/traewelling"
+                style="@style/Theme.Traewelling.PrimaryColorIcons"
                 android:visibility="@{viewModel.isOwnStatus ? View.VISIBLE : View.GONE}"
                 android:onClick="@{() -> checkInCard.handleDeleteClicked()}"/>
 

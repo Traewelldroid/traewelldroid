@@ -58,7 +58,7 @@
                         android:src="@drawable/ic_perlschnur_main"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:tint="@color/traewelling" />
+                        style="@style/Theme.Traewelling.PrimaryColorIcons" />
 
                     <ImageView
                         android:layout_width="20dp"
@@ -67,7 +67,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"
                         android:src="@drawable/ic_perlschnur_main"
-                        app:tint="@color/traewelling" />
+                        style="@style/Theme.Traewelling.PrimaryColorIcons" />
 
                     <ImageView
                         android:layout_width="2dp"

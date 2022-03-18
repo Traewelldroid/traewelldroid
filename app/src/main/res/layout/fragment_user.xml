@@ -27,7 +27,6 @@
                     android:id="@+id/card_user"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintBaseline_toTopOf="parent"
-                    app:cardElevation="3dp"
                     app:cardCornerRadius="8dp"
                     app:cardUseCompatPadding="true"
                     android:layout_margin="8dp">
@@ -83,7 +82,7 @@
                                     android:layout_height="match_parent"
                                     android:src="@drawable/ic_navigation"
                                     android:layout_marginEnd="8dp"
-                                    app:tint="@color/traewelling"/>
+                                    style="@style/Theme.Traewelling.PrimaryColorIcons" />
                                 <TextView
                                     android:id="@+id/textView_kilometres"
                                     android:layout_width="wrap_content"
@@ -112,7 +111,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
                                     android:src="@drawable/ic_score"
-                                    app:tint="@color/traewelling"
+                                    style="@style/Theme.Traewelling.PrimaryColorIcons"
                                     android:layout_marginStart="8dp"/>
                             </LinearLayout>
 
@@ -127,7 +126,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
                                     android:src="@drawable/ic_travel_time"
-                                    app:tint="@color/traewelling"
+                                    style="@style/Theme.Traewelling.PrimaryColorIcons"
                                     android:layout_marginEnd="8dp"/>
                                 <TextView
                                     android:id="@+id/textView_travelTime"
@@ -156,7 +155,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
                                     android:src="@drawable/ic_speed"
-                                    app:tint="@color/traewelling"
+                                    style="@style/Theme.Traewelling.PrimaryColorIcons"
                                     android:layout_marginStart="8dp"/>
                             </LinearLayout>
                         </GridLayout>

@@ -15,6 +15,8 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.widget.PopupMenu
+import androidx.compose.material.MaterialTheme
+import androidx.compose.ui.graphics.toArgb
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doOnTextChanged
@@ -61,6 +63,7 @@ class SearchStationCard(
 
     init {
         addView(binding.root)
+        elevation = 0f
         val adapter = ArrayAdapter<String>(
             context,
             android.R.layout.simple_dropdown_item_1line

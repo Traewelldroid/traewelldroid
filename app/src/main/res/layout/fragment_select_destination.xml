@@ -24,7 +24,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
-                app:cardElevation="3dp"
                 app:cardCornerRadius="8dp"
                 app:cardUseCompatPadding="true">
                 <androidx.constraintlayout.widget.ConstraintLayout

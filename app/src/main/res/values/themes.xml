@@ -1,18 +1,16 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.Traewelling" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.Traewelling" parent="Theme.Material3.DayNight">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/traewelling</item>
-        <item name="colorPrimaryVariant">@color/traewelling_dark</item>
+        <item name="colorPrimaryVariant">@color/traewelling</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/traewelling</item>
-        <item name="colorSecondaryVariant">@color/traewelling_dark</item>
+        <item name="colorSecondaryVariant">@color/traewelling</item>
         <item name="colorOnSecondary">@color/black</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
-        <item name="textInputStyle">@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox</item>
+        <item name="textInputStyle">@style/Widget.Material3.TextInputLayout.OutlinedBox</item>
         <item name="fontFamily">@font/raleway</item>
     </style>
 </resources>

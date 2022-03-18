@@ -1,0 +1,16 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.Traewelling" parent="Theme.Material3.DayNight">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/material_dynamic_primary40</item>
+        <item name="colorPrimaryVariant">@color/material_dynamic_primary40</item>
+        <item name="colorOnPrimary">@color/material_dynamic_neutral99</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/material_dynamic_secondary40</item>
+        <item name="colorSecondaryVariant">@color/material_dynamic_secondary40</item>
+        <item name="colorOnSecondary">@color/material_dynamic_neutral10</item>
+        <!-- Customize your theme here. -->
+        <item name="textInputStyle">@style/Widget.Material3.TextInputLayout.OutlinedBox</item>
+        <item name="fontFamily">@font/raleway</item>
+    </style>
+</resources>

@@ -1,5 +1,6 @@
 package de.hbch.traewelling.ui.statusDetail
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -46,8 +47,13 @@ class StatusDetailFragment : Fragment() {
                         )
                     }
                     polylines.add(polyline)
+                    val color = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+                                    R.color.material_dynamic_primary40
+                                else
+                                    R.color.traewelling
+
                     polyline.outlinePaint.color = resources.getColor(
-                        R.color.traewelling,
+                        color,
                         requireContext().theme
                     )
                 }
