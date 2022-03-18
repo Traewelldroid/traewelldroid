@@ -109,7 +109,8 @@
                         android:id="@+id/layout_filter_text"
                         app:layout_constraintTop_toBottomOf="@id/divider_time_filter"
                         android:paddingStart="16dp"
-                        android:paddingEnd="16dp">
+                        android:paddingEnd="16dp"
+                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="match_parent"
@@ -178,13 +179,39 @@
                         android:id="@+id/divider_filter_departures"
                         app:layout_constraintTop_toBottomOf="@id/layout_filter_text"/>
 
+
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/btn_previous_top"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/divider_filter_departures"
+                        android:layout_margin="8dp"
+                        app:icon="@drawable/ic_previous"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:text="@string/previous"
+                        android:onClick="@{() -> searchConnectionFragment.searchConnections(stationName, viewModel.pageTimes.previous)}"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/divider_filter_departures"
+                        android:layout_margin="8dp"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        app:icon="@drawable/ic_next"
+                        app:iconGravity="end"
+                        android:text="@string/next"
+                        android:onClick="@{() -> searchConnectionFragment.searchConnections(stationName, viewModel.pageTimes.next)}"/>
+
                     <androidx.recyclerview.widget.RecyclerView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:layout_constraintTop_toBottomOf="@id/divider_filter_departures"
+                        app:layout_constraintTop_toBottomOf="@id/btn_previous_top"
                         android:id="@+id/recycler_view_connections"
                         tools:listitem="@layout/connection_list_item"
                         android:nestedScrollingEnabled="false"
+                        android:layout_marginTop="8dp"
                         tools:itemCount="5" />
 
                     <com.google.android.material.button.MaterialButton
@@ -192,7 +219,7 @@
                         android:layout_height="wrap_content"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/recycler_view_connections"
-                        android:layout_margin="16dp"
+                        android:layout_margin="8dp"
                         app:icon="@drawable/ic_previous"
                         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                         android:text="@string/previous"
@@ -203,7 +230,7 @@
                         android:layout_height="wrap_content"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/recycler_view_connections"
-                        android:layout_margin="16dp"
+                        android:layout_margin="8dp"
                         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                         app:icon="@drawable/ic_next"
                         app:iconGravity="end"
