@@ -76,6 +76,9 @@ class ConnectionAdapter(
                     if (filter == ProductType.LONG_DISTANCE)
                         trip.line.product == ProductType.NATIONAL ||
                                 trip.line.product == ProductType.NATIONAL_EXPRESS
+                    else if (filter == ProductType.REGIONAL)
+                        trip.line.product == ProductType.REGIONAL ||
+                                trip.line.product == ProductType.REGIONAL_EXPRESS
                     else
                         trip.line.product == filter
                 }

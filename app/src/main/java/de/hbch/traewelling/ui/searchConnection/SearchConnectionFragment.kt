@@ -66,7 +66,8 @@ class SearchConnectionFragment : Fragment() {
                 it.line?.product == ProductType.FERRY
             })  VISIBLE else GONE
         binding.chipFilterRegional.visibility = if (connections.data.any {
-                it.line?.product == ProductType.REGIONAL
+                it.line?.product == ProductType.REGIONAL ||
+                it.line?.product == ProductType.REGIONAL_EXPRESS
             })  VISIBLE else GONE
         binding.chipFilterSuburban.visibility = if (connections.data.any {
                 it.line?.product == ProductType.SUBURBAN
