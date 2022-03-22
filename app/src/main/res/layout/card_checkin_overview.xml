@@ -23,6 +23,7 @@
         app:cardUseCompatPadding="true"
         android:clickable="true"
         android:focusable="true"
+        app:cardElevation="2dp"
         android:onClick="@{() -> checkInCard.handleCheckInSelected()}">
 
         <androidx.constraintlayout.widget.ConstraintLayout

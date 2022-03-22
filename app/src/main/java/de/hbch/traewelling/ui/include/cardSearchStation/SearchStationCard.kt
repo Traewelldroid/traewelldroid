@@ -63,7 +63,6 @@ class SearchStationCard(
 
     init {
         addView(binding.root)
-        elevation = 0f
         val adapter = ArrayAdapter<String>(
             context,
             android.R.layout.simple_dropdown_item_1line

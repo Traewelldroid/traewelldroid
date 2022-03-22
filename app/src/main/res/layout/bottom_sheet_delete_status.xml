@@ -19,7 +19,7 @@
             android:layout_height="75dp"
             android:id="@+id/icon_delete_status"
             android:src="@drawable/ic_delete"
-            app:tint="@color/traewelling"
+            style="@style/Theme.Traewelling.PrimaryColorIcons"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
