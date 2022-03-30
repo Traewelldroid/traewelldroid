@@ -1,9 +1,7 @@
 package de.hbch.traewelling.ui.dashboard
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.NestedScrollView
@@ -13,11 +11,14 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import de.hbch.traewelling.R
 import de.hbch.traewelling.adapters.CheckInAdapter
 import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.api.models.status.StatusPage
 import de.hbch.traewelling.databinding.FragmentDashboardBinding
 import de.hbch.traewelling.shared.LoggedInUserViewModel
+import de.hbch.traewelling.ui.include.alert.AlertBottomSheet
+import de.hbch.traewelling.ui.include.alert.AlertType
 import de.hbch.traewelling.ui.include.cardSearchStation.SearchStationCard
 import de.hbch.traewelling.ui.include.cardSearchStation.SearchStationCardViewModel
 import retrofit2.Call
@@ -62,7 +63,33 @@ class DashboardFragment : Fragment() {
             lifecycleOwner = viewLifecycleOwner
         }
 
+        setHasOptionsMenu(true)
+
         return binding.root
+    }
+
+    override fun onCreateOptionsMenu(optionsMenu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.dashboard_menu, optionsMenu)
+        super.onCreateOptionsMenu(optionsMenu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.menu_dashboard_notification -> {
+                handleNotificationMenuClick()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun handleNotificationMenuClick() {
+        val alertBottomSheet = AlertBottomSheet(
+            AlertType.ERROR,
+            requireContext().getString(R.string.notifications_not_implemented_text),
+            5000
+        )
+        alertBottomSheet.show(parentFragmentManager, AlertBottomSheet.TAG)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

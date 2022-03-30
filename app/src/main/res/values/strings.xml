@@ -68,4 +68,9 @@
     <string name="title_select_statistics_date_range">Select the date range for your statistics</string>
     <string name="transport_types">Transport types</string>
     <string name="operators">Operators</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="notifications_not_implemented_text">
+        This feature is currently not implemented. Please use the Träwelling website to see
+        or clear your notifications.
+    </string>
 </resources>

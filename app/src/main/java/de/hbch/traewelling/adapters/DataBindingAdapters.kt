@@ -35,7 +35,10 @@ fun setAlertIcon(imageView: ImageView, alertType: AlertType?) {
         AlertType.SUCCESS -> R.drawable.ic_check_in
     })
     imageView.setColorFilter(imageView.resources.getColor(when(alertType) {
-        AlertType.ERROR -> R.color.traewelling
+        AlertType.ERROR -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+                                R.color.material_dynamic_primary40
+                            else
+                                R.color.traewelling
         AlertType.SUCCESS -> R.color.success
     }, null))
 }

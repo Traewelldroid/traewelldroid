@@ -150,6 +150,11 @@ interface TravelService {
     ): Call<Data<List<Station>>>
 }
 
+interface NotificationService {
+    @GET("notifications/count")
+    fun getUnreadNotificationsCount(): Call<Data<Int>>
+}
+
 object TraewellingApi {
     var jwt: String = ""
     val authService: AuthService by lazy {
@@ -163,5 +168,8 @@ object TraewellingApi {
     }
     val travelService: TravelService by lazy {
         retrofit.create(TravelService::class.java)
+    }
+    val notificationService: NotificationService by lazy {
+        retrofit.create(NotificationService::class.java)
     }
 }

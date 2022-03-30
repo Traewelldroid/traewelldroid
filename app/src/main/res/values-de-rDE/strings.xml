@@ -65,4 +65,9 @@
     <string name="title_select_statistics_date_range">Wähle den Zeitraum für die Statistiken</string>
     <string name="transport_types">Verkehrsmittel</string>
     <string name="operators">Betreiber</string>
+    <string name="title_notifications">Benachrichtigungen</string>
+    <string name="notifications_not_implemented_text">
+        Diese Funktion ist aktuell nicht implementiert. Bitte nutze die Träwelling-Webseite,
+        um deine Benachrichtigungen anzusehen oder zu löschen.
+    </string>
 </resources>
