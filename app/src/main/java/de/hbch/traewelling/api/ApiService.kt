@@ -1,7 +1,9 @@
 package de.hbch.traewelling.api
 
+import android.content.pm.PackageManager
 import android.util.Log
 import com.google.gson.GsonBuilder
+import de.hbch.traewelling.BuildConfig
 import de.hbch.traewelling.api.models.Data
 import de.hbch.traewelling.api.models.auth.BearerToken
 import de.hbch.traewelling.api.models.auth.LoginCredentials
@@ -35,7 +37,7 @@ private val client = OkHttpClient.Builder().readTimeout(60, TimeUnit.SECONDS)
             .request()
             .newBuilder()
             .addHeader("Authorization", "Bearer ${TraewellingApi.jwt}")
-            .addHeader("User-Agent", "de.hbch.traewelling/1.0.0")
+            .addHeader("User-Agent", "${BuildConfig.APPLICATION_ID}/${BuildConfig.VERSION_NAME}")
             .build()
 
     chain.proceed(newRequest)
@@ -157,6 +159,7 @@ interface NotificationService {
 
 object TraewellingApi {
     var jwt: String = ""
+    var appVersion: String = ""
     val authService: AuthService by lazy {
         retrofit.create(AuthService::class.java)
     }
