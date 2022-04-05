@@ -141,8 +141,9 @@ class SearchConnectionFragment : Fragment() {
         searchStationCard.binding.editTextSearchStation.setText(args.stationName)
         binding.searchConnectionFragment = this
         binding.lifecycleOwner = viewLifecycleOwner
-        binding.chipGroupFilter.setOnCheckedChangeListener { _, checkedId ->
+        binding.chipGroupFilter.setOnCheckedStateChangeListener { _, checkedIds ->
             val adapter = binding.recyclerViewConnections.adapter as ConnectionAdapter
+            val checkedId = if (checkedIds.size == 0) null else checkedIds[0]
             adapter.applyFilter(when(checkedId) {
                 R.id.chip_filter_bus -> ProductType.BUS
                 R.id.chip_filter_express -> ProductType.LONG_DISTANCE
