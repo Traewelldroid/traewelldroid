@@ -1,8 +1,15 @@
 package de.hbch.traewelling.ui.main
 
+import android.content.Intent
+import android.content.pm.verify.domain.DomainVerificationManager
+import android.content.pm.verify.domain.DomainVerificationUserState
+import android.net.Uri
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.Settings
 import android.telecom.Call
+import androidx.appcompat.app.AlertDialog
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -24,12 +31,15 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
     private lateinit var binding: ActivityMainBinding
+    private lateinit var secureStorage: SecureStorage
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        secureStorage = SecureStorage(this)
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
@@ -44,10 +54,46 @@ class MainActivity : AppCompatActivity() {
         TraewellingApi.jwt = secureStorage.getObject(SharedValues.SS_JWT, String::class.java)!!
 
         navController.addOnDestinationChangedListener { _, _, _ -> getNotificationCount() }
+        
+        checkVerifiedDomains()
     }
 
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp() || super.onSupportNavigateUp()
+    }
+
+    private fun checkVerifiedDomains() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val manager = getSystemService(DomainVerificationManager::class.java)
+            val userState = manager.getDomainVerificationUserState(packageName)
+            val unapprovedDomains = userState?.hostToStateMap
+                ?.filterValues { it == DomainVerificationUserState.DOMAIN_STATE_NONE }
+            if (unapprovedDomains?.containsKey("traewelling.de") == true &&
+                secureStorage.getObject(SharedValues.SS_VERIFY_DOMAINS, Boolean::class.java) != false) {
+                val alertDialog = AlertDialog.Builder(this).create()
+                alertDialog.setTitle(getString(R.string.request_url_verification))
+                alertDialog.setMessage(getString(R.string.request_url_verification_text))
+                alertDialog.setButton(
+                    AlertDialog.BUTTON_POSITIVE,
+                    getString(R.string.yes)
+                ) { _, _ ->
+                    startActivity(
+                        Intent(
+                            Settings.ACTION_APP_OPEN_BY_DEFAULT_SETTINGS,
+                            Uri.parse("package:${packageName}")
+                        )
+                    )
+                }
+                alertDialog.setButton(
+                    AlertDialog.BUTTON_NEGATIVE,
+                    getString(R.string.no)
+                ) { _, _ ->
+                    secureStorage.storeObject(SharedValues.SS_VERIFY_DOMAINS, false)
+                    alertDialog.dismiss()
+                }
+                alertDialog.show()
+            }
+        }
     }
 
     private fun getNotificationCount() {

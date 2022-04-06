@@ -1,5 +1,6 @@
 package de.hbch.traewelling.ui.dashboard
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
@@ -17,6 +18,7 @@ import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.api.models.status.StatusPage
 import de.hbch.traewelling.databinding.FragmentDashboardBinding
 import de.hbch.traewelling.shared.LoggedInUserViewModel
+import de.hbch.traewelling.shared.SharedValues
 import de.hbch.traewelling.ui.include.alert.AlertBottomSheet
 import de.hbch.traewelling.ui.include.alert.AlertType
 import de.hbch.traewelling.ui.include.cardSearchStation.SearchStationCard
@@ -64,6 +66,25 @@ class DashboardFragment : Fragment() {
         }
 
         setHasOptionsMenu(true)
+
+        val intent = activity?.intent
+        intent?.let {
+            if (it.action == Intent.ACTION_VIEW) {
+                if (it.hasExtra(SharedValues.EXTRA_STATUS_ID)) {
+                    val statusId = it.getStringExtra(SharedValues.EXTRA_STATUS_ID)
+                    if (statusId != null) {
+                        intent.action = ""
+                        findNavController()
+                            .navigate(
+                                DashboardFragmentDirections
+                                    .actionDashboardFragmentToStatusDetailFragment(
+                                        statusId.toInt()
+                                    )
+                            )
+                    }
+                }
+            }
+        }
 
         return binding.root
     }

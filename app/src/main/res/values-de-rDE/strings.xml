@@ -70,4 +70,11 @@
         Diese Funktion ist aktuell nicht implementiert. Bitte nutze die Träwelling-Webseite,
         um deine Benachrichtigungen anzusehen oder zu löschen.
     </string>
+    <string name="request_url_verification">Links öffnen</string>
+    <string name="request_url_verification_text">
+        Träwelldroid kann nun Links von traewelling.de öffnen. Möchtest du das einrichten?
+        Dies kann jederzeit in den Systemeinstellungen geändert werden.
+    </string>
+    <string name="yes">Ja</string>
+    <string name="no">Nein</string>
 </resources>

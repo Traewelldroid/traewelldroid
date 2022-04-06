@@ -73,4 +73,11 @@
         This feature is currently not implemented. Please use the Träwelling website to see
         or clear your notifications.
     </string>
+    <string name="request_url_verification">Open URLs</string>
+    <string name="request_url_verification_text">
+        Träwelldroid can now open URLs from traewelling.de. Would you like to set up?
+        This also can be changed at any time in the system settings.
+    </string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>
