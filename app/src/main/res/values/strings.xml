@@ -4,9 +4,9 @@
     <string name="input_password">Password</string>
     <string name="input_stop">Stop / DS100</string>
     <string name="login">Log in</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_active_checkins">Active Check-Ins</string>
-    <string name="title_user">User profile</string>
+    <string name="title_dashboard">Home</string>
+    <string name="title_active_checkins">En route</string>
+    <string name="title_user">Profile</string>
     <string name="title_search_connection">Search connection</string>
     <string name="title_select_destination">Select destination</string>
     <string name="display_points">%1$d points</string>

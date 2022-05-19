@@ -4,9 +4,9 @@
     <string name="input_password">Passwort</string>
     <string name="input_stop">Haltestelle / DS100</string>
     <string name="login">Anmelden</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_active_checkins">Aktive Check-Ins</string>
-    <string name="title_user">Benutzerprofil</string>
+    <string name="title_dashboard">Start</string>
+    <string name="title_active_checkins">Unterwegs</string>
+    <string name="title_user">Profil</string>
     <string name="title_search_connection">Verbindungssuche</string>
     <string name="display_points">%1$d Punkte</string>
     <string name="display_travel_time">%1$d Std. %2$d Min.</string>
@@ -61,7 +61,7 @@
     <string name="product_type_national">Fernverkehr (IC/EC)</string>
     <string name="data_loading" tools:ignore="TypographyEllipsis">Daten werden geladen...</string>
     <string name="status_details">Statusdetails</string>
-    <string name="title_statistics">Statistiken</string>
+    <string name="title_statistics">Statistik</string>
     <string name="title_select_statistics_date_range">Wähle den Zeitraum für die Statistiken</string>
     <string name="transport_types">Verkehrsmittel</string>
     <string name="operators">Betreiber</string>
