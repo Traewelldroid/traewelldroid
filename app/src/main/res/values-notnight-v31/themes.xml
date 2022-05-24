@@ -1,6 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.Traewelling" parent="Theme.Material3.DynamicColors.DayNight"><item name="colorPrimary">@android:color/system_accent1_600</item>
+    <style name="Theme.Traewelling" parent="Theme.Material3.DynamicColors.DayNight">
+        <item name="colorPrimary">@android:color/system_accent1_600</item>
         <item name="colorOnPrimary">@android:color/system_accent1_0</item>
         <item name="colorPrimaryContainer">@android:color/system_accent1_100</item>
         <item name="colorOnPrimaryContainer">@android:color/system_accent1_900</item>

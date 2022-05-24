@@ -10,10 +10,13 @@ import android.os.Bundle
 import android.provider.Settings
 import android.telecom.Call
 import android.view.WindowInsets
+import android.view.WindowInsets.Type.statusBars
+import android.view.WindowInsets.Type.systemBars
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -43,6 +46,15 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.root.setOnApplyWindowInsetsListener { view, insets ->
+            val insetTop = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                insets.getInsets(systemBars()).top
+            } else {
+                insets.systemWindowInsetTop
+            }
+            view.updatePadding(top = insetTop)
+            insets
+        }
 
         secureStorage = SecureStorage(this)
 
