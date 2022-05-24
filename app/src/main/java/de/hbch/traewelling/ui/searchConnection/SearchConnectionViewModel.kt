@@ -25,7 +25,8 @@ class SearchConnectionViewModel: ViewModel() {
         successCallback: (HafasTripPage) -> Unit,
         failureCallback: () -> Unit
     ) {
-        TraewellingApi.travelService.getDeparturesAtStation(stationName, departureTime)
+        var requestStationName = stationName.replace('/', ' ')
+        TraewellingApi.travelService.getDeparturesAtStation(requestStationName, departureTime)
             .enqueue(object: Callback<HafasTripPage> {
                 override fun onResponse(
                     call: Call<HafasTripPage>,
