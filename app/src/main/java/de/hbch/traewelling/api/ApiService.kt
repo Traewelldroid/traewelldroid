@@ -142,13 +142,13 @@ interface TravelService {
 
     @GET("trains/station/{station}/departures")
     fun getDeparturesAtStation(
-        @Path("station") station: String,
+        @Path("station", encoded = false) station: String,
         @Query("when") time: Date
     ): Call<HafasTripPage>
 
     @GET("trains/station/autocomplete/{station}")
     fun autoCompleteStationSearch(
-        @Path("station") station: String
+        @Path("station", encoded = false) station: String
     ): Call<Data<List<Station>>>
 }
 

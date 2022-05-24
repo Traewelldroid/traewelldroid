@@ -1,16 +1,38 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.Traewelling" parent="Theme.Material3.DayNight">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/material_dynamic_primary40</item>
-        <item name="colorPrimaryVariant">@color/material_dynamic_primary40</item>
-        <item name="colorOnPrimary">@color/material_dynamic_neutral99</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/material_dynamic_secondary40</item>
-        <item name="colorSecondaryVariant">@color/material_dynamic_secondary40</item>
-        <item name="colorOnSecondary">@color/material_dynamic_neutral10</item>
+    <style name="Theme.Traewelling" parent="Theme.Material3.DynamicColors.DayNight"><item name="colorPrimary">@android:color/system_accent1_600</item>
+        <item name="colorOnPrimary">@android:color/system_accent1_0</item>
+        <item name="colorPrimaryContainer">@android:color/system_accent1_100</item>
+        <item name="colorOnPrimaryContainer">@android:color/system_accent1_900</item>
+        <item name="colorPrimaryInverse">@android:color/system_accent1_200</item>
+        <item name="colorSecondary">@android:color/system_accent2_600</item>
+        <item name="colorOnSecondary">@android:color/system_accent2_0</item>
+        <item name="colorSecondaryContainer">@android:color/system_accent2_100</item>
+        <item name="colorOnSecondaryContainer">@android:color/system_accent2_900</item>
+        <item name="colorTertiary">@android:color/system_accent3_600</item>
+        <item name="colorOnTertiary">@android:color/system_accent3_0</item>
+        <item name="colorTertiaryContainer">@android:color/system_accent3_100</item>
+        <item name="colorOnTertiaryContainer">@android:color/system_accent3_900</item>
+
+        <item name="colorError">#ffb3261e</item>
+        <item name="colorOnError">#ffffff</item>
+        <item name="colorErrorContainer">#fff9dedc</item>
+        <item name="colorOnErrorContainer">#ff410e0b</item>
+        <item name="colorOutline">@android:color/system_neutral2_500</item>
+        <item name="colorOnBackground">@android:color/system_neutral1_900</item>
+        <item name="colorSurface">@android:color/system_neutral1_10</item>
+        <item name="colorOnSurface">@android:color/system_neutral1_900</item>
+        <item name="colorSurfaceVariant">@android:color/system_neutral2_100</item>
+        <item name="colorOnSurfaceVariant">@android:color/system_neutral2_700</item>
+        <item name="colorSurfaceInverse">@android:color/system_neutral1_800</item>
+        <item name="colorOnSurfaceInverse">@android:color/system_neutral1_50</item>
         <!-- Customize your theme here. -->
         <item name="textInputStyle">@style/Widget.Material3.TextInputLayout.OutlinedBox</item>
         <item name="fontFamily">@font/raleway</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
     </style>
 </resources>

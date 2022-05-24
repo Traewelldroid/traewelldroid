@@ -9,7 +9,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
 import android.telecom.Call
+import android.view.WindowInsets
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -35,9 +39,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
 
         secureStorage = SecureStorage(this)
 
@@ -45,6 +50,7 @@ class MainActivity : AppCompatActivity() {
         navController = navHostFragment.navController
 
         val bottomNavigationView = binding.bottomNavigationBar
+        setSupportActionBar(binding.toolbarMain)
         setupWithNavController(bottomNavigationView, navController)
         setupActionBarWithNavController(navController, AppBarConfiguration(
             setOf(R.id.dashboard_fragment, R.id.active_checkins_fragment, R.id.statisticsFragment, R.id.user_fragment)
