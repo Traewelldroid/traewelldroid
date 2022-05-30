@@ -80,4 +80,5 @@
     </string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="title_also_check_in">Also check-in</string>
 </resources>

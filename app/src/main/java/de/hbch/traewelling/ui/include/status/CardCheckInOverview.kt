@@ -66,7 +66,7 @@ class CardCheckInOverview(
     fun handleCheckInSelected() {
         navController?.navigate(
             R.id.statusDetailFragment,
-            bundleOf(Pair("statusId", binding.checkIn?.id))
+            bundleOf(Pair("statusId", binding.checkIn?.id), Pair("userId", binding.checkIn?.userId))
         )
     }
 

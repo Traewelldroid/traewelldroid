@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_also_check_in"
+        android:icon="@drawable/ic_also_check_in"
+        android:title="@string/title_also_check_in"
+        app:showAsAction="always"/>
+</menu>

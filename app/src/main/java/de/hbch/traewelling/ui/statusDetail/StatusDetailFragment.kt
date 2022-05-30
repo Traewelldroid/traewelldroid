@@ -2,14 +2,16 @@ package de.hbch.traewelling.ui.statusDetail
 
 import android.os.Build
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import de.hbch.traewelling.R
 import de.hbch.traewelling.databinding.FragmentStatusDetailBinding
+import de.hbch.traewelling.shared.CheckInViewModel
+import de.hbch.traewelling.shared.LoggedInUserViewModel
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
@@ -18,6 +20,8 @@ import org.osmdroid.views.overlay.Polyline
 class StatusDetailFragment : Fragment() {
 
     private lateinit var binding: FragmentStatusDetailBinding
+    private val checkInViewModel: CheckInViewModel by activityViewModels()
+    private val userViewModel: LoggedInUserViewModel by activityViewModels()
     private val viewModel: StatusDetailViewModel by viewModels()
     private val args: StatusDetailFragmentArgs by navArgs()
 
@@ -79,7 +83,43 @@ class StatusDetailFragment : Fragment() {
             { }
         )
 
+        setHasOptionsMenu(canAlsoCheckIntoThisConnection())
+
         return binding.root
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.status_detail_also_check_in_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.menu_also_check_in -> {
+                alsoCheckIntoThisConnection()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    fun canAlsoCheckIntoThisConnection(): Boolean {
+        return (userViewModel.loggedInUser.value?.id ?: 0) != args.userId;
+    }
+
+    private fun alsoCheckIntoThisConnection() {
+        if (!canAlsoCheckIntoThisConnection())
+            return
+
+        val status = binding.status!!
+        checkInViewModel.reset()
+        checkInViewModel.lineName = status.journey.line
+        checkInViewModel.tripId = status.journey.tripId.toString()
+        checkInViewModel.startStationId = status.journey.origin.id
+        checkInViewModel.departureTime = status.journey.origin.departurePlanned
+        checkInViewModel.destinationStationId = status.journey.destination.id
+        checkInViewModel.arrivalTime = status.journey.destination.arrivalPlanned
+
+        findNavController().navigate(StatusDetailFragmentDirections.actionStatusDetailFragmentToCheckInFragment("", status.journey.destination.name))
+    }
 }

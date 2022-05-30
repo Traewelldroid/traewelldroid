@@ -78,7 +78,8 @@ class DashboardFragment : Fragment() {
                             .navigate(
                                 DashboardFragmentDirections
                                     .actionDashboardFragmentToStatusDetailFragment(
-                                        statusId.toInt()
+                                        statusId.toInt(),
+                                        0
                                     )
                             )
                     }

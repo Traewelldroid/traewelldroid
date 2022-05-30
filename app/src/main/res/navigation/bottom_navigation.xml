@@ -96,5 +96,11 @@
         <argument
             android:name="statusId"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_statusDetailFragment_to_checkInFragment"
+            app:destination="@id/checkInFragment" />
+        <argument
+            android:name="userId"
+            app:argType="integer" />
     </fragment>
 </navigation>
