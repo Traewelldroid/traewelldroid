@@ -6,8 +6,7 @@ import java.util.*
 
 data class PersonalStatistics(
     @SerializedName("categories") val categories: List<CategoryStatistics>,
-    @SerializedName("operators") val operators: List<OperatorStatistics>,
-    @SerializedName("time") val time: List<TimeStatistics>
+    @SerializedName("operators") val operators: List<OperatorStatistics>
 )
 
 data class CategoryStatistics(
