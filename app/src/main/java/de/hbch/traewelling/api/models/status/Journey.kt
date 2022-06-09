@@ -6,6 +6,7 @@ import de.hbch.traewelling.api.models.trip.ProductType
 
 data class Journey(
     @SerializedName("trip") val tripId: Int,
+    @SerializedName("hafasId") val hafasTripId: String,
     @SerializedName("category") val category: ProductType,
     @SerializedName("number") val number: String,
     @SerializedName("lineName") val line: String,

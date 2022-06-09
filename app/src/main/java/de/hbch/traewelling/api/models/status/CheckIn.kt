@@ -11,15 +11,13 @@ data class CheckInRequest(
     @SerializedName("event") val eventId: Int,
     @SerializedName("tweet") val sendTweet: Boolean,
     @SerializedName("toot") val sendToot: Boolean,
-    @SerializedName("tripID") val tripId: String,
+    @SerializedName("tripId") val tripId: String,
     @SerializedName("lineName") val lineName: String,
     @SerializedName("start") val startStationId: Int,
     @SerializedName("destination") val destinationStationId: Int,
     @SerializedName("departure") val departureTime: Date,
     @SerializedName("arrival") val arrivalTime: Date
-) {
-    @SerializedName("tripId") val tripId2 = tripId
-}
+)
 
 data class CheckInResponse(
     @SerializedName("status") val status: Status,

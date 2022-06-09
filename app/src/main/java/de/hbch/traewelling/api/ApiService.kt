@@ -43,9 +43,11 @@ private val client = OkHttpClient.Builder().readTimeout(60, TimeUnit.SECONDS)
     chain.proceed(newRequest)
 }).build()
 
+private val gson = GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssX").create()
+
 private val retrofit =
     Retrofit.Builder()
-        .addConverterFactory(GsonConverterFactory.create())
+        .addConverterFactory(GsonConverterFactory.create(gson))
         .baseUrl(BASE_URL)
         .client(client)
         .build()

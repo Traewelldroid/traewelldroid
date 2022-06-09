@@ -114,7 +114,7 @@ class StatusDetailFragment : Fragment() {
         val status = binding.status!!
         checkInViewModel.reset()
         checkInViewModel.lineName = status.journey.line
-        checkInViewModel.tripId = status.journey.tripId.toString()
+        checkInViewModel.tripId = status.journey.hafasTripId
         checkInViewModel.startStationId = status.journey.origin.id
         checkInViewModel.departureTime = status.journey.origin.departurePlanned
         checkInViewModel.destinationStationId = status.journey.destination.id
