@@ -324,6 +324,30 @@
                 username="@{checkIn.username}"
                 timestamp="@{checkIn.createdAt}"/>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/fav"
+                    android:layout_marginTop="12dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:visibility="@{checkIn.event == null ? View.GONE : View.VISIBLE}">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/icon_event"
+                        android:src="@drawable/ic_calendar"
+                        android:layout_marginEnd="8dp" />
+
+                    <TextView
+                        android:id="@+id/event_name"
+                        event="@{checkIn.event}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        tools:text="Tolle Veranstaltung" />
+                </LinearLayout>
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

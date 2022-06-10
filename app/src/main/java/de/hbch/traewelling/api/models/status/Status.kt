@@ -1,6 +1,7 @@
 package de.hbch.traewelling.api.models.status
 
 import com.google.gson.annotations.SerializedName
+import de.hbch.traewelling.api.models.event.Event
 import java.util.*
 
 data class Status(
@@ -15,11 +16,9 @@ data class Status(
     @SerializedName("business") val business: StatusBusiness,
     @SerializedName("likes") var likes: Int,
     @SerializedName("liked") var liked: Boolean,
-    @SerializedName("train") val journey: Journey
-    // TODO Event
-) {
-
-}
+    @SerializedName("train") val journey: Journey,
+    @SerializedName("event") val event: Event?
+)
 
 enum class StatusVisibility(val visibility: Int) {
     @SerializedName("0")

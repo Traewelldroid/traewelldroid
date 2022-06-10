@@ -181,6 +181,11 @@ fun setEventOnButton(button: MaterialButton, event: Event?) {
         event?.name ?: button.resources.getString(R.string.title_select_event)
 }
 
+@BindingAdapter("event")
+fun setEventOnTextView(textView: TextView, event: Event?) {
+    textView.text = event?.name ?: ""
+}
+
 fun getBusinessImageResource(business: StatusBusiness): Int {
     return when (business) {
         StatusBusiness.PRIVATE -> R.drawable.ic_person
