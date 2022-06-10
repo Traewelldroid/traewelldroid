@@ -128,11 +128,15 @@ class StatisticsFragment : Fragment() {
         statistics.operators.forEachIndexed { index, operatorStatistics ->
             val dataSet = BarDataSet(listOf(BarEntry(index.toFloat(), operatorStatistics.checkInCount.toFloat())), operatorStatistics.operatorName)
             dataSet.color = dataSetColors[index % dataSetColors.size]
+            if ((resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES)
+                dataSet.valueTextColor = Color.WHITE
             operatorEntries.add(dataSet)
         }
         statistics.categories.forEachIndexed { index, categoryStatistics ->
             val dataSet = BarDataSet(listOf(BarEntry(index.toFloat(), categoryStatistics.checkInCount.toFloat())), ProductType.toString(resources, categoryStatistics.productType))
             dataSet.color = dataSetColors[index % dataSetColors.size]
+            if ((resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES)
+                dataSet.valueTextColor = Color.WHITE
             productTypeEntries.add(dataSet)
         }
 
