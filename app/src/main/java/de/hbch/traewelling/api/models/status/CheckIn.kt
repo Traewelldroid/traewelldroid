@@ -8,7 +8,7 @@ data class CheckInRequest(
     @SerializedName("body") val body: String,
     @SerializedName("business") val business: StatusBusiness,
     @SerializedName("visibility") val visibility: StatusVisibility,
-    @SerializedName("eventId") val eventId: Int,
+    @SerializedName("eventId") val eventId: Int?,
     @SerializedName("tweet") val sendTweet: Boolean,
     @SerializedName("toot") val sendToot: Boolean,
     @SerializedName("tripId") val tripId: String,

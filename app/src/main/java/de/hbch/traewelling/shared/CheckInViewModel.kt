@@ -57,7 +57,7 @@ class CheckInViewModel : ViewModel() {
             message.value ?: "",
             statusBusiness.value ?: StatusBusiness.PRIVATE,
             statusVisibility.value ?: StatusVisibility.PUBLIC,
-            event.value?.id ?: 0,
+            event.value?.id,
             tweet.value ?: false,
             toot.value ?: false,
             tripId,
