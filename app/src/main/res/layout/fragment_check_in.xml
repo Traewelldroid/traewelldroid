@@ -13,6 +13,11 @@
         <variable
             name="checkInFragment"
             type="de.hbch.traewelling.ui.checkIn.CheckInFragment" />
+        <variable
+            name="eventViewModel"
+            type="de.hbch.traewelling.shared.EventViewModel" />
+        <import
+            type="android.view.View" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -88,6 +93,18 @@
                     android:onClick="@{() -> checkInFragment.selectStatusBusiness()}"
                     business="@{viewModel.statusBusiness}" />
 
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_select_event"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    event="@{viewModel.event}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="@{eventViewModel.activeEvents.size() == 0 ? View.GONE : View.VISIBLE}"
+                    android:onClick="@{() -> checkInFragment.selectEvent()}"
+                    app:icon="@drawable/ic_calendar"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/btn_select_visibility"
+                    tools:text="@string/title_select_event" />
 
                 <com.google.android.material.button.MaterialButtonToggleGroup
                     android:layout_width="wrap_content"
@@ -116,7 +133,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/check_in"
                     android:id="@+id/btn_check_in"
-                    app:layout_constraintTop_toBottomOf="@id/btn_select_visibility"
+                    app:layout_constraintTop_toBottomOf="@id/btn_select_event"
                     app:layout_constraintEnd_toEndOf="@id/text_input_status_message"
                     android:layout_marginTop="12dp"
                     app:icon="@drawable/ic_check_in"

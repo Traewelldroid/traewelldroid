@@ -78,4 +78,5 @@
     <string name="yes">Ja</string>
     <string name="no">Nein</string>
     <string name="title_also_check_in">Auch einchecken</string>
+    <string name="title_select_event">Event auswählen</string>
 </resources>

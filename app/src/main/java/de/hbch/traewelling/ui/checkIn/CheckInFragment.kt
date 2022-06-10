@@ -17,11 +17,13 @@ import com.google.android.material.transition.MaterialContainerTransform
 import de.hbch.traewelling.R
 import de.hbch.traewelling.databinding.FragmentCheckInBinding
 import de.hbch.traewelling.shared.CheckInViewModel
+import de.hbch.traewelling.shared.EventViewModel
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.ui.include.alert.AlertBottomSheet
 import de.hbch.traewelling.ui.include.alert.AlertType
 import de.hbch.traewelling.ui.include.checkInSuccessful.CheckInSuccessfulBottomSheet
 import de.hbch.traewelling.ui.include.selectBusinessType.SelectBusinessTypeBottomSheet
+import de.hbch.traewelling.ui.include.selectEvent.SelectEventBottomSheet
 import de.hbch.traewelling.ui.include.selectStatusVisibility.SelectStatusVisibilityBottomSheet
 import kotlinx.coroutines.*
 
@@ -32,6 +34,7 @@ class CheckInFragment : Fragment() {
     private val args: CheckInFragmentArgs by navArgs()
     private val checkInViewModel: CheckInViewModel by activityViewModels()
     private val loggedInUserViewModel: LoggedInUserViewModel by activityViewModels()
+    private val eventViewModel: EventViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,6 +48,7 @@ class CheckInFragment : Fragment() {
             destination = args.destination
             viewModel = checkInViewModel
             checkInFragment = this@CheckInFragment
+            eventViewModel = this@CheckInFragment.eventViewModel
             btnSendToot.visibility =
                 when (loggedInUserViewModel.loggedInUser.value?.mastodonUrl != null) {
                     true -> VISIBLE
@@ -86,6 +90,13 @@ class CheckInFragment : Fragment() {
             checkInViewModel.statusBusiness.postValue(business)
         }
         bottomSheet.show(parentFragmentManager, SelectBusinessTypeBottomSheet.TAG)
+    }
+
+    fun selectEvent() {
+        val bottomSheet = SelectEventBottomSheet(eventViewModel.activeEvents.value ?: listOf()) {
+            this@CheckInFragment.checkInViewModel.event.postValue(it)
+        }
+        bottomSheet.show(parentFragmentManager, SelectEventBottomSheet.TAG)
     }
 
     fun checkIn() {

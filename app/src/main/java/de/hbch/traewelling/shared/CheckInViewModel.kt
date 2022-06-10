@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.api.models.Data
+import de.hbch.traewelling.api.models.event.Event
 import de.hbch.traewelling.api.models.status.CheckInRequest
 import de.hbch.traewelling.api.models.status.CheckInResponse
 import de.hbch.traewelling.api.models.status.StatusBusiness
@@ -27,6 +28,7 @@ class CheckInViewModel : ViewModel() {
     val toot = MutableLiveData(false)
     val statusVisibility = MutableLiveData(StatusVisibility.PUBLIC)
     val statusBusiness = MutableLiveData(StatusBusiness.PRIVATE)
+    val event = MutableLiveData<Event?>()
 
     init {
         reset()
@@ -44,6 +46,7 @@ class CheckInViewModel : ViewModel() {
         toot.value = false
         statusVisibility.postValue(StatusVisibility.PUBLIC)
         statusBusiness.postValue(StatusBusiness.PRIVATE)
+        event.postValue(null)
     }
 
     fun checkIn(
@@ -54,7 +57,7 @@ class CheckInViewModel : ViewModel() {
             message.value ?: "",
             statusBusiness.value ?: StatusBusiness.PRIVATE,
             statusVisibility.value ?: StatusVisibility.PUBLIC,
-            0,
+            event.value?.id ?: 0,
             tweet.value ?: false,
             toot.value ?: false,
             tripId,

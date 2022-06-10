@@ -1,10 +1,9 @@
 package de.hbch.traewelling.api
 
-import android.content.pm.PackageManager
-import android.util.Log
 import com.google.gson.GsonBuilder
 import de.hbch.traewelling.BuildConfig
 import de.hbch.traewelling.api.models.Data
+import de.hbch.traewelling.api.models.event.Event
 import de.hbch.traewelling.api.models.auth.BearerToken
 import de.hbch.traewelling.api.models.auth.LoginCredentials
 import de.hbch.traewelling.api.models.polyline.FeatureCollection
@@ -125,6 +124,9 @@ interface CheckInService {
     fun deleteFavorite(
         @Path("statusId") statusId: Int
     ): Call<Unit>
+
+    @GET("activeEvents")
+    fun getActiveEvents(): Call<Data<List<Event>>>
 }
 
 interface TravelService {

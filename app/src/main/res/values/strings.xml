@@ -81,4 +81,5 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="title_also_check_in">Also check-in</string>
+    <string name="title_select_event">Select event</string>
 </resources>

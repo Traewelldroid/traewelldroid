@@ -8,13 +8,13 @@ import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.google.android.material.button.MaterialButton
 import de.hbch.traewelling.R
+import de.hbch.traewelling.api.models.event.Event
 import de.hbch.traewelling.api.models.status.StatusBusiness
 import de.hbch.traewelling.api.models.status.StatusVisibility
 import de.hbch.traewelling.api.models.trip.ProductType
 import de.hbch.traewelling.ui.include.alert.AlertType
 import java.text.DateFormat
 import java.text.DateFormat.getTimeInstance
-import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
@@ -61,12 +61,12 @@ fun setTimeText(textView: TextView, date: Date?) {
 }
 
 @BindingAdapter("dateRange")
-fun setDisplayTimeRange(button: MaterialButton, dateRange: Pair<Date, Date>?) {
+fun setDisplayTimeRange(textView: TextView, dateRange: Pair<Date, Date>?) {
     if (dateRange == null)
         return
 
     val dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault())
-    button.text = button.resources.getString(
+    textView.text = textView.resources.getString(
         R.string.date_range,
         dateFormat.format(dateRange.first),
         dateFormat.format(dateRange.second)
@@ -173,6 +173,12 @@ fun setStatusBusiness(imageView: ImageView, business: StatusBusiness?) {
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
         imageView.tooltipText = imageView.resources.getString(getBusinessTextResource(business))
+}
+
+@BindingAdapter("event")
+fun setEventOnButton(button: MaterialButton, event: Event?) {
+    button.text =
+        event?.name ?: button.resources.getString(R.string.title_select_event)
 }
 
 fun getBusinessImageResource(business: StatusBusiness): Int {

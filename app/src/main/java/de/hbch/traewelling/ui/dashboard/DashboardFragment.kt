@@ -17,6 +17,7 @@ import de.hbch.traewelling.adapters.CheckInAdapter
 import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.api.models.status.StatusPage
 import de.hbch.traewelling.databinding.FragmentDashboardBinding
+import de.hbch.traewelling.shared.EventViewModel
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.shared.SharedValues
 import de.hbch.traewelling.ui.include.alert.AlertBottomSheet
@@ -32,6 +33,7 @@ class DashboardFragment : Fragment() {
     private lateinit var binding: FragmentDashboardBinding
     private lateinit var searchStationCard: SearchStationCard
     private val loggedInUserViewModel: LoggedInUserViewModel by activityViewModels()
+    private val eventViewModel: EventViewModel by activityViewModels()
     private val searchStationCardViewModel: SearchStationCardViewModel by viewModels()
     private val dashboardFragmentViewModel: DashboardFragmentViewModel by viewModels()
     private var currentPage = 1
@@ -60,6 +62,7 @@ class DashboardFragment : Fragment() {
         }
         loggedInUserViewModel.getLoggedInUser()
         loggedInUserViewModel.getLastVisitedStations()
+        eventViewModel.activeEvents()
 
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
