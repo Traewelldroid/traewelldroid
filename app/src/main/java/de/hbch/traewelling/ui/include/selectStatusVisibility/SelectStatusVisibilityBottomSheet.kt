@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import de.hbch.traewelling.R
+import de.hbch.traewelling.adapters.getStatusVisibilityImageResource
+import de.hbch.traewelling.adapters.getStatusVisibilityTextResource
 import de.hbch.traewelling.api.models.status.StatusVisibility
 import de.hbch.traewelling.databinding.BottomSheetSelectStatusVisibilityBinding
 
@@ -30,18 +32,8 @@ class SelectStatusVisibilityBottomSheet(
         binding.recyclerViewStatusVisibilities.adapter = StandardListItemAdapter(
             StatusVisibility.values().asList(),
             { visibility, bdg ->
-                bdg.imageId = when (visibility) {
-                    StatusVisibility.PUBLIC -> R.drawable.ic_public
-                    StatusVisibility.UNLISTED -> R.drawable.ic_lock_open
-                    StatusVisibility.FOLLOWERS -> R.drawable.ic_people
-                    StatusVisibility.PRIVATE -> R.drawable.ic_lock
-                }
-                bdg.title = getString(when (visibility) {
-                    StatusVisibility.PUBLIC -> R.string.visibility_public
-                    StatusVisibility.UNLISTED -> R.string.visibility_unlisted
-                    StatusVisibility.FOLLOWERS -> R.string.visibility_followers
-                    StatusVisibility.PRIVATE -> R.string.visibility_private
-                })
+                bdg.imageId = getStatusVisibilityImageResource(visibility)
+                bdg.title = getString(getStatusVisibilityTextResource(visibility))
             }, { visibility ->
                 onSelectVisibility(visibility)
             }

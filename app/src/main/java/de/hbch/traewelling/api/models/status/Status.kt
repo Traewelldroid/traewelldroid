@@ -28,7 +28,9 @@ enum class StatusVisibility(val visibility: Int) {
     @SerializedName("2")
     FOLLOWERS(2),
     @SerializedName("3")
-    PRIVATE(3)
+    PRIVATE(3),
+    @SerializedName("4")
+    ONLY_AUTHENTICATED(4)
 }
 
 enum class StatusBusiness(val business: Int) {

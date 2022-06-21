@@ -141,6 +141,7 @@ fun getStatusVisibilityImageResource(visibility: StatusVisibility): Int {
         StatusVisibility.UNLISTED -> R.drawable.ic_lock_open
         StatusVisibility.FOLLOWERS -> R.drawable.ic_people
         StatusVisibility.PRIVATE -> R.drawable.ic_lock
+        StatusVisibility.ONLY_AUTHENTICATED -> R.drawable.ic_authorized
     }
 }
 
@@ -150,6 +151,7 @@ fun getStatusVisibilityTextResource(visibility: StatusVisibility): Int {
         StatusVisibility.UNLISTED -> R.string.visibility_unlisted
         StatusVisibility.FOLLOWERS -> R.string.visibility_followers
         StatusVisibility.PRIVATE -> R.string.visibility_private
+        StatusVisibility.ONLY_AUTHENTICATED -> R.string.visibility_only_authenticated
     }
 }
 

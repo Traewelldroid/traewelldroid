@@ -39,6 +39,7 @@
     <string name="visibility_unlisted">Unlisted</string>
     <string name="visibility_followers">Just for followers</string>
     <string name="visibility_private">Just for you</string>
+    <string name="visibility_only_authenticated">Only authenticated users</string>
     <string name="title_select_business">Select the desired business type:</string>
     <string name="business_private">Private</string>
     <string name="business">Business</string>
