@@ -68,8 +68,6 @@ class DashboardFragment : Fragment() {
             lifecycleOwner = viewLifecycleOwner
         }
 
-        setHasOptionsMenu(true)
-
         val intent = activity?.intent
         intent?.let {
             if (it.action == Intent.ACTION_VIEW) {
@@ -91,11 +89,6 @@ class DashboardFragment : Fragment() {
         }
 
         return binding.root
-    }
-
-    override fun onCreateOptionsMenu(optionsMenu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.dashboard_menu, optionsMenu)
-        super.onCreateOptionsMenu(optionsMenu, inflater)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
