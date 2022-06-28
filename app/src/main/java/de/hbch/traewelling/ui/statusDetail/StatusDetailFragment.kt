@@ -79,11 +79,10 @@ class StatusDetailFragment : Fragment() {
             args.statusId,
             { status ->
                 binding.status = status
+                setHasOptionsMenu(canAlsoCheckIntoThisConnection())
             },
             { }
         )
-
-        setHasOptionsMenu(canAlsoCheckIntoThisConnection())
 
         return binding.root
     }
