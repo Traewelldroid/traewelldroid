@@ -10,7 +10,8 @@
     <string name="title_search_connection">Search connection</string>
     <string name="title_select_destination">Select destination</string>
     <string name="display_points">%1$d points</string>
-    <string name="display_travel_time">%1$dh %2$dmin</string>
+    <string name="display_travel_time_minutes">%1$dmin</string>
+    <string name="display_travel_time_hours_minutes">%1$dh %2$dmin</string>
     <string name="display_average_speed">%1$.2f km/h</string>
     <string name="display_kilometres" translatable="false">%1$dkm</string>
     <string name="where_are_you">Where are you?</string>
@@ -69,6 +70,8 @@
     <string name="title_select_statistics_date_range">Select the date range for your statistics</string>
     <string name="transport_types">Transport types</string>
     <string name="operators">Operators</string>
+    <string name="travel_time">Travel time</string>
+    <string name="check_in_count">Check-in count</string>
     <string name="title_notifications">Notifications</string>
     <string name="notifications_not_implemented_text">
         This feature is currently not implemented. Please use the Träwelling website to see

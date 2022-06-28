@@ -14,12 +14,14 @@ import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.google.android.material.datepicker.MaterialDatePicker
 import de.hbch.traewelling.databinding.FragmentStatisticsBinding
 import java.util.*
 import de.hbch.traewelling.R
+import de.hbch.traewelling.adapters.TravelTimeValueFormatter
 import de.hbch.traewelling.api.models.statistics.PersonalStatistics
 import de.hbch.traewelling.api.models.trip.ProductType
 import okhttp3.internal.Version
@@ -29,9 +31,9 @@ class StatisticsFragment : Fragment() {
 
     private val viewModel: StatisticsViewModel by viewModels()
     private lateinit var binding: FragmentStatisticsBinding
-    private val operatorChart: BarChart get() = binding.chartStatsOperators
-    private val productTypeChart: BarChart get() = binding.chartStatsProductType
+    private val chart: BarChart get() = binding.chart
     private val dataSetColors = mutableListOf<Int>()
+    private lateinit var statistics: PersonalStatistics
 
     init {
         dataSetColors.addAll(ColorTemplate.MATERIAL_COLORS.toList())
@@ -51,14 +53,23 @@ class StatisticsFragment : Fragment() {
             lifecycleOwner = this@StatisticsFragment.viewLifecycleOwner
         }
 
-        initChart(operatorChart)
-        initChart(productTypeChart)
+        initChart(chart)
 
         viewModel.dateRange.observe(viewLifecycleOwner) {
             requestAndDisplayStatistics()
         }
 
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        binding.chipGroupStatisticSelectionData.setOnCheckedStateChangeListener { _, _ ->
+            displayStatistics()
+        }
+        binding.chipGroupStatisticSelectionType.setOnCheckedStateChangeListener { _, _ ->
+            displayStatistics()
+        }
+        super.onViewCreated(view, savedInstanceState)
     }
 
     fun selectDateRange() {
@@ -116,43 +127,60 @@ class StatisticsFragment : Fragment() {
 
     private fun requestAndDisplayStatistics() {
         viewModel.getPersonalStatisticsForSelectedTimeRange(
-            { statistics -> displayStatistics(statistics) },
+            { stats ->
+                statistics = stats
+                displayStatistics()
+            },
             {}
         )
     }
 
-    private fun displayStatistics(statistics: PersonalStatistics) {
-        val operatorEntries = mutableListOf<IBarDataSet>()
-        val productTypeEntries = mutableListOf<IBarDataSet>()
+    private fun displayStatistics() {
+        val entrySet = mutableListOf<IBarDataSet>()
+        val travelTimeValueFormatter = TravelTimeValueFormatter(resources)
 
-        statistics.operators.forEachIndexed { index, operatorStatistics ->
-            val dataSet = BarDataSet(listOf(BarEntry(index.toFloat(), operatorStatistics.checkInCount.toFloat())), operatorStatistics.operatorName)
+        // TODO refactor with inheritance
+        if (binding.chipStatisticsOperators.isChecked) {
+            if (binding.chipStatisticsCheckIns.isChecked) {
+                statistics.operators.forEachIndexed { index, operatorStats ->
+                    val dataSet = BarDataSet(listOf(BarEntry(index.toFloat(), operatorStats.checkInCount.toFloat())), operatorStats.operatorName)
+                    entrySet.add(dataSet)
+                }
+            } else if (binding.chipStatisticsTravelTime.isChecked) {
+                statistics.operators.forEachIndexed { index, operatorStats ->
+                    val dataSet = BarDataSet(listOf(BarEntry(index.toFloat(), operatorStats.duration.toFloat())), operatorStats.operatorName)
+                    dataSet.valueFormatter = travelTimeValueFormatter
+                    entrySet.add(dataSet)
+                }
+            }
+        } else if (binding.chipStatisticsTravelTypes.isChecked) {
+            if (binding.chipStatisticsCheckIns.isChecked) {
+                statistics.categories.forEachIndexed { index, categoryStats ->
+                    val dataSet = BarDataSet(listOf(BarEntry(index.toFloat(), categoryStats.checkInCount.toFloat())), ProductType.toString(resources, categoryStats.productType))
+                    entrySet.add(dataSet)
+                }
+            } else if (binding.chipStatisticsTravelTime.isChecked) {
+                statistics.categories.forEachIndexed { index, categoryStats ->
+                    val dataSet = BarDataSet(listOf(BarEntry(index.toFloat(), categoryStats.duration.toFloat())), ProductType.toString(resources, categoryStats.productType))
+                    dataSet.valueFormatter = travelTimeValueFormatter
+                    entrySet.add(dataSet)
+                }
+            }
+        }
+
+        entrySet.forEachIndexed { index, dataSet ->
+            dataSet as BarDataSet
             dataSet.color = dataSetColors[index % dataSetColors.size]
             if ((resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES)
                 dataSet.valueTextColor = Color.WHITE
-            operatorEntries.add(dataSet)
-        }
-        statistics.categories.forEachIndexed { index, categoryStatistics ->
-            val dataSet = BarDataSet(listOf(BarEntry(index.toFloat(), categoryStatistics.checkInCount.toFloat())), ProductType.toString(resources, categoryStatistics.productType))
-            dataSet.color = dataSetColors[index % dataSetColors.size]
-            if ((resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES)
-                dataSet.valueTextColor = Color.WHITE
-            productTypeEntries.add(dataSet)
         }
 
-        val operatorData = BarData(operatorEntries)
-        val productTypeData = BarData(productTypeEntries)
+        val chartData = BarData(entrySet)
+        chart.data = chartData
+        chart.animateY(500)
+        chart.invalidate()
+        chart.notifyDataSetChanged()
 
-        operatorChart.data = operatorData
-        operatorChart.animateY(500)
-        operatorChart.invalidate()
-        operatorChart.notifyDataSetChanged()
-        productTypeChart.data = productTypeData
-        productTypeChart.animateY(500)
-        productTypeChart.invalidate()
-        productTypeChart.notifyDataSetChanged()
-
-        operatorChart.setDrawGridBackground(false)
-        productTypeChart.setDrawGridBackground(false)
+        chart.setDrawGridBackground(false)
     }
 }

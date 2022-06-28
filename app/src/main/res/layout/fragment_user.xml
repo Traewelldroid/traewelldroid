@@ -134,7 +134,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
                                     style="@style/Theme.Traewelling.StatisticTexts"
-                                    android:text="@{@string/display_travel_time(viewModel.travelHours, viewModel.travelMinutes)}"
+                                    android:text="@{@string/display_travel_time_hours_minutes(viewModel.travelHours, viewModel.travelMinutes)}"
                                     tools:text="14h 5min" />
                             </LinearLayout>
 

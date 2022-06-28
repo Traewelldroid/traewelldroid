@@ -9,7 +9,8 @@
     <string name="title_user">Profil</string>
     <string name="title_search_connection">Verbindungssuche</string>
     <string name="display_points">%1$d Punkte</string>
-    <string name="display_travel_time">%1$d Std. %2$d Min.</string>
+    <string name="display_travel_time_minutes">%1$d Min.</string>
+    <string name="display_travel_time_hours_minutes">%1$d Std. %2$d Min.</string>
     <string name="display_average_speed">%1$.2f km/h</string>
     <string name="where_are_you">Wo bist Du?</string>
     <string name="search">Suche</string>
@@ -66,6 +67,8 @@
     <string name="title_select_statistics_date_range">Wähle den Zeitraum für die Statistiken</string>
     <string name="transport_types">Verkehrsmittel</string>
     <string name="operators">Betreiber</string>
+    <string name="travel_time">Reisezeit</string>
+    <string name="check_in_count">Anzahl Check-Ins</string>
     <string name="title_notifications">Benachrichtigungen</string>
     <string name="notifications_not_implemented_text">
         Diese Funktion ist aktuell nicht implementiert. Bitte nutze die Träwelling-Webseite,

@@ -1,5 +1,6 @@
 package de.hbch.traewelling.adapters
 
+import android.content.res.Resources
 import android.os.Build
 import android.view.View
 import android.widget.ImageView
@@ -86,10 +87,17 @@ fun setTimeProgress(progressBar: ProgressBar, departure: Date?, arrival: Date?) 
 fun setDuration(textView: TextView, duration: Int?) {
     if (duration == null)
         return
+    textView.text = getDurationString(textView.resources, duration)
+}
 
+fun getDurationString(resources: Resources, duration: Int): String {
     val hours = duration / 60
     val minutes = duration % 60
-    textView.text = textView.resources.getString(R.string.display_travel_time, hours, minutes)
+
+    return if (hours == 0)
+        resources.getString(R.string.display_travel_time_minutes, minutes)
+    else
+        resources.getString(R.string.display_travel_time_hours_minutes, hours, minutes)
 }
 
 @BindingAdapter(value = [ "username", "timestamp" ], requireAll = true)
