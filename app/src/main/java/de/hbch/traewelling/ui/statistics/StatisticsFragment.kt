@@ -2,8 +2,6 @@ package de.hbch.traewelling.ui.statistics
 
 import android.content.res.Configuration
 import android.graphics.Color
-import android.os.Build
-import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -14,17 +12,16 @@ import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
-import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.google.android.material.datepicker.MaterialDatePicker
 import de.hbch.traewelling.databinding.FragmentStatisticsBinding
 import java.util.*
 import de.hbch.traewelling.R
-import de.hbch.traewelling.adapters.TravelTimeValueFormatter
+import de.hbch.traewelling.util.TravelTimeValueFormatter
 import de.hbch.traewelling.api.models.statistics.PersonalStatistics
 import de.hbch.traewelling.api.models.trip.ProductType
-import okhttp3.internal.Version
+import de.hbch.traewelling.util.CheckInCountValueFormatter
 
 
 class StatisticsFragment : Fragment() {
@@ -33,7 +30,7 @@ class StatisticsFragment : Fragment() {
     private lateinit var binding: FragmentStatisticsBinding
     private val chart: BarChart get() = binding.chart
     private val dataSetColors = mutableListOf<Int>()
-    private lateinit var statistics: PersonalStatistics
+    private var statistics: PersonalStatistics? = null
 
     init {
         dataSetColors.addAll(ColorTemplate.MATERIAL_COLORS.toList())
@@ -115,6 +112,8 @@ class StatisticsFragment : Fragment() {
         chart.animateY(500)
         chart.setDrawGridBackground(false)
         chart.xAxis.isEnabled = false
+        chart.axisLeft.isEnabled = false
+        chart.axisRight.isEnabled = false
         chart.setScaleEnabled(false)
 
         if ((resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES) {
@@ -136,18 +135,26 @@ class StatisticsFragment : Fragment() {
     }
 
     private fun displayStatistics() {
+        val currentStats = statistics
+        if (currentStats == null) {
+            requestAndDisplayStatistics()
+            return
+        }
+
         val entrySet = mutableListOf<IBarDataSet>()
         val travelTimeValueFormatter = TravelTimeValueFormatter(resources)
+        val checkInCountValueFormatter = CheckInCountValueFormatter()
 
         // TODO refactor with inheritance
         if (binding.chipStatisticsOperators.isChecked) {
             if (binding.chipStatisticsCheckIns.isChecked) {
-                statistics.operators.forEachIndexed { index, operatorStats ->
+                currentStats.operators.forEachIndexed { index, operatorStats ->
                     val dataSet = BarDataSet(listOf(BarEntry(index.toFloat(), operatorStats.checkInCount.toFloat())), operatorStats.operatorName)
+                    dataSet.valueFormatter = checkInCountValueFormatter
                     entrySet.add(dataSet)
                 }
             } else if (binding.chipStatisticsTravelTime.isChecked) {
-                statistics.operators.forEachIndexed { index, operatorStats ->
+                currentStats.operators.forEachIndexed { index, operatorStats ->
                     val dataSet = BarDataSet(listOf(BarEntry(index.toFloat(), operatorStats.duration.toFloat())), operatorStats.operatorName)
                     dataSet.valueFormatter = travelTimeValueFormatter
                     entrySet.add(dataSet)
@@ -155,12 +162,13 @@ class StatisticsFragment : Fragment() {
             }
         } else if (binding.chipStatisticsTravelTypes.isChecked) {
             if (binding.chipStatisticsCheckIns.isChecked) {
-                statistics.categories.forEachIndexed { index, categoryStats ->
+                currentStats.categories.forEachIndexed { index, categoryStats ->
                     val dataSet = BarDataSet(listOf(BarEntry(index.toFloat(), categoryStats.checkInCount.toFloat())), ProductType.toString(resources, categoryStats.productType))
+                    dataSet.valueFormatter = checkInCountValueFormatter
                     entrySet.add(dataSet)
                 }
             } else if (binding.chipStatisticsTravelTime.isChecked) {
-                statistics.categories.forEachIndexed { index, categoryStats ->
+                currentStats.categories.forEachIndexed { index, categoryStats ->
                     val dataSet = BarDataSet(listOf(BarEntry(index.toFloat(), categoryStats.duration.toFloat())), ProductType.toString(resources, categoryStats.productType))
                     dataSet.valueFormatter = travelTimeValueFormatter
                     entrySet.add(dataSet)
