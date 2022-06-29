@@ -18,15 +18,18 @@
         tools:context=".ui.statistics.StatisticsFragment">
 
         <com.google.android.material.button.MaterialButton
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/select_date_range"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             dateRange="@{viewModel.dateRange}"
             tools:text="@string/date_range"
             app:icon="@drawable/ic_calendar"
             android:onClick="@{() -> statisticsFragment.selectDateRange()}"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"/>
 
@@ -37,7 +40,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/select_date_range"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_margin="8dp"
+            android:layout_margin="16dp"
             app:singleSelection="true">
 
             <com.google.android.material.chip.Chip
@@ -66,7 +69,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/chip_group_statistic_selection_type"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_margin="8dp"
+            android:layout_margin="16dp"
             app:singleSelection="true">
 
             <com.google.android.material.chip.Chip
@@ -99,8 +102,7 @@
             <com.github.mikephil.charting.charts.BarChart
                 android:id="@+id/chart"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="16dp"/>
+                android:layout_height="match_parent"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
