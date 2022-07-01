@@ -42,11 +42,8 @@ class LoggedInUserViewModel : ViewModel() {
         user?.points ?: 0
     }
 
-    val travelHours: LiveData<Int> get() = Transformations.map(_loggedInUser) { user ->
-        (user?.duration ?: 0) / 60
-    }
-    val travelMinutes: LiveData<Int> get() = Transformations.map(_loggedInUser) { user ->
-        (user?.duration ?: 0) % 60
+    val duration: LiveData<Int> get() = Transformations.map(_loggedInUser) { user ->
+        user?.duration ?: 0
     }
 
     val averageSpeed: LiveData<Double> get() = Transformations.map(_loggedInUser) { user ->

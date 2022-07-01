@@ -91,13 +91,19 @@ fun setDuration(textView: TextView, duration: Int?) {
 }
 
 fun getDurationString(resources: Resources, duration: Int): String {
-    val hours = duration / 60
     val minutes = duration % 60
+    var hours = duration / 60
+    val days = hours / 24
+    hours -= days * 24
 
-    return if (hours == 0)
-        resources.getString(R.string.display_travel_time_minutes, minutes)
-    else
-        resources.getString(R.string.display_travel_time_hours_minutes, hours, minutes)
+    return if (days > 0)
+        resources.getString(R.string.display_travel_time_days_hours_minutes, days, hours, minutes)
+    else {
+        if (hours == 0)
+            resources.getString(R.string.display_travel_time_minutes, minutes)
+        else
+            resources.getString(R.string.display_travel_time_hours_minutes, hours, minutes)
+    }
 }
 
 @BindingAdapter(value = [ "username", "timestamp" ], requireAll = true)

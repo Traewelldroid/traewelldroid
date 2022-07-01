@@ -69,7 +69,7 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/textView_username"
                             android:useDefaultMargins="true"
-                            android:layout_margin="16dp">
+                            android:layout_marginTop="8dp">
 
                             <LinearLayout
                                 android:layout_rowWeight="1"
@@ -134,7 +134,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
                                     style="@style/Theme.Traewelling.StatisticTexts"
-                                    android:text="@{@string/display_travel_time_hours_minutes(viewModel.travelHours, viewModel.travelMinutes)}"
+                                    duration="@{viewModel.duration}"
                                     tools:text="14h 5min" />
                             </LinearLayout>
 

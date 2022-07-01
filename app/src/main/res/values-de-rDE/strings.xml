@@ -2,7 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="input_username">Benutzername</string>
     <string name="input_password">Passwort</string>
-    <string name="input_stop">Haltestelle / DS100</string>
+    <string name="input_stop">Haltestelle / Ril100</string>
     <string name="login">Anmelden</string>
     <string name="title_dashboard">Start</string>
     <string name="title_active_checkins">Unterwegs</string>
@@ -11,6 +11,7 @@
     <string name="display_points">%1$d Punkte</string>
     <string name="display_travel_time_minutes">%1$d Min.</string>
     <string name="display_travel_time_hours_minutes">%1$d Std. %2$d Min.</string>
+    <string name="display_travel_time_days_hours_minutes">%1$d T. %2$d Std. %3$d Min.</string>
     <string name="display_average_speed">%1$.2f km/h</string>
     <string name="where_are_you">Wo bist Du?</string>
     <string name="search">Suche</string>
