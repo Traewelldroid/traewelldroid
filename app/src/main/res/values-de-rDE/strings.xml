@@ -84,4 +84,5 @@
     <string name="no">Nein</string>
     <string name="title_also_check_in">Auch einchecken</string>
     <string name="title_select_event">Event auswählen</string>
+    <string name="hint_event_missing">Vermisst du ein Event? Auf der Träwelling-Website kannst du es gerne vorschlagen! https://traewelling.de/events</string>
 </resources>

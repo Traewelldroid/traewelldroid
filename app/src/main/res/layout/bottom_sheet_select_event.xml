@@ -21,11 +21,21 @@
             android:layout_marginTop="16dp"
             android:text="@string/title_select_event" />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/hint_event_missing"
+            android:gravity="center"
+            app:layout_constraintTop_toBottomOf="@id/question_events"
+            android:text="@string/hint_event_missing"
+            android:autoLink="web"
+            android:layout_margin="20dp" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/recycler_view_events"
-            app:layout_constraintTop_toBottomOf="@id/question_events"
+            app:layout_constraintTop_toBottomOf="@id/hint_event_missing"
             android:layout_marginTop="16dp"
             tools:listitem="@layout/event_list_item"
             tools:itemCount="3" />
