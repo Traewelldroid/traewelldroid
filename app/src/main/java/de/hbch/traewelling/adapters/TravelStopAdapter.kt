@@ -20,11 +20,14 @@ class TravelStopAdapter(val stops: List<HafasTrainTripStation>, val onClick: (Vi
     }
 
     override fun onBindViewHolder(holder: TravelStopViewHolder, position: Int) {
-        holder.bind(stops[position], position == (itemCount - 1))
-        holder.itemView.setOnClickListener {
-            onClick(it, stops[position])
-        }
-        holder.itemView.transitionName = stops[position].name
+        val stop = stops[position]
+        holder.bind(stop, position == (itemCount - 1))
+        holder.itemView.transitionName = stop.name
+
+        if (!stop.isCancelled)
+            holder.itemView.setOnClickListener {
+                onClick(it, stop)
+            }
     }
 
     override fun getItemCount() = stops.size

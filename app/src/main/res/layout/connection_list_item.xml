@@ -7,6 +7,7 @@
         <variable
             name="connection"
             type="de.hbch.traewelling.api.models.trip.HafasTrip" />
+        <import type="android.view.View" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -50,7 +51,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/text_view_destination"
             app:layout_constraintStart_toEndOf="@id/layout_product_type"
-            app:layout_constraintEnd_toStartOf="@id/text_view_departure_time"
+            app:layout_constraintEnd_toStartOf="@id/layout_departure_time"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginLeft="16dp"
@@ -60,16 +61,30 @@
             android:textSize="18sp"
             tools:text="Memmingen" />
 
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/layout_departure_time"
             app:layout_constraintTop_toTopOf="@id/layout_product_type"
             app:layout_constraintBottom_toBottomOf="@id/layout_product_type"
             app:layout_constraintEnd_toEndOf="parent"
-            android:id="@+id/text_view_departure_time"
-            displayTime="@{connection.departure ?? connection.plannedDeparture}"
-            android:textSize="18sp"
-            tools:textColor="@color/train_on_time"
-            tools:text="15:02" />
+            android:layout_marginEnd="16dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/text_view_departure_time"
+                tools:text="15:09"
+                displayTime="@{connection.departure ?? connection.plannedDeparture}"
+                android:textSize="18sp"
+                android:visibility="@{connection.cancelled ? View.GONE : View.VISIBLE}"
+                tools:textColor="@color/train_on_time" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cancelled"
+                android:textSize="18sp"
+                android:textColor="@color/train_delayed"
+                android:visibility="@{connection.cancelled ? View.VISIBLE : View.GONE}"/>
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

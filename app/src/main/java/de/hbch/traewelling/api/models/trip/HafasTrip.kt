@@ -13,5 +13,6 @@ data class HafasTrip(
     @SerializedName("plannedPlatform") val plannedPlatform: String?,
     @SerializedName("direction") val destination: String?,
     @SerializedName("line") val line: HafasLine?,
-    @SerializedName("station") val station: Station?
+    @SerializedName("station") val station: Station?,
+    @SerializedName("cancelled") val isCancelled: Boolean
 )

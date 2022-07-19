@@ -37,10 +37,12 @@ class ConnectionAdapter(
     }
 
     override fun onBindViewHolder(holder: ConnectionViewHolder, position: Int) {
-        holder.bind(connectionsFiltered[position])
-        holder.itemView.setOnClickListener {
-            onItemClick(it, connectionsFiltered[position])
-        }
+        val connection = connectionsFiltered[position]
+        holder.bind(connection)
+        if (!connection.isCancelled)
+            holder.itemView.setOnClickListener {
+                onItemClick(it, connection)
+            }
     }
 
     override fun getItemCount() = connectionsFiltered.size

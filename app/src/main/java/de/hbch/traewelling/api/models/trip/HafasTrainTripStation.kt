@@ -20,4 +20,5 @@ data class HafasTrainTripStation(
     @SerializedName("platform") val platform: String,
     @SerializedName("isArrivalDelayed") val isArrivalDelayed: Boolean,
     @SerializedName("isDepartureDelayed") val isDepartureDelayed: Boolean,
+    @SerializedName("cancelled") val isCancelled: Boolean
 )
