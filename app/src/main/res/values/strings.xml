@@ -88,4 +88,7 @@
     <string name="title_also_check_in">Also check-in</string>
     <string name="title_select_event">Select event</string>
     <string name="hint_event_missing">Missing an event? You can submit your suggestion on the Träwelling website! https://traewelling.de/events</string>
+    <string name="cancelled">cancelled</string>
+    <string name="reset_selection">Reset selection</string>
+    <string name="no_event_check_in">No event check-in</string>
 </resources>
