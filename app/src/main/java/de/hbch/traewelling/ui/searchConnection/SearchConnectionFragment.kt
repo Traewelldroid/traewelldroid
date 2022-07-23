@@ -172,7 +172,7 @@ class SearchConnectionFragment : Fragment() {
                 val action =
                     SearchConnectionFragmentDirections.actionSearchConnectionFragmentToSelectDestinationFragment(
                         transitionName,
-                        connection.destination ?: ""
+                        connection.finalDestination
                     )
                 findNavController().navigate(action, extras)
             }
