@@ -91,16 +91,6 @@ class DashboardFragment : Fragment() {
         return binding.root
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.menu_dashboard_notification -> {
-                handleNotificationMenuClick()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
     private fun handleNotificationMenuClick() {
         val alertBottomSheet = AlertBottomSheet(
             AlertType.ERROR,
@@ -141,7 +131,7 @@ class DashboardFragment : Fragment() {
             }
 
         binding.nestedScrollViewDashboard.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, _, _, _, _ ->
-            val vw = v?.getChildAt(v.childCount - 1)
+            val vw = v.getChildAt(v.childCount - 1)
             val diff = (vw?.bottom?.minus((v.height + v.scrollY)))
             if (diff!! == 0) {
                 if (!checkInsLoading.value!!) {

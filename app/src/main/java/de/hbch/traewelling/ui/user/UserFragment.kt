@@ -3,6 +3,7 @@ package de.hbch.traewelling.ui.user
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
+import androidx.core.view.MenuProvider
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -19,7 +20,6 @@ import de.hbch.traewelling.ui.include.alert.AlertBottomSheet
 import de.hbch.traewelling.ui.include.alert.AlertType
 import de.hbch.traewelling.ui.login.LoginActivity
 import java.lang.Exception
-import java.util.*
 
 
 class UserFragment : Fragment() {
@@ -33,7 +33,7 @@ class UserFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentUserBinding.inflate(inflater, container, false)
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
@@ -45,7 +45,7 @@ class UserFragment : Fragment() {
             loggedInUserViewModel.userId
         ) {}
         binding.nestedScrollViewUser.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, _, _, _, _ ->
-            val vw = v?.getChildAt(v.childCount - 1)
+            val vw = v.getChildAt(v.childCount - 1)
             val diff = (vw?.bottom?.minus((v.height + v.scrollY)))
             if (diff!! == 0) {
                 if (!binding.swipeRefreshDashboardCheckIns.isRefreshing) {
@@ -70,7 +70,30 @@ class UserFragment : Fragment() {
 
         loadCheckIns()
 
-        setHasOptionsMenu(true)
+        requireActivity().addMenuProvider(object: MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuItems.forEachIndexed { index, item ->
+                    menu
+                        .add(
+                            0,
+                            Menu.FIRST + index,
+                            Menu.NONE,
+                            item.title
+                        )
+                        .setIcon(item.drawable)
+                        .setShowAsActionFlags(android.view.MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW)
+                }
+            }
+            override fun onMenuItemSelected(menuItem: android.view.MenuItem): Boolean {
+                return try {
+                    val item = menuItems[menuItem.itemId - Menu.FIRST]
+                    item.action()
+                    true
+                } catch (_: Exception) {
+                    false
+                }
+            }
+        })
 
         return binding.root
     }
@@ -95,32 +118,7 @@ class UserFragment : Fragment() {
         )
     }
 
-    override fun onCreateOptionsMenu(optionsMenu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(optionsMenu, inflater)
-        menuItems.forEachIndexed { index, item ->
-            optionsMenu
-                .add(
-                    0,
-                    Menu.FIRST + index,
-                    Menu.NONE,
-                    item.title
-                )
-                .setIcon(item.drawable)
-                .setShowAsActionFlags(android.view.MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW)
-        }
-    }
-
-    override fun onOptionsItemSelected(item: android.view.MenuItem): Boolean {
-        return try {
-            val menuItem = menuItems[item.itemId - Menu.FIRST]
-            menuItem.action()
-            true
-        } catch (_: Exception) {
-            super.onOptionsItemSelected(item)
-        }
-    }
-
-    fun loadCheckIns() {
+    private fun loadCheckIns() {
         binding.swipeRefreshDashboardCheckIns.isRefreshing = true
         loggedInUserViewModel.getPersonalCheckIns(
             page,

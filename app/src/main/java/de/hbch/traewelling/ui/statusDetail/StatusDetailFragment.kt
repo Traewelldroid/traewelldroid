@@ -3,6 +3,7 @@ package de.hbch.traewelling.ui.statusDetail
 import android.os.Build
 import android.os.Bundle
 import android.view.*
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -29,7 +30,7 @@ class StatusDetailFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentStatusDetailBinding.inflate(inflater, container, false)
         Configuration.getInstance().userAgentValue = "de.hbch.traewelldroid/1.0"
         binding.mapStatusDetail.setTileSource(TileSourceFactory.MAPNIK)
@@ -79,7 +80,24 @@ class StatusDetailFragment : Fragment() {
             args.statusId,
             { status ->
                 binding.status = status
-                setHasOptionsMenu(canAlsoCheckIntoThisConnection())
+                if (canAlsoCheckIntoThisConnection()) {
+                    requireActivity().addMenuProvider(object : MenuProvider {
+                        override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                            menuInflater.inflate(R.menu.status_detail_also_check_in_menu, menu)
+                        }
+
+                        override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                            return when (menuItem.itemId) {
+                                R.id.menu_also_check_in -> {
+                                    alsoCheckIntoThisConnection()
+                                    true
+                                }
+                                else -> false
+                            }
+                        }
+
+                    })
+                }
             },
             { }
         )
@@ -87,22 +105,7 @@ class StatusDetailFragment : Fragment() {
         return binding.root
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.status_detail_also_check_in_menu, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.menu_also_check_in -> {
-                alsoCheckIntoThisConnection()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
-    fun canAlsoCheckIntoThisConnection(): Boolean {
+    private fun canAlsoCheckIntoThisConnection(): Boolean {
         return (userViewModel.loggedInUser.value?.id ?: 0) != args.userId;
     }
 
