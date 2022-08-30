@@ -7,6 +7,7 @@ import androidx.core.view.MenuProvider
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import coil.transform.CircleCropTransformation
@@ -28,6 +29,7 @@ class UserFragment : Fragment() {
     private val loggedInUserViewModel: LoggedInUserViewModel by activityViewModels()
     private lateinit var menuItems: List<MenuItem>
     private var page = 1
+    private lateinit var menuProvider: MenuProvider
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -70,7 +72,7 @@ class UserFragment : Fragment() {
 
         loadCheckIns()
 
-        requireActivity().addMenuProvider(object: MenuProvider {
+        menuProvider = object: MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuItems.forEachIndexed { index, item ->
                     menu
@@ -93,27 +95,23 @@ class UserFragment : Fragment() {
                     false
                 }
             }
-        })
+        }
+        requireActivity().addMenuProvider(menuProvider)
 
         return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        requireActivity().removeMenuProvider(menuProvider)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         menuItems = listOf(
-            MenuItem(R.string.logout, R.drawable.ic_logout) {
-                loggedInUserViewModel.logout( {
-                    val secureStorage = SecureStorage(requireContext())
-                    secureStorage.removeObject(SharedValues.SS_JWT)
-                    startActivity(Intent(requireContext(), LoginActivity::class.java))
-                    requireActivity().finish()
-                }, {
-                    val bottomSheet = AlertBottomSheet(
-                        AlertType.ERROR,
-                        getString(R.string.error_logout)
-                    )
-                    bottomSheet.show(parentFragmentManager, AlertBottomSheet.TAG)
-                })
+            MenuItem(R.string.settings, R.drawable.ic_settings) {
+                findNavController()
+                    .navigate(UserFragmentDirections.actionUserFragmentToSettingsFragment())
             }
         )
     }

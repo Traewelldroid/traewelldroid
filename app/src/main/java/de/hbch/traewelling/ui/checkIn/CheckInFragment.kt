@@ -1,24 +1,29 @@
 package de.hbch.traewelling.ui.checkIn
 
+import android.content.Context
 import android.graphics.Color
+import android.inputmethodservice.InputMethodService
 import android.os.Bundle
 import android.util.TypedValue
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.widget.Toast
+import android.view.inputmethod.InputMethodManager
+import androidx.core.content.ContextCompat.getSystemService
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.transition.MaterialContainerTransform
+import com.jcloquell.androidsecurestorage.SecureStorage
 import de.hbch.traewelling.R
 import de.hbch.traewelling.databinding.FragmentCheckInBinding
 import de.hbch.traewelling.shared.CheckInViewModel
 import de.hbch.traewelling.shared.EventViewModel
 import de.hbch.traewelling.shared.LoggedInUserViewModel
+import de.hbch.traewelling.shared.SharedValues
 import de.hbch.traewelling.ui.include.alert.AlertBottomSheet
 import de.hbch.traewelling.ui.include.alert.AlertType
 import de.hbch.traewelling.ui.include.checkInSuccessful.CheckInSuccessfulBottomSheet
@@ -35,6 +40,7 @@ class CheckInFragment : Fragment() {
     private val checkInViewModel: CheckInViewModel by activityViewModels()
     private val loggedInUserViewModel: LoggedInUserViewModel by activityViewModels()
     private val eventViewModel: EventViewModel by activityViewModels()
+    private lateinit var secureStorage: SecureStorage
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -65,6 +71,13 @@ class CheckInFragment : Fragment() {
                     R.id.btn_send_tweet -> checkInViewModel.tweet.value = isChecked
                 }
             }
+        }
+
+        secureStorage = SecureStorage(requireContext())
+        val storedHashtag = secureStorage.getObject(SharedValues.SS_HASHTAG, String::class.java)
+        if (storedHashtag != null && storedHashtag != "") {
+            checkInViewModel.message.postValue("\n#${storedHashtag}")
+            binding.editTextStatusMessage.setSelection(0)
         }
 
         sharedElementEnterTransition = MaterialContainerTransform().apply {

@@ -88,4 +88,12 @@
     <string name="cancelled">entfällt</string>
     <string name="reset_selection">Auswahl zurücksetzen</string>
     <string name="no_event_check_in">Kein Event-Check-In</string>
+    <string name="settings">Einstellungen</string>
+    <string name="jwt_expiration">Anmeldung läuft ab am: %1$s</string>
+    <string name="signed_in_as">Angemeldet als %1$s</string>
+    <string name="renew_login">Anmeldung erneuern</string>
+    <string name="renew_login_success">Erneuerung erfolgreich!</string>
+    <string name="renew_login_failed">Die Erneuerung der Anmeldung ist fehlgeschlagen. Dies kann an einem Schnittstellenfehler liegen, der noch nicht behoben ist. Bitte melde dich manuell ab und wieder an, um deine Anmeldung zu erneuern.</string>
+    <string name="default_hashtag_text">Du kannst hier einen Standardhashtag festlegen, der automatisch zu deinen Check-Ins hinzugefügt wird.</string>
+    <string name="store_hashtag">Hashtag speichern</string>
 </resources>
