@@ -34,6 +34,9 @@
         <action
             android:id="@+id/action_user_fragment_to_statusDetailFragment"
             app:destination="@id/statusDetailFragment" />
+        <action
+            android:id="@+id/action_user_fragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
     </fragment>
     <fragment
         android:id="@+id/statisticsFragment"
@@ -103,4 +106,8 @@
             android:name="userId"
             app:argType="integer" />
     </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="de.hbch.traewelling.ui.settings.SettingsFragment"
+        android:label="@string/settings" />
 </navigation>

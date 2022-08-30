@@ -25,6 +25,22 @@ class StatusDetailFragment : Fragment() {
     private val userViewModel: LoggedInUserViewModel by activityViewModels()
     private val viewModel: StatusDetailViewModel by viewModels()
     private val args: StatusDetailFragmentArgs by navArgs()
+    private val menuProvider = object : MenuProvider {
+        override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+            menuInflater.inflate(R.menu.status_detail_also_check_in_menu, menu)
+        }
+
+        override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+            return when (menuItem.itemId) {
+                R.id.menu_also_check_in -> {
+                    alsoCheckIntoThisConnection()
+                    true
+                }
+                else -> false
+            }
+        }
+
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -81,28 +97,18 @@ class StatusDetailFragment : Fragment() {
             { status ->
                 binding.status = status
                 if (canAlsoCheckIntoThisConnection()) {
-                    requireActivity().addMenuProvider(object : MenuProvider {
-                        override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                            menuInflater.inflate(R.menu.status_detail_also_check_in_menu, menu)
-                        }
-
-                        override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                            return when (menuItem.itemId) {
-                                R.id.menu_also_check_in -> {
-                                    alsoCheckIntoThisConnection()
-                                    true
-                                }
-                                else -> false
-                            }
-                        }
-
-                    })
+                    requireActivity().addMenuProvider(menuProvider)
                 }
             },
             { }
         )
 
         return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        requireActivity().removeMenuProvider(menuProvider)
     }
 
     private fun canAlsoCheckIntoThisConnection(): Boolean {

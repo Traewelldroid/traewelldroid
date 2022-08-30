@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
+import com.auth0.android.jwt.JWT
 import com.google.android.material.button.MaterialButton
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.event.Event
@@ -37,7 +38,7 @@ fun setAlertIcon(imageView: ImageView, alertType: AlertType?) {
     })
     imageView.setColorFilter(imageView.resources.getColor(when(alertType) {
         AlertType.ERROR -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-                                R.color.material_dynamic_primary40
+                                R.color.train_delayed
                             else
                                 R.color.traewelling
         AlertType.SUCCESS -> R.color.success
@@ -147,6 +148,23 @@ fun setStatusVisibility(imageView: ImageView, statusVisibility: StatusVisibility
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
         imageView.tooltipText =
             imageView.resources.getString(getStatusVisibilityTextResource(statusVisibility))
+}
+
+@BindingAdapter("jwtExpiration")
+fun setJwtExpiration(textView: TextView, jwt: String) {
+    if (jwt == "")
+        return
+    val decodedJwt = JWT(jwt)
+    var dateTimeString = ""
+    val df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.getDefault())
+    if (decodedJwt.expiresAt != null)
+        dateTimeString = df.format(decodedJwt.expiresAt)
+    textView.setText(textView.resources.getString(R.string.jwt_expiration, dateTimeString))
+}
+
+@BindingAdapter("loggedInAs")
+fun setLoggedInAs(textView: TextView, username: String?) {
+    textView.setText(textView.resources.getString(R.string.signed_in_as, username ?: ""))
 }
 
 fun getStatusVisibilityImageResource(visibility: StatusVisibility): Int {

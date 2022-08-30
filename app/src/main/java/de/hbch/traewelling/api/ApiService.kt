@@ -57,6 +57,9 @@ interface AuthService {
         @Body credentials: LoginCredentials
     ): Call<Data<BearerToken>>
 
+    @POST("auth/refresh")
+    fun refreshToken(): Call<Data<BearerToken>>
+
     @POST("auth/logout")
     fun logout(): Call<Unit>
 

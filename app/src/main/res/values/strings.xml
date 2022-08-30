@@ -91,4 +91,13 @@
     <string name="cancelled">cancelled</string>
     <string name="reset_selection">Reset selection</string>
     <string name="no_event_check_in">No event check-in</string>
+    <string name="settings">Settings</string>
+    <string name="jwt_expiration">Login expires on: %1$s</string>
+    <string name="signed_in_as">Signed in as %1$s</string>
+    <string name="renew_login">Renew login</string>
+    <string name="hashtag" translatable="false">Hashtag</string>
+    <string name="default_hashtag_text">You can define a default hashtag which will be automatically added to your check-ins.</string>
+    <string name="renew_login_failed">The renew of the login failed. This may be due to an API error which is not fixed yet. Please consider signing yourself off and on again for renewing your login.</string>
+    <string name="renew_login_success">Login renewed!</string>
+    <string name="store_hashtag">Store hashtag</string>
 </resources>
