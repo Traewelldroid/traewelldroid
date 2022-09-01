@@ -12,6 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import com.jcloquell.androidsecurestorage.SecureStorage
 import de.hbch.traewelling.R
+import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.databinding.FragmentSettingsBinding
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.shared.SharedValues
@@ -60,6 +61,7 @@ class SettingsFragment : Fragment() {
             { token ->
                 jwt.postValue(token.jwt)
                 secureStorage.storeObject(SharedValues.SS_JWT, token.jwt)
+                TraewellingApi.jwt = token.jwt
                 val bottomSheet = AlertBottomSheet(AlertType.SUCCESS, getString(R.string.renew_login_success), 3000)
                 bottomSheet.show(parentFragmentManager, AlertBottomSheet.TAG)
             },
