@@ -16,11 +16,18 @@ class StatisticsViewModel : ViewModel() {
     var dateRange = MutableLiveData<Pair<Date, Date>>()
 
     init {
-        val calendar = GregorianCalendar()
-        calendar.time = Date()
-        calendar.set(Calendar.DATE, 1)
+        val startCalendar = GregorianCalendar()
+        startCalendar.time = Date()
+        startCalendar.set(Calendar.DATE, 1)
+        startCalendar.set(Calendar.HOUR_OF_DAY, 0)
+        startCalendar.set(Calendar.MINUTE, 0)
 
-        dateRange.postValue(Pair(calendar.time, Date()))
+        val endCalendar = GregorianCalendar()
+        endCalendar.time = Date()
+        endCalendar.set(Calendar.HOUR_OF_DAY, 23)
+        endCalendar.set(Calendar.MINUTE, 59)
+
+        dateRange.postValue(Pair(startCalendar.time, endCalendar.time))
     }
 
 
