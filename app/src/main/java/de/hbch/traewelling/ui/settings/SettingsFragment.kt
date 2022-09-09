@@ -89,8 +89,4 @@ class SettingsFragment : Fragment() {
             bottomSheet.show(parentFragmentManager, AlertBottomSheet.TAG)
         })
     }
-
-    fun getEmojiPickerAdapter(): EmojiPackItemAdapter {
-        return EmojiPackItemAdapter.get(this.requireActivity())
-    }
 }
