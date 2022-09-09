@@ -96,4 +96,6 @@
     <string name="renew_login_failed">Die Erneuerung der Anmeldung ist fehlgeschlagen. Bitte melde dich manuell ab und wieder an, um deine Anmeldung zu erneuern.</string>
     <string name="default_hashtag_text">Du kannst hier einen Standardhashtag festlegen, der automatisch zu deinen Check-Ins hinzugefügt wird.</string>
     <string name="store_hashtag">Hashtag speichern</string>
+    <string name="emoji">Emoji-Paket</string>
+    <string name="emoji_text">Du kannst das Emoji-Paket für diese App ändern</string>
 </resources>

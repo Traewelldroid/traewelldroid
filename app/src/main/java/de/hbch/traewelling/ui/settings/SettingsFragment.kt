@@ -11,6 +11,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import com.jcloquell.androidsecurestorage.SecureStorage
+import de.c1710.filemojicompat_ui.views.picker.EmojiPackItemAdapter
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.databinding.FragmentSettingsBinding
@@ -19,6 +20,7 @@ import de.hbch.traewelling.shared.SharedValues
 import de.hbch.traewelling.ui.include.alert.AlertBottomSheet
 import de.hbch.traewelling.ui.include.alert.AlertType
 import de.hbch.traewelling.ui.login.LoginActivity
+import de.hbch.traewelling.ui.main.MainActivity
 
 class SettingsFragment : Fragment() {
 
@@ -42,6 +44,7 @@ class SettingsFragment : Fragment() {
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
             fragment = this@SettingsFragment
+            emojiPickerAdapter = (this@SettingsFragment.requireActivity() as MainActivity).emojiPackItemAdapter
         }
         return binding.root
     }
