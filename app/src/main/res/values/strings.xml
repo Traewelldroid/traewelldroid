@@ -100,4 +100,7 @@
     <string name="renew_login_failed">The renew of the login failed. Please consider signing yourself off and on again for renewing your login.</string>
     <string name="renew_login_success">Login renewed!</string>
     <string name="store_hashtag">Store hashtag</string>
+    <string name="emoji">Emoji Pack</string>
+    <string name="emoji_text">You can change the emoji pack for this app</string>
+    <string name="change_emoji">Switch emoji pack</string>
 </resources>

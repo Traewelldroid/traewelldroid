@@ -24,6 +24,7 @@ import androidx.navigation.ui.NavigationUI.setupWithNavController
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.google.android.material.navigation.NavigationBarView
 import com.jcloquell.androidsecurestorage.SecureStorage
+import de.c1710.filemojicompat_ui.views.picker.EmojiPackItemAdapter
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.api.models.Data
@@ -39,6 +40,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
     private lateinit var binding: ActivityMainBinding
     private lateinit var secureStorage: SecureStorage
+    lateinit var emojiPackItemAdapter: EmojiPackItemAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,6 +72,8 @@ class MainActivity : AppCompatActivity() {
 
         val secureStorage = SecureStorage(this)
         TraewellingApi.jwt = secureStorage.getObject(SharedValues.SS_JWT, String::class.java)!!
+
+        emojiPackItemAdapter = EmojiPackItemAdapter.get(this)
         
         checkVerifiedDomains()
     }
