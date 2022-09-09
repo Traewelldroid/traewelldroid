@@ -144,7 +144,9 @@
                 app:layout_constraintEnd_toEndOf="@id/btn_store_hashtag"
                 android:layout_marginTop="16dp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:adapter="@{emojiPickerAdapter}"/>
+                app:adapter="@{emojiPickerAdapter}"
+                android:nestedScrollingEnabled="false"
+                />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
