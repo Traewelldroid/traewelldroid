@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.hbch.traewelling">
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <application
         android:name=".TraewellingApplication"
         android:allowBackup="false"
@@ -14,8 +16,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Traewelling"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".ui.info.InfoActivity"
+            android:exported="false" />
+
         <meta-data
-            android:name="io.sentry.dsn" android:value="${SENTRY_DSN}" />
+            android:name="io.sentry.dsn"
+            android:value="${SENTRY_DSN}" />
+
         <activity
             android:name=".ui.main.MainActivity"
             android:exported="true" />
@@ -29,12 +37,15 @@
             android:theme="@style/Theme.Traewelling.Starting">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="http" />
                 <data android:scheme="https" />
                 <data android:host="traewelling.de" />

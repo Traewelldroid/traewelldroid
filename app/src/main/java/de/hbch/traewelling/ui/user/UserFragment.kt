@@ -19,6 +19,7 @@ import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.shared.SharedValues
 import de.hbch.traewelling.ui.include.alert.AlertBottomSheet
 import de.hbch.traewelling.ui.include.alert.AlertType
+import de.hbch.traewelling.ui.info.InfoActivity
 import de.hbch.traewelling.ui.login.LoginActivity
 import java.lang.Exception
 
@@ -112,6 +113,9 @@ class UserFragment : Fragment() {
             MenuItem(R.string.settings, R.drawable.ic_settings) {
                 findNavController()
                     .navigate(UserFragmentDirections.actionUserFragmentToSettingsFragment())
+            },
+            MenuItem(R.string.information, R.drawable.ic_settings) {
+                startActivity(Intent(requireContext(), InfoActivity::class.java))
             }
         )
     }

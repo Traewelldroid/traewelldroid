@@ -3,6 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'androidx.navigation.safeargs.kotlin'
+    id 'com.google.android.gms.oss-licenses-plugin'
 }
 
 def properties = new Properties()
@@ -25,8 +26,8 @@ android {
         applicationId "de.hbch.traewelling"
         minSdk 23
         targetSdk 32
-        versionCode 57
-        versionName "0.27"
+        versionCode 58
+        versionName "0.28"
 
         manifestPlaceholders = [
                 SENTRY_DSN: sentryDsn
@@ -97,6 +98,9 @@ dependencies {
 
     // Emoji pack support
     implementation 'de.c1710:filemojicompat-autoinit:3.2.5'
+
+    // OSS licenses
+    implementation 'com.google.android.gms:play-services-oss-licenses:17.0.0'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

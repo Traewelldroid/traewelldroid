@@ -6,10 +6,12 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.jcloquell.androidsecurestorage.SecureStorage
 import de.hbch.traewelling.R
 import de.hbch.traewelling.databinding.ActivityLoginBinding
 import de.hbch.traewelling.shared.SharedValues
+import de.hbch.traewelling.ui.info.InfoActivity
 import de.hbch.traewelling.ui.main.MainActivity
 
 class LoginActivity : AppCompatActivity() {
@@ -49,6 +51,10 @@ class LoginActivity : AppCompatActivity() {
                 setError(true)
             }
         )
+    }
+
+    fun showInfoActivity() {
+        startActivity(Intent(this, InfoActivity::class.java))
     }
 
     private fun setError(error: Boolean) {

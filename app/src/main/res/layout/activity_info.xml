@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="infoActivity"
+            type="de.hbch.traewelling.ui.info.InfoActivity" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.info.InfoActivity">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/app_bar_layout"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:titleCentered="true"
+                app:title="Informationen"
+                android:id="@+id/toolbar_main" />
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:text="Open Source Lizenzen"
+            app:layout_constraintTop_toBottomOf="@id/app_bar_layout"
+            android:layout_margin="16dp"
+            android:onClick="@{() -> infoActivity.showOSSLicenses()}" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

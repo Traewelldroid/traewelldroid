@@ -72,6 +72,14 @@
                 android:onClick="@{() -> loginActivity.login()}"/>
         </LinearLayout>
 
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:text="Informationen"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:onClick="@{() -> loginActivity.showInfoActivity()}"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
