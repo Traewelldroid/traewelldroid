@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import de.hbch.traewelling.databinding.ActivityInfoBinding
+import de.hbch.traewelling.ui.legal.LegalActivity
 
 class InfoActivity : AppCompatActivity() {
 
@@ -33,6 +34,10 @@ class InfoActivity : AppCompatActivity() {
         val intent = Intent(Intent.ACTION_VIEW)
         intent.data = Uri.parse("https://github.com/jheubuch/traewelling-android")
         startActivity(intent)
+    }
+
+    fun viewLegalInfo() {
+        startActivity(Intent(this, LegalActivity::class.java))
     }
 
     override fun onSupportNavigateUp(): Boolean {

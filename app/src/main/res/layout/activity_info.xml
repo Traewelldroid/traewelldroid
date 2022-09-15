@@ -51,5 +51,16 @@
             app:icon="@drawable/ic_code"
             android:onClick="@{() -> infoActivity.viewOnGitHub()}" />
 
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:text="@string/legal"
+            android:id="@+id/btn_legal"
+            app:layout_constraintTop_toBottomOf="@id/btn_github"
+            android:layout_margin="16dp"
+            app:icon="@drawable/ic_privacy"
+            android:onClick="@{() -> infoActivity.viewLegalInfo()}" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -17,6 +17,9 @@
         android:theme="@style/Theme.Traewelling"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ui.legal.LegalActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.info.InfoActivity"
             android:exported="false" />
 
