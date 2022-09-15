@@ -25,18 +25,31 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:titleCentered="true"
-                app:title="Informationen"
+                app:title="@string/information"
                 android:id="@+id/toolbar_main" />
         </com.google.android.material.appbar.AppBarLayout>
 
         <com.google.android.material.button.MaterialButton
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/btn_oss"
             style="@style/Widget.Material3.Button.OutlinedButton"
-            android:text="Open Source Lizenzen"
+            android:text="@string/open_source_licenses"
             app:layout_constraintTop_toBottomOf="@id/app_bar_layout"
             android:layout_margin="16dp"
+            app:icon="@drawable/ic_library"
             android:onClick="@{() -> infoActivity.showOSSLicenses()}" />
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:text="@string/view_on_github"
+            android:id="@+id/btn_github"
+            app:layout_constraintTop_toBottomOf="@id/btn_oss"
+            android:layout_margin="16dp"
+            app:icon="@drawable/ic_code"
+            android:onClick="@{() -> infoActivity.viewOnGitHub()}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

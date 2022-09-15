@@ -1,6 +1,7 @@
 package de.hbch.traewelling.ui.info
 
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
@@ -18,10 +19,24 @@ class InfoActivity : AppCompatActivity() {
             infoActivity = this@InfoActivity
         }
 
+        setSupportActionBar(binding.toolbarMain)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         setContentView(binding.root)
     }
 
     fun showOSSLicenses() {
         startActivity(Intent(this, OssLicensesMenuActivity::class.java))
+    }
+
+    fun viewOnGitHub() {
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.data = Uri.parse("https://github.com/jheubuch/traewelling-android")
+        startActivity(intent)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 }
