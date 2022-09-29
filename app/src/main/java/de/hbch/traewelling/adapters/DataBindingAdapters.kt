@@ -13,6 +13,7 @@ import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.event.Event
 import de.hbch.traewelling.api.models.status.StatusBusiness
 import de.hbch.traewelling.api.models.status.StatusVisibility
+import de.hbch.traewelling.api.models.trip.HafasTrip
 import de.hbch.traewelling.api.models.trip.ProductType
 import de.hbch.traewelling.ui.include.alert.AlertType
 import java.text.DateFormat
@@ -260,4 +261,33 @@ fun getJourneyProgress(departure: Date, arrival: Date): Long {
     }
 
     return progressMinutes
+}
+
+fun getLastDestination(trip: HafasTrip): String {
+    var lastDestination = ""
+
+    lastDestination = clarifyRingbahnBerlin(trip)
+
+    // default case
+    if (lastDestination == "")
+        lastDestination = trip.direction ?: (trip.destination?.name ?: "")
+
+    return lastDestination
+}
+
+private fun clarifyRingbahnBerlin(trip: HafasTrip): String {
+    if (trip.line == null)
+        return ""
+    if (trip.direction == null)
+        return ""
+
+    if (trip.line.operator.id == "s-bahn-berlin" && trip.direction.contains("Ring")) {
+        var direction = trip.direction
+        direction = direction.replace("S41", "↻")
+        direction = direction.replace("S42", "↺")
+
+        return direction
+    }
+
+    return ""
 }

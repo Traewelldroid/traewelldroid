@@ -39,7 +39,9 @@ class ConnectionAdapter(
     override fun onBindViewHolder(holder: ConnectionViewHolder, position: Int) {
         val connection = connectionsFiltered[position]
         holder.bind(connection)
-        if (!connection.isCancelled)
+        if (connection.isCancelled)
+            holder.itemView.setOnClickListener {  }
+        else
             holder.itemView.setOnClickListener {
                 onItemClick(it, connection)
             }
@@ -53,14 +55,14 @@ class ConnectionAdapter(
             binding.textViewDepartureTime.setTextColor(
                 ContextCompat.getColor(
                     binding.root.context,
-                    when(trip.departure ?: Date() > trip.plannedDeparture) {
+                    when((trip.departure ?: Date()) > trip.plannedDeparture) {
                         true -> R.color.train_delayed
                         false -> R.color.train_on_time
                     }
                 )
             )
 
-            binding.layoutConnectionListItem.transitionName = "${trip.tripId}"
+            binding.layoutConnectionListItem.transitionName = trip.tripId
             binding.connection = trip
             binding.executePendingBindings()
         }
