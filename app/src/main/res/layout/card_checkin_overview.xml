@@ -4,27 +4,30 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="checkIn"
             type="de.hbch.traewelling.api.models.status.Status" />
+
         <variable
             name="viewModel"
             type="de.hbch.traewelling.ui.include.status.StatusCardViewModel" />
+
         <variable
             name="checkInCard"
             type="de.hbch.traewelling.ui.include.status.CardCheckInOverview" />
-        <import
-            type="android.view.View" />
+
+        <import type="android.view.View" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardUseCompatPadding="true"
         android:clickable="true"
         android:focusable="true"
+        android:onClick="@{() -> checkInCard.handleCheckInSelected()}"
         app:cardElevation="2dp"
-        android:onClick="@{() -> checkInCard.handleCheckInSelected()}">
+        app:cardUseCompatPadding="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -43,12 +46,12 @@
 
                 <ImageView
                     android:id="@+id/perlschnur_start"
+                    style="@style/Theme.Traewelling.PrimaryColorIcons"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:src="@drawable/ic_perlschnur_main"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    style="@style/Theme.Traewelling.PrimaryColorIcons" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
                     android:layout_width="2dp"
@@ -64,25 +67,25 @@
 
                 <ImageView
                     android:id="@+id/perlschnur_end"
+                    style="@style/Theme.Traewelling.PrimaryColorIcons"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:src="@drawable/ic_perlschnur_main"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    style="@style/Theme.Traewelling.PrimaryColorIcons" />
+                    app:layout_constraintStart_toStartOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
             <!--Travel connection-->
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/travel_layout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/travel_layout"
-                app:layout_constraintStart_toEndOf="@id/perlschnur_layout"
+                app:layout_constraintBottom_toBottomOf="@id/perlschnur_layout"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/perlschnur_layout"
-                app:layout_constraintBottom_toBottomOf="@id/perlschnur_layout">
+                app:layout_constraintStart_toEndOf="@id/perlschnur_layout"
+                app:layout_constraintTop_toTopOf="@id/perlschnur_layout">
 
                 <TextView
                     android:id="@+id/start_station"
@@ -117,78 +120,78 @@
 
                 <TextView
                     android:id="@+id/departure_time"
+                    style="@style/Theme.Traewelling.PrimaryColorTexts"
+                    displayTime="@{checkIn.journey.origin.departureReal ?? checkIn.journey.origin.departurePlanned}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    tools:text="15:25"
-                    displayTime="@{checkIn.journey.origin.departureReal ?? checkIn.journey.origin.departurePlanned}"
-                    style="@style/Theme.Traewelling.PrimaryColorTexts"
                     android:textSize="18sp"
-                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toBottomOf="@id/start_station"
-                    app:layout_constraintTop_toTopOf="@id/start_station" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/start_station"
+                    tools:text="15:25" />
 
                 <ImageView
+                    android:id="@+id/icon_product"
+                    productType="@{checkIn.journey.category}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    tools:srcCompat="@drawable/ic_suburban"
-                    android:id="@+id/icon_product"
+                    android:layout_marginTop="4dp"
                     app:layout_constraintStart_toStartOf="@id/start_station"
                     app:layout_constraintTop_toBottomOf="@id/start_station"
-                    productType="@{checkIn.journey.category}"
-                    android:layout_marginTop="4dp" />
+                    tools:srcCompat="@drawable/ic_suburban" />
 
                 <TextView
+                    android:id="@+id/train_line"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/train_line"
                     android:layout_marginStart="4dp"
+                    android:text="@{checkIn.journey.line}"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="@id/icon_product"
                     app:layout_constraintStart_toEndOf="@id/icon_product"
                     app:layout_constraintTop_toTopOf="@id/icon_product"
-                    app:layout_constraintBottom_toBottomOf="@id/icon_product"
-                    android:textSize="16sp"
-                    tools:text="RB 73"
-                    android:text="@{checkIn.journey.line}" />
+                    tools:text="RB 73" />
 
                 <TextView
+                    android:id="@+id/distance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/distance"
+                    android:layout_marginStart="16dp"
+                    android:text="@{@string/display_kilometres(checkIn.journey.distance / 1000)}"
+                    android:textSize="16sp"
                     app:layout_constraintStart_toEndOf="@id/train_line"
                     app:layout_constraintTop_toTopOf="@id/train_line"
-                    android:layout_marginStart="16dp"
-                    android:textSize="16sp"
-                    tools:text="64km"
-                    android:text="@{@string/display_kilometres(checkIn.journey.distance / 1000)}" />
+                    tools:text="64km" />
 
                 <TextView
+                    android:id="@+id/travel_time"
+                    duration="@{checkIn.journey.duration}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/travel_time"
-                    app:layout_constraintStart_toEndOf="@id/distance"
-                    app:layout_constraintTop_toTopOf="@id/distance"
                     android:layout_marginStart="16dp"
                     android:textSize="16sp"
-                    tools:text="45min"
-                    duration="@{checkIn.journey.duration}"/>
+                    app:layout_constraintStart_toEndOf="@id/distance"
+                    app:layout_constraintTop_toTopOf="@id/distance"
+                    tools:text="45min" />
 
                 <ImageView
+                    android:id="@+id/icon_business_type"
+                    business="@{checkIn.business}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/icon_business_type"
                     android:layout_marginStart="8dp"
+                    app:layout_constraintBottom_toBottomOf="@id/distance"
                     app:layout_constraintStart_toEndOf="@id/travel_time"
                     app:layout_constraintTop_toTopOf="@id/distance"
-                    app:layout_constraintBottom_toBottomOf="@id/distance"
-                    tools:srcCompat="@drawable/ic_commute"
-                    business="@{checkIn.business}" />
+                    tools:srcCompat="@drawable/ic_commute" />
 
                 <TextView
                     android:id="@+id/next_station"
+                    style="@style/Theme.Traewelling.PrimaryColorTexts"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="25dp"
                     android:text="@{checkIn.body}"
-                    style="@style/Theme.Traewelling.PrimaryColorTexts"
                     android:textSize="18sp"
                     app:layout_constraintBottom_toTopOf="@id/end_station"
                     app:layout_constraintEnd_toStartOf="@+id/departure_time"
@@ -201,13 +204,13 @@
                     style="@style/Theme.Traewelling.StatisticTexts"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
                     android:gravity="start"
                     android:onClick="@{() -> checkInCard.onStationNameClicked(checkIn.journey.destination.name)}"
                     android:text="@{checkIn.journey.destination.name}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/arrival_planned_time"
                     app:layout_constraintStart_toEndOf="parent"
-                    android:layout_marginEnd="8dp"
                     app:layout_constraintStart_toStartOf="@id/start_station"
                     tools:text="Ende Hbf" />
 
@@ -228,116 +231,130 @@
 
                 <TextView
                     android:id="@+id/destination_time"
+                    style="@style/Theme.Traewelling.PrimaryColorTexts"
+                    displayTime="@{checkIn.journey.destination.arrival ?? checkIn.journey.destination.arrivalPlanned}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    tools:text="15:25"
-                    displayTime="@{checkIn.journey.destination.arrival ?? checkIn.journey.destination.arrivalPlanned}"
-                    style="@style/Theme.Traewelling.PrimaryColorTexts"
                     android:textSize="18sp"
-                    app:layout_constraintEnd_toEndOf="@id/departure_time"
                     app:layout_constraintBottom_toBottomOf="@id/end_station"
-                    app:layout_constraintTop_toTopOf="@id/end_station" />
+                    app:layout_constraintEnd_toEndOf="@id/departure_time"
+                    app:layout_constraintTop_toTopOf="@id/end_station"
+                    tools:text="15:25" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/footer_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/travel_layout"
                 android:layout_marginTop="16dp"
-                android:id="@+id/footer_layout">
-
-            <ProgressBar
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/travel_progress"
-                tools:progress="30"
-                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                departure="@{checkIn.journey.origin.departure ?? checkIn.journey.origin.departurePlanned}"
-                arrival="@{checkIn.journey.destination.arrival ?? checkIn.journey.destination.arrivalPlanned}" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/fav"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/travel_progress"
-                android:src="@{viewModel.liked ? @drawable/ic_faved : @drawable/ic_not_faved}"
-                tools:src="@drawable/ic_not_faved"
-                android:layout_marginTop="8dp"
-                app:tint="#FFC107"
-                android:clickable="true"
-                android:onClick="@{() -> viewModel.handleFavoriteClick()}"
-                android:focusable="true" />
+                app:layout_constraintTop_toBottomOf="@id/travel_layout">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/like_count"
-                app:layout_constraintStart_toEndOf="@id/fav"
-                app:layout_constraintTop_toTopOf="@id/fav"
-                app:layout_constraintBottom_toBottomOf="@id/fav"
-                android:layout_marginStart="4dp"
-                android:textSize="16sp"
-                tools:text="3"
-                android:text="@{Integer.toString(viewModel.likes)}" />
+                <ProgressBar
+                    android:id="@+id/travel_progress"
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                    arrival="@{checkIn.journey.destination.arrival ?? checkIn.journey.destination.arrivalPlanned}"
+                    departure="@{checkIn.journey.origin.departure ?? checkIn.journey.origin.departurePlanned}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:progress="30" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/btn_delete_status"
-                app:layout_constraintStart_toEndOf="@id/like_count"
-                app:layout_constraintTop_toTopOf="@id/like_count"
-                app:layout_constraintBottom_toBottomOf="@id/like_count"
-                android:layout_marginStart="16dp"
-                android:src="@drawable/ic_delete"
-                style="@style/Theme.Traewelling.PrimaryColorIcons"
-                android:visibility="@{viewModel.isOwnStatus ? View.VISIBLE : View.GONE}"
-                android:onClick="@{() -> checkInCard.handleDeleteClicked()}"/>
+                <ImageView
+                    android:id="@+id/fav"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:onClick="@{() -> viewModel.handleFavoriteClick()}"
+                    android:src="@{viewModel.liked ? @drawable/ic_faved : @drawable/ic_not_faved}"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/travel_progress"
+                    app:tint="#FFC107"
+                    tools:src="@drawable/ic_not_faved" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/icon_status_visibility"
-                app:layout_constraintEnd_toStartOf="@id/status_info"
-                app:layout_constraintTop_toTopOf="@id/status_info"
-                app:layout_constraintBottom_toBottomOf="@id/status_info"
-                android:layout_marginEnd="8dp"
-                tools:srcCompat="@drawable/ic_lock_open"
-                statusVisibility="@{checkIn.visibility}" />
+                <TextView
+                    android:id="@+id/like_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:text="@{Integer.toString(viewModel.likes)}"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="@id/fav"
+                    app:layout_constraintStart_toEndOf="@id/fav"
+                    app:layout_constraintTop_toTopOf="@id/fav"
+                    tools:text="3" />
+
+                <ImageView
+                    android:id="@+id/btn_delete_status"
+                    style="@style/Theme.Traewelling.PrimaryColorIcons"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:onClick="@{() -> checkInCard.handleDeleteClicked()}"
+                    android:src="@drawable/ic_delete"
+                    android:visibility="@{viewModel.isOwnStatus ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBottom_toBottomOf="@id/like_count"
+                    app:layout_constraintStart_toEndOf="@id/like_count"
+                    app:layout_constraintTop_toTopOf="@id/like_count" />
+
+                <ImageView
+                    android:id="@+id/btn_edit_status"
+                    style="@style/Theme.Traewelling.PrimaryColorIcons"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:onClick="@{() -> checkInCard.handleEditClicked()}"
+                    android:src="@drawable/ic_edit"
+                    android:visibility="@{viewModel.isOwnStatus ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBottom_toBottomOf="@id/btn_delete_status"
+                    app:layout_constraintStart_toEndOf="@id/btn_delete_status"
+                    app:layout_constraintTop_toTopOf="@id/btn_delete_status" />
+
+                <ImageView
+                    android:id="@+id/icon_status_visibility"
+                    statusVisibility="@{checkIn.visibility}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    app:layout_constraintBottom_toBottomOf="@id/status_info"
+                    app:layout_constraintEnd_toStartOf="@id/status_info"
+                    app:layout_constraintTop_toTopOf="@id/status_info"
+                    tools:srcCompat="@drawable/ic_lock_open" />
 
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/status_info"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/fav"
-                app:layout_constraintBottom_toBottomOf="@id/fav"
-                android:textSize="16sp"
-                tools:text="username, 31.01.2021 15:25"
-                username="@{checkIn.username}"
-                timestamp="@{checkIn.createdAt}"/>
+                <TextView
+                    android:id="@+id/status_info"
+                    timestamp="@{checkIn.createdAt}"
+                    username="@{checkIn.username}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="@id/fav"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/fav"
+                    tools:text="username, 31.01.2021 15:25" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/fav"
                     android:layout_marginTop="12dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:visibility="@{checkIn.event == null ? View.GONE : View.VISIBLE}">
+                    android:visibility="@{checkIn.event == null ? View.GONE : View.VISIBLE}"
+                    app:layout_constraintTop_toBottomOf="@id/fav">
+
                     <ImageView
+                        android:id="@+id/icon_event"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/icon_event"
-                        android:src="@drawable/ic_calendar"
-                        android:layout_marginEnd="8dp" />
+                        android:layout_marginEnd="8dp"
+                        android:src="@drawable/ic_calendar" />
 
                     <TextView
                         android:id="@+id/event_name"
