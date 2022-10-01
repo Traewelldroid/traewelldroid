@@ -156,6 +156,7 @@
                     android:id="@+id/check_in_information_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginVertical="10dp"
                     app:layout_constraintBottom_toTopOf="@+id/end_station"
                     app:layout_constraintEnd_toStartOf="@+id/departure_planned_time"
                     app:layout_constraintHorizontal_bias="0.741"
