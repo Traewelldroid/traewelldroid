@@ -257,12 +257,12 @@
                         android:layout_marginBottom="8dp"
                         android:text="@{@string/next_station(checkIn.journey.origin.name)}"
                         android:textSize="16sp"
+                        android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="@+id/check_in_body"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="@+id/icon_product"
-                        app:layout_constraintTop_toBottomOf="@+id/check_in_body"
-                        tools:visibility="gone" />
+                        app:layout_constraintTop_toBottomOf="@+id/check_in_body" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
