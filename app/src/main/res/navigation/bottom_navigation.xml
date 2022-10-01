@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_dashboard_fragment_to_statusDetailFragment"
             app:destination="@id/statusDetailFragment" />
+        <action
+            android:id="@+id/action_dashboard_fragment_to_profile"
+            app:destination="@id/userProfileFragment" />
     </fragment>
     <fragment
         android:id="@+id/active_checkins_fragment"

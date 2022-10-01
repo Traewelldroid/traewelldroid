@@ -80,6 +80,16 @@ class DashboardFragment : Fragment() {
                                     )
                             )
                     }
+                } else if (it.hasExtra(SharedValues.EXTRA_USER_NAME)) {
+                    val userName = it.getStringExtra(SharedValues.EXTRA_USER_NAME)
+                    if (userName != null) {
+                        intent.action = ""
+                        findNavController()
+                            .navigate(
+                                DashboardFragmentDirections
+                                    .actionDashboardFragmentToProfile(userName)
+                            )
+                    }
                 }
             }
         }
