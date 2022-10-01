@@ -143,9 +143,6 @@ fun setStatusVisibility(imageView: ImageView, statusVisibility: StatusVisibility
 
     imageView.setImageResource(getStatusVisibilityImageResource(statusVisibility))
 
-    if (statusVisibility == StatusVisibility.PUBLIC)
-        imageView.visibility = View.GONE
-
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
         imageView.tooltipText =
             imageView.resources.getString(getStatusVisibilityTextResource(statusVisibility))
