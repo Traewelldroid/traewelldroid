@@ -5,16 +5,28 @@ import android.os.Bundle
 import android.view.*
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
 import de.hbch.traewelling.R
+import de.hbch.traewelling.api.TraewellingApi
+import de.hbch.traewelling.api.models.Data
+import de.hbch.traewelling.api.models.station.Station
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.ui.info.InfoActivity
+import io.sentry.Sentry
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class LoggedInAbstractUserFragment : AbstractUserFragment() {
     override val viewModel: LoggedInUserViewModel by activityViewModels()
     private lateinit var menuItems: List<MenuItem>
     private lateinit var menuProvider: MenuProvider
+
+    private val _lastVisitedStations = MutableLiveData<List<Station>?>(null)
+    val lastVisitedStations: LiveData<List<Station>?> get() = _lastVisitedStations
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -65,6 +77,27 @@ class LoggedInAbstractUserFragment : AbstractUserFragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         requireActivity().removeMenuProvider(menuProvider)
+    }
+
+    fun getLastVisitedStations() {
+        TraewellingApi.authService.getLastVisitedStations()
+            .enqueue(object : Callback<Data<List<Station>>> {
+                override fun onResponse(
+                    call: Call<Data<List<Station>>>,
+                    response: Response<Data<List<Station>>>
+                ) {
+                    if (response.isSuccessful) {
+                        val stations = response.body()
+                        if (stations != null) {
+                            _lastVisitedStations.postValue(stations.data)
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<Data<List<Station>>>, t: Throwable) {
+                    Sentry.captureException(t)
+                }
+            })
     }
 }
 

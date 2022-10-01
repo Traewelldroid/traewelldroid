@@ -18,9 +18,6 @@ import retrofit2.Response
 open class UserViewModel : ViewModel() {
     protected val _user = MutableLiveData<User?>()
 
-    private val _lastVisitedStations = MutableLiveData<List<Station>?>(null)
-    val lastVisitedStations: LiveData<List<Station>?> get() = _lastVisitedStations
-
     val userId: LiveData<Int>
         get() = Transformations.map(_user) { user ->
             user?.id ?: -1
@@ -85,27 +82,6 @@ open class UserViewModel : ViewModel() {
             }
         }
 
-
-    fun getLastVisitedStations() {
-        TraewellingApi.authService.getLastVisitedStations()
-            .enqueue(object : Callback<Data<List<Station>>> {
-                override fun onResponse(
-                    call: Call<Data<List<Station>>>,
-                    response: Response<Data<List<Station>>>
-                ) {
-                    if (response.isSuccessful) {
-                        val stations = response.body()
-                        if (stations != null) {
-                            _lastVisitedStations.postValue(stations.data)
-                        }
-                    }
-                }
-
-                override fun onFailure(call: Call<Data<List<Station>>>, t: Throwable) {
-                    Sentry.captureException(t)
-                }
-            })
-    }
 
     fun getPersonalCheckIns(
         page: Int,

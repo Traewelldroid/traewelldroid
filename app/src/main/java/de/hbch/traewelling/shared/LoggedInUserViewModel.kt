@@ -1,7 +1,10 @@
 package de.hbch.traewelling.shared
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import de.hbch.traewelling.api.TraewellingApi
+import de.hbch.traewelling.api.models.Data
+import de.hbch.traewelling.api.models.station.Station
 import de.hbch.traewelling.api.models.user.User
 import io.sentry.Sentry
 import retrofit2.Call
@@ -12,7 +15,10 @@ class LoggedInUserViewModel : UserViewModel() {
 
     val loggedInUser: LiveData<User?> get() = _user
 
-    fun login() =
+    private val _lastVisitedStations = MutableLiveData<List<Station>?>(null)
+    val lastVisitedStations: LiveData<List<Station>?> get() = _lastVisitedStations
+
+    fun getLoggedInUser() =
         TraewellingApi.authService.getLoggedInUser().enqueue(loadUserCallback())
 
     fun logout(successCallback: () -> Unit, failureCallback: () -> Unit) {
@@ -29,6 +35,27 @@ class LoggedInUserViewModel : UserViewModel() {
 
                 override fun onFailure(call: Call<Unit>, t: Throwable) {
                     failureCallback()
+                    Sentry.captureException(t)
+                }
+            })
+    }
+
+    fun getLastVisitedStations() {
+        TraewellingApi.authService.getLastVisitedStations()
+            .enqueue(object : Callback<Data<List<Station>>> {
+                override fun onResponse(
+                    call: Call<Data<List<Station>>>,
+                    response: Response<Data<List<Station>>>
+                ) {
+                    if (response.isSuccessful) {
+                        val stations = response.body()
+                        if (stations != null) {
+                            _lastVisitedStations.postValue(stations.data)
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<Data<List<Station>>>, t: Throwable) {
                     Sentry.captureException(t)
                 }
             })

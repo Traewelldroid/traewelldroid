@@ -55,7 +55,7 @@ private val retrofit =
         .build()
 
 interface AuthService {
-    @POST("auth/login")
+    @POST("auth/getLoggedInUser")
     fun login(
         @Body credentials: LoginCredentials
     ): Call<Data<BearerToken>>

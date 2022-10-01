@@ -56,7 +56,7 @@ class DashboardFragment : Fragment() {
         searchStationCard.requestPermissionCallback = { permission ->
             requestPermissionLauncher.launch(permission)
         }
-        loggedInUserViewModel.login()
+        loggedInUserViewModel.getLoggedInUser()
         loggedInUserViewModel.getLastVisitedStations()
         eventViewModel.activeEvents()
 
@@ -116,7 +116,7 @@ class DashboardFragment : Fragment() {
             }
         }
         binding.swipeRefreshDashboardCheckIns.setOnRefreshListener {
-            loggedInUserViewModel.login()
+            loggedInUserViewModel.getLoggedInUser()
             currentPage = 1
             loadCheckins(currentPage)
         }
