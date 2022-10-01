@@ -203,9 +203,6 @@ fun setStatusBusiness(imageView: ImageView, business: StatusBusiness?) {
 
     imageView.setImageResource(getBusinessImageResource(business))
 
-    if (business == StatusBusiness.PRIVATE)
-        imageView.visibility = View.GONE
-
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
         imageView.tooltipText = imageView.resources.getString(getBusinessTextResource(business))
 }
