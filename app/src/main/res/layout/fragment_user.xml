@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewModel"
-            type="de.hbch.traewelling.shared.LoggedInUserViewModel" />
+            type="de.hbch.traewelling.shared.UserViewModel" />
     </data>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
