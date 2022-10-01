@@ -78,14 +78,14 @@
                     style="@style/Theme.Traewelling.StatisticTexts"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginStart="12dp"
                     android:layout_marginEnd="8dp"
                     android:gravity="start"
+                    android:onClick="@{() -> checkInCard.onStationNameClicked(checkIn.journey.origin.name)}"
                     android:text="@{checkIn.journey.origin.name}"
-                    app:layout_constraintBottom_toBottomOf="@id/perlschnur_start"
                     app:layout_constraintEnd_toStartOf="@+id/departure_planned_time"
                     app:layout_constraintStart_toEndOf="@id/perlschnur_start"
-                    app:layout_constraintTop_toTopOf="@id/perlschnur_start"
+                    app:layout_constraintTop_toTopOf="parent"
                     tools:text="Start Hbf" />
 
                 <TextView
@@ -96,7 +96,6 @@
                     android:layout_marginEnd="8dp"
                     android:gravity="start"
                     android:text="@{checkIn.journey.destination.name}"
-                    app:layout_constraintBottom_toBottomOf="@id/perlschnur_end"
                     app:layout_constraintEnd_toStartOf="@+id/arrival_planned_time"
                     app:layout_constraintStart_toStartOf="@id/start_station"
                     app:layout_constraintTop_toTopOf="@id/perlschnur_end"
@@ -247,6 +246,8 @@
                         app:layout_constraintTop_toTopOf="@id/icon_check_in_body"
                         tools:text="Hello I am träwelling" />
 
+                    <!-- TODO: Enable this once we have current stop information -->
+                    <!-- Also see: https://github.com/jheubuch/traewelling-android/issues/26 -->
                     <TextView
                         android:id="@+id/next_station"
                         style="@style/Theme.Traewelling.PrimaryColorTexts"
@@ -254,14 +255,14 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="8dp"
-                        android:text="@string/next_station"
+                        android:text="@{@string/next_station(checkIn.journey.origin.name)}"
                         android:textSize="16sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="@+id/check_in_body"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="@+id/icon_product"
                         app:layout_constraintTop_toBottomOf="@+id/check_in_body"
-                        tools:visibility="visible" />
+                        tools:visibility="gone" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
