@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="ok">Ok</string>
+    <string name="abort">Abbrechen</string>
     <string name="input_username">Benutzername</string>
     <string name="input_password">Passwort</string>
     <string name="input_stop">Haltestelle / Ril100</string>
@@ -106,6 +108,9 @@
     <string name="view_on_github">Projekt auf GitHub anzeigen</string>
     <string name="legal">Impressum und Datenschutzerklärung</string>
     <string name="title_edit">Bearbeiten</string>
+    <string name="confirm_check_in_replacement">Träwelling lässt es nicht zu das Ziel eines
+    Check-Ins zu ändern, weswegen ein neuer erstellt werden muss, dies kann dazu führen, dass Du
+    Punkte verlierst</string>
     <string name="point_reason_good_enough">
         Weil Du ein klein wenig zu spät eingecheckt hast, hast Du nicht alle Punkte erhalten.
         Versuche nächstes Mal, kurz vor der Abfahrt oder während der Reise einzuchecken, um alle

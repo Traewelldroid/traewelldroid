@@ -1,5 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name" translatable="false">Träwelldroid</string>
+    <string name="ok">Ok</string>
+    <string name="abort">Abort</string>
     <string name="input_username">Username</string>
     <string name="input_password">Password</string>
     <string name="input_stop">Stop / Ril100</string>
@@ -121,4 +123,7 @@
     <string name="point_reason_forced">
         Because you forced this check-in, you received 0 points.
     </string>
+    <string name="confirm_check_in_replacement">Träwelling doesn\'t allow to alter a check-in
+        destination, therefore we need to delete the current check-in and create a new one
+        this might cause you to loose points</string>
 </resources>

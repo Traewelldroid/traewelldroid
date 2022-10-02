@@ -97,11 +97,6 @@ interface CheckInService {
         @Path("id") id: Int
     ): Call<Data<Status>>
 
-    @DELETE("statuses/{id}")
-    fun deleteStatusById(
-        @Path("id") id: Int
-    ): Call<Void>
-
     @GET("polyline/{ids}")
     fun getPolylinesForStatuses(
         @Path("ids") statusIds: String
