@@ -31,16 +31,19 @@ private const val BASE_URL =
 
 private val client = OkHttpClient.Builder().readTimeout(60, TimeUnit.SECONDS)
     .addInterceptor(Interceptor() { chain ->
-    val newRequest =
-        chain
-            .request()
-            .newBuilder()
-            .addHeader("Authorization", "Bearer ${TraewellingApi.jwt}")
-            .addHeader("User-Agent", "${BuildConfig.APPLICATION_ID}/${BuildConfig.VERSION_NAME}")
-            .build()
+        val newRequest =
+            chain
+                .request()
+                .newBuilder()
+                .addHeader("Authorization", "Bearer ${TraewellingApi.jwt}")
+                .addHeader(
+                    "User-Agent",
+                    "${BuildConfig.APPLICATION_ID}/${BuildConfig.VERSION_NAME}"
+                )
+                .build()
 
-    chain.proceed(newRequest)
-}).build()
+        chain.proceed(newRequest)
+    }).build()
 
 private val gson = GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssX").create()
 
@@ -164,9 +167,19 @@ interface NotificationService {
     fun getUnreadNotificationsCount(): Call<Data<Int>>
 }
 
+interface UserService {
+    @GET("user/{username}")
+    fun getUser(
+        @Path("username") username: String
+    ): Call<Data<User>>
+}
+
 object TraewellingApi {
     var jwt: String = ""
     var appVersion: String = ""
+    val userService: UserService by lazy {
+        retrofit.create(UserService::class.java)
+    }
     val authService: AuthService by lazy {
         retrofit.create(AuthService::class.java)
     }

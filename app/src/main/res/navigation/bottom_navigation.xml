@@ -9,28 +9,31 @@
         android:id="@+id/dashboard_fragment"
         android:name="de.hbch.traewelling.ui.dashboard.DashboardFragment"
         android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" >
+        tools:layout="@layout/fragment_dashboard">
         <action
             android:id="@+id/action_dashboard_fragment_to_searchConnectionFragment"
             app:destination="@id/searchConnectionFragment" />
         <action
             android:id="@+id/action_dashboard_fragment_to_statusDetailFragment"
             app:destination="@id/statusDetailFragment" />
+        <action
+            android:id="@+id/action_dashboard_fragment_to_profile"
+            app:destination="@id/userProfileFragment" />
     </fragment>
     <fragment
         android:id="@+id/active_checkins_fragment"
         android:name="de.hbch.traewelling.ui.activeCheckins.ActiveCheckinsFragment"
         android:label="@string/title_active_checkins"
-        tools:layout="@layout/fragment_active_checkins" >
+        tools:layout="@layout/fragment_active_checkins">
         <action
             android:id="@+id/action_active_checkins_fragment_to_statusDetailFragment"
             app:destination="@id/statusDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/user_fragment"
-        android:name="de.hbch.traewelling.ui.user.UserFragment"
+        android:name="de.hbch.traewelling.ui.user.LoggedInAbstractUserFragment"
         android:label="@string/title_user"
-        tools:layout="@layout/fragment_user" >
+        tools:layout="@layout/fragment_user">
         <action
             android:id="@+id/action_user_fragment_to_statusDetailFragment"
             app:destination="@id/statusDetailFragment" />
@@ -48,7 +51,7 @@
         android:id="@+id/searchConnectionFragment"
         android:name="de.hbch.traewelling.ui.searchConnection.SearchConnectionFragment"
         android:label="@string/title_search_connection"
-        tools:layout="@layout/fragment_search_connection" >
+        tools:layout="@layout/fragment_search_connection">
         <action
             android:id="@+id/action_searchConnectionFragment_self"
             app:destination="@id/searchConnectionFragment"
@@ -64,7 +67,7 @@
         android:id="@+id/selectDestinationFragment"
         android:name="de.hbch.traewelling.ui.selectDestination.SelectDestinationFragment"
         android:label="@string/title_select_destination"
-        tools:layout="@layout/fragment_select_destination" >
+        tools:layout="@layout/fragment_select_destination">
         <argument
             android:name="transitionName"
             app:argType="string" />
@@ -79,7 +82,7 @@
         android:id="@+id/checkInFragment"
         android:name="de.hbch.traewelling.ui.checkIn.CheckInFragment"
         android:label="@string/check_in"
-        tools:layout="@layout/fragment_check_in" >
+        tools:layout="@layout/fragment_check_in">
         <argument
             android:name="transitionName"
             app:argType="string" />
@@ -105,6 +108,14 @@
         <argument
             android:name="userId"
             app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/userProfileFragment"
+        android:name="de.hbch.traewelling.ui.user.UserFragment"
+        android:label="@string/title_user">
+        <argument
+            android:name="userName"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"

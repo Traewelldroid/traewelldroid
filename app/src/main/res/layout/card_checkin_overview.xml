@@ -320,6 +320,7 @@
                 app:layout_constraintTop_toTopOf="@id/fav"
                 app:layout_constraintBottom_toBottomOf="@id/fav"
                 android:textSize="16sp"
+                android:onClick="@{() -> checkInCard.handleUserSelected()}"
                 tools:text="username, 31.01.2021 15:25"
                 username="@{checkIn.username}"
                 timestamp="@{checkIn.createdAt}"/>

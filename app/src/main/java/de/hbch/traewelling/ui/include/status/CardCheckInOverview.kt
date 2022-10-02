@@ -63,6 +63,13 @@ class CardCheckInOverview(
         }
     }
 
+    fun handleUserSelected() {
+        navController?.navigate(
+            R.id.userProfileFragment,
+            bundleOf("userName" to binding.checkIn?.username)
+        )
+    }
+
     fun handleCheckInSelected() {
         navController?.navigate(
             R.id.statusDetailFragment,

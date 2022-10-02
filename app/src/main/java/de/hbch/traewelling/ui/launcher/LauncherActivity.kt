@@ -1,17 +1,9 @@
 package de.hbch.traewelling.ui.launcher
 
-import android.content.DialogInterface
 import android.content.Intent
-import android.content.pm.verify.domain.DomainVerificationManager
-import android.content.pm.verify.domain.DomainVerificationUserState
 import android.net.Uri
-import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.Settings
-import android.widget.Toast
-import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.jcloquell.androidsecurestorage.SecureStorage
 import de.hbch.traewelling.shared.SharedValues
@@ -24,10 +16,11 @@ class LauncherActivity : AppCompatActivity() {
         installSplashScreen()
 
         val secureStorage = SecureStorage(this)
-        val startupActivity = when (secureStorage.getObject(SharedValues.SS_JWT, String::class.java)) {
-            null -> LoginActivity::class.java
-            else -> MainActivity::class.java
-        }
+        val startupActivity =
+            when (secureStorage.getObject(SharedValues.SS_JWT, String::class.java)) {
+                null -> LoginActivity::class.java
+                else -> MainActivity::class.java
+            }
 
         var startupIntent: Intent? = null
         val action = intent?.action
@@ -37,7 +30,14 @@ class LauncherActivity : AppCompatActivity() {
                 val data = intent?.data
                 if (data != null) {
                     startupIntent = Intent(Intent.ACTION_VIEW, Uri.EMPTY, this, startupActivity)
-                    startupIntent?.putExtra(SharedValues.EXTRA_STATUS_ID, data.lastPathSegment)
+                    if ("status" in data.pathSegments) {
+                        startupIntent?.putExtra(SharedValues.EXTRA_STATUS_ID, data.lastPathSegment)
+                    } else {
+                        startupIntent?.putExtra(
+                            SharedValues.EXTRA_USER_NAME,
+                            data.lastPathSegment?.substringAfter('@')
+                        )
+                    }
                 }
             }
         }

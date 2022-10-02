@@ -2,8 +2,9 @@ package de.hbch.traewelling.ui.dashboard
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.*
-import android.widget.Toast
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
@@ -14,8 +15,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import de.hbch.traewelling.R
 import de.hbch.traewelling.adapters.CheckInAdapter
-import de.hbch.traewelling.api.TraewellingApi
-import de.hbch.traewelling.api.models.status.StatusPage
 import de.hbch.traewelling.databinding.FragmentDashboardBinding
 import de.hbch.traewelling.shared.EventViewModel
 import de.hbch.traewelling.shared.LoggedInUserViewModel
@@ -24,9 +23,6 @@ import de.hbch.traewelling.ui.include.alert.AlertBottomSheet
 import de.hbch.traewelling.ui.include.alert.AlertType
 import de.hbch.traewelling.ui.include.cardSearchStation.SearchStationCard
 import de.hbch.traewelling.ui.include.cardSearchStation.SearchStationCardViewModel
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class DashboardFragment : Fragment() {
 
@@ -38,11 +34,11 @@ class DashboardFragment : Fragment() {
     private val dashboardFragmentViewModel: DashboardFragmentViewModel by viewModels()
     private var currentPage = 1
     private val requestPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()) {
-            isGranted ->
-            run {
-                searchStationCard.onPermissionResult(isGranted)
-            }
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        run {
+            searchStationCard.onPermissionResult(isGranted)
+        }
     }
 
     private var checkInsLoading = MutableLiveData(false)
@@ -84,6 +80,16 @@ class DashboardFragment : Fragment() {
                                     )
                             )
                     }
+                } else if (it.hasExtra(SharedValues.EXTRA_USER_NAME)) {
+                    val userName = it.getStringExtra(SharedValues.EXTRA_USER_NAME)
+                    if (userName != null) {
+                        intent.action = ""
+                        findNavController()
+                            .navigate(
+                                DashboardFragmentDirections
+                                    .actionDashboardFragmentToProfile(userName)
+                            )
+                    }
                 }
             }
         }
@@ -116,7 +122,11 @@ class DashboardFragment : Fragment() {
         }
         binding.searchCard.setOnStationSelectedCallback { station ->
             findNavController()
-                .navigate(DashboardFragmentDirections.actionDashboardFragmentToSearchConnectionFragment(station))
+                .navigate(
+                    DashboardFragmentDirections.actionDashboardFragmentToSearchConnectionFragment(
+                        station
+                    )
+                )
         }
 
         // Init recycler view
@@ -126,8 +136,8 @@ class DashboardFragment : Fragment() {
             CheckInAdapter(
                 mutableListOf(),
                 loggedInUserViewModel.userId
-            ) {
-                stationName -> searchStationCard.searchConnections(stationName)
+            ) { stationName ->
+                searchStationCard.searchConnections(stationName)
             }
 
         binding.nestedScrollViewDashboard.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, _, _, _, _ ->
