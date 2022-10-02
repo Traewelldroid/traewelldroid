@@ -1,9 +1,8 @@
 package de.hbch.traewelling.ui.checkIn
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.core.view.MenuProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import de.hbch.traewelling.R
@@ -21,6 +20,7 @@ import retrofit2.Response
 
 class EditCheckInFragment : AbstractCheckInFragment() {
     private val args: EditCheckInFragmentArgs by navArgs()
+    private lateinit var menuProvider: MenuProvider
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,7 +37,31 @@ class EditCheckInFragment : AbstractCheckInFragment() {
             viewModel!!.statusVisibility.postValue(enumValues<StatusVisibility>()[args.visibility])
             viewModel!!.statusBusiness.postValue(enumValues<StatusBusiness>()[args.business])
         }
+
+        menuProvider = object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.status_edit_menu, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.menu_also_check_in -> {
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }
+
+
+        requireActivity().addMenuProvider(menuProvider)
+
         return response
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        requireActivity().removeMenuProvider(menuProvider)
     }
 
     override fun submit() {

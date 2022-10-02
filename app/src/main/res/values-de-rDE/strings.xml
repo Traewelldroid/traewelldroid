@@ -25,6 +25,7 @@
     <string name="line_destination">%1$s nach %2$s</string>
     <string name="check_in">Einchecken</string>
     <string name="edit_status">Status bearbeiten</string>
+    <string name="change_destination">Ziel ändern</string>
     <string name="status_message">Status-Nachricht</string>
     <string name="departures_at">Abfahrten in %1$s</string>
     <string name="error_credentials">Bitte überprüfe deine Anmeldedaten</string>

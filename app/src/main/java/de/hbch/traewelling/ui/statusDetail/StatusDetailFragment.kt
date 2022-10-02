@@ -48,7 +48,6 @@ class StatusDetailFragment : Fragment() {
                 else -> false
             }
         }
-
     }
 
     override fun onCreateView(
