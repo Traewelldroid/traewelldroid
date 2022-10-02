@@ -159,7 +159,6 @@
                     android:layout_marginVertical="10dp"
                     app:layout_constraintBottom_toTopOf="@+id/end_station"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.741"
                     app:layout_constraintStart_toStartOf="@id/start_station"
                     app:layout_constraintTop_toBottomOf="@id/start_station"
                     app:layout_constraintVertical_bias="0.0">
@@ -234,16 +233,18 @@
                     <TextView
                         android:id="@+id/check_in_body"
                         style="@style/Theme.Traewelling.PrimaryColorTexts"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
+                        android:layout_marginEnd="16dp"
+                        android:gravity="center_vertical"
                         android:text="@{checkIn.body}"
                         android:textSize="16sp"
-                        app:layout_constraintWidth_max="256dp"
-                        app:layout_constraintBottom_toBottomOf="@id/icon_check_in_body"
                         app:layout_constraintStart_toEndOf="@id/icon_check_in_body"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="@id/icon_check_in_body"
-                        tools:text="Hello I am träwelling" />
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        tools:text="Hello" />
 
                     <!-- TODO: Enable this once we have current stop information -->
                     <!-- Also see: https://github.com/jheubuch/traewelling-android/issues/26 -->
