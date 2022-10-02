@@ -327,6 +327,19 @@
                     app:layout_constraintTop_toTopOf="@id/like_count" />
 
                 <ImageView
+                    android:id="@+id/btn_edit_status"
+                    style="@style/Theme.Traewelling.PrimaryColorIcons"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:onClick="@{() -> checkInCard.handleEditClicked()}"
+                    android:src="@drawable/ic_edit"
+                    android:visibility="@{viewModel.isOwnStatus ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBottom_toBottomOf="@id/btn_delete_status"
+                    app:layout_constraintStart_toEndOf="@id/btn_delete_status"
+                    app:layout_constraintTop_toTopOf="@id/btn_delete_status" />
+
+                <ImageView
                     android:id="@+id/icon_status_visibility"
                     statusVisibility="@{checkIn.visibility}"
                     android:layout_width="wrap_content"
