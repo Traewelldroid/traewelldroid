@@ -104,9 +104,7 @@ class StatusDetailFragment : Fragment() {
             args.statusId,
             { status ->
                 binding.status = status
-                if (args.statusId != -1) {
-                    requireActivity().addMenuProvider(menuProvider)
-                }
+                requireActivity().addMenuProvider(menuProvider)
             },
             { }
         )
