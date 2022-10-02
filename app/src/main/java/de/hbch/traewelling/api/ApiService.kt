@@ -3,17 +3,14 @@ package de.hbch.traewelling.api
 import com.google.gson.GsonBuilder
 import de.hbch.traewelling.BuildConfig
 import de.hbch.traewelling.api.models.Data
-import de.hbch.traewelling.api.models.event.Event
 import de.hbch.traewelling.api.models.auth.BearerToken
 import de.hbch.traewelling.api.models.auth.LoginCredentials
+import de.hbch.traewelling.api.models.event.Event
 import de.hbch.traewelling.api.models.polyline.FeatureCollection
 import de.hbch.traewelling.api.models.station.Station
 import de.hbch.traewelling.api.models.station.StationData
 import de.hbch.traewelling.api.models.statistics.PersonalStatistics
-import de.hbch.traewelling.api.models.status.CheckInRequest
-import de.hbch.traewelling.api.models.status.CheckInResponse
-import de.hbch.traewelling.api.models.status.Status
-import de.hbch.traewelling.api.models.status.StatusPage
+import de.hbch.traewelling.api.models.status.*
 import de.hbch.traewelling.api.models.trip.HafasTrainTrip
 import de.hbch.traewelling.api.models.trip.HafasTripPage
 import de.hbch.traewelling.api.models.user.User
@@ -120,6 +117,12 @@ interface CheckInService {
     fun checkIn(
         @Body checkIn: CheckInRequest
     ): Call<Data<CheckInResponse>>
+
+    @PUT("statuses/{statusId}")
+    fun updateCheckIn(
+        @Path("statusId") statusId: Int,
+        @Body update: UpdateStatusRequest
+    ): Call<Data<Status>>
 
     @POST("like/{statusId}")
     fun createFavorite(

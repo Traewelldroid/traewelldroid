@@ -1,16 +1,10 @@
 package de.hbch.traewelling.ui.include.status
 
-import android.app.Activity
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.view.LayoutInflater
-import android.widget.Toast
 import androidx.core.os.bundleOf
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.navigation.NavDirections
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.card.MaterialCardView
 import de.hbch.traewelling.R
@@ -21,10 +15,10 @@ import de.hbch.traewelling.ui.include.alert.AlertType
 import de.hbch.traewelling.ui.include.deleteStatus.DeleteStatusBottomSheet
 
 class CardCheckInOverview(
-        context: Context?,
-        attrs: AttributeSet?,
-        private val adapter: CheckInAdapter
-    ) :
+    context: Context?,
+    attrs: AttributeSet?,
+    private val adapter: CheckInAdapter
+) :
     MaterialCardView(context, attrs, 0) {
 
     val binding: CardCheckinOverviewBinding =
@@ -51,7 +45,8 @@ class CardCheckInOverview(
                 )
                 alertBottomSheet.show(fragmentManager, AlertBottomSheet.TAG)
             }, {
-                val alertBottomSheet = AlertBottomSheet(AlertType.ERROR,
+                val alertBottomSheet = AlertBottomSheet(
+                    AlertType.ERROR,
                     context.resources.getString(R.string.status_delete_failure),
                     3000
                 )
@@ -74,6 +69,21 @@ class CardCheckInOverview(
         navController?.navigate(
             R.id.statusDetailFragment,
             bundleOf(Pair("statusId", binding.checkIn?.id), Pair("userId", binding.checkIn?.userId))
+        )
+    }
+
+    fun handleEditClicked() {
+        navController?.navigate(
+            R.id.editStatusFragment,
+            bundleOf(
+                "transitionName" to binding.checkIn?.journey?.origin?.name,
+                "destination" to binding.checkIn?.journey?.destination?.name,
+                "body" to binding.checkIn?.body,
+                "business" to binding.checkIn?.business?.ordinal,
+                "visibility" to binding.checkIn?.visibility?.ordinal,
+                "line" to binding.checkIn?.journey?.line,
+                "statusId" to binding.checkIn?.id
+            )
         )
     }
 

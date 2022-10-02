@@ -1,5 +1,8 @@
 package de.hbch.traewelling.api.models.status
 
+import android.os.Parcel
+import android.os.Parcelable
+import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import de.hbch.traewelling.api.models.event.Event
 import java.util.*
@@ -18,7 +21,26 @@ data class Status(
     @SerializedName("liked") var liked: Boolean,
     @SerializedName("train") val journey: Journey,
     @SerializedName("event") val event: Event?
-)
+) : Parcelable {
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(gson.toJson(this))
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<Status> {
+        private val gson = Gson()
+        override fun createFromParcel(parcel: Parcel): Status {
+            return gson.fromJson(parcel.readString(), Status::class.java)
+        }
+
+        override fun newArray(size: Int): Array<Status?> {
+            return arrayOfNulls(size)
+        }
+    }
+}
 
 enum class StatusVisibility(val visibility: Int) {
     @SerializedName("0")

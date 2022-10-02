@@ -96,6 +96,38 @@
             app:argType="string" />
     </fragment>
     <fragment
+        android:id="@+id/editStatusFragment"
+        android:name="de.hbch.traewelling.ui.checkIn.EditCheckInFragment"
+        android:label="@string/edit_status"
+        tools:layout="@layout/fragment_check_in">
+        <action
+            android:id="@+id/action_editStatusFragment_to_statusDetailFragment"
+            app:destination="@id/statusDetailFragment"
+            app:popUpTo="@id/dashboard_fragment"
+            app:popUpToInclusive="false" />
+        <argument
+            android:name="transitionName"
+            app:argType="string" />
+        <argument
+            android:name="destination"
+            app:argType="string" />
+        <argument
+            android:name="body"
+            app:argType="string" />
+        <argument
+            android:name="line"
+            app:argType="string" />
+        <argument
+            android:name="visibility"
+            app:argType="integer" />
+        <argument
+            android:name="business"
+            app:argType="integer" />
+        <argument
+            android:name="statusId"
+            app:argType="integer" />
+    </fragment>
+    <fragment
         android:id="@+id/statusDetailFragment"
         android:name="de.hbch.traewelling.ui.statusDetail.StatusDetailFragment"
         android:label="@string/status_details">
