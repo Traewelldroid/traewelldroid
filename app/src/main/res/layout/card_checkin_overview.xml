@@ -160,9 +160,8 @@
                     app:layout_constraintBottom_toTopOf="@+id/end_station"
                     app:layout_constraintEnd_toStartOf="@+id/departure_planned_time"
                     app:layout_constraintHorizontal_bias="0.741"
-                    app:layout_constraintStart_toEndOf="@id/start_station"
-                    app:layout_constraintStart_toStartOf="@+id/start_station"
-                    app:layout_constraintTop_toBottomOf="@+id/start_station"
+                    app:layout_constraintStart_toStartOf="@id/start_station"
+                    app:layout_constraintTop_toBottomOf="@id/start_station"
                     app:layout_constraintVertical_bias="0.0">
 
                     <ImageView
@@ -170,7 +169,7 @@
                         productType="@{checkIn.journey.category}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:layout_constraintHorizontal_bias="0.081"
+                        app:layout_constraintHorizontal_bias="0.093"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
@@ -225,10 +224,9 @@
                         android:id="@+id/icon_check_in_body"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
+                        android:layout_marginTop="4dp"
                         android:src="@drawable/ic_quote_right_solid"
-                        app:layout_constraintHorizontal_bias="0.081"
+                        app:layout_constraintHorizontal_bias="0.093"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/icon_product" />
