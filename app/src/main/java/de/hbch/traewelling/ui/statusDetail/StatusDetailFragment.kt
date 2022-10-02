@@ -28,12 +28,21 @@ class StatusDetailFragment : Fragment() {
     private val menuProvider = object : MenuProvider {
         override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
             menuInflater.inflate(R.menu.status_detail_also_check_in_menu, menu)
+            if (isOwnConnection()) {
+                menu.getItem(0).isVisible = true
+            } else {
+                menu.getItem(1).isVisible = true
+            }
         }
 
         override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
             return when (menuItem.itemId) {
                 R.id.menu_also_check_in -> {
                     alsoCheckIntoThisConnection()
+                    true
+                }
+                R.id.menu_edit_check_in -> {
+                    editStatus()
                     true
                 }
                 else -> false
@@ -69,9 +78,9 @@ class StatusDetailFragment : Fragment() {
                     }
                     polylines.add(polyline)
                     val color = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-                                    R.color.material_dynamic_primary40
-                                else
-                                    R.color.traewelling
+                        R.color.material_dynamic_primary40
+                    else
+                        R.color.traewelling
 
                     polyline.outlinePaint.color = resources.getColor(
                         color,
@@ -96,9 +105,7 @@ class StatusDetailFragment : Fragment() {
             args.statusId,
             { status ->
                 binding.status = status
-                if (canAlsoCheckIntoThisConnection()) {
-                    requireActivity().addMenuProvider(menuProvider)
-                }
+                requireActivity().addMenuProvider(menuProvider)
             },
             { }
         )
@@ -111,12 +118,30 @@ class StatusDetailFragment : Fragment() {
         requireActivity().removeMenuProvider(menuProvider)
     }
 
-    private fun canAlsoCheckIntoThisConnection(): Boolean {
+    private fun isOwnConnection(): Boolean {
         return (userViewModel.loggedInUser.value?.id ?: 0) != args.userId;
     }
 
+    private fun editStatus() {
+        if (isOwnConnection())
+            return
+
+        val status = binding.status!!
+        findNavController().navigate(
+            StatusDetailFragmentDirections.actionStatusDetailFragmentToEditStatusFragment(
+                status.journey.origin.name,
+                status.journey.destination.name,
+                status.body,
+                status.journey.line,
+                status.visibility.ordinal,
+                status.business.ordinal,
+                status.id
+            )
+        )
+    }
+
     private fun alsoCheckIntoThisConnection() {
-        if (!canAlsoCheckIntoThisConnection())
+        if (!isOwnConnection())
             return
 
         val status = binding.status!!
@@ -128,6 +153,11 @@ class StatusDetailFragment : Fragment() {
         checkInViewModel.destinationStationId = status.journey.destination.id
         checkInViewModel.arrivalTime = status.journey.destination.arrivalPlanned
 
-        findNavController().navigate(StatusDetailFragmentDirections.actionStatusDetailFragmentToCheckInFragment("", status.journey.destination.name))
+        findNavController().navigate(
+            StatusDetailFragmentDirections.actionStatusDetailFragmentToCheckInFragment(
+                "",
+                status.journey.destination.name
+            )
+        )
     }
 }

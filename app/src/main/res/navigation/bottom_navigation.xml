@@ -121,7 +121,8 @@
             app:argType="string" />
         <argument
             android:name="body"
-            app:argType="string" />
+            app:argType="string"
+            app:nullable="true" />
         <argument
             android:name="line"
             app:argType="string" />
@@ -145,6 +146,9 @@
         <action
             android:id="@+id/action_statusDetailFragment_to_checkInFragment"
             app:destination="@id/checkInFragment" />
+        <action
+            android:id="@+id/action_statusDetailFragment_to_editStatusFragment"
+            app:destination="@id/editStatusFragment" />
         <argument
             android:name="userId"
             app:argType="integer" />

@@ -1,9 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
     <item
         android:id="@+id/menu_also_check_in"
         android:icon="@drawable/ic_also_check_in"
         android:title="@string/title_also_check_in"
-        app:showAsAction="always"/>
+        android:visible="false"
+        app:showAsAction="always"
+        tools:visible="true" />
+    <item
+        android:id="@+id/menu_edit_check_in"
+        android:icon="@drawable/ic_edit"
+        android:title="@string/title_edit"
+        android:visible="false"
+        app:showAsAction="always"
+        tools:visible="true" />
 </menu>
