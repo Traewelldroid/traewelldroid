@@ -1,6 +1,7 @@
 package de.hbch.traewelling.adapters
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.findViewTreeLifecycleOwner
@@ -9,6 +10,7 @@ import de.hbch.traewelling.api.models.status.Status
 import de.hbch.traewelling.databinding.CardCheckinOverviewBinding
 import de.hbch.traewelling.ui.include.status.CardCheckInOverview
 import de.hbch.traewelling.ui.include.status.StatusCardViewModel
+import java.util.*
 
 class CheckInAdapter(
     val checkIns: MutableList<Status>,
@@ -66,8 +68,12 @@ class CheckInAdapter(
             loggedInUserId.observe(binding.lifecycleOwner!!) {
                 binding.viewModel!!.isOwnStatus.postValue(it == checkIn.userId)
             }
-            if (checkIn.body == null || checkIn.body == "")
-                binding.nextStation.textSize = 0F
+            if (checkIn.body.isNullOrBlank()) {
+                binding.checkInBody.visibility = View.GONE
+                binding.iconCheckInBody.visibility = View.GONE
+            }
+            if (checkIn.journey.destination.arrival.before(Date()))
+                binding.nextStation.visibility = View.GONE
             binding.executePendingBindings()
         }
     }
