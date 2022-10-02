@@ -83,7 +83,7 @@
                     android:gravity="start"
                     android:onClick="@{() -> checkInCard.onStationNameClicked(checkIn.journey.origin.name)}"
                     android:text="@{checkIn.journey.origin.name}"
-                    app:layout_constraintEnd_toStartOf="@+id/departure_planned_time"
+                    app:layout_constraintEnd_toStartOf="@id/departure_planned_time"
                     app:layout_constraintStart_toEndOf="@id/perlschnur_start"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="Start Hbf" />
@@ -98,8 +98,8 @@
                     android:text="@{checkIn.journey.destination.name}"
                     app:layout_constraintEnd_toStartOf="@+id/arrival_planned_time"
                     app:layout_constraintStart_toStartOf="@id/start_station"
-                    app:layout_constraintTop_toTopOf="@id/perlschnur_end"
-                    tools:text="Ende Hbf" />
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    tools:text="Start Hbf" />
 
                 <TextView
                     android:id="@+id/departure_time"
@@ -174,7 +174,6 @@
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        tools:layout_editor_absoluteY="-2dp"
                         tools:srcCompat="@drawable/ic_suburban" />
 
                     <TextView
