@@ -15,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import de.hbch.traewelling.R
 import de.hbch.traewelling.adapters.CheckInAdapter
+import de.hbch.traewelling.api.models.trip.ProductType
 import de.hbch.traewelling.databinding.FragmentDashboardBinding
 import de.hbch.traewelling.shared.EventViewModel
 import de.hbch.traewelling.shared.LoggedInUserViewModel
@@ -88,6 +89,21 @@ class DashboardFragment : Fragment() {
                             .navigate(
                                 DashboardFragmentDirections
                                     .actionDashboardFragmentToProfile(userName)
+                            )
+                    }
+                } else if (it.hasExtra(SharedValues.EXTRA_STATION_ID)) {
+                    val stationId = it.getStringExtra(SharedValues.EXTRA_STATION_ID)
+                    val travelType = it.getStringExtra(SharedValues.EXTRA_TRAVEL_TYPE)
+                        ?.let { enumValueOf<ProductType>(it.uppercase()) }
+                    if (stationId != null) {
+                        intent.action = ""
+                        findNavController()
+                            .navigate(
+                                DashboardFragmentDirections
+                                    .actionDashboardFragmentToSearchConnectionFragment(
+                                        stationId,
+                                        travelType ?: ProductType.ALL
+                                    )
                             )
                     }
                 }

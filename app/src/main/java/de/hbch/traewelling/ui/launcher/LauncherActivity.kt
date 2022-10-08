@@ -32,6 +32,20 @@ class LauncherActivity : AppCompatActivity() {
                     startupIntent = Intent(Intent.ACTION_VIEW, Uri.EMPTY, this, startupActivity)
                     if ("status" in data.pathSegments) {
                         startupIntent?.putExtra(SharedValues.EXTRA_STATUS_ID, data.lastPathSegment)
+                    } else if ("stationboard" in data.pathSegments) {
+                        val station = data.getQueryParameter("station")
+                        startupIntent?.putExtra(
+                            SharedValues.EXTRA_STATION_ID,
+                            station
+                        )
+                        val travelType =
+                            data.getQueryParameter("travelType")
+                        if (travelType != null) {
+                            startupIntent?.putExtra(
+                                SharedValues.EXTRA_TRAVEL_TYPE,
+                                travelType
+                            )
+                        }
                     } else {
                         startupIntent?.putExtra(
                             SharedValues.EXTRA_USER_NAME,
@@ -40,11 +54,11 @@ class LauncherActivity : AppCompatActivity() {
                     }
                 }
             }
-        }
-        if (startupIntent == null)
-            startupIntent = Intent(this, startupActivity)
+            if (startupIntent == null)
+                startupIntent = Intent(this, startupActivity)
 
-        startActivity(startupIntent)
-        finish()
+            startActivity(startupIntent)
+            finish()
+        }
     }
 }

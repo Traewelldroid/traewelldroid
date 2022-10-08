@@ -17,6 +17,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.chip.Chip
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
@@ -55,30 +56,21 @@ class SearchConnectionFragment : Fragment() {
         binding.searchCard.binding.editTextSearchStation.setText(connections.meta.station.name)
         val adapter = binding.recyclerViewConnections.adapter as ConnectionAdapter
         adapter.addNewConnections(connections.data)
+        val availableTypes = connections.data.mapNotNull { it.line?.product }
+        fun Chip.setStatus(vararg types: ProductType) {
+            visibility = if (types.any { it in availableTypes }) VISIBLE else GONE
+            if (args.travelType in types) {
+                performClick()
+            }
+        }
         binding.executePendingBindings()
-        binding.chipFilterBus.visibility = if (connections.data.any {
-            it.line?.product == ProductType.BUS
-            })  VISIBLE else GONE
-        binding.chipFilterTram.visibility = if (connections.data.any {
-                it.line?.product == ProductType.TRAM
-            })  VISIBLE else GONE
-        binding.chipFilterFerry.visibility = if (connections.data.any {
-                it.line?.product == ProductType.FERRY
-            })  VISIBLE else GONE
-        binding.chipFilterRegional.visibility = if (connections.data.any {
-                it.line?.product == ProductType.REGIONAL ||
-                it.line?.product == ProductType.REGIONAL_EXPRESS
-            })  VISIBLE else GONE
-        binding.chipFilterSuburban.visibility = if (connections.data.any {
-                it.line?.product == ProductType.SUBURBAN
-            })  VISIBLE else GONE
-        binding.chipFilterSubway.visibility = if (connections.data.any {
-                it.line?.product == ProductType.SUBWAY
-            })  VISIBLE else GONE
-        binding.chipFilterExpress.visibility = if (connections.data.any {
-                it.line?.product == ProductType.NATIONAL
-                        || it.line?.product == ProductType.NATIONAL_EXPRESS
-            })  VISIBLE else GONE
+        binding.chipFilterBus.setStatus(ProductType.BUS)
+        binding.chipFilterTram.setStatus(ProductType.TRAM)
+        binding.chipFilterFerry.setStatus(ProductType.FERRY)
+        binding.chipFilterRegional.setStatus(ProductType.REGIONAL, ProductType.REGIONAL_EXPRESS)
+        binding.chipFilterSuburban.setStatus(ProductType.SUBURBAN)
+        binding.chipFilterSubway.setStatus(ProductType.SUBWAY)
+        binding.chipFilterExpress.setStatus(ProductType.NATIONAL, ProductType.NATIONAL_EXPRESS)
 
         binding.chipGroupFilter.visibility = if (connections.data.isNotEmpty())
             VISIBLE else GONE
