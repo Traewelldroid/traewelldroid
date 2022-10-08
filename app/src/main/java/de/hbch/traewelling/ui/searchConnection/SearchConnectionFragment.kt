@@ -23,19 +23,18 @@ import com.google.android.material.timepicker.TimeFormat
 import com.google.android.material.transition.Hold
 import de.hbch.traewelling.R
 import de.hbch.traewelling.adapters.ConnectionAdapter
-import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.api.models.trip.HafasTripPage
 import de.hbch.traewelling.api.models.trip.ProductType
-import de.hbch.traewelling.databinding.BottomSheetHomelandStationBinding
 import de.hbch.traewelling.databinding.FragmentSearchConnectionBinding
-import de.hbch.traewelling.models.Connection
 import de.hbch.traewelling.shared.CheckInViewModel
 import de.hbch.traewelling.shared.LoggedInUserViewModel
-import de.hbch.traewelling.ui.checkIn.CheckInFragmentDirections
 import de.hbch.traewelling.ui.include.cardSearchStation.SearchStationCard
 import de.hbch.traewelling.ui.include.cardSearchStation.SearchStationCardViewModel
 import de.hbch.traewelling.ui.include.homelandStation.HomelandStationBottomSheet
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.*
 
 class SearchConnectionFragment : Fragment() {
@@ -57,28 +56,28 @@ class SearchConnectionFragment : Fragment() {
         adapter.addNewConnections(connections.data)
         binding.executePendingBindings()
         binding.chipFilterBus.visibility = if (connections.data.any {
-            it.line?.product == ProductType.BUS
-            })  VISIBLE else GONE
+                it.line?.product == ProductType.BUS
+            }) VISIBLE else GONE
         binding.chipFilterTram.visibility = if (connections.data.any {
                 it.line?.product == ProductType.TRAM
-            })  VISIBLE else GONE
+            }) VISIBLE else GONE
         binding.chipFilterFerry.visibility = if (connections.data.any {
                 it.line?.product == ProductType.FERRY
-            })  VISIBLE else GONE
+            }) VISIBLE else GONE
         binding.chipFilterRegional.visibility = if (connections.data.any {
                 it.line?.product == ProductType.REGIONAL ||
-                it.line?.product == ProductType.REGIONAL_EXPRESS
-            })  VISIBLE else GONE
+                        it.line?.product == ProductType.REGIONAL_EXPRESS
+            }) VISIBLE else GONE
         binding.chipFilterSuburban.visibility = if (connections.data.any {
                 it.line?.product == ProductType.SUBURBAN
-            })  VISIBLE else GONE
+            }) VISIBLE else GONE
         binding.chipFilterSubway.visibility = if (connections.data.any {
                 it.line?.product == ProductType.SUBWAY
-            })  VISIBLE else GONE
+            }) VISIBLE else GONE
         binding.chipFilterExpress.visibility = if (connections.data.any {
                 it.line?.product == ProductType.NATIONAL
                         || it.line?.product == ProductType.NATIONAL_EXPRESS
-            })  VISIBLE else GONE
+            }) VISIBLE else GONE
 
         binding.chipGroupFilter.visibility = if (connections.data.isNotEmpty())
             VISIBLE else GONE
@@ -86,8 +85,8 @@ class SearchConnectionFragment : Fragment() {
             VISIBLE else GONE
     }
     private val requestPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()) {
-            isGranted ->
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
         run {
             searchStationCard.onPermissionResult(isGranted)
         }
@@ -129,10 +128,10 @@ class SearchConnectionFragment : Fragment() {
         searchStationCard = binding.searchCard
         searchStationCard.viewModel = searchStationCardViewModel
         searchStationCard.binding.card = searchStationCard
-        searchStationCard.setOnStationSelectedCallback { station ->
+        searchStationCard.setOnStationSelectedCallback { station, date ->
             searchConnections(
                 station,
-                currentSearchDate
+                date ?: currentSearchDate
             )
         }
         searchStationCard.requestPermissionCallback = { permission ->
@@ -144,21 +143,28 @@ class SearchConnectionFragment : Fragment() {
         binding.chipGroupFilter.setOnCheckedStateChangeListener { _, checkedIds ->
             val adapter = binding.recyclerViewConnections.adapter as ConnectionAdapter
             val checkedId = if (checkedIds.size == 0) null else checkedIds[0]
-            adapter.applyFilter(when(checkedId) {
-                R.id.chip_filter_bus -> ProductType.BUS
-                R.id.chip_filter_express -> ProductType.LONG_DISTANCE
-                R.id.chip_filter_ferry -> ProductType.FERRY
-                R.id.chip_filter_regional -> ProductType.REGIONAL
-                R.id.chip_filter_suburban -> ProductType.SUBURBAN
-                R.id.chip_filter_subway -> ProductType.SUBWAY
-                R.id.chip_filter_tram -> ProductType.TRAM
-                else -> null
-            })
+            adapter.applyFilter(
+                when (checkedId) {
+                    R.id.chip_filter_bus -> ProductType.BUS
+                    R.id.chip_filter_express -> ProductType.LONG_DISTANCE
+                    R.id.chip_filter_ferry -> ProductType.FERRY
+                    R.id.chip_filter_regional -> ProductType.REGIONAL
+                    R.id.chip_filter_suburban -> ProductType.SUBURBAN
+                    R.id.chip_filter_subway -> ProductType.SUBWAY
+                    R.id.chip_filter_tram -> ProductType.TRAM
+                    else -> null
+                }
+            )
         }
 
         val connectionRecyclerView = binding.recyclerViewConnections
         connectionRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        connectionRecyclerView.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
+        connectionRecyclerView.addItemDecoration(
+            DividerItemDecoration(
+                requireContext(),
+                DividerItemDecoration.VERTICAL
+            )
+        )
         binding.recyclerViewConnections.adapter =
             ConnectionAdapter(mutableListOf()) { itemView, connection ->
                 checkInViewModel.reset()
@@ -183,10 +189,14 @@ class SearchConnectionFragment : Fragment() {
             viewModel = (this@SearchConnectionFragment).viewModel
         }
 
-        val cal = Calendar.getInstance()
-        cal.time = Date()
-        cal.add(Calendar.MINUTE, -5)
-        currentSearchDate = cal.time
+        if (args.date != null) {
+            currentSearchDate = args.date!!
+        } else {
+            val cal = Calendar.getInstance()
+            cal.time = Date()
+            cal.add(Calendar.MINUTE, -5)
+            currentSearchDate = cal.time
+        }
         searchConnections(
             binding.stationName.toString(),
             currentSearchDate
@@ -246,10 +256,12 @@ class SearchConnectionFragment : Fragment() {
                 .setHour(currentDate.get(Calendar.HOUR_OF_DAY))
                 .setMinute(currentDate.get(Calendar.MINUTE))
 
-            timePickerBuilder.setTimeFormat(when (is24HourFormat(requireContext())) {
-                true -> TimeFormat.CLOCK_24H
-                false -> TimeFormat.CLOCK_12H
-            })
+            timePickerBuilder.setTimeFormat(
+                when (is24HourFormat(requireContext())) {
+                    true -> TimeFormat.CLOCK_24H
+                    false -> TimeFormat.CLOCK_12H
+                }
+            )
 
             val timePicker = timePickerBuilder.build()
 

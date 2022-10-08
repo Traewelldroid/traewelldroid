@@ -31,7 +31,7 @@ class ActiveCheckinsFragment : Fragment() {
         recyclerView.adapter = CheckInAdapter(
             mutableListOf(),
             loggedInUserViewModel.userId
-        ) { }
+        ) { _, _ -> }
 
         getActiveCheckins()
 
