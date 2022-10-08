@@ -40,7 +40,7 @@ class LoggedInUserViewModel : UserViewModel() {
             })
     }
 
-    fun getLastVisitedStations() {
+    fun getLastVisitedStations(onDone: (List<Station>) -> Unit) {
         TraewellingApi.authService.getLastVisitedStations()
             .enqueue(object : Callback<Data<List<Station>>> {
                 override fun onResponse(
@@ -51,6 +51,7 @@ class LoggedInUserViewModel : UserViewModel() {
                         val stations = response.body()
                         if (stations != null) {
                             _lastVisitedStations.postValue(stations.data)
+                            onDone(stations.data)
                         }
                     }
                 }

@@ -24,6 +24,7 @@ import de.hbch.traewelling.ui.include.alert.AlertBottomSheet
 import de.hbch.traewelling.ui.include.alert.AlertType
 import de.hbch.traewelling.ui.include.cardSearchStation.SearchStationCard
 import de.hbch.traewelling.ui.include.cardSearchStation.SearchStationCardViewModel
+import de.hbch.traewelling.util.publishStationShortcuts
 
 class DashboardFragment : Fragment() {
 
@@ -58,7 +59,9 @@ class DashboardFragment : Fragment() {
             requestPermissionLauncher.launch(permission)
         }
         loggedInUserViewModel.getLoggedInUser()
-        loggedInUserViewModel.getLastVisitedStations()
+        loggedInUserViewModel.getLastVisitedStations {
+            publishStationShortcuts(requireContext(), it)
+        }
         eventViewModel.activeEvents()
 
         binding.apply {
