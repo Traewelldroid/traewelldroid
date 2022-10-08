@@ -1,5 +1,6 @@
 package de.hbch.traewelling.ui.statusDetail
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.*
@@ -43,6 +44,24 @@ class StatusDetailFragment : Fragment() {
                 }
                 R.id.menu_edit_check_in -> {
                     editStatus()
+                    true
+                }
+                R.id.menu_share_check_in -> {
+                    val intent = Intent(Intent.ACTION_SEND).apply {
+                        type = "text/plain"
+                        flags = Intent.FLAG_ACTIVITY_NEW_DOCUMENT
+                        putExtra(
+                            Intent.EXTRA_TEXT,
+                            "https://traewelling.de/status/${binding.status?.id}"
+                        )
+                    }
+
+                    startActivity(
+                        Intent.createChooser(
+                            intent,
+                            resources.getString(R.string.title_share)
+                        )
+                    )
                     true
                 }
                 else -> false

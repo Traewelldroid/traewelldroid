@@ -7,13 +7,20 @@
         android:icon="@drawable/ic_also_check_in"
         android:title="@string/title_also_check_in"
         android:visible="false"
-        app:showAsAction="always"
+        app:showAsAction="never"
         tools:visible="true" />
     <item
         android:id="@+id/menu_edit_check_in"
         android:icon="@drawable/ic_edit"
         android:title="@string/title_edit"
         android:visible="false"
-        app:showAsAction="always"
+        app:showAsAction="never"
+        tools:visible="true" />
+    <item
+        android:id="@+id/menu_share_check_in"
+        android:icon="@drawable/ic_share"
+        android:title="@string/title_share"
+        android:visible="true"
+        app:showAsAction="never"
         tools:visible="true" />
 </menu>
