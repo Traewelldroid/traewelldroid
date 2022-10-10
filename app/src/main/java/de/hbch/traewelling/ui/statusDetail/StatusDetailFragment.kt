@@ -50,10 +50,8 @@ class StatusDetailFragment : Fragment() {
                     val intent = Intent(Intent.ACTION_SEND).apply {
                         type = "text/plain"
                         flags = Intent.FLAG_ACTIVITY_NEW_DOCUMENT
-                        putExtra(
-                            Intent.EXTRA_TEXT,
-                            "https://traewelling.de/status/${binding.status?.id}"
-                        )
+                        putExtra(Intent.EXTRA_TEXT, binding.status.socialText)
+                        putExtra(Intent.EXTRA_SUBJECT, "https://traewelling.de/status/${binding.status?.id}")
                     }
 
                     startActivity(
