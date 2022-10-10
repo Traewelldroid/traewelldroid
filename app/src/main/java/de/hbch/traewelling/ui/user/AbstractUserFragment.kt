@@ -32,7 +32,7 @@ abstract class AbstractUserFragment : Fragment() {
         binding.recyclerViewCheckIn.adapter = CheckInAdapter(
             mutableListOf(),
             viewModel.userId
-        ) {}
+        ) { _, _ -> }
         binding.nestedScrollViewUser.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, _, _, _, _ ->
             val vw = v.getChildAt(v.childCount - 1)
             val diff = (vw?.bottom?.minus((v.height + v.scrollY)))

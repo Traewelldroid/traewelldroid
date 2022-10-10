@@ -1,21 +1,20 @@
 package de.hbch.traewelling.adapters
 
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import de.hbch.traewelling.api.models.status.Status
-import de.hbch.traewelling.databinding.CardCheckinOverviewBinding
 import de.hbch.traewelling.ui.include.status.CardCheckInOverview
 import de.hbch.traewelling.ui.include.status.StatusCardViewModel
+import de.hbch.traewelling.util.StationNameClickListener
 import java.util.*
 
 class CheckInAdapter(
     val checkIns: MutableList<Status>,
     private val loggedInUserId: LiveData<Int>,
-    private val onStationNameClickedListener: (String) -> Unit
+    private val onStationNameClickedListener: StationNameClickListener
     )
     : RecyclerView.Adapter<CheckInAdapter.CheckInViewHolder>() {
 
@@ -72,7 +71,7 @@ class CheckInAdapter(
                 binding.checkInBody.visibility = View.GONE
                 binding.iconCheckInBody.visibility = View.GONE
             }
-            if (checkIn.journey.destination.arrival.before(Date()))
+            if (checkIn.journey.destination.arrivalSave.before(Date()))
                 binding.nextStation.visibility = View.GONE
             binding.executePendingBindings()
         }

@@ -31,16 +31,18 @@ import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.shared.PermissionResultReceiver
 import de.hbch.traewelling.ui.include.alert.AlertBottomSheet
 import de.hbch.traewelling.ui.include.alert.AlertType
+import de.hbch.traewelling.util.StationNameClickListener
+import java.util.Date
 
 class SearchStationCard(
-        context: Context,
-        attrs: AttributeSet? = null
-    ) : MaterialCardView(context, attrs), LocationListener, PermissionResultReceiver {
+    context: Context,
+    attrs: AttributeSet? = null
+) : MaterialCardView(context, attrs), LocationListener, PermissionResultReceiver {
 
     private var locationManager: LocationManager? = null
     var requestPermissionCallback: (String) -> Unit = {}
 
-    private var onStationSelectedCallback: (String) -> Unit = {}
+    private var onStationSelectedCallback: StationNameClickListener = { _, _ -> }
     private lateinit var _loggedInUserViewModel: LoggedInUserViewModel
 
     val binding = CardSearchStationBinding.inflate(
@@ -104,8 +106,9 @@ class SearchStationCard(
         if (loggedInUserViewModel.loggedInUser.value?.home != null)
             hasHomelandStation = true
         if (loggedInUserViewModel.lastVisitedStations.value != null &&
-                loggedInUserViewModel.lastVisitedStations.value?.size!! > 0)
-                    hasLastVisitedStations = true
+            loggedInUserViewModel.lastVisitedStations.value?.size!! > 0
+        )
+            hasLastVisitedStations = true
 
         if (hasLastVisitedStations) {
             // Show dropdown
@@ -136,7 +139,8 @@ class SearchStationCard(
                                 Menu.NONE,
                                 station.name
                             )
-                            popupMenu.menu.findItem(menuIndex + index)?.setIcon(R.drawable.ic_history)
+                            popupMenu.menu.findItem(menuIndex + index)
+                                ?.setIcon(R.drawable.ic_history)
                         }
                 }
                 popupMenu.setOnMenuItemClickListener { item ->
@@ -175,35 +179,37 @@ class SearchStationCard(
     }
 
     fun findNearbyStations() {
-        when (ContextCompat.checkSelfPermission(context,
-            android.Manifest.permission.ACCESS_FINE_LOCATION)) {
-                PackageManager.PERMISSION_GRANTED -> {
-                    getCurrentLocation()
+        when (ContextCompat.checkSelfPermission(
+            context,
+            android.Manifest.permission.ACCESS_FINE_LOCATION
+        )) {
+            PackageManager.PERMISSION_GRANTED -> {
+                getCurrentLocation()
+            }
+            PackageManager.PERMISSION_DENIED -> {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(
+                        context as FragmentActivity,
+                        android.Manifest.permission.ACCESS_FINE_LOCATION
+                    )
+                ) {
+                    val alertBottomSheet = AlertBottomSheet(
+                        AlertType.ERROR,
+                        context.getString(R.string.error_missing_location_permission),
+                        3000
+                    )
+                    alertBottomSheet.show(
+                        (context as FragmentActivity).supportFragmentManager,
+                        AlertBottomSheet.TAG
+                    )
+                } else {
+                    requestPermissionCallback(android.Manifest.permission.ACCESS_FINE_LOCATION)
                 }
-                PackageManager.PERMISSION_DENIED -> {
-                    if (ActivityCompat.shouldShowRequestPermissionRationale(
-                            context as FragmentActivity,
-                            android.Manifest.permission.ACCESS_FINE_LOCATION
-                        )
-                    ) {
-                        val alertBottomSheet = AlertBottomSheet(
-                            AlertType.ERROR,
-                            context.getString(R.string.error_missing_location_permission),
-                            3000
-                        )
-                        alertBottomSheet.show(
-                            (context as FragmentActivity).supportFragmentManager,
-                            AlertBottomSheet.TAG
-                        )
-                    } else {
-                        requestPermissionCallback(android.Manifest.permission.ACCESS_FINE_LOCATION)
-                    }
-                }
+            }
         }
     }
 
-    fun searchConnections(station: String) {
-        onStationSelectedCallback(station)
+    fun searchConnections(station: String, date: Date? = null) {
+        onStationSelectedCallback(station, date)
     }
 
     fun searchConnections() {
@@ -226,7 +232,7 @@ class SearchStationCard(
         locationManager?.requestLocationUpdates(provider, 0L, 0F, this)
     }
 
-    fun setOnStationSelectedCallback(callback: (String) -> Unit) {
+    fun setOnStationSelectedCallback(callback: StationNameClickListener) {
         onStationSelectedCallback = callback
     }
 

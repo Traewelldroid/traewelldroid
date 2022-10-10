@@ -13,6 +13,8 @@ import de.hbch.traewelling.databinding.CardCheckinOverviewBinding
 import de.hbch.traewelling.ui.include.alert.AlertBottomSheet
 import de.hbch.traewelling.ui.include.alert.AlertType
 import de.hbch.traewelling.ui.include.deleteStatus.DeleteStatusBottomSheet
+import de.hbch.traewelling.util.StationNameClickListener
+import java.util.Date
 
 class CardCheckInOverview(
     context: Context?,
@@ -28,7 +30,7 @@ class CardCheckInOverview(
     private val fragmentManager get() = (context as FragmentActivity).supportFragmentManager
     private val navController get() = fragmentManager.primaryNavigationFragment?.findNavController()
 
-    private var onStationNameClickedListener: (String) -> Unit = {}
+    private var onStationNameClickedListener: StationNameClickListener = { _, _ -> }
 
     fun handleDeleteClicked() {
         val bottomSheet = DeleteStatusBottomSheet { bottomSheet ->
@@ -87,11 +89,14 @@ class CardCheckInOverview(
         )
     }
 
-    fun onStationNameClicked(stationName: String) {
-        onStationNameClickedListener(stationName)
+    fun onStationNameClicked(stationName: String) =
+        onStationNameClicked(stationName, null)
+
+    fun onStationNameClicked(stationName: String, date: Date?) {
+        onStationNameClickedListener(stationName, date)
     }
 
-    fun setOnStationNameClickedListener(listener: (String) -> Unit) {
+    fun setOnStationNameClickedListener(listener: StationNameClickListener) {
         onStationNameClickedListener = listener
     }
 }

@@ -65,6 +65,29 @@ class SearchConnectionFragment : Fragment() {
             }
         }
         binding.executePendingBindings()
+        binding.chipFilterBus.visibility = if (connections.data.any {
+                it.line?.product == ProductType.BUS
+            }) VISIBLE else GONE
+        binding.chipFilterTram.visibility = if (connections.data.any {
+                it.line?.product == ProductType.TRAM
+            }) VISIBLE else GONE
+        binding.chipFilterFerry.visibility = if (connections.data.any {
+                it.line?.product == ProductType.FERRY
+            }) VISIBLE else GONE
+        binding.chipFilterRegional.visibility = if (connections.data.any {
+                it.line?.product == ProductType.REGIONAL ||
+                        it.line?.product == ProductType.REGIONAL_EXPRESS
+            }) VISIBLE else GONE
+        binding.chipFilterSuburban.visibility = if (connections.data.any {
+                it.line?.product == ProductType.SUBURBAN
+            }) VISIBLE else GONE
+        binding.chipFilterSubway.visibility = if (connections.data.any {
+                it.line?.product == ProductType.SUBWAY
+            }) VISIBLE else GONE
+        binding.chipFilterExpress.visibility = if (connections.data.any {
+                it.line?.product == ProductType.NATIONAL
+                        || it.line?.product == ProductType.NATIONAL_EXPRESS
+            }) VISIBLE else GONE
         binding.chipFilterBus.setStatus(ProductType.BUS)
         binding.chipFilterTram.setStatus(ProductType.TRAM)
         binding.chipFilterFerry.setStatus(ProductType.FERRY)
@@ -122,10 +145,10 @@ class SearchConnectionFragment : Fragment() {
         searchStationCard = binding.searchCard
         searchStationCard.viewModel = searchStationCardViewModel
         searchStationCard.binding.card = searchStationCard
-        searchStationCard.setOnStationSelectedCallback { station ->
+        searchStationCard.setOnStationSelectedCallback { station, date ->
             searchConnections(
                 station,
-                currentSearchDate
+                date ?: currentSearchDate
             )
         }
         searchStationCard.requestPermissionCallback = { permission ->
@@ -183,10 +206,14 @@ class SearchConnectionFragment : Fragment() {
             viewModel = (this@SearchConnectionFragment).viewModel
         }
 
-        val cal = Calendar.getInstance()
-        cal.time = Date()
-        cal.add(Calendar.MINUTE, -5)
-        currentSearchDate = cal.time
+        if (args.date != null) {
+            currentSearchDate = args.date!!
+        } else {
+            val cal = Calendar.getInstance()
+            cal.time = Date()
+            cal.add(Calendar.MINUTE, -5)
+            currentSearchDate = cal.time
+        }
         searchConnections(
             binding.stationName.toString(),
             currentSearchDate
