@@ -6,4 +6,6 @@ object SharedValues {
     val SS_HASHTAG = "HASHTAG"
     val EXTRA_STATUS_ID = "STATUS_ID"
     val EXTRA_USER_NAME = "USER_NAME"
+    val EXTRA_STATION_ID = "EXTRA_STATION_ID"
+    val EXTRA_TRAVEL_TYPE = "EXTRA_TRAVEL_TYPE"
 }

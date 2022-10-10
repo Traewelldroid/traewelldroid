@@ -15,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import de.hbch.traewelling.R
 import de.hbch.traewelling.adapters.CheckInAdapter
+import de.hbch.traewelling.api.models.trip.ProductType
 import de.hbch.traewelling.databinding.FragmentDashboardBinding
 import de.hbch.traewelling.shared.EventViewModel
 import de.hbch.traewelling.shared.LoggedInUserViewModel
@@ -23,6 +24,7 @@ import de.hbch.traewelling.ui.include.alert.AlertBottomSheet
 import de.hbch.traewelling.ui.include.alert.AlertType
 import de.hbch.traewelling.ui.include.cardSearchStation.SearchStationCard
 import de.hbch.traewelling.ui.include.cardSearchStation.SearchStationCardViewModel
+import de.hbch.traewelling.util.publishStationShortcuts
 
 class DashboardFragment : Fragment() {
 
@@ -57,7 +59,9 @@ class DashboardFragment : Fragment() {
             requestPermissionLauncher.launch(permission)
         }
         loggedInUserViewModel.getLoggedInUser()
-        loggedInUserViewModel.getLastVisitedStations()
+        loggedInUserViewModel.getLastVisitedStations {
+            publishStationShortcuts(requireContext(), it)
+        }
         eventViewModel.activeEvents()
 
         binding.apply {
@@ -88,6 +92,21 @@ class DashboardFragment : Fragment() {
                             .navigate(
                                 DashboardFragmentDirections
                                     .actionDashboardFragmentToProfile(userName)
+                            )
+                    }
+                } else if (it.hasExtra(SharedValues.EXTRA_STATION_ID)) {
+                    val stationId = it.getStringExtra(SharedValues.EXTRA_STATION_ID)
+                    val travelType = it.getStringExtra(SharedValues.EXTRA_TRAVEL_TYPE)
+                        ?.let { enumValueOf<ProductType>(it.uppercase()) }
+                    if (stationId != null) {
+                        intent.action = ""
+                        findNavController()
+                            .navigate(
+                                DashboardFragmentDirections
+                                    .actionDashboardFragmentToSearchConnectionFragment(
+                                        stationId,
+                                        travelType ?: ProductType.ALL
+                                    )
                             )
                     }
                 }
