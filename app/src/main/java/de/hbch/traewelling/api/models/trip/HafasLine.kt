@@ -14,6 +14,8 @@ data class HafasLine(
 )
 
 enum class ProductType {
+    @SerializedName("all")
+    ALL,
     @SerializedName("ferry")
     FERRY,
     @SerializedName("bus")

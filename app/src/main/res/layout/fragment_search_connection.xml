@@ -95,7 +95,7 @@
                         android:layout_margin="16dp"
                         android:src="@drawable/ic_home"
                         style="@style/Theme.Traewelling.PrimaryColorIcons"
-                        android:onClick="@{() -> searchConnectionFragment.setHomelandStation()}"/>
+                        android:onClick="@{() -> searchConnectionFragment.setHomelandStation(context)}"/>
 
                     <com.google.android.material.divider.MaterialDivider
                         android:layout_width="match_parent"

@@ -78,27 +78,6 @@ class LoggedInAbstractUserFragment : AbstractUserFragment() {
         super.onDestroyView()
         requireActivity().removeMenuProvider(menuProvider)
     }
-
-    fun getLastVisitedStations() {
-        TraewellingApi.authService.getLastVisitedStations()
-            .enqueue(object : Callback<Data<List<Station>>> {
-                override fun onResponse(
-                    call: Call<Data<List<Station>>>,
-                    response: Response<Data<List<Station>>>
-                ) {
-                    if (response.isSuccessful) {
-                        val stations = response.body()
-                        if (stations != null) {
-                            _lastVisitedStations.postValue(stations.data)
-                        }
-                    }
-                }
-
-                override fun onFailure(call: Call<Data<List<Station>>>, t: Throwable) {
-                    Sentry.captureException(t)
-                }
-            })
-    }
 }
 
 class MenuItem(

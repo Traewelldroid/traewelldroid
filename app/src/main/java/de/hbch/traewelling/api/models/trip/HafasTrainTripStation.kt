@@ -20,10 +20,13 @@ data class HafasTrainTripStation(
     @SerializedName("platform") val platform: String,
     @SerializedName("isArrivalDelayed") val isArrivalDelayed: Boolean,
     @SerializedName("isDepartureDelayed") val isDepartureDelayed: Boolean,
-    @SerializedName("cancelled") val isCancelled: Boolean
+    @SerializedName("cancelled") val cancelled: Boolean
 ) {
     val departureSave get() = departure ?: departurePlanned
     val departureRealSave get() = departureReal ?: departurePlanned
     val arrivalSave get() = arrival ?: arrivalPlanned
     val arrivalRealSave get() = arrivalReal ?: arrivalPlanned
+    val isCancelled: Boolean
+        // DB Rest also shows last stop as cancelled
+        get() = cancelled && departureReal == null && arrivalReal == null
 }
