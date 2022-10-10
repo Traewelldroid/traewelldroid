@@ -4,18 +4,21 @@ import android.os.Bundle
 import android.view.*
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import coil.transform.CircleCropTransformation
 import de.hbch.traewelling.R
 import de.hbch.traewelling.adapters.CheckInAdapter
 import de.hbch.traewelling.databinding.FragmentUserBinding
+import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.shared.UserViewModel
 
 abstract class AbstractUserFragment : Fragment() {
 
     private lateinit var binding: FragmentUserBinding
     protected abstract val viewModel: UserViewModel
+    private val loggedInUserViewModel: LoggedInUserViewModel by activityViewModels()
     private var page = 1
 
     override fun onCreateView(
@@ -31,7 +34,7 @@ abstract class AbstractUserFragment : Fragment() {
         binding.recyclerViewCheckIn.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerViewCheckIn.adapter = CheckInAdapter(
             mutableListOf(),
-            viewModel.userId
+            loggedInUserViewModel.userId
         ) { _, _ -> }
         binding.nestedScrollViewUser.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, _, _, _, _ ->
             val vw = v.getChildAt(v.childCount - 1)
