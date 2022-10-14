@@ -2,9 +2,10 @@ package de.hbch.traewelling.ui.checkIn
 
 import android.content.DialogInterface
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.core.view.MenuProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import de.hbch.traewelling.R
@@ -29,7 +30,6 @@ import java.util.concurrent.TimeUnit
 
 class EditCheckInFragment : AbstractCheckInFragment() {
     private val args: EditCheckInFragmentArgs by navArgs()
-    private lateinit var menuProvider: MenuProvider
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,44 +47,27 @@ class EditCheckInFragment : AbstractCheckInFragment() {
             viewModel!!.statusBusiness.postValue(enumValues<StatusBusiness>()[args.business])
         }
 
-        menuProvider = object : MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menuInflater.inflate(R.menu.status_edit_menu, menu)
-            }
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                return when (menuItem.itemId) {
-                    R.id.menu_change_destination -> {
-                        findNavController().navigate(
-                            EditCheckInFragmentDirections.actionEditStatusFragmentToUpdateDestinationFragment(
-                                args.transitionName,
-                                args.departureTime,
-                                args.destination,
-                                args.statusId,
-                                args.body,
-                                args.visibility,
-                                args.business,
-                                args.tripId,
-                                args.line,
-                                args.startStationId
-                            )
-                        )
-                        true
-                    }
-                    else -> false
-                }
-            }
-        }
-
-
-        requireActivity().addMenuProvider(menuProvider)
+        binding.btnChangeDestionation.visibility = View.VISIBLE
 
         return response
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        requireActivity().removeMenuProvider(menuProvider)
+
+    override fun onChangeDestination() {
+        findNavController().navigate(
+            EditCheckInFragmentDirections.actionEditStatusFragmentToUpdateDestinationFragment(
+                args.transitionName,
+                args.departureTime,
+                args.destination,
+                args.statusId,
+                args.body,
+                args.visibility,
+                args.business,
+                args.tripId,
+                args.line,
+                args.startStationId
+            )
+        )
     }
 
     override fun submit() {

@@ -127,6 +127,7 @@
                     app:layout_constraintStart_toStartOf="@+id/text_input_status_message"
                     app:layout_constraintTop_toTopOf="@id/btn_check_in"
                     app:selectionRequired="false"
+                    tools:visibility="gone"
                     app:singleSelection="false">
 
                     <Button
@@ -155,6 +156,20 @@
                     app:layout_constraintEnd_toEndOf="@id/text_input_status_message"
                     app:layout_constraintTop_toBottomOf="@id/btn_select_event"
                     tools:text="@string/check_in" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_change_destionation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{() -> checkInFragment.submit()}"
+                    android:text="@string/change_destination"
+                    app:icon="@drawable/ic_location"
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="@+id/btn_check_in"
+                    app:layout_constraintStart_toStartOf="@+id/btn_select_event"
+                    app:layout_constraintTop_toTopOf="@+id/btn_check_in" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
 
