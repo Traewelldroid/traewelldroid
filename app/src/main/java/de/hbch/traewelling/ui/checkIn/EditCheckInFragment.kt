@@ -1,11 +1,9 @@
 package de.hbch.traewelling.ui.checkIn
 
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import de.hbch.traewelling.R
@@ -17,16 +15,9 @@ import de.hbch.traewelling.api.models.status.StatusVisibility
 import de.hbch.traewelling.api.models.status.UpdateStatusRequest
 import de.hbch.traewelling.ui.include.alert.AlertBottomSheet
 import de.hbch.traewelling.ui.include.alert.AlertType
-import de.hbch.traewelling.ui.include.checkInSuccessful.CheckInSuccessfulBottomSheet
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.*
-import java.util.concurrent.TimeUnit
 
 class EditCheckInFragment : AbstractCheckInFragment() {
     private val args: EditCheckInFragmentArgs by navArgs()
@@ -104,75 +95,18 @@ class EditCheckInFragment : AbstractCheckInFragment() {
                 )
             ).enqueue(callback)
         } else {
-            if ((Date().time - args.departureTime.time) > TimeUnit.MINUTES.toMillis(20)) {
-                val listener = DialogInterface.OnClickListener { _, which ->
-                    when (which) {
-                        DialogInterface.BUTTON_POSITIVE -> replace()
-                        DialogInterface.BUTTON_NEGATIVE -> {
-                            findNavController()
-                                .navigate(
-                                    EditCheckInFragmentDirections.actionEditStatusFragmentToDashboardFragment()
-                                )
-                        }
-                        else -> error("Unexpected type: $which")
-                    }
-                }
-                AlertDialog.Builder(requireContext())
-                    .setMessage(R.string.confirm_check_in_replacement)
-                    .setPositiveButton(R.string.ok, listener)
-                    .setNegativeButton(R.string.abort, listener)
-                    .show()
-
-            } else {
-                replace()
-            }
+            checkInViewModel.startStationId = args.startStationId
+            checkInViewModel.destinationStationId = args.destinationId
+            checkInViewModel.departureTime = args.departureTime
+            TraewellingApi.checkInService.updateCheckIn(
+                args.statusId, UpdateStatusRequest(
+                    model.message.value,
+                    model.statusBusiness.value ?: error("Invalid data"),
+                    model.statusVisibility.value ?: error("Invalid data"),
+                    args.destinationId,
+                    args.departureTime
+                )
+            )
         }
-    }
-
-    private fun replace() {
-        checkInViewModel.startStationId = args.startStationId
-        checkInViewModel.destinationStationId = args.destinationId
-        checkInViewModel.departureTime = args.departureTime
-        TraewellingApi.checkInService.deleteStatus(args.statusId)
-            .enqueue(object : Callback<Any> {
-                override fun onResponse(call: Call<Any>, response: Response<Any>) {
-                    checkInViewModel.checkIn({ response ->
-                        if (response != null) {
-                            val checkInSuccessfulBottomSheet =
-                                CheckInSuccessfulBottomSheet(response)
-                            checkInSuccessfulBottomSheet.show(
-                                parentFragmentManager,
-                                CheckInSuccessfulBottomSheet.TAG
-                            )
-                            CoroutineScope(Dispatchers.Main).launch {
-                                findNavController().navigate(
-                                    EditCheckInFragmentDirections.actionEditStatusFragmentToStatusDetailFragment(
-                                        response.status.id,
-                                        response.status.userId
-                                    )
-                                )
-                                delay(3000)
-                                checkInSuccessfulBottomSheet.dismiss()
-                            }
-                            checkInViewModel.reset()
-                        }
-                    }, { statusCode ->
-                        val alertBottomSheet = AlertBottomSheet(
-                            AlertType.ERROR,
-                            requireContext().getString(
-                                when (statusCode) {
-                                    409 -> R.string.check_in_conflict
-                                    else -> R.string.check_in_failure
-                                }
-                            ),
-                            3000
-                        )
-                        alertBottomSheet.show(parentFragmentManager, AlertBottomSheet.TAG)
-                    })
-                }
-
-                override fun onFailure(call: Call<Any>, t: Throwable) {
-                }
-            })
     }
 }
