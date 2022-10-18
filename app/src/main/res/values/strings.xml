@@ -107,4 +107,15 @@
     <string name="open_source_licenses">Open source licenses</string>
     <string name="view_on_github">View project on GitHub</string>
     <string name="legal">Imprint and privacy</string>
+    <string name="point_reason_good_enough">
+        Because you checked in a little too late, you didn\'t receive full points. Try checking in
+        shortly before departure or while travelling.
+    </string>
+    <string name="point_reason_not_sufficient">
+        Because you checked in too early or too late, you didn\'t receive full points. Try checking
+        in shortly before departure or while travelling.
+    </string>
+    <string name="point_reason_forced">
+        Because you forced this check-in, you received 0 points.
+    </string>
 </resources>
