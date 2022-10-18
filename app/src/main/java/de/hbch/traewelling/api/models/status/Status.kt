@@ -63,3 +63,14 @@ enum class StatusBusiness(val business: Int) {
     @SerializedName("2")
     COMMUTE(2)
 }
+
+enum class PointReason(val pointReason: Int) {
+    @SerializedName("0")
+    IN_TIME(0),
+    @SerializedName("1")
+    GOOD_ENOUGH(1),
+    @SerializedName("2")
+    NOT_SUFFICIENT(2),
+    @SerializedName("3")
+    FORCED(3)
+}
