@@ -30,6 +30,10 @@ fun publishStationShortcuts(context: Context, stations: List<Station>, home: Boo
         it.toShortCut(context)
     }
 
-    ShortcutManagerCompat.addDynamicShortcuts(context, shortcuts)
+    try {
+        ShortcutManagerCompat.addDynamicShortcuts(context, shortcuts)
+    } catch (ex: IllegalArgumentException) {
+        // nothing to do then
+    }
 }
 
