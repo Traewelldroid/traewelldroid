@@ -7,6 +7,10 @@
         <variable
             name="checkIn"
             type="de.hbch.traewelling.api.models.status.CheckInResponse" />
+        <import
+            type="android.view.View" />
+        <import
+            type="de.hbch.traewelling.api.models.status.PointReason" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -88,12 +92,41 @@
         </LinearLayout>
 
         <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/check_in_detail_layout"
+            android:id="@+id/point_reason_layout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="32dp"
+            tools:visibility="visible"
+            android:visibility="@{checkIn.points.calculation.reason == PointReason.IN_TIME ? View.GONE : View.VISIBLE}"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:src="@drawable/ic_error"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                app:tint="@color/warning" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/warning"
+                tools:text="@string/point_reason_not_sufficient"
+                pointReason="@{checkIn.points}"
+                android:layout_marginStart="12dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/co_travellers_layout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/check_in_detail_layout"
+            app:layout_constraintTop_toBottomOf="@id/point_reason_layout"
             android:layout_marginTop="32dp"
             android:orientation="vertical">
 
@@ -106,10 +139,10 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:id="@+id/recycler_view_co_travellers"
                 tools:listitem="@android:layout/simple_list_item_1"
-                tools:itemCount="3"
-                android:layout_gravity="center" />
+                tools:itemCount="3" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

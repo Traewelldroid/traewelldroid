@@ -7,4 +7,5 @@
     <color name="train_on_time">#00D809</color>
     <color name="train_delayed">#FF0000</color>
     <color name="success">#4CAF50</color>
+    <color name="warning">#FF9800</color>
 </resources>

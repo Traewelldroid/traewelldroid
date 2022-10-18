@@ -11,7 +11,9 @@ import com.auth0.android.jwt.JWT
 import com.google.android.material.button.MaterialButton
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.event.Event
+import de.hbch.traewelling.api.models.status.PointReason
 import de.hbch.traewelling.api.models.status.StatusBusiness
+import de.hbch.traewelling.api.models.status.StatusPoints
 import de.hbch.traewelling.api.models.status.StatusVisibility
 import de.hbch.traewelling.api.models.trip.HafasTrip
 import de.hbch.traewelling.api.models.trip.ProductType
@@ -213,6 +215,17 @@ fun setEventOnButton(button: MaterialButton, event: Event?) {
 @BindingAdapter("event")
 fun setEventOnTextView(textView: TextView, event: Event?) {
     textView.text = event?.name ?: ""
+}
+
+@BindingAdapter("pointReason")
+fun setPointReasonOnTextView(textView: TextView, statusPoints: StatusPoints?) {
+    if (statusPoints?.calculation != null && statusPoints.calculation.reason != PointReason.IN_TIME)
+        textView.text = textView.resources.getString(when(statusPoints.calculation.reason) {
+            PointReason.FORCED -> R.string.point_reason_forced
+            PointReason.GOOD_ENOUGH -> R.string.point_reason_good_enough
+            PointReason.NOT_SUFFICIENT -> R.string.point_reason_not_sufficient
+            PointReason.IN_TIME -> R.string.base
+        });
 }
 
 fun getBusinessImageResource(business: StatusBusiness): Int {

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import de.hbch.traewelling.R
+import de.hbch.traewelling.api.models.status.PointReason
 import de.hbch.traewelling.ui.include.alert.AlertBottomSheet
 import de.hbch.traewelling.ui.include.alert.AlertType
 import de.hbch.traewelling.ui.include.checkInSuccessful.CheckInSuccessfulBottomSheet
@@ -42,7 +43,8 @@ class CheckInFragment : AbstractCheckInFragment() {
                 )
                 CoroutineScope(Dispatchers.Main).launch {
                     findNavController().navigate(CheckInFragmentDirections.actionCheckInFragmentToDashboardFragment())
-                    delay(3000)
+                    val dismissTime = if (response.points.calculation.reason == PointReason.IN_TIME) 3000L else 7000L
+                    delay(dismissTime)
                     checkInSuccessfulBottomSheet.dismiss()
                 }
                 checkInViewModel.reset()
