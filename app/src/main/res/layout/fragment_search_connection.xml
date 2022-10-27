@@ -8,6 +8,9 @@
             name="stationName"
             type="String" />
         <variable
+            name="stationId"
+            type="int" />
+        <variable
             name="viewModel"
             type="de.hbch.traewelling.ui.searchConnection.SearchConnectionViewModel" />
         <variable
