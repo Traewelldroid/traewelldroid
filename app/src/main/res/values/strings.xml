@@ -18,6 +18,7 @@
     <string name="where_are_you">Where are you?</string>
     <string name="search">Search</string>
     <string name="next_station">Next station: %1$s</string>
+    <string name="from_station">dep %1$s</string>
     <string name="check_in_user_time" translatable="false">%1$s, %2$s</string>
     <string name="logout">Log out</string>
     <string name="previous">Previous</string>

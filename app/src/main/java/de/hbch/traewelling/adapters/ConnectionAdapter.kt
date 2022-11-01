@@ -3,17 +3,18 @@ package de.hbch.traewelling.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Filter
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.trip.HafasTrip
 import de.hbch.traewelling.api.models.trip.ProductType
 import de.hbch.traewelling.databinding.ConnectionListItemBinding
+import de.hbch.traewelling.databinding.FragmentSearchConnectionBinding
 import java.util.*
 
 class ConnectionAdapter(
     private val connections: MutableList<HafasTrip>,
+    val searchBinding: FragmentSearchConnectionBinding? = null,
     val onItemClick: (View, HafasTrip) -> Unit
 ) : RecyclerView.Adapter<ConnectionAdapter.ConnectionViewHolder>() {
 
@@ -49,7 +50,7 @@ class ConnectionAdapter(
 
     override fun getItemCount() = connectionsFiltered.size
 
-    class ConnectionViewHolder(val binding: ConnectionListItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ConnectionViewHolder(val binding: ConnectionListItemBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(trip: HafasTrip) {
 
             binding.textViewDepartureTime.setTextColor(
@@ -64,6 +65,9 @@ class ConnectionAdapter(
 
             binding.layoutConnectionListItem.transitionName = trip.tripId
             binding.connection = trip
+            if (!trip.station?.name.isNullOrBlank() && searchBinding?.stationId != null && trip.station?.id != searchBinding?.stationId) {
+                binding.textViewOrigin.visibility = View.VISIBLE
+            }
             binding.executePendingBindings()
         }
     }

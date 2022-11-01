@@ -29,7 +29,7 @@ class EventViewModel : ViewModel() {
                     if (response.isSuccessful) {
                         val data = response.body()?.data
                         if (data != null)
-                            _activeEvents.postValue(data)
+                            _activeEvents.postValue(data!!)
                         return
                     }
                     Sentry.captureMessage(response.errorBody()?.string() ?: "getActiveEvents Error")

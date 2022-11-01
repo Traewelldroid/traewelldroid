@@ -52,6 +52,7 @@ class SearchConnectionFragment : Fragment() {
     private val onFoundConnectionsCallback: (HafasTripPage) -> Unit = { connections ->
         dataLoading.postValue(false)
         binding.stationName = connections.meta.station.name
+        binding.stationId = connections.meta.station.id
         binding.searchCard.binding.editTextSearchStation.clearFocus()
         binding.searchCard.loggedInUserViewModel = loggedInUserViewModel
         binding.searchCard.binding.editTextSearchStation.setText(connections.meta.station.name)
@@ -132,12 +133,12 @@ class SearchConnectionFragment : Fragment() {
         dataLoading.observe(viewLifecycleOwner) { loading ->
             when (loading) {
                 true -> {
-                    binding.cardConnections.visibility = View.GONE
-                    binding.connectionDataLoadingView.root.visibility = View.VISIBLE
+                    binding.cardConnections.visibility = GONE
+                    binding.connectionDataLoadingView.root.visibility = VISIBLE
                 }
                 false -> {
-                    binding.cardConnections.visibility = View.VISIBLE
-                    binding.connectionDataLoadingView.root.visibility = View.GONE
+                    binding.cardConnections.visibility = VISIBLE
+                    binding.connectionDataLoadingView.root.visibility = GONE
                 }
             }
         }
@@ -183,7 +184,7 @@ class SearchConnectionFragment : Fragment() {
             )
         )
         binding.recyclerViewConnections.adapter =
-            ConnectionAdapter(mutableListOf()) { itemView, connection ->
+            ConnectionAdapter(mutableListOf(), binding) { itemView, connection ->
                 checkInViewModel.reset()
                 checkInViewModel.lineName = connection.line?.name ?: ""
                 checkInViewModel.tripId = connection.tripId
