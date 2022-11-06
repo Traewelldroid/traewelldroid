@@ -11,6 +11,7 @@ import de.hbch.traewelling.api.models.trip.ProductType
 import de.hbch.traewelling.databinding.ConnectionListItemBinding
 import de.hbch.traewelling.databinding.FragmentSearchConnectionBinding
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class ConnectionAdapter(
     private val connections: MutableList<HafasTrip>,
@@ -41,7 +42,7 @@ class ConnectionAdapter(
         val connection = connectionsFiltered[position]
         holder.bind(connection)
         if (connection.isCancelled)
-            holder.itemView.setOnClickListener {  }
+            holder.itemView.setOnClickListener { }
         else
             holder.itemView.setOnClickListener {
                 onItemClick(it, connection)
@@ -50,15 +51,21 @@ class ConnectionAdapter(
 
     override fun getItemCount() = connectionsFiltered.size
 
-    inner class ConnectionViewHolder(val binding: ConnectionListItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ConnectionViewHolder(val binding: ConnectionListItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(trip: HafasTrip) {
+
+            val difference = TimeUnit.MILLISECONDS.toMinutes(
+                (trip.departure ?: Date()).time - (trip.plannedDeparture ?: Date()).time
+            )
 
             binding.textViewDepartureTime.setTextColor(
                 ContextCompat.getColor(
                     binding.root.context,
-                    when((trip.departure ?: Date()) > trip.plannedDeparture) {
-                        true -> R.color.train_delayed
-                        false -> R.color.train_on_time
+                    when {
+                        difference <= 0 -> R.color.train_on_time
+                        difference in 0..5 -> R.color.warning
+                        else -> R.color.train_delayed
                     }
                 )
             )
@@ -89,8 +96,7 @@ class ConnectionAdapter(
                                 trip.line.product == ProductType.REGIONAL_EXPRESS
                     else
                         trip.line.product == filter
-                }
-                else
+                } else
                     false
             })
         }
