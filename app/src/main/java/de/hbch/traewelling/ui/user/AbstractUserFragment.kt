@@ -60,6 +60,7 @@ abstract class AbstractUserFragment : Fragment() {
             }
         }
 
+        page = 1 // Reset page
         loadCheckIns()
 
         return binding.root
