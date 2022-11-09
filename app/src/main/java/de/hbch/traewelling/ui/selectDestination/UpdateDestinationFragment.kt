@@ -30,7 +30,7 @@ class UpdateDestinationFragment : AbstractSelectDestinationFragment() {
             UpdateDestinationFragmentDirections.actionSelectDestinationFragmentToEditCheckIn(
                 args.transitionName,
                 stop.name,
-                args.departureTime,
+                stop.arrivalPlanned,
                 args.body,
                 args.lineName,
                 args.visibility,
