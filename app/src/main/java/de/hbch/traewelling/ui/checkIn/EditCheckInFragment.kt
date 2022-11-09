@@ -38,7 +38,7 @@ class EditCheckInFragment : AbstractCheckInFragment() {
             viewModel!!.statusBusiness.postValue(enumValues<StatusBusiness>()[args.business])
         }
 
-        binding.btnChangeDestionation.visibility = View.VISIBLE
+        binding.btnChangeDestination.visibility = View.VISIBLE
 
         return response
     }
