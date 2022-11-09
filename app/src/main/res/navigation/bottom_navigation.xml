@@ -184,7 +184,7 @@
             android:name="statusId"
             app:argType="integer" />
         <argument
-            android:name="replace"
+            android:name="changeDestination"
             android:defaultValue="false"
             app:argType="boolean" />
         <argument

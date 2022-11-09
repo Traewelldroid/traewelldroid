@@ -38,7 +38,10 @@ class EditCheckInFragment : AbstractCheckInFragment() {
             viewModel!!.statusBusiness.postValue(enumValues<StatusBusiness>()[args.business])
         }
 
-        binding.btnChangeDestination.visibility = View.VISIBLE
+        // if this is true a new destination has already been selectedJoa
+        if (!args.changeDestination) {
+            binding.btnChangeDestination.visibility = View.VISIBLE
+        }
 
         return response
     }
@@ -86,7 +89,7 @@ class EditCheckInFragment : AbstractCheckInFragment() {
                 alertBottomSheet.show(parentFragmentManager, AlertBottomSheet.TAG)
             }
         }
-        if (!args.replace) {
+        if (!args.changeDestination) {
             TraewellingApi.checkInService.updateCheckIn(
                 args.statusId, UpdateStatusRequest(
                     model.message.value,
@@ -106,7 +109,7 @@ class EditCheckInFragment : AbstractCheckInFragment() {
                     args.destinationId,
                     args.departureTime
                 )
-            )
+            ).enqueue(callback)
         }
     }
 }

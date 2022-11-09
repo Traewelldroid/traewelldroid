@@ -38,7 +38,7 @@ class UpdateDestinationFragment : AbstractSelectDestinationFragment() {
                 args.statusId,
                 args.tripId,
                 args.startStationId,
-                replace = true,
+                changeDestination = true,
                 destinationId = stop.id
             )
         )
