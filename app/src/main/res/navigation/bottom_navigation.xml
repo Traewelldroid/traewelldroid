@@ -87,6 +87,45 @@
             app:argType="string" />
     </fragment>
     <fragment
+        android:id="@+id/updateDestinationFragment"
+        android:name="de.hbch.traewelling.ui.selectDestination.UpdateDestinationFragment"
+        android:label="@string/title_select_destination"
+        tools:layout="@layout/fragment_select_destination">
+        <action
+            android:id="@+id/action_selectDestinationFragment_to_editCheckIn"
+            app:destination="@id/editStatusFragment" />
+        <argument
+            android:name="transitionName"
+            app:argType="string" />
+        <argument android:name="departureTime"
+            app:argType="java.util.Date" />
+        <argument
+            android:name="destination"
+            app:argType="string" />
+        <argument
+            android:name="statusId"
+            app:argType="integer" />
+        <argument
+            android:name="body"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="visibility"
+            app:argType="integer" />
+        <argument
+            android:name="business"
+            app:argType="integer" />
+        <argument
+            android:name="tripId"
+            app:argType="string" />
+        <argument
+            android:name="lineName"
+            app:argType="string" />
+        <argument
+            android:name="startStationId"
+            app:argType="integer" />
+    </fragment>
+    <fragment
         android:id="@+id/checkInFragment"
         android:name="de.hbch.traewelling.ui.checkIn.CheckInFragment"
         android:label="@string/check_in"
@@ -113,6 +152,12 @@
             app:destination="@id/statusDetailFragment"
             app:popUpTo="@id/dashboard_fragment"
             app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_editStatusFragment_to_updateDestinationFragment"
+            app:destination="@id/updateDestinationFragment" />
+        <action
+            android:id="@+id/action_editStatusFragment_to_dashboardFragment"
+            app:destination="@id/dashboard_fragment" />
         <argument
             android:name="transitionName"
             app:argType="string" />
@@ -120,8 +165,12 @@
             android:name="destination"
             app:argType="string" />
         <argument
+            android:name="departureTime"
+            app:argType="java.util.Date" />
+        <argument
             android:name="body"
-            app:argType="string" />
+            app:argType="string"
+            app:nullable="true" />
         <argument
             android:name="line"
             app:argType="string" />
@@ -134,6 +183,20 @@
         <argument
             android:name="statusId"
             app:argType="integer" />
+        <argument
+            android:name="changeDestination"
+            android:defaultValue="false"
+            app:argType="boolean" />
+        <argument
+            android:name="tripId"
+            app:argType="string" />
+        <argument
+            android:name="startStationId"
+            app:argType="integer" />
+        <argument
+            android:name="destinationId"
+            android:defaultValue="-1"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/statusDetailFragment"
@@ -145,6 +208,9 @@
         <action
             android:id="@+id/action_statusDetailFragment_to_checkInFragment"
             app:destination="@id/checkInFragment" />
+        <action
+            android:id="@+id/action_statusDetailFragment_to_editStatusFragment"
+            app:destination="@id/editStatusFragment" />
         <argument
             android:name="userId"
             app:argType="integer" />

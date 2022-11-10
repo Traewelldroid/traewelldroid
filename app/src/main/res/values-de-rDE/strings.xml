@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="ok">Ok</string>
+    <string name="abort">Abbrechen</string>
     <string name="input_username">Benutzername</string>
     <string name="input_password">Passwort</string>
     <string name="input_stop">Haltestelle / Ril100</string>
@@ -25,6 +27,7 @@
     <string name="line_destination">%1$s nach %2$s</string>
     <string name="check_in">Einchecken</string>
     <string name="edit_status">Status bearbeiten</string>
+    <string name="change_destination">Ziel ändern</string>
     <string name="status_message">Status-Nachricht</string>
     <string name="departures_at">Abfahrten in %1$s</string>
     <string name="error_credentials">Bitte überprüfe deine Anmeldedaten</string>
@@ -104,6 +107,7 @@
     <string name="open_source_licenses">Open Source-Lizenzen</string>
     <string name="view_on_github">Projekt auf GitHub anzeigen</string>
     <string name="legal">Impressum und Datenschutzerklärung</string>
+    <string name="title_edit">Bearbeiten</string>
     <string name="point_reason_good_enough">
         Weil Du ein klein wenig zu spät eingecheckt hast, hast Du nicht alle Punkte erhalten.
         Versuche nächstes Mal, kurz vor der Abfahrt oder während der Reise einzuchecken, um alle

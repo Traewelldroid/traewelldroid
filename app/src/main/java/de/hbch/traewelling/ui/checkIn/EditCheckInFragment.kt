@@ -37,18 +37,36 @@ class EditCheckInFragment : AbstractCheckInFragment() {
             viewModel!!.statusVisibility.postValue(enumValues<StatusVisibility>()[args.visibility])
             viewModel!!.statusBusiness.postValue(enumValues<StatusBusiness>()[args.business])
         }
+
+        // if this is true a new destination has already been selectedJoa
+        if (!args.changeDestination) {
+            binding.btnChangeDestination.visibility = View.VISIBLE
+        }
+
         return response
+    }
+
+
+    override fun onChangeDestination() {
+        findNavController().navigate(
+            EditCheckInFragmentDirections.actionEditStatusFragmentToUpdateDestinationFragment(
+                args.transitionName,
+                args.departureTime,
+                args.destination,
+                args.statusId,
+                args.body,
+                args.visibility,
+                args.business,
+                args.tripId,
+                args.line,
+                args.startStationId
+            )
+        )
     }
 
     override fun submit() {
         val model = binding.viewModel!!
-        TraewellingApi.checkInService.updateCheckIn(
-            args.statusId, UpdateStatusRequest(
-                model.message.value,
-                model.statusBusiness.value ?: error("Invalid data"),
-                model.statusVisibility.value ?: error("Invalid data")
-            )
-        ).enqueue(object : Callback<Data<Status>> {
+        val callback = object : Callback<Data<Status>> {
             override fun onResponse(call: Call<Data<Status>>, response: Response<Data<Status>>) {
                 val body = response.body()
                 if (body != null) {
@@ -70,6 +88,28 @@ class EditCheckInFragment : AbstractCheckInFragment() {
                 )
                 alertBottomSheet.show(parentFragmentManager, AlertBottomSheet.TAG)
             }
-        })
+        }
+        if (!args.changeDestination) {
+            TraewellingApi.checkInService.updateCheckIn(
+                args.statusId, UpdateStatusRequest(
+                    model.message.value,
+                    model.statusBusiness.value ?: error("Invalid data"),
+                    model.statusVisibility.value ?: error("Invalid data")
+                )
+            ).enqueue(callback)
+        } else {
+            checkInViewModel.startStationId = args.startStationId
+            checkInViewModel.destinationStationId = args.destinationId
+            checkInViewModel.departureTime = args.departureTime
+            TraewellingApi.checkInService.updateCheckIn(
+                args.statusId, UpdateStatusRequest(
+                    model.message.value,
+                    model.statusBusiness.value ?: error("Invalid data"),
+                    model.statusVisibility.value ?: error("Invalid data"),
+                    args.destinationId,
+                    args.departureTime
+                )
+            ).enqueue(callback)
+        }
     }
 }

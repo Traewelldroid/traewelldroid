@@ -75,6 +75,8 @@ abstract class AbstractCheckInFragment : Fragment() {
         return binding.root
     }
 
+    open fun onChangeDestination() = Unit
+
     fun selectStatusVisibility() {
         val bottomSheet = SelectStatusVisibilityBottomSheet { statusVisibility ->
             checkInViewModel.statusVisibility.postValue(statusVisibility)

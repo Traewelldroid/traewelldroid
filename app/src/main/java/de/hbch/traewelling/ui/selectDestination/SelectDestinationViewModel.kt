@@ -1,8 +1,5 @@
 package de.hbch.traewelling.ui.selectDestination
 
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.api.models.Data

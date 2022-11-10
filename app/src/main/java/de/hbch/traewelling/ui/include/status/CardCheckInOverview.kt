@@ -81,10 +81,13 @@ class CardCheckInOverview(
                 "transitionName" to binding.checkIn?.journey?.origin?.name,
                 "destination" to binding.checkIn?.journey?.destination?.name,
                 "body" to binding.checkIn?.body,
+                "departureTime" to binding.checkIn?.journey?.origin?.departurePlanned,
                 "business" to binding.checkIn?.business?.ordinal,
                 "visibility" to binding.checkIn?.visibility?.ordinal,
                 "line" to binding.checkIn?.journey?.line,
-                "statusId" to binding.checkIn?.id
+                "statusId" to binding.checkIn?.id,
+                "tripId" to binding.checkIn?.journey?.hafasTripId,
+                "startStationId" to binding.checkIn?.journey?.origin?.id,
             )
         )
     }

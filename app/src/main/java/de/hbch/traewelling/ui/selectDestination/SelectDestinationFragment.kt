@@ -1,109 +1,44 @@
 package de.hbch.traewelling.ui.selectDestination
 
-import android.graphics.Color
 import android.os.Bundle
-import android.util.TypedValue
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.transition.Hold
-import com.google.android.material.transition.MaterialContainerTransform
-import de.hbch.traewelling.R
-import de.hbch.traewelling.adapters.TravelStopAdapter
-import de.hbch.traewelling.databinding.FragmentSelectDestinationBinding
-import de.hbch.traewelling.models.TravelStop
-import de.hbch.traewelling.shared.CheckInViewModel
-import java.lang.reflect.Type
+import de.hbch.traewelling.api.models.trip.HafasTrainTripStation
 
-class SelectDestinationFragment : Fragment() {
+class SelectDestinationFragment : AbstractSelectDestinationFragment() {
 
-    private lateinit var binding: FragmentSelectDestinationBinding
     private val args: SelectDestinationFragmentArgs by navArgs()
-    private val viewModel: SelectDestinationViewModel by viewModels()
-    private val checkInViewModel: CheckInViewModel by activityViewModels()
-
-    private val dataLoading = MutableLiveData<Boolean>(false)
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentSelectDestinationBinding.inflate(inflater, container, false)
-
-        dataLoading.observe(viewLifecycleOwner) { loading ->
-            binding.viewConnectionDataLoading.root.visibility = when (loading) {
-                true -> View.VISIBLE
-                false -> View.GONE
-            }
-        }
-
-        val transition = MaterialContainerTransform().apply {
-            scrimColor = Color.TRANSPARENT
-            val color = TypedValue()
-            requireContext().theme.resolveAttribute(android.R.attr.windowBackground, color, true)
-            if (color.type >= TypedValue.TYPE_FIRST_COLOR_INT && color.type <= TypedValue.TYPE_LAST_COLOR_INT) {
-                setAllContainerColors(color.data)
-            }
-        }
-        sharedElementEnterTransition = transition
-        exitTransition = Hold()
-
-        binding.layoutSelectDestination.transitionName = args.transitionName
+        val response = super.onCreateView(inflater, container, savedInstanceState)
         binding.apply {
+            layoutSelectDestination.transitionName = args.transitionName
             destination = args.destination
-            line = checkInViewModel.lineName
         }
 
-        val recyclerView = binding.recyclerViewTravelStops
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        dataLoading.postValue(true)
-        viewModel.getTrip(
-            checkInViewModel.tripId,
-            checkInViewModel.lineName,
-            checkInViewModel.startStationId,
-            { trip ->
-                dataLoading.postValue(false)
-                val relevantStations = trip.stopovers.subList(
-                    trip.stopovers.indexOf(
-                        trip.stopovers.find {
-                            it.id == checkInViewModel.startStationId
-                        }
-                    ) + 1, trip.stopovers.lastIndex + 1)
+        return response
+    }
 
-                recyclerView.adapter = TravelStopAdapter(relevantStations) { itemView, stop ->
-
-                    checkInViewModel.destinationStationId = stop.id
-                    checkInViewModel.arrivalTime = stop.arrivalPlanned
-
-                    val transitionName = stop.name
-                    val extras = FragmentNavigatorExtras(
-                        itemView to transitionName
-                    )
-                    findNavController().navigate(
-                        SelectDestinationFragmentDirections
-                            .actionSelectDestinationFragmentToCheckInFragment(
-                                transitionName,
-                                stop.name
-                            ),
-                        extras
-                    )
-                }
-            },
-            {
-                dataLoading.postValue(false)
-            }
+    override fun select(itemView: View, stop: HafasTrainTripStation) {
+        val transitionName = stop.name
+        val extras = FragmentNavigatorExtras(
+            itemView to transitionName
         )
-
-        return binding.root
+        findNavController().navigate(
+            SelectDestinationFragmentDirections
+                .actionSelectDestinationFragmentToCheckInFragment(
+                    transitionName,
+                    stop.name
+                ),
+            extras
+        )
     }
 }
