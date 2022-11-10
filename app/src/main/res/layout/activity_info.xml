@@ -7,6 +7,8 @@
         <variable
             name="infoActivity"
             type="de.hbch.traewelling.ui.info.InfoActivity" />
+        <import
+            type="de.hbch.traewelling.BuildConfig" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -61,6 +63,15 @@
             android:layout_margin="16dp"
             app:icon="@drawable/ic_privacy"
             android:onClick="@{() -> infoActivity.viewLegalInfo()}" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="@{@string/version_with_code(BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE)}"
+            android:layout_marginBottom="8dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
