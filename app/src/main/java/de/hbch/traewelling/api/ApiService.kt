@@ -1,7 +1,8 @@
 package de.hbch.traewelling.api
 
 import com.google.gson.GsonBuilder
-import de.hbch.traewelling.BuildConfig
+import de.hbch.traewelling.api.interceptors.AuthInterceptor
+import de.hbch.traewelling.api.interceptors.ErrorInterceptor
 import de.hbch.traewelling.api.models.Data
 import de.hbch.traewelling.api.models.auth.BearerToken
 import de.hbch.traewelling.api.models.auth.LoginCredentials
@@ -14,7 +15,6 @@ import de.hbch.traewelling.api.models.status.*
 import de.hbch.traewelling.api.models.trip.HafasTrainTrip
 import de.hbch.traewelling.api.models.trip.HafasTripPage
 import de.hbch.traewelling.api.models.user.User
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Retrofit
@@ -27,31 +27,8 @@ private const val BASE_URL =
     "https://traewelling.de/api/v1/"
 
 private val client = OkHttpClient.Builder().readTimeout(60, TimeUnit.SECONDS)
-    // Auth interceptor
-    .addInterceptor(Interceptor { chain ->
-        val newRequest =
-            chain
-                .request()
-                .newBuilder()
-                .addHeader("Authorization", "Bearer ${TraewellingApi.jwt}")
-                .addHeader(
-                    "User-Agent",
-                    "${BuildConfig.APPLICATION_ID}/${BuildConfig.VERSION_NAME}"
-                )
-                .build()
-
-        chain.proceed(newRequest)
-    })
-    // Error interceptor
-    .addInterceptor(Interceptor { chain ->
-        val request = chain.request()
-        val response = chain.proceed(request)
-
-        if (response.code == 401)
-            TODO()
-
-        response
-    })
+    .addInterceptor(AuthInterceptor())
+    .addInterceptor(ErrorInterceptor())
     .build()
 
 private val gson = GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssX").create()
