@@ -27,7 +27,8 @@ private const val BASE_URL =
     "https://traewelling.de/api/v1/"
 
 private val client = OkHttpClient.Builder().readTimeout(60, TimeUnit.SECONDS)
-    .addInterceptor(Interceptor() { chain ->
+    // Auth interceptor
+    .addInterceptor(Interceptor { chain ->
         val newRequest =
             chain
                 .request()
@@ -40,7 +41,18 @@ private val client = OkHttpClient.Builder().readTimeout(60, TimeUnit.SECONDS)
                 .build()
 
         chain.proceed(newRequest)
-    }).build()
+    })
+    // Error interceptor
+    .addInterceptor(Interceptor { chain ->
+        val request = chain.request()
+        val response = chain.proceed(request)
+
+        if (response.code == 401)
+            TODO()
+
+        response
+    })
+    .build()
 
 private val gson = GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssX").create()
 
@@ -179,7 +191,7 @@ interface UserService {
 
 object TraewellingApi {
     var jwt: String = ""
-    var appVersion: String = ""
+
     val userService: UserService by lazy {
         retrofit.create(UserService::class.java)
     }
