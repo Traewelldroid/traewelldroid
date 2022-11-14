@@ -8,32 +8,26 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
-import android.telecom.Call
-import android.view.WindowInsets
-import android.view.WindowInsets.Type.statusBars
 import android.view.WindowInsets.Type.systemBars
-import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI.setupWithNavController
 import androidx.navigation.ui.setupActionBarWithNavController
-import com.google.android.material.navigation.NavigationBarView
 import com.jcloquell.androidsecurestorage.SecureStorage
 import de.c1710.filemojicompat_ui.views.picker.EmojiPackItemAdapter
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.TraewellingApi
-import de.hbch.traewelling.api.models.Data
 import de.hbch.traewelling.databinding.ActivityMainBinding
-import de.hbch.traewelling.shared.LoggedInUserViewModel
+import de.hbch.traewelling.events.UnauthorizedEvent
 import de.hbch.traewelling.shared.SharedValues
-import io.sentry.Sentry
-import retrofit2.Callback
-import retrofit2.Response
+import de.hbch.traewelling.ui.login.LoginActivity
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 class MainActivity : AppCompatActivity() {
 
@@ -41,6 +35,29 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var secureStorage: SecureStorage
     lateinit var emojiPackItemAdapter: EmojiPackItemAdapter
+
+    override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        EventBus.getDefault().unregister(this)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onUnauthorizedEvent(unauthorizedEvent: UnauthorizedEvent) {
+        startActivity(
+            Intent(
+                this,
+                LoginActivity::class.java
+            )
+        )
+        secureStorage?.removeObject(SharedValues.SS_JWT)
+        TraewellingApi.jwt = ""
+        finish()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
