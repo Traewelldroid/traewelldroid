@@ -71,9 +71,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:id="@+id/destination_time"
                 tools:text="15:09"
                 displayTime="@{travelStop.arrivalReal ?? travelStop.arrivalPlanned}"
-                android:textColor="@{travelStop.isArrivalDelayed ? @color/train_delayed : @color/train_on_time}"
                 android:textSize="18sp"
                 android:visibility="@{travelStop.isCancelled ? View.GONE : View.VISIBLE}"
                 tools:textColor="@color/train_on_time" />
