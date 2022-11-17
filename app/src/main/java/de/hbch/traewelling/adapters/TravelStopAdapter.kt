@@ -4,11 +4,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.INVISIBLE
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.trip.HafasTrainTripStation
 import de.hbch.traewelling.databinding.TravelStopListItemBinding
-import de.hbch.traewelling.models.TravelStop
+import java.util.*
+import java.util.concurrent.TimeUnit
 
 class TravelStopAdapter(val stops: List<HafasTrainTripStation>, val onClick: (View, HafasTrainTripStation) -> Unit)
     : RecyclerView.Adapter<TravelStopAdapter.TravelStopViewHolder>() {
@@ -24,6 +26,8 @@ class TravelStopAdapter(val stops: List<HafasTrainTripStation>, val onClick: (Vi
         holder.bind(stop, position == (itemCount - 1))
         holder.itemView.transitionName = stop.name
 
+
+
         if (!stop.isCancelled)
             holder.itemView.setOnClickListener {
                 onClick(it, stop)
@@ -34,6 +38,22 @@ class TravelStopAdapter(val stops: List<HafasTrainTripStation>, val onClick: (Vi
 
     class TravelStopViewHolder(val binding: TravelStopListItemBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(travelStop: HafasTrainTripStation, isLast: Boolean) {
+
+            val difference = TimeUnit.MILLISECONDS.toMinutes(
+                (travelStop.departure ?: Date()).time - (travelStop.departurePlanned ?: Date()).time
+            )
+
+            binding.destinationTime.setTextColor(
+                ContextCompat.getColor(
+                    binding.root.context,
+                    when {
+                        difference <= 0 -> R.color.train_on_time
+                        difference in 0..5 -> R.color.warning
+                        else -> R.color.train_delayed
+                    }
+                )
+            )
+
             if (isLast)
                 binding.perlschnurConnectionBottom.visibility = INVISIBLE
             binding.travelStop = travelStop
