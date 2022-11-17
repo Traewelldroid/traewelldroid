@@ -123,4 +123,5 @@
     <string name="point_reason_forced">
         Because you forced this check-in, you received 0 points.
     </string>
+    <string name="title_share">Share</string>
 </resources>

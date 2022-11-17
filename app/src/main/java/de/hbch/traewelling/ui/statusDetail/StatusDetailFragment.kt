@@ -30,9 +30,9 @@ class StatusDetailFragment : Fragment() {
         override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
             menuInflater.inflate(R.menu.status_detail_also_check_in_menu, menu)
             if (isOwnConnection()) {
-                menu.getItem(0).isVisible = true
-            } else {
                 menu.getItem(1).isVisible = true
+            } else {
+                menu.getItem(2).isVisible = true
             }
         }
 
@@ -48,10 +48,10 @@ class StatusDetailFragment : Fragment() {
                 }
                 R.id.menu_share_check_in -> {
                     val intent = Intent(Intent.ACTION_SEND).apply {
+                        val url = "https://traewelling.de/status/${binding.status?.id}"
                         type = "text/plain"
                         flags = Intent.FLAG_ACTIVITY_NEW_DOCUMENT
-                        putExtra(Intent.EXTRA_TEXT, binding.status.socialText)
-                        putExtra(Intent.EXTRA_SUBJECT, "https://traewelling.de/status/${binding.status?.id}")
+                        putExtra(Intent.EXTRA_TEXT, binding.status?.socialText?.plus("\n\n")?.plus(url) ?: url)
                     }
 
                     startActivity(
