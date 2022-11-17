@@ -20,7 +20,8 @@ data class Status(
     @SerializedName("likes") var likes: Int,
     @SerializedName("liked") var liked: Boolean,
     @SerializedName("train") val journey: Journey,
-    @SerializedName("event") val event: Event?
+    @SerializedName("event") val event: Event?,
+    @SerializedName("socialText") val socialText: String?
 ) : Parcelable {
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(gson.toJson(this))
