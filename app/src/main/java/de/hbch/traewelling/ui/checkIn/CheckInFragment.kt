@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.status.PointReason
+import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.ui.include.alert.AlertBottomSheet
 import de.hbch.traewelling.ui.include.alert.AlertType
 import de.hbch.traewelling.ui.include.checkInSuccessful.CheckInSuccessfulBottomSheet
@@ -20,6 +22,7 @@ import kotlinx.coroutines.launch
 class CheckInFragment : AbstractCheckInFragment() {
 
     private val args: CheckInFragmentArgs by navArgs()
+    private val loggedInUserViewModel: LoggedInUserViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,6 +32,7 @@ class CheckInFragment : AbstractCheckInFragment() {
         binding.apply {
             layoutCheckIn.transitionName = args.transitionName
             destination = args.destination
+            binding.viewModel.statusVisibility.postValue(loggedInUserViewModel.defaultStatusVisibility.value)
         }
         return response
     }
@@ -43,7 +47,8 @@ class CheckInFragment : AbstractCheckInFragment() {
                 )
                 CoroutineScope(Dispatchers.Main).launch {
                     findNavController().navigate(CheckInFragmentDirections.actionCheckInFragmentToDashboardFragment())
-                    val dismissTime = if (response.points.calculation.reason == PointReason.IN_TIME) 3000L else 7000L
+                    val dismissTime =
+                        if (response.points.calculation.reason == PointReason.IN_TIME) 3000L else 7000L
                     delay(dismissTime)
                     checkInSuccessfulBottomSheet.dismiss()
                 }

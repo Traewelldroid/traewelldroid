@@ -9,6 +9,7 @@ import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.api.models.Data
 import de.hbch.traewelling.api.models.station.Station
 import de.hbch.traewelling.api.models.status.StatusPage
+import de.hbch.traewelling.api.models.status.StatusVisibility
 import de.hbch.traewelling.api.models.user.User
 import io.sentry.Sentry
 import retrofit2.Call
@@ -54,6 +55,10 @@ open class UserViewModel : ViewModel() {
     val homelandStation: LiveData<String>
         get() = Transformations.map(_user) { user ->
             user?.home?.name ?: ""
+        }
+    val defaultStatusVisibility: LiveData<StatusVisibility>
+        get() = Transformations.map(_user) { user ->
+            user?.defaultStatusVisibility ?: StatusVisibility.PUBLIC
         }
 
     val profilePictureSrc: LiveData<String>
