@@ -18,5 +18,5 @@ data class User(
     @SerializedName("home") var home: Station?,
     @SerializedName("prevent_index") val preventIndex: Boolean,
     @SerializedName("language") val language: String,
-    @SerializedName("default_status_visibility") val defaultStatusVisibility: StatusVisibility
+    val defaultStatusVisibility: StatusVisibility
 )
