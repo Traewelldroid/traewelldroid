@@ -41,6 +41,11 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField "android.net.Uri", "OAUTH_SERVER", "android.net.Uri.parse(\"https://api.traewelldroid.de\")"
+        }
+        debug {
+
+            buildConfigField "android.net.Uri", "OAUTH_SERVER", "android.net.Uri.parse(\"http://192.168.0.198:8080\")"
         }
     }
     buildFeatures {
@@ -66,6 +71,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation "androidx.browser:browser:1.4.0"
     implementation 'androidx.core:core-splashscreen:1.0.0'
     implementation 'com.auth0.android:jwtdecode:2.0.1'
     implementation 'org.greenrobot:eventbus:3.3.1'

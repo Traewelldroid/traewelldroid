@@ -4,9 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
             type="de.hbch.traewelling.ui.login.LoginActivityViewModel" />
+
         <variable
             name="loginActivity"
             type="de.hbch.traewelling.ui.login.LoginActivity" />
@@ -15,8 +17,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.login.LoginActivity"
-        android:padding="16dp">
+        android:padding="16dp"
+        tools:context=".ui.login.LoginActivity">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -26,38 +28,38 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
+                style="@style/Theme.Traewelling.PrimaryColorTexts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_margin="40dp"
                 android:text="@string/app_name"
-                style="@style/Theme.Traewelling.PrimaryColorTexts"
                 android:textSize="50sp" />
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/text_input_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/text_input_login"
                 android:hint="@string/username_or_email">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_text_login"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/edit_text_login" />
+                    android:layout_height="wrap_content" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/text_input_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:id="@+id/text_input_password"
                 android:hint="@string/input_password">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_text_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/edit_text_password"
                     android:inputType="textPassword" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -66,19 +68,58 @@
                 android:id="@+id/btn_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginVertical="16dp"
+                android:minHeight="60dp"
+                android:onClick="@{() -> loginActivity.login()}"
+                android:text="@string/login" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    style="@style/Theme.Traewelling.PrimaryColorTexts"
+                    android:id="@+id/divider_or"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:text="@string/or" />
+
+                <com.google.android.material.divider.MaterialDivider
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="16dp"
+                    android:layout_toStartOf="@id/divider_or" />
+
+                <com.google.android.material.divider.MaterialDivider
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="16dp"
+                    android:layout_toEndOf="@id/divider_or" />
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/btn_oauth_login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:minHeight="60dp"
-                android:text="@string/login"
-                android:onClick="@{() -> loginActivity.login()}"/>
+                android:onClick="@{() -> loginActivity.initiateOAuthLogin()}"
+                android:drawableEnd="@drawable/ic_popup"
+                android:text="@string/login_oauth" />
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
+            style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:onClick="@{() -> loginActivity.showInfoActivity()}"
             android:text="Informationen"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:onClick="@{() -> loginActivity.showInfoActivity()}"/>
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -29,28 +29,38 @@ class LauncherActivity : AppCompatActivity() {
             if (it == Intent.ACTION_VIEW) {
                 val data = intent?.data
                 if (data != null) {
-                    startupIntent = Intent(Intent.ACTION_VIEW, Uri.EMPTY, this, startupActivity)
-                    if ("status" in data.pathSegments) {
-                        startupIntent?.putExtra(SharedValues.EXTRA_STATUS_ID, data.lastPathSegment)
-                    } else if ("stationboard" in data.pathSegments) {
-                        val station = data.getQueryParameter("station")
-                        startupIntent?.putExtra(
-                            SharedValues.EXTRA_STATION_ID,
-                            station
-                        )
-                        val travelType =
-                            data.getQueryParameter("travelType")
-                        if (travelType != null) {
+                    if (data.host == "app.traewelldroid.de" || (data.host == "auth" && data.scheme == "traewelldroid")) {
+                        val accessToken = data.getQueryParameter("access_token") ?: return
+                        secureStorage.storeObject(SharedValues.SS_JWT, accessToken)
+                        startupIntent =
+                            Intent(Intent.ACTION_VIEW, Uri.EMPTY, this, MainActivity::class.java)
+                    } else {
+                        startupIntent = Intent(Intent.ACTION_VIEW, Uri.EMPTY, this, startupActivity)
+                        if ("status" in data.pathSegments) {
                             startupIntent?.putExtra(
-                                SharedValues.EXTRA_TRAVEL_TYPE,
-                                travelType
+                                SharedValues.EXTRA_STATUS_ID,
+                                data.lastPathSegment
+                            )
+                        } else if ("stationboard" in data.pathSegments) {
+                            val station = data.getQueryParameter("station")
+                            startupIntent?.putExtra(
+                                SharedValues.EXTRA_STATION_ID,
+                                station
+                            )
+                            val travelType =
+                                data.getQueryParameter("travelType")
+                            if (travelType != null) {
+                                startupIntent?.putExtra(
+                                    SharedValues.EXTRA_TRAVEL_TYPE,
+                                    travelType
+                                )
+                            }
+                        } else {
+                            startupIntent?.putExtra(
+                                SharedValues.EXTRA_USER_NAME,
+                                data.lastPathSegment?.substringAfter('@')
                             )
                         }
-                    } else {
-                        startupIntent?.putExtra(
-                            SharedValues.EXTRA_USER_NAME,
-                            data.lastPathSegment?.substringAfter('@')
-                        )
                     }
                 }
             }
