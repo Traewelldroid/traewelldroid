@@ -19,6 +19,11 @@ if (sentryDsn == null) {
     sentryDsn = ""
     project.logger.error('Sentry DSN was not set!')
 }
+def oauthServer = properties.getProperty('OAUTH_SERVER')
+if (oauthServer == null) {
+    oauthServer = ""
+    project.logger.error('OAuth Server was not set!')
+}
 
 android {
     compileSdk 33
@@ -41,11 +46,10 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            buildConfigField "android.net.Uri", "OAUTH_SERVER", "android.net.Uri.parse(\"https://app.traewelldroid.de\")"
+            buildConfigField "android.net.Uri", "OAUTH_SERVER", "android.net.Uri.parse(\"${oauthServer}\")"
         }
         debug {
-
-            buildConfigField "android.net.Uri", "OAUTH_SERVER", "android.net.Uri.parse(\"http://192.168.0.198:8080\")"
+            buildConfigField "android.net.Uri", "OAUTH_SERVER", "android.net.Uri.parse(\"${oauthServer}\")"
         }
     }
     buildFeatures {
