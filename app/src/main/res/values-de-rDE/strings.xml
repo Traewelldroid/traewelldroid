@@ -122,4 +122,6 @@
         Weil Du diesen Check-In erzwungen hast, hast du nur 0 Punkte erhalten.
     </string>
     <string name="title_share">Teilen</string>
+    <string name="or">oder</string>
+    <string name="login_oauth">Über Traewelling.de anmelden</string>
 </resources>

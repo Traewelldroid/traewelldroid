@@ -6,8 +6,10 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.browser.customtabs.CustomTabsIntent
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.jcloquell.androidsecurestorage.SecureStorage
+import de.hbch.traewelling.BuildConfig
 import de.hbch.traewelling.R
 import de.hbch.traewelling.databinding.ActivityLoginBinding
 import de.hbch.traewelling.shared.SharedValues
@@ -30,6 +32,18 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setError(false)
+    }
+
+    fun initiateOAuthLogin() {
+        val intent = CustomTabsIntent.Builder()
+            .setShowTitle(false)
+            .build()
+
+        val url = BuildConfig.OAUTH_SERVER.buildUpon()
+            .path("auth")
+            .build()
+
+        intent.launchUrl(this, url)
     }
 
     fun login() {
