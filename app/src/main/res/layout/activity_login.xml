@@ -102,15 +102,15 @@
                     android:layout_toEndOf="@id/divider_or" />
             </RelativeLayout>
 
-            <Button
-                android:id="@+id/btn_oauth_login"
+            <com.google.android.material.button.MaterialButton
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginVertical="16dp"
                 android:minHeight="60dp"
                 android:onClick="@{() -> loginActivity.initiateOAuthLogin()}"
-                android:drawableEnd="@drawable/ic_popup"
-                android:text="@string/login_oauth" />
+                android:text="@string/login_oauth"
+                app:icon="@drawable/ic_popup"
+                app:iconGravity="end" />
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
@@ -118,7 +118,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="@{() -> loginActivity.showInfoActivity()}"
-            android:text="Informationen"
+            android:text="@string/information"
             app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
