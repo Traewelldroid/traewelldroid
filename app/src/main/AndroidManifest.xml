@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="de.hbch.traewelling">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -12,10 +13,12 @@
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:localeConfig="@xml/locales_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Traewelling"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        tools:targetApi="33">
         <activity
             android:name=".ui.legal.LegalActivity"
             android:exported="false" />
@@ -45,6 +48,7 @@
             </intent-filter>
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
@@ -55,8 +59,10 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="http" />
                 <data android:scheme="https" />
                 <data android:host="traewelling.de" />
@@ -65,8 +71,12 @@
                 <data android:pathPrefix="/@" />
                 <data android:scheme="http" />
                 <data android:scheme="https" />
-                <data android:host="app.traewelldroid.de" android:scheme="https"/>
-                <data android:host="app.traewelldroid.de" android:scheme="traewelldroid"/>
+                <data
+                    android:host="app.traewelldroid.de"
+                    android:scheme="https" />
+                <data
+                    android:host="app.traewelldroid.de"
+                    android:scheme="traewelldroid" />
                 <data android:pathPrefix="/auth/login" />
             </intent-filter>
         </activity>
