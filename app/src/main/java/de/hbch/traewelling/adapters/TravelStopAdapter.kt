@@ -40,7 +40,7 @@ class TravelStopAdapter(val stops: List<HafasTrainTripStation>, val onClick: (Vi
         fun bind(travelStop: HafasTrainTripStation, isLast: Boolean) {
 
             val difference = TimeUnit.MILLISECONDS.toMinutes(
-                (travelStop.departure ?: Date()).time - (travelStop.departurePlanned ?: Date()).time
+                (travelStop.departure ?: Date()).time - travelStop.departurePlanned.time
             )
 
             binding.destinationTime.setTextColor(

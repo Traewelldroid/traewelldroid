@@ -72,7 +72,7 @@ class ConnectionAdapter(
 
             binding.layoutConnectionListItem.transitionName = trip.tripId
             binding.connection = trip
-            if (!trip.station?.name.isNullOrBlank() && searchBinding?.stationId != null && trip.station?.id != searchBinding?.stationId) {
+            if (!trip.station?.name.isNullOrBlank() && searchBinding?.stationId != null && trip.station?.id != searchBinding.stationId) {
                 binding.textViewOrigin.visibility = View.VISIBLE
             }
             binding.executePendingBindings()

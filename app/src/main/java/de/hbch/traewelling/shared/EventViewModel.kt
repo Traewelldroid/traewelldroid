@@ -1,6 +1,5 @@
 package de.hbch.traewelling.shared
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -21,15 +20,14 @@ class EventViewModel : ViewModel() {
         TraewellingApi
             .checkInService
             .getActiveEvents()
-            .enqueue(object: Callback<Data<List<Event>>> {
+            .enqueue(object : Callback<Data<List<Event>>> {
                 override fun onResponse(
                     call: Call<Data<List<Event>>>,
                     response: Response<Data<List<Event>>>
                 ) {
                     if (response.isSuccessful) {
-                        val data = response.body()?.data
-                        if (data != null)
-                            _activeEvents.postValue(data!!)
+                        val data = response.body()?.data ?: return
+                        _activeEvents.postValue(data)
                         return
                     }
                     Sentry.captureMessage(response.errorBody()?.string() ?: "getActiveEvents Error")
