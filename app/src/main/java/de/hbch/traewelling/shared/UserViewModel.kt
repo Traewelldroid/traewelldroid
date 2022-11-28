@@ -56,10 +56,8 @@ open class UserViewModel : ViewModel() {
         get() = Transformations.map(_user) { user ->
             user?.home?.name ?: ""
         }
-    val defaultStatusVisibility: LiveData<StatusVisibility>
-        get() = Transformations.map(_user) { user ->
-            user?.defaultStatusVisibility ?: StatusVisibility.PUBLIC
-        }
+    val defaultStatusVisibility: StatusVisibility
+        get() = _user.value?.defaultStatusVisibility ?: StatusVisibility.PUBLIC
 
     val profilePictureSrc: LiveData<String>
         get() = Transformations.map(_user) { user ->
