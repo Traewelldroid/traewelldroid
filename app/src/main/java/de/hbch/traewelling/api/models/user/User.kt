@@ -17,5 +17,6 @@ data class User(
     @SerializedName("privateProfile") val privateProfile: Boolean,
     @SerializedName("home") var home: Station?,
     @SerializedName("prevent_index") val preventIndex: Boolean,
-    @SerializedName("language") val language: String
+    @SerializedName("language") val language: String,
+    val defaultStatusVisibility: StatusVisibility
 )
