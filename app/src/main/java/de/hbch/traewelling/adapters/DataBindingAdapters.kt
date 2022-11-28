@@ -35,17 +35,23 @@ fun setImageResource(imageView: ImageView, resourceId: Int?) {
 fun setAlertIcon(imageView: ImageView, alertType: AlertType?) {
     if (alertType == null)
         return
-    imageView.setImageResource(when(alertType) {
-        AlertType.ERROR -> R.drawable.ic_error
-        AlertType.SUCCESS -> R.drawable.ic_check_in
-    })
-    imageView.setColorFilter(imageView.resources.getColor(when(alertType) {
-        AlertType.ERROR -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-                                R.color.train_delayed
-                            else
-                                R.color.traewelling
-        AlertType.SUCCESS -> R.color.success
-    }, null))
+    imageView.setImageResource(
+        when (alertType) {
+            AlertType.ERROR -> R.drawable.ic_error
+            AlertType.SUCCESS -> R.drawable.ic_check_in
+        }
+    )
+    imageView.setColorFilter(
+        imageView.resources.getColor(
+            when (alertType) {
+                AlertType.ERROR -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+                    R.color.train_delayed
+                else
+                    R.color.traewelling
+                AlertType.SUCCESS -> R.color.success
+            }, null
+        )
+    )
 }
 
 @BindingAdapter(value = ["planned", "real"], requireAll = true)
@@ -78,7 +84,7 @@ fun setDisplayTimeRange(textView: TextView, dateRange: Pair<Date, Date>?) {
     )
 }
 
-@BindingAdapter(value = [ "departure", "arrival" ], requireAll = true)
+@BindingAdapter(value = ["departure", "arrival"], requireAll = true)
 fun setTimeProgress(progressBar: ProgressBar, departure: Date?, arrival: Date?) {
     if (departure == null || arrival == null)
         return
@@ -110,12 +116,13 @@ fun getDurationString(resources: Resources, duration: Int): String {
     }
 }
 
-@BindingAdapter(value = [ "username", "timestamp" ], requireAll = true)
+@BindingAdapter(value = ["username", "timestamp"], requireAll = true)
 fun setUsernameAndTimeOnCheckIn(textView: TextView, username: String?, timestamp: Date?) {
     if (username == null || timestamp == null)
         return
     val df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.getDefault())
-    textView.text = textView.resources.getString(R.string.check_in_user_time, username, df.format(timestamp))
+    textView.text =
+        textView.resources.getString(R.string.check_in_user_time, username, df.format(timestamp))
 }
 
 @BindingAdapter("productType")
@@ -145,9 +152,8 @@ fun setStatusVisibility(imageView: ImageView, statusVisibility: StatusVisibility
 
     imageView.setImageResource(getStatusVisibilityImageResource(statusVisibility))
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-        imageView.tooltipText =
-            imageView.resources.getString(getStatusVisibilityTextResource(statusVisibility))
+    imageView.tooltipText =
+        imageView.resources.getString(getStatusVisibilityTextResource(statusVisibility))
 }
 
 @BindingAdapter("jwtExpiration")
@@ -157,14 +163,15 @@ fun setJwtExpiration(textView: TextView, jwt: String) {
     val decodedJwt = JWT(jwt)
     var dateTimeString = ""
     val df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.getDefault())
-    if (decodedJwt.expiresAt != null)
-        dateTimeString = df.format(decodedJwt.expiresAt)
-    textView.setText(textView.resources.getString(R.string.jwt_expiration, dateTimeString))
+    val expiresAt = decodedJwt.expiresAt
+    if (expiresAt != null)
+        dateTimeString = df.format(expiresAt)
+    textView.text = textView.resources.getString(R.string.jwt_expiration, dateTimeString)
 }
 
 @BindingAdapter("loggedInAs")
 fun setLoggedInAs(textView: TextView, username: String?) {
-    textView.setText(textView.resources.getString(R.string.signed_in_as, username ?: ""))
+    textView.text = textView.resources.getString(R.string.signed_in_as, username ?: "")
 }
 
 fun getStatusVisibilityImageResource(visibility: StatusVisibility): Int {
@@ -202,8 +209,7 @@ fun setStatusBusiness(imageView: ImageView, business: StatusBusiness?) {
 
     imageView.setImageResource(getBusinessImageResource(business))
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-        imageView.tooltipText = imageView.resources.getString(getBusinessTextResource(business))
+    imageView.tooltipText = imageView.resources.getString(getBusinessTextResource(business))
 }
 
 @BindingAdapter("event")
@@ -220,12 +226,14 @@ fun setEventOnTextView(textView: TextView, event: Event?) {
 @BindingAdapter("pointReason")
 fun setPointReasonOnTextView(textView: TextView, statusPoints: StatusPoints?) {
     if (statusPoints?.calculation != null && statusPoints.calculation.reason != PointReason.IN_TIME)
-        textView.text = textView.resources.getString(when(statusPoints.calculation.reason) {
-            PointReason.FORCED -> R.string.point_reason_forced
-            PointReason.GOOD_ENOUGH -> R.string.point_reason_good_enough
-            PointReason.NOT_SUFFICIENT -> R.string.point_reason_not_sufficient
-            PointReason.IN_TIME -> R.string.base
-        });
+        textView.text = textView.resources.getString(
+            when (statusPoints.calculation.reason) {
+                PointReason.FORCED -> R.string.point_reason_forced
+                PointReason.GOOD_ENOUGH -> R.string.point_reason_good_enough
+                PointReason.NOT_SUFFICIENT -> R.string.point_reason_not_sufficient
+                PointReason.IN_TIME -> R.string.base
+            }
+        )
 }
 
 fun getBusinessImageResource(business: StatusBusiness): Int {
@@ -271,15 +279,11 @@ fun getJourneyProgress(departure: Date, arrival: Date): Long {
 }
 
 fun getLastDestination(trip: HafasTrip): String {
-    var lastDestination = ""
+    val lastDestination = clarifyRingbahnBerlin(trip)
 
-    lastDestination = clarifyRingbahnBerlin(trip)
-
-    // default case
-    if (lastDestination == "")
-        lastDestination = trip.direction ?: (trip.destination?.name ?: "")
-
-    return lastDestination
+    return lastDestination.ifBlank {
+        trip.direction ?: (trip.destination?.name ?: "")
+    }
 }
 
 private fun clarifyRingbahnBerlin(trip: HafasTrip): String {
@@ -289,11 +293,8 @@ private fun clarifyRingbahnBerlin(trip: HafasTrip): String {
         return ""
 
     if (trip.line.operator.id == "s-bahn-berlin" && trip.direction.contains("Ring")) {
-        var direction = trip.direction
-        direction = direction.replace("S41", "↻")
-        direction = direction.replace("S42", "↺")
-
-        return direction
+        return trip.direction.replace("S41", "↻")
+            .replace("S42", "↺")
     }
 
     return ""

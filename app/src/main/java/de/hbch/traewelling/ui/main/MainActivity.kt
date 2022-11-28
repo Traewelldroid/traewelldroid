@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
                 LoginActivity::class.java
             )
         )
-        secureStorage?.removeObject(SharedValues.SS_JWT)
+        secureStorage.removeObject(SharedValues.SS_JWT)
         TraewellingApi.jwt = ""
         finish()
     }
@@ -69,6 +69,7 @@ class MainActivity : AppCompatActivity() {
             val insetTop = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 insets.getInsets(systemBars()).top
             } else {
+                @Suppress("DEPRECATION")
                 insets.systemWindowInsetTop
             }
             view.updatePadding(top = insetTop)
