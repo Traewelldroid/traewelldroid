@@ -149,13 +149,13 @@ class StatisticsFragment : Fragment() {
         if (binding.chipStatisticsOperators.isChecked) {
             if (binding.chipStatisticsCheckIns.isChecked) {
                 currentStats.operators.forEachIndexed { index, operatorStats ->
-                    val dataSet = BarDataSet(listOf(BarEntry(index.toFloat(), operatorStats.checkInCount.toFloat())), operatorStats.operatorName)
+                    val dataSet = BarDataSet(listOf(BarEntry(index.toFloat(), operatorStats.checkInCount.toFloat())), operatorStats.operatorName ?: getString(R.string.other_operators))
                     dataSet.valueFormatter = checkInCountValueFormatter
                     entrySet.add(dataSet)
                 }
             } else if (binding.chipStatisticsTravelTime.isChecked) {
                 currentStats.operators.forEachIndexed { index, operatorStats ->
-                    val dataSet = BarDataSet(listOf(BarEntry(index.toFloat(), operatorStats.duration.toFloat())), operatorStats.operatorName)
+                    val dataSet = BarDataSet(listOf(BarEntry(index.toFloat(), operatorStats.duration.toFloat())), operatorStats.operatorName ?: getString(R.string.other_operators))
                     dataSet.valueFormatter = travelTimeValueFormatter
                     entrySet.add(dataSet)
                 }
