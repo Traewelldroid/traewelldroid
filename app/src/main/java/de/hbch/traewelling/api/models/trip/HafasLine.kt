@@ -10,7 +10,7 @@ data class HafasLine(
     @SerializedName("fahrtNr") val travelId: String,
     @SerializedName("name") val name: String,
     @SerializedName("product") val product: ProductType,
-    @SerializedName("operator") val operator: HafasOperator
+    @SerializedName("operator") val operator: HafasOperator?
 )
 
 enum class ProductType {
