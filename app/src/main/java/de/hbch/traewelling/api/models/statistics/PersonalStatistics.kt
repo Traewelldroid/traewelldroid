@@ -16,7 +16,7 @@ data class CategoryStatistics(
 )
 
 data class OperatorStatistics(
-    @SerializedName("name") val operatorName: String,
+    @SerializedName("name") val operatorName: String?,
     @SerializedName("count") val checkInCount: Int,
     @SerializedName("duration") val duration: Int
 )
