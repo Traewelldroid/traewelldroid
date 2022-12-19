@@ -287,9 +287,7 @@ fun getLastDestination(trip: HafasTrip): String {
 }
 
 private fun clarifyRingbahnBerlin(trip: HafasTrip): String {
-    if (trip.line == null)
-        return ""
-    if (trip.direction == null)
+    if (trip.line == null || trip.direction == null || trip.line.operator == null)
         return ""
 
     if (trip.line.operator.id == "s-bahn-berlin" && trip.direction.contains("Ring")) {
