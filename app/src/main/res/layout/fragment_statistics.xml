@@ -87,6 +87,13 @@
                 android:id="@+id/chip_statistics_operators"
                 android:text="@string/operators" />
 
+            <com.google.android.material.chip.Chip
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:id="@+id/chip_statistics_businesses"
+                android:text="@string/travel_purpose" />
+
         </com.google.android.material.chip.ChipGroup>
 
         <androidx.constraintlayout.widget.ConstraintLayout

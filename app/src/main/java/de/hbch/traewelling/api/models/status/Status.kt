@@ -1,9 +1,11 @@
 package de.hbch.traewelling.api.models.status
 
+import android.content.res.Resources
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
+import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.event.Event
 import java.util.*
 
@@ -62,5 +64,14 @@ enum class StatusBusiness(val business: Int) {
     @SerializedName("1")
     BUSINESS(1),
     @SerializedName("2")
-    COMMUTE(2)
+    COMMUTE(2);
+
+    companion object {
+        fun toString(resources: Resources, business: StatusBusiness)
+            = resources.getString(when(business) {
+                StatusBusiness.PRIVATE -> R.string.business_private
+                StatusBusiness.COMMUTE -> R.string.business_commute
+                StatusBusiness.BUSINESS -> R.string.business
+            })
+    }
 }
