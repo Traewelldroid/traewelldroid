@@ -16,7 +16,6 @@
     <string name="display_travel_time_hours_minutes">%1$dh %2$dmin</string>
     <string name="display_travel_time_days_hours_minutes">%1$dd %2$dh %3$dmin</string>
     <string name="display_average_speed">%1$.2f km/h</string>
-    <string name="display_kilometres" translatable="false">%1$dkm</string>
     <string name="where_are_you">Where are you?</string>
     <string name="search">Search</string>
     <string name="next_station">Next station: %1$s</string>
