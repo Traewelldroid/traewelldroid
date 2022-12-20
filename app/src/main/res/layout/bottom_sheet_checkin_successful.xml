@@ -70,7 +70,7 @@
                 android:layout_marginStart="16dp"
                 android:textSize="16sp"
                 tools:text="64km"
-                android:text="@{@string/display_kilometres(checkIn.status.journey.distance / 1000)}" />
+                android:text="@{checkIn.status.journey.formattedDistance}" />
 
             <TextView
                 android:layout_width="wrap_content"
