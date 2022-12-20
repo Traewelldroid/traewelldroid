@@ -20,6 +20,7 @@ import java.util.*
 import de.hbch.traewelling.R
 import de.hbch.traewelling.util.TravelTimeValueFormatter
 import de.hbch.traewelling.api.models.statistics.PersonalStatistics
+import de.hbch.traewelling.api.models.status.StatusBusiness
 import de.hbch.traewelling.api.models.trip.ProductType
 import de.hbch.traewelling.util.CheckInCountValueFormatter
 
@@ -170,6 +171,20 @@ class StatisticsFragment : Fragment() {
             } else if (binding.chipStatisticsTravelTime.isChecked) {
                 currentStats.categories.forEachIndexed { index, categoryStats ->
                     val dataSet = BarDataSet(listOf(BarEntry(index.toFloat(), categoryStats.duration.toFloat())), ProductType.toString(resources, categoryStats.productType))
+                    dataSet.valueFormatter = travelTimeValueFormatter
+                    entrySet.add(dataSet)
+                }
+            }
+        } else if (binding.chipStatisticsBusinesses.isChecked) {
+            if (binding.chipStatisticsCheckIns.isChecked) {
+                currentStats.purposes.forEachIndexed { index, purposeStats ->
+                    val dataSet = BarDataSet(listOf(BarEntry(index.toFloat(), purposeStats.checkInCount.toFloat())), StatusBusiness.toString(resources, purposeStats.businessType))
+                    dataSet.valueFormatter = checkInCountValueFormatter
+                    entrySet.add(dataSet)
+                }
+            } else if (binding.chipStatisticsTravelTime.isChecked) {
+                currentStats.purposes.forEachIndexed { index, purposeStats ->
+                    val dataSet = BarDataSet(listOf(BarEntry(index.toFloat(), purposeStats.duration.toFloat())), StatusBusiness.toString(resources, purposeStats.businessType))
                     dataSet.valueFormatter = travelTimeValueFormatter
                     entrySet.add(dataSet)
                 }

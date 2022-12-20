@@ -46,6 +46,7 @@
     <string name="visibility_private">Nur für dich</string>
     <string name="visibility_only_authenticated">Nur angemeldete Nutzer</string>
     <string name="title_select_business">Wähle den gewünschten Fahrttyp:</string>
+    <string name="travel_purpose">Reisezweck</string>
     <string name="business_private">Privatreise</string>
     <string name="business">Geschäftsreise</string>
     <string name="business_commute">Arbeitsweg</string>
