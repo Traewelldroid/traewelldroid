@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.annotation.DrawableRes
 import androidx.databinding.BindingAdapter
 import com.auth0.android.jwt.JWT
 import com.google.android.material.button.MaterialButton
@@ -17,6 +18,7 @@ import de.hbch.traewelling.api.models.status.StatusPoints
 import de.hbch.traewelling.api.models.status.StatusVisibility
 import de.hbch.traewelling.api.models.trip.HafasTrip
 import de.hbch.traewelling.api.models.trip.ProductType
+import de.hbch.traewelling.api.models.user.User
 import de.hbch.traewelling.ui.include.alert.AlertType
 import java.text.DateFormat
 import java.text.DateFormat.getTimeInstance
@@ -234,6 +236,42 @@ fun setPointReasonOnTextView(textView: TextView, statusPoints: StatusPoints?) {
                 PointReason.IN_TIME -> R.string.base
             }
         )
+}
+
+@BindingAdapter("followButton")
+fun manageFollowButton(button: MaterialButton, user: User?) {
+    if (user == null)
+        return
+
+    /*
+    * Handle four states:
+    * - Following
+    * - Not following, public profile
+    * - Not following, private profile
+    * - Follow request pending
+    */
+    val iconDrawable =
+        if (user.following) {
+            R.drawable.ic_person_remove
+        } else if (user.followRequestPending) {
+            R.drawable.ic_hourglass
+        } else {
+            R.drawable.ic_add_person
+        }
+
+    val buttonText =
+        if (user.following) {
+            R.string.unfollow
+        } else if (user.followRequestPending) {
+            R.string.request_follow_pending
+        } else if (user.privateProfile) {
+            R.string.request_follow
+        } else {
+            R.string.follow
+        }
+
+    button.text = button.resources.getString(buttonText)
+    button.setIconResource(iconDrawable)
 }
 
 fun getBusinessImageResource(business: StatusBusiness): Int {

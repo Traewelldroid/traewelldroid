@@ -19,6 +19,8 @@ import retrofit2.Response
 open class UserViewModel : ViewModel() {
     protected val _user = MutableLiveData<User?>()
 
+    val user: LiveData<User?> get() = _user
+
     val userId: LiveData<Int>
         get() = Transformations.map(_user) { user ->
             user?.id ?: -1

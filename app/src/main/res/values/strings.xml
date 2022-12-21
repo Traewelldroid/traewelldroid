@@ -129,4 +129,8 @@
     <string name="login_oauth">Login with Traewelling.de</string>
     <string name="other_operators">Other operators</string>
     <string name="private_profile">Private profile</string>
+    <string name="follow">Follow</string>
+    <string name="request_follow">Request follow</string>
+    <string name="request_follow_pending">Request pending</string>
+    <string name="unfollow">Unfollow</string>
 </resources>
