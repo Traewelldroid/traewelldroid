@@ -181,7 +181,8 @@
                             app:layout_constraintTop_toBottomOf="@id/layout_stats"
                             android:layout_marginTop="8dp"
                             android:visibility="@{isOwnProfile == true ? View.GONE : View.VISIBLE}"
-                            followButton="@{viewModel.user}" />
+                            followButton="@{viewModel.user}"
+                            android:onClick="@{() -> viewModel.handleFollowButton()}"/>
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
