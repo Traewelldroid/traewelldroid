@@ -7,6 +7,7 @@
         <variable
             name="viewModel"
             type="de.hbch.traewelling.shared.UserViewModel" />
+        <import type="android.view.View" />
     </data>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -46,6 +47,14 @@
                             app:layout_constraintTop_toTopOf="parent"
                             android:src="@drawable/ic_new_user"
                             android:layout_marginTop="8dp"/>
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_lock"
+                            app:layout_constraintBottom_toBottomOf="@id/image_profile"
+                            app:layout_constraintEnd_toEndOf="@id/image_profile"
+                            android:visibility="@{viewModel.privateProfile == true ? View.VISIBLE : View.GONE}"
+                            android:tooltipText="@string/private_profile" />
 
                         <TextView
                             android:layout_width="wrap_content"

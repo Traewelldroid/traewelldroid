@@ -128,4 +128,5 @@
     <string name="or">or</string>
     <string name="login_oauth">Login with Traewelling.de</string>
     <string name="other_operators">Other operators</string>
+    <string name="private_profile">Private profile</string>
 </resources>

@@ -6,8 +6,9 @@ import de.hbch.traewelling.api.models.status.StatusVisibility
 
 data class User(
     @SerializedName("id") val id: Int,
-    @SerializedName("name") val name: String,
+    @SerializedName("displayName") val name: String,
     @SerializedName("username") val username: String,
+    @SerializedName("profilePicture") val avatarUrl: String,
     @SerializedName("trainDistance") val distance: Int,
     @SerializedName("trainDuration") val duration: Int,
     @SerializedName("trainSpeed") val averageSpeed: Double,
@@ -16,7 +17,8 @@ data class User(
     @SerializedName("mastodonUrl") val mastodonUrl: String,
     @SerializedName("privateProfile") val privateProfile: Boolean,
     @SerializedName("home") var home: Station?,
-    @SerializedName("prevent_index") val preventIndex: Boolean,
     @SerializedName("language") val language: String,
+    @SerializedName("following") val following: Boolean,
+    @SerializedName("followPending") val followRequestPending: Boolean,
     val defaultStatusVisibility: StatusVisibility
 )
