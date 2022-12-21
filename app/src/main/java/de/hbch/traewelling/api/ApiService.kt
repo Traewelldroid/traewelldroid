@@ -164,6 +164,16 @@ interface UserService {
     fun getUser(
         @Path("username") username: String
     ): Call<Data<User>>
+
+    @POST("user/createFollow")
+    fun followUser(
+        @Query("userId") userId: Int
+    ): Call<Data<User>>
+
+    @DELETE("user/destroyFollow")
+    fun unfollowUser(
+        @Query("userId") userId: Int
+    ): Call<Data<User>>
 }
 
 object TraewellingApi {

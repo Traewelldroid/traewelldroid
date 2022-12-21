@@ -7,6 +7,10 @@
         <variable
             name="viewModel"
             type="de.hbch.traewelling.shared.UserViewModel" />
+        <variable
+            name="isOwnProfile"
+            type="Boolean" />
+        <import type="android.view.View" />
     </data>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -46,6 +50,14 @@
                             app:layout_constraintTop_toTopOf="parent"
                             android:src="@drawable/ic_new_user"
                             android:layout_marginTop="8dp"/>
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_lock"
+                            app:layout_constraintBottom_toBottomOf="@id/image_profile"
+                            app:layout_constraintEnd_toEndOf="@id/image_profile"
+                            android:visibility="@{viewModel.privateProfile == true ? View.VISIBLE : View.GONE}"
+                            android:tooltipText="@string/private_profile" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -62,6 +74,7 @@
                         <GridLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:id="@+id/layout_stats"
                             android:columnCount="2"
                             android:rowCount="2"
                             android:stretchColumns="*"
@@ -161,7 +174,15 @@
                             </LinearLayout>
                         </GridLayout>
 
-
+                        <com.google.android.material.button.MaterialButton
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            tools:text="@string/follow"
+                            app:layout_constraintTop_toBottomOf="@id/layout_stats"
+                            android:layout_marginTop="8dp"
+                            android:visibility="@{isOwnProfile == true ? View.GONE : View.VISIBLE}"
+                            followButton="@{viewModel.user}"
+                            android:onClick="@{() -> viewModel.handleFollowButton()}"/>
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>

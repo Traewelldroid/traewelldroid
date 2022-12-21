@@ -16,9 +16,9 @@ import de.hbch.traewelling.shared.UserViewModel
 
 abstract class AbstractUserFragment : Fragment() {
 
-    private lateinit var binding: FragmentUserBinding
+    protected lateinit var binding: FragmentUserBinding
     protected abstract val viewModel: UserViewModel
-    private val loggedInUserViewModel: LoggedInUserViewModel by activityViewModels()
+    protected val loggedInUserViewModel: LoggedInUserViewModel by activityViewModels()
     private var page = 1
 
     override fun onCreateView(

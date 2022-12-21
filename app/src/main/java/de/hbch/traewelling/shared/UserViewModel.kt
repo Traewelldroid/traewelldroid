@@ -19,6 +19,8 @@ import retrofit2.Response
 open class UserViewModel : ViewModel() {
     protected val _user = MutableLiveData<User?>()
 
+    val user: LiveData<User?> get() = _user
+
     val userId: LiveData<Int>
         get() = Transformations.map(_user) { user ->
             user?.id ?: -1
@@ -61,7 +63,12 @@ open class UserViewModel : ViewModel() {
 
     val profilePictureSrc: LiveData<String>
         get() = Transformations.map(_user) { user ->
-            "https://traewelling.de/@${user?.username ?: ""}/picture"
+            user?.avatarUrl ?: ""
+        }
+
+    val privateProfile: LiveData<Boolean>
+        get() = Transformations.map(_user) { user ->
+            user?.privateProfile ?: false
         }
 
     fun setHomelandStation(station: Station) {
@@ -115,4 +122,37 @@ open class UserViewModel : ViewModel() {
 
     fun loadUser(name: String, onSuccess: (Data<User>) -> Unit = {}) =
         TraewellingApi.userService.getUser(name).enqueue(loadUserCallback(onSuccess))
+
+    fun handleFollowButton() {
+        val successCallback: (User?) -> Unit = {
+            _user.postValue(it)
+        }
+        val apiCallback = object: Callback<Data<User>> {
+            override fun onResponse(call: Call<Data<User>>, response: Response<Data<User>>) {
+                if (response.isSuccessful) {
+                    successCallback(response.body()?.data)
+                }
+            }
+
+            override fun onFailure(call: Call<Data<User>>, t: Throwable) {
+                Sentry.captureException(t)
+            }
+        }
+
+        if (user.value?.following == false) {
+            followUser(apiCallback)
+        } else {
+            unfollowUser(apiCallback)
+        }
+    }
+
+    private fun followUser(successCallback: Callback<Data<User>>) {
+        TraewellingApi.userService.followUser(user.value?.id ?: 0)
+            .enqueue(successCallback)
+    }
+
+    private fun unfollowUser(successCallback: Callback<Data<User>>) {
+        TraewellingApi.userService.unfollowUser(user.value?.id ?: 0)
+            .enqueue(successCallback)
+    }
 }

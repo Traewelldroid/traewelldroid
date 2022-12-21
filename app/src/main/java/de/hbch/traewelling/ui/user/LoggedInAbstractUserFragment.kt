@@ -71,7 +71,10 @@ class LoggedInAbstractUserFragment : AbstractUserFragment() {
 
         requireActivity().addMenuProvider(menuProvider)
 
-        return super.onCreateView(inflater, container, savedInstanceState)
+        val view = super.onCreateView(inflater, container, savedInstanceState)
+        binding.isOwnProfile = true
+
+        return view
     }
 
     override fun onDestroyView() {
