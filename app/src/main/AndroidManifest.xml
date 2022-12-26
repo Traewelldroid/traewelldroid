@@ -21,9 +21,6 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="33">
         <activity
-            android:name=".ui.legal.LegalActivity"
-            android:exported="false" />
-        <activity
             android:name=".ui.info.InfoActivity"
             android:exported="false" />
 
