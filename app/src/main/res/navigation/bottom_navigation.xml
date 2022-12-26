@@ -40,6 +40,9 @@
         <action
             android:id="@+id/action_user_fragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_user_fragment_to_searchConnectionFragment"
+            app:destination="@id/searchConnectionFragment" />
     </fragment>
     <fragment
         android:id="@+id/statisticsFragment"
