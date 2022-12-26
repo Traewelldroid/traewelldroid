@@ -12,6 +12,21 @@ Sentry instance is used.
 At the moment the app is available on Google Play. You can download the app there:
 [Google Play Store](https://play.google.com/store/apps/details?id=de.hbch.traewelling)
 
+## Setup
+
+First of all you should copy the `key.properties.example` file in the root directory and copy the
+contents into a `key.properties` file. With those properties the main keys and URLs of the application
+can be set.
+
+| Property name  | Usage                                                                         | Mandatory |
+| -------------- | ----------------------------------------------------------------------------- | --------- |
+| `SENTRY_DSN`   | The DSN used for error logging with Sentry.                                   | No        |
+| `OAUTH_SERVER` | The URL to the OAuth server running the authentication service for Träwelling | No        |
+| `REPO_URL`     | The URL to the repository                                                     | No        |
+| `PRIVACY_URL`  | URL to the privacy statement and imprint.                                     | Yes       |
+
+After that, open Android Studio and the project should setup itself automatically.
+
 ## Contributions
 
 I'm always happy for contributions in any way! Is there something that could be improved on
