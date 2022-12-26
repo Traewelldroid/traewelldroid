@@ -15,7 +15,7 @@ At the moment the app is available on Google Play. You can download the app ther
 ## Contributions
 
 I'm always happy for contributions in any way! Is there something that could be improved on
-Träwelldroid? Just [create an issue](https://github.com/jheubuch/traewelldroid/issues/new/choose)
+Träwelldroid? Just [create an issue](https://github.com/Traewelldroid/traewelldroid/issues/new/choose)
 and tell us about your concerns or ideas!
 
 Of course you're also free to contribute code by yourself! Just fork the repo, do your changes and

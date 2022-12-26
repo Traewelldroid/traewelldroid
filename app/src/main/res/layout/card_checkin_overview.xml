@@ -252,7 +252,7 @@
                         tools:text="Hello" />
 
                     <!-- TODO: Enable this once we have current stop information -->
-                    <!-- Also see: https://github.com/jheubuch/traewelling-android/issues/26 -->
+                    <!-- Also see: https://github.com/Traewelldroid/traewelldroid/issues/26 -->
                     <TextView
                         android:id="@+id/next_station"
                         style="@style/Theme.Traewelling.PrimaryColorTexts"
