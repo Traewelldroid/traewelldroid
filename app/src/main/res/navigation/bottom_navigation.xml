@@ -40,6 +40,9 @@
         <action
             android:id="@+id/action_user_fragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_logged_in_user_fragment_to_searchConnectionFragment"
+            app:destination="@id/searchConnectionFragment" />
     </fragment>
     <fragment
         android:id="@+id/statisticsFragment"
@@ -222,6 +225,9 @@
         <argument
             android:name="userName"
             app:argType="string" />
+        <action
+            android:id="@+id/action_user_profile_fragment_to_searchConnectionFragment"
+            app:destination="@id/searchConnectionFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"

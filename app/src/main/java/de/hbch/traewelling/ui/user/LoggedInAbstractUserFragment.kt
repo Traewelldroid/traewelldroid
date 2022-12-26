@@ -9,10 +9,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
 import de.hbch.traewelling.R
+import de.hbch.traewelling.adapters.CheckInAdapter
 import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.api.models.Data
 import de.hbch.traewelling.api.models.station.Station
 import de.hbch.traewelling.shared.LoggedInUserViewModel
+import de.hbch.traewelling.ui.dashboard.DashboardFragmentDirections
 import de.hbch.traewelling.ui.info.InfoActivity
 import io.sentry.Sentry
 import retrofit2.Call
@@ -73,6 +75,15 @@ class LoggedInAbstractUserFragment : AbstractUserFragment() {
 
         val view = super.onCreateView(inflater, container, savedInstanceState)
         binding.isOwnProfile = true
+
+        val adapter = binding.recyclerViewCheckIn.adapter as CheckInAdapter
+        adapter.setOnStationNameClickedListener { stationName, date -> findNavController()
+            .navigate(
+                LoggedInAbstractUserFragmentDirections.actionLoggedInUserFragmentToSearchConnectionFragment(
+                    stationName,
+                    date
+                )
+            ) }
 
         return view
     }

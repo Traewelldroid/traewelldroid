@@ -14,7 +14,7 @@ import java.util.*
 class CheckInAdapter(
     val checkIns: MutableList<Status>,
     private val loggedInUserId: LiveData<Int>,
-    private val onStationNameClickedListener: StationNameClickListener
+    private var onStationNameClickedListener: StationNameClickListener
     )
     : RecyclerView.Adapter<CheckInAdapter.CheckInViewHolder>() {
 
@@ -75,5 +75,9 @@ class CheckInAdapter(
                 binding.nextStation.visibility = View.GONE
             binding.executePendingBindings()
         }
+    }
+
+    fun setOnStationNameClickedListener(listener: StationNameClickListener) {
+        onStationNameClickedListener = listener;
     }
 }

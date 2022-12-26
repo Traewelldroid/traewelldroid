@@ -61,9 +61,13 @@ abstract class AbstractUserFragment : Fragment() {
         }
 
         page = 1 // Reset page
-        loadCheckIns()
 
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        loadCheckIns()
     }
 
     protected fun loadCheckIns() {
