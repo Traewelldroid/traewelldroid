@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import de.hbch.traewelling.adapters.CheckInAdapter
 import de.hbch.traewelling.shared.UserViewModel
 
 class UserFragment : AbstractUserFragment() {
@@ -23,6 +25,17 @@ class UserFragment : AbstractUserFragment() {
             binding.isOwnProfile =
                 (loggedInUserViewModel.user.value?.id ?: -1) == (it.data.id)
         }
-        return super.onCreateView(inflater, container, savedInstanceState)
+        val view = super.onCreateView(inflater, container, savedInstanceState)
+
+        val adapter = binding.recyclerViewCheckIn.adapter as CheckInAdapter
+        adapter.setOnStationNameClickedListener { stationName, date -> findNavController()
+            .navigate(
+                UserFragmentDirections.actionUserProfileFragmentToSearchConnectionFragment(
+                    stationName,
+                    date
+                )
+            ) }
+
+        return view
     }
 }

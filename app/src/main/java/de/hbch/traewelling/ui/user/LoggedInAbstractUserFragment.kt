@@ -79,7 +79,7 @@ class LoggedInAbstractUserFragment : AbstractUserFragment() {
         val adapter = binding.recyclerViewCheckIn.adapter as CheckInAdapter
         adapter.setOnStationNameClickedListener { stationName, date -> findNavController()
             .navigate(
-                LoggedInAbstractUserFragmentDirections.actionUserFragmentToSearchConnectionFragment(
+                LoggedInAbstractUserFragmentDirections.actionLoggedInUserFragmentToSearchConnectionFragment(
                     stationName,
                     date
                 )
