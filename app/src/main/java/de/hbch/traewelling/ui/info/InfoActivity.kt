@@ -4,9 +4,10 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.browser.customtabs.CustomTabsIntent
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
+import de.hbch.traewelling.BuildConfig
 import de.hbch.traewelling.databinding.ActivityInfoBinding
-import de.hbch.traewelling.ui.legal.LegalActivity
 
 class InfoActivity : AppCompatActivity() {
 
@@ -32,12 +33,16 @@ class InfoActivity : AppCompatActivity() {
 
     fun viewOnGitHub() {
         val intent = Intent(Intent.ACTION_VIEW)
-        intent.data = Uri.parse("https://github.com/jheubuch/traewelling-android")
+        intent.data = Uri.parse(BuildConfig.REPO_URL)
         startActivity(intent)
     }
 
     fun viewLegalInfo() {
-        startActivity(Intent(this, LegalActivity::class.java))
+        val intent = CustomTabsIntent.Builder()
+            .setShowTitle(false)
+            .build()
+
+        intent.launchUrl(this, Uri.parse(BuildConfig.PRIVACY_URL))
     }
 
     override fun onSupportNavigateUp(): Boolean {
