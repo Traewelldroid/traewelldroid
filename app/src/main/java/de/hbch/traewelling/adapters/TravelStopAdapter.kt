@@ -38,10 +38,13 @@ class TravelStopAdapter(val stops: List<HafasTrainTripStation>, val onClick: (Vi
 
     class TravelStopViewHolder(val binding: TravelStopListItemBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(travelStop: HafasTrainTripStation, isLast: Boolean) {
+            val differenceMillis = if(travelStop.departureReal == null) {
+                (travelStop.arrivalReal ?: Date()).time - travelStop.arrivalPlanned.time
+            } else {
+                travelStop.departureReal.time - travelStop.departurePlanned.time
+            }
 
-            val difference = TimeUnit.MILLISECONDS.toMinutes(
-                (travelStop.departure ?: Date()).time - travelStop.departurePlanned.time
-            )
+            val difference = TimeUnit.MILLISECONDS.toMinutes(differenceMillis)
 
             binding.destinationTime.setTextColor(
                 ContextCompat.getColor(
