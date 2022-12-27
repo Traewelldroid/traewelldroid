@@ -1,7 +1,6 @@
 package de.hbch.traewelling.api.models.status
 
 import com.google.gson.annotations.SerializedName
-import de.hbch.traewelling.api.models.user.User
 import java.util.*
 
 data class CheckInRequest(
@@ -11,6 +10,7 @@ data class CheckInRequest(
     @SerializedName("eventId") val eventId: Int?,
     @SerializedName("tweet") val sendTweet: Boolean,
     @SerializedName("toot") val sendToot: Boolean,
+    @SerializedName("shouldChain_check") val shouldChainToot: Boolean,
     @SerializedName("tripId") val tripId: String,
     @SerializedName("lineName") val lineName: String,
     @SerializedName("start") val startStationId: Int,
