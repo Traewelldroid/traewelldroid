@@ -143,6 +143,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:icon="@drawable/ic_mastodon" />
+
+                    <Button
+                        android:id="@+id/btn_send_chain_toot"
+                        style="@style/Widget.App.ToggleButton.OutlinedButton.IconOnly"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:icon="@drawable/ic_chain" />
                 </com.google.android.material.button.MaterialButtonToggleGroup>
 
                 <com.google.android.material.button.MaterialButton

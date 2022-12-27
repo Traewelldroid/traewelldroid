@@ -44,15 +44,30 @@ abstract class AbstractCheckInFragment : Fragment() {
                     true -> View.VISIBLE
                     false -> View.GONE
                 }
-            btnSendTweet.visibility =
+            val mastodonVisibility =
                 when (loggedInUserViewModel.loggedInUser.value?.twitterUrl != null) {
                     true -> View.VISIBLE
                     false -> View.GONE
                 }
-            toggleGroupSocialMedia.addOnButtonCheckedListener { _, checkedId, isChecked ->
+
+            btnSendTweet.visibility = mastodonVisibility
+            btnSendChainToot.visibility = mastodonVisibility
+
+            toggleGroupSocialMedia.addOnButtonCheckedListener { group, checkedId, isChecked ->
                 when (checkedId) {
-                    R.id.btn_send_toot -> checkInViewModel.toot.value = isChecked
+                    R.id.btn_send_toot -> {
+                        if (isChecked) {
+                            group.uncheck(R.id.btn_send_chain_toot)
+                        }
+                        checkInViewModel.toot.value = isChecked
+                    }
                     R.id.btn_send_tweet -> checkInViewModel.tweet.value = isChecked
+                    R.id.btn_send_chain_toot -> {
+                        if(isChecked) {
+                            group.check(R.id.btn_send_toot)
+                        }
+                        checkInViewModel.chainToot.value = isChecked
+                    }
                 }
             }
         }
