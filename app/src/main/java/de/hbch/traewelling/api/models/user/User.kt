@@ -20,5 +20,6 @@ data class User(
     @SerializedName("language") val language: String,
     @SerializedName("following") val following: Boolean,
     @SerializedName("followPending") val followRequestPending: Boolean,
+    @SerializedName("muted") val muted: Boolean,
     val defaultStatusVisibility: StatusVisibility
 )

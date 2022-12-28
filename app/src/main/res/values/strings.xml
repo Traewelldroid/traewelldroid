@@ -133,4 +133,6 @@
     <string name="request_follow">Request follow</string>
     <string name="request_follow_pending">Request pending</string>
     <string name="unfollow">Unfollow</string>
+    <string name="mute">Mute</string>
+    <string name="unmute">Unmute</string>
 </resources>

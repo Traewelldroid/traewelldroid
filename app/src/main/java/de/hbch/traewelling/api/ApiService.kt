@@ -174,6 +174,16 @@ interface UserService {
     fun unfollowUser(
         @Query("userId") userId: Int
     ): Call<Data<User>>
+
+    @POST("user/createMute")
+    fun muteUser(
+        @Query("userId") userId: Int
+    ): Call<Data<User>>
+
+    @DELETE("user/destroyMute")
+    fun unmuteUser(
+        @Query("userId") userId: Int
+    ): Call<Data<User>>
 }
 
 object TraewellingApi {
