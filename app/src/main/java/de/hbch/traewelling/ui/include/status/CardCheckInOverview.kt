@@ -1,27 +1,29 @@
 package de.hbch.traewelling.ui.include.status
 
 import android.content.Context
+import android.os.CountDownTimer
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.card.MaterialCardView
 import de.hbch.traewelling.R
 import de.hbch.traewelling.adapters.CheckInAdapter
+import de.hbch.traewelling.adapters.getJourneyProgress
 import de.hbch.traewelling.databinding.CardCheckinOverviewBinding
 import de.hbch.traewelling.ui.include.alert.AlertBottomSheet
 import de.hbch.traewelling.ui.include.alert.AlertType
 import de.hbch.traewelling.ui.include.deleteStatus.DeleteStatusBottomSheet
 import de.hbch.traewelling.util.StationNameClickListener
-import java.util.Date
+import java.util.*
 
 class CardCheckInOverview(
     context: Context?,
     attrs: AttributeSet?,
     private val adapter: CheckInAdapter
-) :
-    MaterialCardView(context, attrs, 0) {
+) : MaterialCardView(context, attrs, 0) {
 
     val binding: CardCheckinOverviewBinding =
         CardCheckinOverviewBinding
@@ -31,6 +33,28 @@ class CardCheckInOverview(
     private val navController get() = fragmentManager.primaryNavigationFragment?.findNavController()
 
     private var onStationNameClickedListener: StationNameClickListener = { _, _ -> }
+    private val timer by lazy {
+        object : CountDownTimer(
+            binding.checkIn!!.journey.destination.arrivalSave.time - Date().time,
+            10000
+        ) {
+            override fun onTick(millisUntilFinished: Long) {
+                val journey = binding.checkIn!!.journey
+                binding.nextStation.text =
+                    resources.getString(R.string.next_station, journey.nextStation)
+
+                binding.travelProgress.progress = getJourneyProgress(
+                    journey.origin.departureSave,
+                    journey.destination.arrivalSave
+                ).toInt()
+            }
+
+            override fun onFinish() {
+                binding.nextStation.visibility = View.GONE
+                binding.travelProgress.progress = binding.travelProgress.max
+            }
+        }
+    }
 
     fun handleDeleteClicked() {
         val bottomSheet = DeleteStatusBottomSheet { bottomSheet ->
@@ -101,5 +125,9 @@ class CardCheckInOverview(
 
     fun setOnStationNameClickedListener(listener: StationNameClickListener) {
         onStationNameClickedListener = listener
+    }
+
+    fun onCreate() {
+        timer.start()
     }
 }

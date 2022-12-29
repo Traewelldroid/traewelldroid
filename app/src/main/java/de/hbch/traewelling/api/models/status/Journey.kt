@@ -6,7 +6,7 @@ import android.icu.util.MeasureUnit
 import com.google.gson.annotations.SerializedName
 import de.hbch.traewelling.api.models.trip.HafasTrainTripStation
 import de.hbch.traewelling.api.models.trip.ProductType
-import java.util.Locale
+import java.util.*
 
 data class Journey(
     @SerializedName("trip") val tripId: Int,
@@ -20,7 +20,8 @@ data class Journey(
     @SerializedName("duration") val duration: Int,
     @SerializedName("speed") val averageSpeed: Double,
     @SerializedName("origin") val origin: HafasTrainTripStation,
-    @SerializedName("destination") val destination: HafasTrainTripStation
+    @SerializedName("destination") val destination: HafasTrainTripStation,
+    @SerializedName("stopovers") val stopovers: List<HafasTrainTripStation>?
 ) {
     val roundedDistance: Measure
         get() = if (distance < 1000) Measure(distance, MeasureUnit.METER) else Measure(distance / 1000, MeasureUnit.KILOMETER)
@@ -28,4 +29,12 @@ data class Journey(
     val formattedDistance: String
         get() = MeasureFormat.getInstance(Locale.getDefault(), MeasureFormat.FormatWidth.SHORT)
             .formatMeasures(roundedDistance)
+
+    val nextStation: HafasTrainTripStation?
+        get() {
+            val now = Date()
+            return (stopovers ?: emptyList())
+                .sortedBy { it.arrival ?: it.arrivalPlanned }
+                .firstOrNull { it.arrival?.after(now) == true && it.departure?.before(now) == true }
+        }
 }

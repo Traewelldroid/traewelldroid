@@ -74,6 +74,7 @@ class CheckInAdapter(
             if (checkIn.journey.destination.arrivalSave.before(Date()))
                 binding.nextStation.visibility = View.GONE
             binding.executePendingBindings()
+            checkInCard.onCreate()
         }
     }
 
