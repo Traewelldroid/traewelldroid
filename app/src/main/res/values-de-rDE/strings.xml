@@ -131,4 +131,6 @@
     <string name="request_follow">Anfragen</string>
     <string name="request_follow_pending">Anfrage ausstehend</string>
     <string name="unfollow">Entfolgen</string>
+    <string name="mute">Stummschalten</string>
+    <string name="unmute">Stummschaltung aufheben</string>
 </resources>

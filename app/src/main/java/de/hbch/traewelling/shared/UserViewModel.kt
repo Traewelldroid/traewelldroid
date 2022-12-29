@@ -155,4 +155,35 @@ open class UserViewModel : ViewModel() {
         TraewellingApi.userService.unfollowUser(user.value?.id ?: 0)
             .enqueue(successCallback)
     }
+
+    fun handleMuteButton() {
+        val successCallback: (User?) -> Unit = {
+            _user.postValue(it)
+        }
+        val apiCallback = object: Callback<Data<User>> {
+            override fun onResponse(call: Call<Data<User>>, response: Response<Data<User>>) {
+                if (response.isSuccessful) {
+                    successCallback(response.body()?.data)
+                }
+            }
+            override fun onFailure(call: Call<Data<User>>, t: Throwable) {
+                Sentry.captureException(t)
+            }
+        }
+
+        if (user.value?.muted == false)
+            muteUser(apiCallback)
+        else
+            unmuteUser(apiCallback)
+    }
+
+    private fun muteUser(apiCallback: Callback<Data<User>>) {
+        TraewellingApi.userService.muteUser(user.value?.id ?: 0)
+            .enqueue(apiCallback)
+    }
+
+    private fun unmuteUser(apiCallback: Callback<Data<User>>) {
+        TraewellingApi.userService.unmuteUser(user.value?.id ?: 0)
+            .enqueue(apiCallback)
+    }
 }

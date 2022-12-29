@@ -175,14 +175,31 @@
                         </GridLayout>
 
                         <com.google.android.material.button.MaterialButton
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:id="@+id/btn_follow"
                             tools:text="@string/follow"
                             app:layout_constraintTop_toBottomOf="@id/layout_stats"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/btn_mute"
                             android:layout_marginTop="8dp"
+                            android:layout_marginHorizontal="4dp"
                             android:visibility="@{isOwnProfile == true ? View.GONE : View.VISIBLE}"
                             followButton="@{viewModel.user}"
                             android:onClick="@{() -> viewModel.handleFollowButton()}"/>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/btn_mute"
+                            tools:text="Stummschalten"
+                            app:layout_constraintStart_toEndOf="@id/btn_follow"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/btn_follow"
+                            android:visibility="@{isOwnProfile == true ? View.GONE : View.VISIBLE}"
+                            muteButton="@{viewModel.user}"
+                            android:onClick="@{() -> viewModel.handleMuteButton()}"
+                            android:layout_marginHorizontal="4dp" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>

@@ -274,6 +274,27 @@ fun manageFollowButton(button: MaterialButton, user: User?) {
     button.setIconResource(iconDrawable)
 }
 
+@BindingAdapter("muteButton")
+fun manageMuteButton(button: MaterialButton, user: User?) {
+    if (user == null)
+        return
+
+    val iconDrawable =
+        if (user.muted)
+            R.drawable.ic_unmute
+        else
+            R.drawable.ic_mute
+
+    val buttonText =
+        if (user.muted)
+            R.string.unmute
+        else
+            R.string.mute
+
+    button.text = button.resources.getString(buttonText)
+    button.setIconResource(iconDrawable)
+}
+
 fun getBusinessImageResource(business: StatusBusiness): Int {
     return when (business) {
         StatusBusiness.PRIVATE -> R.drawable.ic_person
