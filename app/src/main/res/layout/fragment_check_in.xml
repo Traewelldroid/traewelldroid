@@ -62,6 +62,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="280"
                     android:hint="@string/status_message"
                     app:layout_constraintTop_toBottomOf="@id/text_view_line_final_destination">
 
@@ -71,6 +73,7 @@
                         android:layout_height="wrap_content"
                         android:inputType="text|textMultiLine"
                         android:minHeight="75dp"
+                        android:maxLength="280"
                         android:text="@={viewModel.message}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
