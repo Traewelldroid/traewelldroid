@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.api.models.status.Status
 import de.hbch.traewelling.api.models.status.StatusPage
+import de.hbch.traewelling.util.fetchStopOvers
 import io.sentry.Sentry
 import retrofit2.Call
 import retrofit2.Callback
@@ -22,9 +23,7 @@ class DashboardFragmentViewModel : ViewModel() {
                 override fun onResponse(call: Call<StatusPage>, response: Response<StatusPage>) {
                     if (response.isSuccessful) {
                         val statusPage = response.body()
-                        if (statusPage != null) {
-                            successCallback(statusPage.data)
-                        }
+                        statusPage?.data?.fetchStopOvers(successCallback)
                         return
                     }
                     failureCallback()

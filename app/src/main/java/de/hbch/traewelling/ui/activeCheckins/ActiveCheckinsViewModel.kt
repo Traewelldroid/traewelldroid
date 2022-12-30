@@ -1,12 +1,10 @@
 package de.hbch.traewelling.ui.activeCheckins
 
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.api.models.status.Status
 import de.hbch.traewelling.api.models.status.StatusPage
+import de.hbch.traewelling.util.fetchStopOvers
 import io.sentry.Sentry
 import retrofit2.Call
 import retrofit2.Callback
@@ -23,7 +21,7 @@ class ActiveCheckinsViewModel : ViewModel() {
                     if (response.isSuccessful) {
                         val statuses = response.body()
                         if (statuses != null) {
-                            successCallback(statuses.data)
+                            statuses.data.fetchStopOvers(successCallback)
                             return
                         }
                     }

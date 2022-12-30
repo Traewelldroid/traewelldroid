@@ -15,8 +15,7 @@ class CheckInAdapter(
     val checkIns: MutableList<Status>,
     private val loggedInUserId: LiveData<Int>,
     private var onStationNameClickedListener: StationNameClickListener
-    )
-    : RecyclerView.Adapter<CheckInAdapter.CheckInViewHolder>() {
+) : RecyclerView.Adapter<CheckInAdapter.CheckInViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CheckInViewHolder {
         val checkInCard = CardCheckInOverview(

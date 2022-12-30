@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="checkIn"
             type="de.hbch.traewelling.api.models.status.Status" />
@@ -118,9 +119,9 @@
                     android:id="@+id/arrival_time"
                     style="@style/Theme.Traewelling.StatisticTexts"
                     displayTime="@{checkIn.journey.destination.arrivalSave}"
-                    android:onClick="@{() -> checkInCard.onStationNameClicked(checkIn.journey.destination.name, checkIn.journey.destination.arrivalSave)}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:onClick="@{() -> checkInCard.onStationNameClicked(checkIn.journey.destination.name, checkIn.journey.destination.arrivalSave)}"
                     app:layout_constraintBottom_toBottomOf="@id/perlschnur_end"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/perlschnur_end"
@@ -146,10 +147,10 @@
                     displayTime="@{checkIn.journey.destination.arrivalPlanned}"
                     planned="@{checkIn.journey.destination.arrivalPlanned}"
                     real="@{checkIn.journey.destination.arrivalReal ?? checkIn.journey.origin.arrival}"
-                    android:onClick="@{() -> checkInCard.onStationNameClicked(checkIn.journey.destination.name, checkIn.journey.destination.arrivalPlanned)}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
+                    android:onClick="@{() -> checkInCard.onStationNameClicked(checkIn.journey.destination.name, checkIn.journey.destination.arrivalPlanned)}"
                     android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="@id/arrival_time"
                     app:layout_constraintEnd_toStartOf="@id/arrival_time"
@@ -164,6 +165,7 @@
                     android:layout_marginVertical="10dp"
                     app:layout_constraintBottom_toTopOf="@+id/end_station"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="@id/start_station"
                     app:layout_constraintTop_toBottomOf="@id/start_station"
                     app:layout_constraintVertical_bias="0.0">
@@ -241,33 +243,29 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:layout_marginEnd="16dp"
                         android:gravity="center_vertical"
                         android:text="@{checkIn.body}"
                         android:textSize="16sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/icon_check_in_body"
-                        app:layout_constraintTop_toTopOf="@id/icon_check_in_body"
-                        tools:text="Hello" />
+                        app:layout_constraintTop_toTopOf="@+id/icon_check_in_body"
+                        tools:text="Hi" />
 
-                    <!-- TODO: Enable this once we have current stop information -->
-                    <!-- Also see: https://github.com/Traewelldroid/traewelldroid/issues/26 -->
                     <TextView
                         android:id="@+id/next_station"
                         style="@style/Theme.Traewelling.PrimaryColorTexts"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:text="@{@string/next_station(checkIn.journey.origin.name)}"
+                        android:layout_marginTop="10dp"
+                        android:text="@{@string/next_station(checkIn.journey.nextStation.name)}"
                         android:textSize="16sp"
-                        android:visibility="gone"
+                        android:visibility="@{checkIn.journey.nextStation == null ? View.GONE : View.VISIBLE}"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="@+id/check_in_body"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="@+id/icon_product"
-                        app:layout_constraintTop_toBottomOf="@+id/check_in_body" />
+                        app:layout_constraintTop_toBottomOf="@+id/check_in_body"
+                        tools:text="Nächste Station: Mitte Hbf"
+                        tools:visibility="visible" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
 

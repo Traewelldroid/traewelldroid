@@ -13,6 +13,7 @@ import de.hbch.traewelling.api.models.station.StationData
 import de.hbch.traewelling.api.models.statistics.PersonalStatistics
 import de.hbch.traewelling.api.models.status.*
 import de.hbch.traewelling.api.models.trip.HafasTrainTrip
+import de.hbch.traewelling.api.models.trip.HafasTrainTripStation
 import de.hbch.traewelling.api.models.trip.HafasTripPage
 import de.hbch.traewelling.api.models.user.User
 import okhttp3.OkHttpClient
@@ -86,6 +87,9 @@ interface CheckInService {
         @Path("id") id: Int
     ): Call<Data<Status>>
 
+    @GET("stopovers/{ids}")
+    fun getStopoversRaw(@Path("ids") ids: String): Call<Data<Map<Int, List<HafasTrainTripStation>>>>
+
     @GET("polyline/{ids}")
     fun getPolylinesForStatuses(
         @Path("ids") statusIds: String
@@ -126,6 +130,9 @@ interface CheckInService {
     @GET("activeEvents")
     fun getActiveEvents(): Call<Data<List<Event>>>
 }
+
+
+fun CheckInService.getStopovers(vararg ids: Int) = getStopoversRaw(ids.joinToString(","))
 
 interface TravelService {
     @GET("trains/trip")

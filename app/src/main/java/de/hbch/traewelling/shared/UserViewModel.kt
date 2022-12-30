@@ -11,6 +11,7 @@ import de.hbch.traewelling.api.models.station.Station
 import de.hbch.traewelling.api.models.status.StatusPage
 import de.hbch.traewelling.api.models.status.StatusVisibility
 import de.hbch.traewelling.api.models.user.User
+import de.hbch.traewelling.util.fetchStopOvers
 import io.sentry.Sentry
 import retrofit2.Call
 import retrofit2.Callback
@@ -104,7 +105,7 @@ open class UserViewModel : ViewModel() {
                     if (response.isSuccessful) {
                         val statusPage = response.body()
                         if (statusPage != null) {
-                            successCallback(statusPage)
+                            statusPage.data.fetchStopOvers { successCallback(statusPage.copy(data = it)) }
                             return
                         }
                     }
@@ -127,7 +128,7 @@ open class UserViewModel : ViewModel() {
         val successCallback: (User?) -> Unit = {
             _user.postValue(it)
         }
-        val apiCallback = object: Callback<Data<User>> {
+        val apiCallback = object : Callback<Data<User>> {
             override fun onResponse(call: Call<Data<User>>, response: Response<Data<User>>) {
                 if (response.isSuccessful) {
                     successCallback(response.body()?.data)

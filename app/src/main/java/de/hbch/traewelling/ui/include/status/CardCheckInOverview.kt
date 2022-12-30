@@ -41,7 +41,7 @@ class CardCheckInOverview(
             override fun onTick(millisUntilFinished: Long) {
                 val journey = binding.checkIn!!.journey
                 binding.nextStation.text =
-                    resources.getString(R.string.next_station, journey.nextStation)
+                    resources.getString(R.string.next_station, journey.nextStation?.name)
 
                 binding.travelProgress.progress = getJourneyProgress(
                     journey.origin.departureSave,

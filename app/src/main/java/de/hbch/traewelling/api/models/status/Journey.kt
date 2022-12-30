@@ -21,10 +21,13 @@ data class Journey(
     @SerializedName("speed") val averageSpeed: Double,
     @SerializedName("origin") val origin: HafasTrainTripStation,
     @SerializedName("destination") val destination: HafasTrainTripStation,
-    @SerializedName("stopovers") val stopovers: List<HafasTrainTripStation>?
+    @SerializedName("stopovers") val stopovers: List<HafasTrainTripStation>? = null
 ) {
     val roundedDistance: Measure
-        get() = if (distance < 1000) Measure(distance, MeasureUnit.METER) else Measure(distance / 1000, MeasureUnit.KILOMETER)
+        get() = if (distance < 1000) Measure(
+            distance,
+            MeasureUnit.METER
+        ) else Measure(distance / 1000, MeasureUnit.KILOMETER)
 
     val formattedDistance: String
         get() = MeasureFormat.getInstance(Locale.getDefault(), MeasureFormat.FormatWidth.SHORT)
@@ -35,6 +38,6 @@ data class Journey(
             val now = Date()
             return (stopovers ?: emptyList())
                 .sortedBy { it.arrival ?: it.arrivalPlanned }
-                .firstOrNull { it.arrival?.after(now) == true && it.departure?.before(now) == true }
+                .firstOrNull { it.arrival?.after(now) == true }
         }
 }
