@@ -133,4 +133,5 @@
     <string name="unfollow">Entfolgen</string>
     <string name="mute">Stummschalten</string>
     <string name="unmute">Stummschaltung aufheben</string>
+    <string name="platform">Gl. %1$s</string>
 </resources>
