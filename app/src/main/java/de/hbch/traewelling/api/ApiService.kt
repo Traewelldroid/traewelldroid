@@ -171,7 +171,7 @@ interface UserService {
 
     @DELETE("user/{userId}/follow")
     fun unfollowUser(
-        @Query("userId") userId: Int
+        @Path("userId") userId: Int
     ): Call<Data<User>>
 
     @POST("user/createMute")
