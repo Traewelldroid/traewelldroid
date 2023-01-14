@@ -181,7 +181,7 @@ interface UserService {
 
     @DELETE("user/destroyMute")
     fun unmuteUser(
-        @Path("userId") userId: Int
+        @Query("userId") userId: Int
     ): Call<Data<User>>
 }
 
