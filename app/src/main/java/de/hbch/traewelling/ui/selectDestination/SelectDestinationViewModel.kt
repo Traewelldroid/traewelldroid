@@ -18,7 +18,7 @@ class SelectDestinationViewModel : ViewModel() {
         successfulCallback: (HafasTrainTrip) -> Unit,
         failureCallback: () -> Unit
     ) {
-        TraewellingApi.travelService.getTrip(tripId, tripId, lineName, start)
+        TraewellingApi.travelService.getTrip(tripId, lineName, start)
             .enqueue(object: Callback<Data<HafasTrainTrip>> {
                 override fun onResponse(
                     call: Call<Data<HafasTrainTrip>>,

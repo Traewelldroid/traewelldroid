@@ -81,7 +81,7 @@ interface CheckInService {
     @GET("statuses")
     fun getStatuses(): Call<StatusPage>
 
-    @GET("statuses/{id}")
+    @GET("status/{id}")
     fun getStatusById(
         @Path("id") id: Int
     ): Call<Data<Status>>
@@ -97,7 +97,7 @@ interface CheckInService {
         @Query("page") page: Int
     ): Call<StatusPage>
 
-    @DELETE("statuses/{statusId}")
+    @DELETE("status/{statusId}")
     fun deleteStatus(
         @Path("statusId") statusId: Int
     ): Call<Any>
@@ -107,18 +107,18 @@ interface CheckInService {
         @Body checkIn: CheckInRequest
     ): Call<Data<CheckInResponse>>
 
-    @PUT("statuses/{statusId}")
+    @PUT("status/{statusId}")
     fun updateCheckIn(
         @Path("statusId") statusId: Int,
         @Body update: UpdateStatusRequest
     ): Call<Data<Status>>
 
-    @POST("like/{statusId}")
+    @POST("status/{statusId}/like")
     fun createFavorite(
         @Path("statusId") statusId: Int
     ): Call<Unit>
 
-    @DELETE("like/{statusId}")
+    @DELETE("status/{statusId}/like")
     fun deleteFavorite(
         @Path("statusId") statusId: Int
     ): Call<Unit>
@@ -130,8 +130,7 @@ interface CheckInService {
 interface TravelService {
     @GET("trains/trip")
     fun getTrip(
-        @Query("tripID") tripId: String,
-        @Query("tripId") tripId2: String,
+        @Query("hafasTripId") tripId: String,
         @Query("lineName") lineName: String,
         @Query("start") start: Int
     ): Call<Data<HafasTrainTrip>>
@@ -165,14 +164,14 @@ interface UserService {
         @Path("username") username: String
     ): Call<Data<User>>
 
-    @POST("user/createFollow")
+    @POST("user/{userId}/follow")
     fun followUser(
-        @Query("userId") userId: Int
+        @Path("userId") userId: Int
     ): Call<Data<User>>
 
-    @DELETE("user/destroyFollow")
+    @DELETE("user/{userId}/follow")
     fun unfollowUser(
-        @Query("userId") userId: Int
+        @Path("userId") userId: Int
     ): Call<Data<User>>
 
     @POST("user/createMute")
