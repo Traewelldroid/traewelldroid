@@ -167,22 +167,22 @@ interface UserService {
     @POST("user/{userId}/follow")
     fun followUser(
         @Path("userId") userId: Int
-    ): Call<Data<User>>
+    ): Call<Data<Unit>>
 
     @DELETE("user/{userId}/follow")
     fun unfollowUser(
         @Path("userId") userId: Int
-    ): Call<Data<User>>
+    ): Call<Data<Unit>>
 
     @POST("user/createMute")
     fun muteUser(
         @Query("userId") userId: Int
-    ): Call<Data<User>>
+    ): Call<Data<Unit>>
 
     @DELETE("user/destroyMute")
     fun unmuteUser(
         @Query("userId") userId: Int
-    ): Call<Data<User>>
+    ): Call<Data<Unit>>
 }
 
 object TraewellingApi {
