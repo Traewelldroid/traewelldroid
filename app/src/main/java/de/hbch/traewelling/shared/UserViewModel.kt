@@ -8,15 +8,17 @@ import androidx.lifecycle.ViewModel
 import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.api.models.Data
 import de.hbch.traewelling.api.models.station.Station
+import de.hbch.traewelling.api.models.status.Status
 import de.hbch.traewelling.api.models.status.StatusPage
 import de.hbch.traewelling.api.models.status.StatusVisibility
 import de.hbch.traewelling.api.models.user.User
+import de.hbch.traewelling.ui.include.status.CheckInListViewModel
 import io.sentry.Sentry
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-open class UserViewModel : ViewModel() {
+open class UserViewModel : ViewModel(), CheckInListViewModel {
     protected val _user = MutableLiveData<User?>()
 
     val user: LiveData<User?> get() = _user
@@ -93,10 +95,10 @@ open class UserViewModel : ViewModel() {
         }
 
 
-    fun getPersonalCheckIns(
+    override fun loadCheckIns(
         page: Int,
-        successCallback: (StatusPage) -> Unit,
-        failureCallback: () -> Unit
+        successCallback: (List<Status>) -> Unit,
+        failureCallback: (Throwable) -> Unit
     ) {
         TraewellingApi.checkInService.getStatusesForUser(_user.value?.username ?: "", page)
             .enqueue(object : Callback<StatusPage> {
@@ -104,19 +106,19 @@ open class UserViewModel : ViewModel() {
                     if (response.isSuccessful) {
                         val statusPage = response.body()
                         if (statusPage != null) {
-                            successCallback(statusPage)
+                            successCallback(statusPage.data)
                             return
                         }
                     }
-                    failureCallback()
-                    Sentry.captureMessage(response.errorBody()?.string() ?: "")
+                    val errorString = response.errorBody()?.string() ?: ""
+                    failureCallback(RuntimeException(errorString))
+                    Sentry.captureMessage(errorString)
                 }
 
                 override fun onFailure(call: Call<StatusPage>, t: Throwable) {
-                    failureCallback()
+                    failureCallback(t)
                     Sentry.captureException(t)
                 }
-
             })
     }
 

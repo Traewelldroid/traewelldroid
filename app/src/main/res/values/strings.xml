@@ -135,4 +135,9 @@
     <string name="unfollow">Unfollow</string>
     <string name="mute">Mute</string>
     <string name="unmute">Unmute</string>
+    <string name="reload">Reload</string>
+    <string name="no_checkins">There are currently no check-ins</string>
+    <string name="check_in_loading_error">Could not load check-ins: %1$s</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

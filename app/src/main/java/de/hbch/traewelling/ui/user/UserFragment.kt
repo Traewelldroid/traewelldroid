@@ -21,21 +21,9 @@ class UserFragment : AbstractUserFragment() {
         savedInstanceState: Bundle?
     ): View {
         viewModel.loadUser(args.userName) {
-            loadCheckIns()
             binding.isOwnProfile =
                 (loggedInUserViewModel.user.value?.id ?: -1) == (it.data.id)
         }
-        val view = super.onCreateView(inflater, container, savedInstanceState)
-
-        val adapter = binding.recyclerViewCheckIn.adapter as CheckInAdapter
-        adapter.setOnStationNameClickedListener { stationName, date -> findNavController()
-            .navigate(
-                UserFragmentDirections.actionUserProfileFragmentToSearchConnectionFragment(
-                    stationName,
-                    date
-                )
-            ) }
-
-        return view
+        return super.onCreateView(inflater, container, savedInstanceState)
     }
 }

@@ -133,4 +133,7 @@
     <string name="unfollow">Entfolgen</string>
     <string name="mute">Stummschalten</string>
     <string name="unmute">Stummschaltung aufheben</string>
+    <string name="reload">Neu-laden</string>
+    <string name="no_checkins">Es gibt derzeit keine Check-Ins</string>
+    <string name="check_in_loading_error">Check-Ins konnten nicht geladen werden: %1$s</string>
 </resources>

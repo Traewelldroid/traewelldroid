@@ -1,24 +1,23 @@
 package de.hbch.traewelling.ui.activeCheckins
 
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.api.models.status.Status
 import de.hbch.traewelling.api.models.status.StatusPage
+import de.hbch.traewelling.ui.include.status.CheckInListViewModel
 import io.sentry.Sentry
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class ActiveCheckinsViewModel : ViewModel() {
-    fun getActiveCheckins(
+class ActiveCheckinsViewModel : ViewModel(), CheckInListViewModel {
+    override fun loadCheckIns(
+        page: Int,
         successCallback: (List<Status>) -> Unit,
-        failureCallback: () -> Unit
+        failureCallback: (Throwable) -> Unit
     ) {
         TraewellingApi.checkInService.getStatuses()
-            .enqueue(object: Callback<StatusPage> {
+            .enqueue(object : Callback<StatusPage> {
                 override fun onResponse(call: Call<StatusPage>, response: Response<StatusPage>) {
                     if (response.isSuccessful) {
                         val statuses = response.body()
@@ -27,11 +26,13 @@ class ActiveCheckinsViewModel : ViewModel() {
                             return
                         }
                     }
-                    failureCallback()
-                    Sentry.captureMessage(response.errorBody()?.string() ?: "")
+                    val errorString = response.errorBody()?.string() ?: ""
+                    failureCallback(RuntimeException(errorString))
+                    Sentry.captureMessage(errorString)
                 }
+
                 override fun onFailure(call: Call<StatusPage>, t: Throwable) {
-                    failureCallback()
+                    failureCallback(t)
                     Sentry.captureException(t)
                 }
             })

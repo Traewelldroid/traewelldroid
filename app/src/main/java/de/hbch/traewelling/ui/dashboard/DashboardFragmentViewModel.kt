@@ -4,16 +4,17 @@ import androidx.lifecycle.ViewModel
 import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.api.models.status.Status
 import de.hbch.traewelling.api.models.status.StatusPage
+import de.hbch.traewelling.ui.include.status.CheckInListViewModel
 import io.sentry.Sentry
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class DashboardFragmentViewModel : ViewModel() {
-    fun loadCheckIns(
+class DashboardFragmentViewModel : ViewModel(), CheckInListViewModel {
+    override fun loadCheckIns(
         page: Int,
         successCallback: (List<Status>) -> Unit,
-        failureCallback: () -> Unit
+        failureCallback: (Throwable) -> Unit
     ) {
         TraewellingApi
             .checkInService
@@ -27,11 +28,12 @@ class DashboardFragmentViewModel : ViewModel() {
                         }
                         return
                     }
-                    failureCallback()
-                    Sentry.captureMessage(response.errorBody()?.string() ?: "")
+                    val errorString = response.errorBody()?.string() ?: ""
+                    failureCallback(RuntimeException(errorString))
+                    Sentry.captureMessage(errorString)
                 }
                 override fun onFailure(call: Call<StatusPage>, t: Throwable) {
-                    failureCallback()
+                    failureCallback(t)
                     Sentry.captureException(t)
                 }
             })
