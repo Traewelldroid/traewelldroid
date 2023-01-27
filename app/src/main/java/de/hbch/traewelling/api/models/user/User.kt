@@ -13,13 +13,13 @@ data class User(
     @SerializedName("trainDuration") val duration: Int,
     @SerializedName("trainSpeed") val averageSpeed: Double,
     @SerializedName("points") val points: Int,
-    @SerializedName("twitterUrl") val twitterUrl: String,
-    @SerializedName("mastodonUrl") val mastodonUrl: String,
+    @SerializedName("twitterUrl") val twitterUrl: String?,
+    @SerializedName("mastodonUrl") val mastodonUrl: String?,
     @SerializedName("privateProfile") val privateProfile: Boolean,
     @SerializedName("home") var home: Station?,
-    @SerializedName("language") val language: String,
+    @SerializedName("language") val language: String?,
     @SerializedName("following") val following: Boolean,
     @SerializedName("followPending") val followRequestPending: Boolean,
     @SerializedName("muted") val muted: Boolean,
-    val defaultStatusVisibility: StatusVisibility
+    val defaultStatusVisibility: StatusVisibility?
 )

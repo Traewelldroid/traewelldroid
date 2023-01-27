@@ -127,14 +127,14 @@ open class UserViewModel : ViewModel() {
         val successCallback: (User?) -> Unit = {
             _user.postValue(it)
         }
-        val apiCallback = object: Callback<Data<User>> {
-            override fun onResponse(call: Call<Data<User>>, response: Response<Data<User>>) {
+        val apiCallback = object : Callback<Data<Unit>> {
+            override fun onResponse(call: Call<Data<Unit>>, response: Response<Data<Unit>>) {
                 if (response.isSuccessful) {
-                    successCallback(response.body()?.data)
+                    successCallback(user.value?.let { it.copy(following = !it.following) })
                 }
             }
 
-            override fun onFailure(call: Call<Data<User>>, t: Throwable) {
+            override fun onFailure(call: Call<Data<Unit>>, t: Throwable) {
                 Sentry.captureException(t)
             }
         }
@@ -146,12 +146,12 @@ open class UserViewModel : ViewModel() {
         }
     }
 
-    private fun followUser(successCallback: Callback<Data<User>>) {
+    private fun followUser(successCallback: Callback<Data<Unit>>) {
         TraewellingApi.userService.followUser(user.value?.id ?: 0)
             .enqueue(successCallback)
     }
 
-    private fun unfollowUser(successCallback: Callback<Data<User>>) {
+    private fun unfollowUser(successCallback: Callback<Data<Unit>>) {
         TraewellingApi.userService.unfollowUser(user.value?.id ?: 0)
             .enqueue(successCallback)
     }
@@ -160,13 +160,14 @@ open class UserViewModel : ViewModel() {
         val successCallback: (User?) -> Unit = {
             _user.postValue(it)
         }
-        val apiCallback = object: Callback<Data<User>> {
-            override fun onResponse(call: Call<Data<User>>, response: Response<Data<User>>) {
+        val apiCallback = object : Callback<Data<Unit>> {
+            override fun onResponse(call: Call<Data<Unit>>, response: Response<Data<Unit>>) {
                 if (response.isSuccessful) {
-                    successCallback(response.body()?.data)
+                    successCallback(user.value?.let { it.copy(muted = !it.muted) })
                 }
             }
-            override fun onFailure(call: Call<Data<User>>, t: Throwable) {
+
+            override fun onFailure(call: Call<Data<Unit>>, t: Throwable) {
                 Sentry.captureException(t)
             }
         }
@@ -177,12 +178,12 @@ open class UserViewModel : ViewModel() {
             unmuteUser(apiCallback)
     }
 
-    private fun muteUser(apiCallback: Callback<Data<User>>) {
+    private fun muteUser(apiCallback: Callback<Data<Unit>>) {
         TraewellingApi.userService.muteUser(user.value?.id ?: 0)
             .enqueue(apiCallback)
     }
 
-    private fun unmuteUser(apiCallback: Callback<Data<User>>) {
+    private fun unmuteUser(apiCallback: Callback<Data<Unit>>) {
         TraewellingApi.userService.unmuteUser(user.value?.id ?: 0)
             .enqueue(apiCallback)
     }
