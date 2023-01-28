@@ -174,14 +174,14 @@ interface UserService {
         @Path("userId") userId: Int
     ): Call<Data<Unit>>
 
-    @POST("user/createMute")
+    @POST("user/{id}/mute")
     fun muteUser(
-        @Query("userId") userId: Int
+        @Query("id") userId: Int
     ): Call<Data<Unit>>
 
-    @DELETE("user/destroyMute")
+    @DELETE("user/{id}/mute")
     fun unmuteUser(
-        @Query("userId") userId: Int
+        @Query("id") userId: Int
     ): Call<Data<Unit>>
 }
 
