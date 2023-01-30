@@ -6,6 +6,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.jcloquell.androidsecurestorage.SecureStorage
+import de.hbch.traewelling.BuildConfig
+import de.hbch.traewelling.api.PCKEUtil
 import de.hbch.traewelling.shared.SharedValues
 import de.hbch.traewelling.ui.login.LoginActivity
 import de.hbch.traewelling.ui.main.MainActivity
@@ -29,11 +31,9 @@ class LauncherActivity : AppCompatActivity() {
             if (it == Intent.ACTION_VIEW) {
                 val data = intent?.data
                 if (data != null) {
-                    if (data.host == "app.traewelldroid.de" || (data.host == "auth" && data.scheme == "traewelldroid")) {
-                        val accessToken = data.getQueryParameter("access_token") ?: return
-                        secureStorage.storeObject(SharedValues.SS_JWT, accessToken)
-                        startupIntent =
-                            Intent(Intent.ACTION_VIEW, Uri.EMPTY, this, MainActivity::class.java)
+                    if (data.host == BuildConfig.OAUTH_CALLBACK_URL.host || (data.host == "auth" && data.scheme == "traewelldroid")) {
+                        PCKEUtil.handleCallback(this, data, secureStorage)
+                        return
                     } else {
                         startupIntent = Intent(Intent.ACTION_VIEW, Uri.EMPTY, this, startupActivity)
                         if ("status" in data.pathSegments) {

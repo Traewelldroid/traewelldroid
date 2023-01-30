@@ -1,11 +1,13 @@
 package de.hbch.traewelling.api
 
 import com.google.gson.GsonBuilder
+import com.google.gson.JsonObject
 import de.hbch.traewelling.api.interceptors.AuthInterceptor
 import de.hbch.traewelling.api.interceptors.ErrorInterceptor
 import de.hbch.traewelling.api.models.Data
 import de.hbch.traewelling.api.models.auth.BearerToken
 import de.hbch.traewelling.api.models.auth.LoginCredentials
+import de.hbch.traewelling.api.models.auth.TokenResponse
 import de.hbch.traewelling.api.models.event.Event
 import de.hbch.traewelling.api.models.polyline.FeatureCollection
 import de.hbch.traewelling.api.models.station.Station
@@ -62,6 +64,16 @@ interface AuthService {
 
     @GET("trains/station/history")
     fun getLastVisitedStations(): Call<Data<List<Station>>>
+
+    @FormUrlEncoded
+    @POST("/oauth/token")
+    fun requestToken(
+        @Field("client_id") clientId: String,
+        @Field("redirect_uri") redirectUri: String,
+        @Field("grant_type") grantType: String,
+        @Field("code_verifier") codeVerifier: String,
+        @Field("code") code: String
+    ): Call<TokenResponse>
 }
 
 interface StatisticsService {

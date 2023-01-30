@@ -103,6 +103,7 @@
     <string name="hashtag" translatable="false">Hashtag</string>
     <string name="default_hashtag_text">You can define a default hashtag which will be automatically added to your check-ins.</string>
     <string name="renew_login_failed">The renew of the login failed. Please consider signing yourself off and on again for renewing your login.</string>
+    <string name="login_failed">The login failed, please try again</string>
     <string name="renew_login_success">Login renewed!</string>
     <string name="store_hashtag">Store hashtag</string>
     <string name="emoji">Emoji Pack</string>

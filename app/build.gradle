@@ -19,11 +19,13 @@ if (sentryDsn == null) {
     sentryDsn = ""
     project.logger.error('Sentry DSN was not set!')
 }
-def oauthServer = properties.getProperty('OAUTH_SERVER')
-if (oauthServer == null) {
-    oauthServer = ""
-    project.logger.error('OAuth Server was not set!')
+def oauthRedirectUrl = properties.getProperty('OAUTH_REDIRECT_URI') ?: "traewelldroid://app.traewelldroid.de/"
+def oauthClientId = properties.getProperty('OAUTH_CLIENT_ID')
+if (oauthClientId == null) {
+    oauthClientId = ""
+    project.logger.error('OAuth Client id was not set!')
 }
+
 def repoUrl = properties.getProperty('REPO_URL')
 if (repoUrl == null) {
     repoUrl = ""
@@ -51,7 +53,8 @@ android {
 
         testInstrumentationRunner
 
-        buildConfigField "android.net.Uri", "OAUTH_SERVER", "android.net.Uri.parse(\"${oauthServer}\")"
+        buildConfigField "android.net.Uri", "OAUTH_CLIENT_ID", "android.net.Uri.parse(\"${oauthClientId}\")"
+        buildConfigField "android.net.Uri", "OAUTH_CALLBACK_URL", "android.net.Uri.parse(\"${oauthRedirectUrl}\")"
         buildConfigField "String", "REPO_URL", "\"${repoUrl}\""
         buildConfigField "String", "PRIVACY_URL", "\"${privacyUrl}\""
     }
