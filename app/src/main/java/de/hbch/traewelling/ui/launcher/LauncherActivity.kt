@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.jcloquell.androidsecurestorage.SecureStorage
 import de.hbch.traewelling.BuildConfig
-import de.hbch.traewelling.api.PCKEUtil
+import de.hbch.traewelling.api.PKCEUtil
 import de.hbch.traewelling.shared.SharedValues
 import de.hbch.traewelling.ui.login.LoginActivity
 import de.hbch.traewelling.ui.main.MainActivity
@@ -32,7 +32,7 @@ class LauncherActivity : AppCompatActivity() {
                 val data = intent?.data
                 if (data != null) {
                     if (data.host == BuildConfig.OAUTH_CALLBACK_URL.host || (data.host == "auth" && data.scheme == "traewelldroid")) {
-                        PCKEUtil.handleCallback(this, data, secureStorage)
+                        PKCEUtil.handleCallback(this, data, secureStorage)
                         return
                     } else {
                         startupIntent = Intent(Intent.ACTION_VIEW, Uri.EMPTY, this, startupActivity)

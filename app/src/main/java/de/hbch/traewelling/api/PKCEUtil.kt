@@ -18,9 +18,8 @@ import retrofit2.Response
 import java.security.MessageDigest
 import java.security.SecureRandom
 import java.util.*
-import kotlin.properties.Delegates
 
-private var verifier by Delegates.notNull<String>()
+private val verifiers = mutableMapOf<String, String>()
 
 private fun redirectUri() = BuildConfig.OAUTH_CALLBACK_URL.buildUpon()
     .appendPath("auth")
@@ -28,11 +27,13 @@ private fun redirectUri() = BuildConfig.OAUTH_CALLBACK_URL.buildUpon()
     .build()
     .toString()
 
-object PCKEUtil {
+object PKCEUtil {
     private val secureRandom = SecureRandom()
 
     fun handleCallback(activity: Activity, uri: Uri, secureStorage: SecureStorage) {
         val code = uri.getQueryParameter("code") ?: error("Missing authorization code")
+        val verifier =
+            uri.getQueryParameter("state")?.let { verifiers.remove(it) } ?: error("Invalid state")
         TraewellingApi.authService.requestToken(
             BuildConfig.OAUTH_CLIENT_ID.toString(),
             redirectUri(),
@@ -74,12 +75,14 @@ object PCKEUtil {
         })
     }
 
-    private fun nextChallenge(): String {
-        verifier = generateCodeVerifier()
-        return generateCodeChallenge()
+    private fun nextChallenge(): ChallengeContext {
+        val verifier = generateCodeVerifier()
+        val state = generateCodeVerifier()
+        verifiers[state] = verifier
+        return ChallengeContext(state, generateCodeChallenge(verifier))
     }
 
-    private fun generateCodeChallenge(): String {
+    private fun generateCodeChallenge(verifier: String): String {
         val bytes = verifier.toByteArray(Charsets.US_ASCII)
         val messageDigest = MessageDigest.getInstance("SHA-256")
         messageDigest.update(bytes, 0, bytes.size)
@@ -98,11 +101,13 @@ object PCKEUtil {
             .setShowTitle(false)
             .build()
 
+        val (state, challenge) = nextChallenge()
         val url = Uri.parse("https://traewelling.de").buildUpon()
             .appendPath("oauth").appendEncodedPath("authorize")
             .appendQueryParameter("client_id", "28")
             .appendQueryParameter("redirect_uri", redirectUri())
-            .appendQueryParameter("code_challenge", nextChallenge())
+            .appendQueryParameter("code_challenge", challenge)
+            .appendQueryParameter("state", state)
             .appendQueryParameter("code_challenge_method", "S256")
             .appendQueryParameter("response_type", "code")
             .build()
@@ -110,3 +115,5 @@ object PCKEUtil {
         intent.launchUrl(this, url)
     }
 }
+
+private data class ChallengeContext(val state: String, val challenge: String)
