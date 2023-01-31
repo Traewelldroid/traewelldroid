@@ -18,8 +18,9 @@ import retrofit2.Response
 import java.security.MessageDigest
 import java.security.SecureRandom
 import java.util.*
+import java.util.concurrent.ConcurrentHashMap
 
-private val verifiers = mutableMapOf<String, String>()
+private val verifiers: MutableMap<String, String> = ConcurrentHashMap()
 
 private fun redirectUri() = BuildConfig.OAUTH_CALLBACK_URL.buildUpon()
     .appendPath("auth")
