@@ -8,6 +8,7 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.WindowInsets.Type.systemBars
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.WindowCompat
@@ -74,6 +75,12 @@ class MainActivity : AppCompatActivity() {
             }
             view.updatePadding(top = insetTop)
             insets
+        }
+
+        binding.bottomNavigationBar.setOnItemReselectedListener {
+            if(!navController.navigateUp()) {
+                println("HIII")
+            }
         }
 
         secureStorage = SecureStorage(this)

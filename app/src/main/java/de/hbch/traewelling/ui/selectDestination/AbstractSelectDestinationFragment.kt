@@ -59,6 +59,7 @@ abstract class AbstractSelectDestinationFragment : Fragment() {
             checkInViewModel.lineName,
             checkInViewModel.startStationId,
             { trip ->
+                binding.trainNumber = trip.journeyNumber
                 dataLoading.postValue(false)
                 val relevantStations = trip.stopovers.subList(
                     trip.stopovers.indexOf(
