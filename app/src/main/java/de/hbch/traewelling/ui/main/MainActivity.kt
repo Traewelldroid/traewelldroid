@@ -77,11 +77,6 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        binding.bottomNavigationBar.setOnItemReselectedListener {
-            if(!navController.navigateUp()) {
-                println("HIII")
-            }
-        }
 
         secureStorage = SecureStorage(this)
 
