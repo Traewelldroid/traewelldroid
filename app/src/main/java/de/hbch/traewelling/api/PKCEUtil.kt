@@ -105,7 +105,7 @@ object PKCEUtil {
         val (state, challenge) = nextChallenge()
         val url = Uri.parse("https://traewelling.de").buildUpon()
             .appendPath("oauth").appendEncodedPath("authorize")
-            .appendQueryParameter("client_id", "28")
+            .appendQueryParameter("client_id", BuildConfig.OAUTH_CLIENT_ID.toString())
             .appendQueryParameter("redirect_uri", redirectUri())
             .appendQueryParameter("code_challenge", challenge)
             .appendQueryParameter("state", state)
