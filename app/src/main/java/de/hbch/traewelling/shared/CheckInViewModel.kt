@@ -24,7 +24,6 @@ class CheckInViewModel : ViewModel() {
     var arrivalTime: Date? = null
     var departureTime: Date? = null
     val message = MutableLiveData<String>()
-    val tweet = MutableLiveData(false)
     val toot = MutableLiveData(false)
     val chainToot = MutableLiveData(false)
     val statusVisibility = MutableLiveData(StatusVisibility.PUBLIC)
@@ -43,7 +42,6 @@ class CheckInViewModel : ViewModel() {
         arrivalTime = null
         departureTime = null
         message.value = ""
-        tweet.value = false
         toot.value = false
         chainToot.value = false
         statusVisibility.postValue(StatusVisibility.PUBLIC)
@@ -60,7 +58,6 @@ class CheckInViewModel : ViewModel() {
             statusBusiness.value ?: StatusBusiness.PRIVATE,
             statusVisibility.value ?: StatusVisibility.PUBLIC,
             event.value?.id,
-            tweet.value ?: false,
             toot.value ?: false,
             chainToot.value ?: false,
             tripId,
