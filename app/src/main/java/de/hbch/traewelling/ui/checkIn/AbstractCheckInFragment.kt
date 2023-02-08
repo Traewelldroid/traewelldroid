@@ -50,7 +50,6 @@ abstract class AbstractCheckInFragment : Fragment() {
                     false -> View.GONE
                 }
 
-            btnSendTweet.visibility = mastodonVisibility
             btnSendChainToot.visibility = mastodonVisibility
 
             toggleGroupSocialMedia.addOnButtonCheckedListener { group, checkedId, isChecked ->
@@ -61,7 +60,6 @@ abstract class AbstractCheckInFragment : Fragment() {
                         }
                         checkInViewModel.toot.value = isChecked
                     }
-                    R.id.btn_send_tweet -> checkInViewModel.tweet.value = isChecked
                     R.id.btn_send_chain_toot -> {
                         if(isChecked) {
                             group.check(R.id.btn_send_toot)

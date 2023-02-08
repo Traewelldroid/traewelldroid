@@ -132,14 +132,6 @@
                     app:selectionRequired="false"
                     tools:visibility="gone"
                     app:singleSelection="false">
-
-                    <Button
-                        android:id="@+id/btn_send_tweet"
-                        style="@style/Widget.App.ToggleButton.OutlinedButton.IconOnly"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:icon="@drawable/ic_twitter" />
-
                     <Button
                         android:id="@+id/btn_send_toot"
                         style="@style/Widget.App.ToggleButton.OutlinedButton.IconOnly"
