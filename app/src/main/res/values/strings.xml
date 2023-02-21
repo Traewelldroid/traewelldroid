@@ -126,7 +126,7 @@
     <string name="title_share">Share</string>
     <string name="version_with_code" translatable="false">v%1$s (%2$d)</string>
     <string name="or">or</string>
-    <string name="login_oauth">Login with Traewelling.de</string>
+    <string name="login_oauth">Login with Träwelling</string>
     <string name="other_operators">Other operators</string>
     <string name="private_profile">Private profile</string>
     <string name="follow">Follow</string>
@@ -135,4 +135,6 @@
     <string name="unfollow">Unfollow</string>
     <string name="mute">Mute</string>
     <string name="unmute">Unmute</string>
+    <string name="welcome">Welcome!</string>
+    <string name="account_notice">To use Träwelldroid, you are required to need to have created an account with Träwelling. If you have one already, just sign in by clicking the button below. Otherwise you can create an account there.</string>
 </resources>

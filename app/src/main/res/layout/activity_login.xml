@@ -4,11 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
-        <variable
-            name="viewModel"
-            type="de.hbch.traewelling.ui.login.LoginActivityViewModel" />
-
         <variable
             name="loginActivity"
             type="de.hbch.traewelling.ui.login.LoginActivity" />
@@ -18,108 +13,59 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="16dp"
+        style="@style/Theme.Traewelling.PrimaryColorBackground"
         tools:context=".ui.login.LoginActivity">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/welcome_text"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="64dp"
+            android:text="@string/welcome"
+            android:textColor="@color/white"
+            android:textSize="40sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                style="@style/Theme.Traewelling.PrimaryColorTexts"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="40dp"
-                android:text="@string/app_name"
-                android:textSize="50sp" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/text_input_login"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/username_or_email">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edit_text_login"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/text_input_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:hint="@string/input_password">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edit_text_password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPassword" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <Button
-                android:id="@+id/btn_login"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="16dp"
-                android:minHeight="60dp"
-                android:onClick="@{() -> loginActivity.login()}"
-                android:text="@string/login" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    style="@style/Theme.Traewelling.PrimaryColorTexts"
-                    android:id="@+id/divider_or"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:text="@string/or" />
-
-                <com.google.android.material.divider.MaterialDivider
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="16dp"
-                    android:layout_toStartOf="@id/divider_or" />
-
-                <com.google.android.material.divider.MaterialDivider
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="16dp"
-                    android:layout_toEndOf="@id/divider_or" />
-            </RelativeLayout>
-
-            <com.google.android.material.button.MaterialButton
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="16dp"
-                android:minHeight="60dp"
-                android:onClick="@{() -> loginActivity.initiateOAuthLogin()}"
-                android:text="@string/login_oauth"
-                app:icon="@drawable/ic_popup"
-                app:iconGravity="end" />
-        </LinearLayout>
+        <TextView
+            android:id="@+id/account_notice"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginVertical="32dp"
+            android:text="@string/account_notice"
+            android:textAlignment="viewStart"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/welcome_text" />
 
         <com.google.android.material.button.MaterialButton
-            style="@style/Widget.Material3.Button.OutlinedButton"
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="32dp"
+            android:backgroundTint="#C72730"
+            android:onClick="@{() -> loginActivity.initiateOAuthLogin()}"
+            android:text="@string/login_oauth"
+            android:textColor="@color/white"
+            app:icon="@drawable/ic_popup"
+            app:iconGravity="end"
+            app:iconTint="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/account_notice" />
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/Widget.Material3.Button.ElevatedButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="@{() -> loginActivity.showInfoActivity()}"
             android:text="@string/information"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginHorizontal="16dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
