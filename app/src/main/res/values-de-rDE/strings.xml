@@ -124,7 +124,7 @@
     </string>
     <string name="title_share">Teilen</string>
     <string name="or">oder</string>
-    <string name="login_oauth">Über Traewelling.de anmelden</string>
+    <string name="login_oauth">Mit Träwelling anmelden</string>
     <string name="other_operators">Andere Betreiber</string>
     <string name="private_profile">Privates Profil</string>
     <string name="follow">Folgen</string>
@@ -133,4 +133,6 @@
     <string name="unfollow">Entfolgen</string>
     <string name="mute">Stummschalten</string>
     <string name="unmute">Stummschaltung aufheben</string>
+    <string name="welcome">Willkommen!</string>
+    <string name="account_notice">Um Träwelldroid zu nutzen, benötigst Du einen Account bei Träwelling. Wenn Du bereits ein Nutzerkonto besitzt, kannst Du Dich einfach mit dem Button unten einloggen. Ansonsten kannst Du Dir dort ein Konto erstellen.</string>
 </resources>
