@@ -86,6 +86,7 @@ class StatusDetailFragment : Fragment() {
         binding.mapStatusDetail.setMultiTouchControls(true)
         binding.mapStatusDetail.controller.setZoom(17.5)
         binding.fragment = this
+        binding.lifecycleOwner = viewLifecycleOwner
 
         viewModel.getPolylineForStatus(
             args.statusId,
