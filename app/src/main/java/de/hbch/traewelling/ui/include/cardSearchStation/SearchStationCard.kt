@@ -99,7 +99,6 @@ class SearchStationCard(
         }
     }
 
-    @SuppressLint("RestrictedApi")
     fun setSearchEndIconAndDisplayMode() {
         var hasHomelandStation = false
         var hasLastVisitedStations = false
@@ -119,13 +118,13 @@ class SearchStationCard(
                 val popupMenu = PopupMenu(context, button)
                 var menuIndex = Menu.FIRST
                 if (hasHomelandStation) {
-                    popupMenu.menu.add(
+                    val item = popupMenu.menu.add(
                         0,
                         menuIndex,
                         Menu.NONE,
                         loggedInUserViewModel.loggedInUser.value?.home?.name ?: ""
                     )
-                    popupMenu.menu.findItem(menuIndex)?.setIcon(R.drawable.ic_home)
+                    item.setIcon(R.drawable.ic_home)
                     menuIndex++
                 }
                 if (hasLastVisitedStations) {
@@ -133,22 +132,21 @@ class SearchStationCard(
                         .lastVisitedStations
                         .value!!
                         .forEachIndexed { index, station ->
-                            popupMenu.menu.add(
+                            val item = popupMenu.menu.add(
                                 0,
                                 menuIndex + index,
                                 Menu.NONE,
                                 station.name
                             )
-                            popupMenu.menu.findItem(menuIndex + index)
-                                ?.setIcon(R.drawable.ic_history)
+                            item.setIcon(R.drawable.ic_history)
                         }
                 }
                 popupMenu.setOnMenuItemClickListener { item ->
                     searchConnections(item.title.toString())
                     true
                 }
-                if (popupMenu.menu is MenuBuilder)
-                    (popupMenu.menu as MenuBuilder).setOptionalIconsVisible(true)
+
+                popupMenu.setForceShowIcon(true)
                 popupMenu.show()
             }
         } else if (hasHomelandStation) {
