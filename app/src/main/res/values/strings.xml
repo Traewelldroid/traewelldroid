@@ -137,4 +137,5 @@
     <string name="unmute">Unmute</string>
     <string name="welcome">Welcome!</string>
     <string name="account_notice">To use Träwelldroid, you are required to need to have created an account with Träwelling. If you have one already, just sign in by clicking the button below. Otherwise you can create an account there.</string>
+    <string name="status_invisible">This status is invisible for you.</string>
 </resources>

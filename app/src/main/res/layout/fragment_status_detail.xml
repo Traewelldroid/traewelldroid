@@ -8,6 +8,13 @@
         <variable
             name="status"
             type="de.hbch.traewelling.api.models.status.Status" />
+
+        <variable
+            name="fragment"
+            type="de.hbch.traewelling.ui.statusDetail.StatusDetailFragment" />
+
+        <import
+            type="android.view.View" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -21,13 +28,43 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:visibility="gone"
+            tools:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+        
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="@{(!fragment.statusLoadingSuccess) ? View.VISIBLE : View.GONE}">
+            
+            <ImageView
+                android:layout_width="128dp"
+                android:layout_height="128dp"
+                android:id="@+id/ic_warning"
+                android:src="@drawable/ic_error"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="64dp"
+                app:tint="@color/warning" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/ic_warning"
+                android:layout_marginTop="16dp"
+                android:textSize="24sp"
+                android:text="@string/status_invisible"
+                android:textAlignment="center" />
+            
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            tools:visibility="gone"
+            android:visibility="@{(fragment.statusLoadingSuccess) ? View.VISIBLE : View.GONE}">
 
             <org.osmdroid.views.MapView
                 android:id="@+id/map_status_detail"

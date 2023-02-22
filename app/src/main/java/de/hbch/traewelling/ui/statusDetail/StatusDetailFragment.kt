@@ -8,6 +8,8 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import de.hbch.traewelling.R
@@ -67,6 +69,12 @@ class StatusDetailFragment : Fragment() {
         }
     }
 
+    private val _statusLoading = MutableLiveData(true)
+    val statusLoading: LiveData<Boolean> get() = _statusLoading
+
+    private val _statusLoadingSuccess = MutableLiveData(true)
+    val statusLoadingSuccess: LiveData<Boolean> get() = _statusLoadingSuccess
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -77,6 +85,7 @@ class StatusDetailFragment : Fragment() {
         binding.mapStatusDetail.setTileSource(TileSourceFactory.MAPNIK)
         binding.mapStatusDetail.setMultiTouchControls(true)
         binding.mapStatusDetail.controller.setZoom(17.5)
+        binding.fragment = this
 
         viewModel.getPolylineForStatus(
             args.statusId,
@@ -122,8 +131,13 @@ class StatusDetailFragment : Fragment() {
             { status ->
                 binding.status = status
                 requireActivity().addMenuProvider(menuProvider)
+                _statusLoading.postValue(false)
+                _statusLoadingSuccess.postValue(true)
             },
-            { }
+            {
+                _statusLoading.postValue(false)
+                _statusLoadingSuccess.postValue(false)
+            }
         )
 
         return binding.root
