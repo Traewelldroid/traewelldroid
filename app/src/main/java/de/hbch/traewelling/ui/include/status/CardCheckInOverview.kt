@@ -3,6 +3,8 @@ package de.hbch.traewelling.ui.include.status
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.Menu
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.os.bundleOf
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.fragment.findNavController
@@ -101,5 +103,39 @@ class CardCheckInOverview(
 
     fun setOnStationNameClickedListener(listener: StationNameClickListener) {
         onStationNameClickedListener = listener
+    }
+
+    fun showStatusActions() {
+        val popupMenu = PopupMenu(context, binding.btnStatusActions)
+        var menuIndex = Menu.FIRST
+
+        val editItem = popupMenu.menu.add(
+            0,
+            menuIndex,
+            Menu.NONE,
+            context.getString(R.string.title_edit)
+        )
+        editItem.setIcon(R.drawable.ic_edit)
+
+        val deleteItem = popupMenu.menu.add(
+            0,
+            menuIndex + 1,
+            Menu.NONE,
+            context.getString(R.string.delete)
+        )
+        deleteItem.setIcon(R.drawable.ic_delete)
+
+        popupMenu.setOnMenuItemClickListener { item ->
+            when(item) {
+                editItem ->
+                    handleEditClicked()
+                deleteItem ->
+                    handleDeleteClicked()
+            }
+            true
+        }
+
+        popupMenu.setForceShowIcon(true)
+        popupMenu.show()
     }
 }
