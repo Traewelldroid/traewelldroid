@@ -17,9 +17,12 @@ import de.hbch.traewelling.databinding.FragmentStatusDetailBinding
 import de.hbch.traewelling.shared.CheckInViewModel
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import org.osmdroid.config.Configuration
+import org.osmdroid.tileprovider.MapTileProviderBasic
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
+import org.osmdroid.tileprovider.tilesource.XYTileSource
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.Polyline
+import org.osmdroid.views.overlay.TilesOverlay
 
 class StatusDetailFragment : Fragment() {
 
@@ -85,6 +88,13 @@ class StatusDetailFragment : Fragment() {
         binding.mapStatusDetail.setTileSource(TileSourceFactory.MAPNIK)
         binding.mapStatusDetail.setMultiTouchControls(true)
         binding.mapStatusDetail.controller.setZoom(17.5)
+
+        val tileProvider = MapTileProviderBasic(requireContext())
+        tileProvider.tileSource = XYTileSource("OpenRailwayMap", 0, 19, 256, ".png", arrayOf("https://tiles.openrailwaymap.org/standard/"))
+
+        val tilesOverlay = TilesOverlay(tileProvider, requireContext())
+        binding.mapStatusDetail.overlays.add(tilesOverlay)
+
         binding.fragment = this
         binding.lifecycleOwner = viewLifecycleOwner
 
