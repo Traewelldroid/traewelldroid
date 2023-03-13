@@ -3,8 +3,8 @@ package de.hbch.traewelling.shared
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
 import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.api.models.Data
 import de.hbch.traewelling.api.models.station.Station
@@ -22,17 +22,17 @@ open class UserViewModel : ViewModel() {
     val user: LiveData<User?> get() = _user
 
     val userId: LiveData<Int>
-        get() = Transformations.map(_user) { user ->
+        get() = _user.map { user ->
             user?.id ?: -1
         }
 
     val username: LiveData<String>
-        get() = Transformations.map(_user) { user ->
+        get() = _user.map { user ->
             user?.username ?: ""
         }
 
     val kilometres: LiveData<String>
-        get() = Transformations.map(_user) { user ->
+        get() = _user.map { user ->
             when (user != null) {
                 true -> "${user.distance / 1000} km"
                 false -> ""
@@ -40,34 +40,34 @@ open class UserViewModel : ViewModel() {
         }
 
     val points: LiveData<Int>
-        get() = Transformations.map(_user) { user ->
+        get() = _user.map { user ->
             user?.points ?: 0
         }
 
     val duration: LiveData<Int>
-        get() = Transformations.map(_user) { user ->
+        get() = _user.map { user ->
             user?.duration ?: 0
         }
 
     val averageSpeed: LiveData<Double>
-        get() = Transformations.map(_user) { user ->
+        get() = _user.map { user ->
             (user?.averageSpeed?.div(1000)) ?: 0.0
         }
 
     val homelandStation: LiveData<String>
-        get() = Transformations.map(_user) { user ->
+        get() = _user.map { user ->
             user?.home?.name ?: ""
         }
     val defaultStatusVisibility: StatusVisibility
         get() = _user.value?.defaultStatusVisibility ?: StatusVisibility.PUBLIC
 
     val profilePictureSrc: LiveData<String>
-        get() = Transformations.map(_user) { user ->
+        get() = _user.map { user ->
             user?.avatarUrl ?: ""
         }
 
     val privateProfile: LiveData<Boolean>
-        get() = Transformations.map(_user) { user ->
+        get() = _user.map { user ->
             user?.privateProfile ?: false
         }
 
