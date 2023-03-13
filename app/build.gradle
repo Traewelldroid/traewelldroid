@@ -42,8 +42,8 @@ android {
         applicationId "de.hbch.traewelling"
         minSdk 26
         targetSdk 33
-        versionCode 77
-        versionName "1.8.0"
+        versionCode 78
+        versionName "1.8.1"
 
         manifestPlaceholders = [
                 SENTRY_DSN: sentryDsn
