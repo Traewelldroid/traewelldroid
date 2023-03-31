@@ -136,4 +136,6 @@
     <string name="welcome">Willkommen!</string>
     <string name="account_notice">Um Träwelldroid zu nutzen, benötigst Du einen Account bei Träwelling. Wenn Du bereits ein Nutzerkonto besitzt, kannst Du Dich einfach mit dem Button unten einloggen. Ansonsten kannst Du Dir dort ein Konto erstellen.</string>
     <string name="status_invisible">Dieser Status ist für Dich nicht sichtbar.</string>
+    <string name="send_toot">Diesen Check-In auf Mastodon teilen</string>
+    <string name="chain_toot">Mastodon-Post an den letzten Post anhängen</string>
 </resources>
