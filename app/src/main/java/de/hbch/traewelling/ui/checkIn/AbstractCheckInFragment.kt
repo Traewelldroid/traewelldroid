@@ -39,34 +39,22 @@ abstract class AbstractCheckInFragment : Fragment() {
             viewModel = checkInViewModel
             checkInFragment = this@AbstractCheckInFragment
             eventViewModel = this@AbstractCheckInFragment.eventViewModel
-            btnSendToot.visibility =
-                when (loggedInUserViewModel.loggedInUser.value?.mastodonUrl != null) {
-                    true -> View.VISIBLE
-                    false -> View.GONE
-                }
-            val mastodonVisibility =
-                when (loggedInUserViewModel.loggedInUser.value?.twitterUrl != null) {
-                    true -> View.VISIBLE
-                    false -> View.GONE
-                }
+            layoutSendToot.visibility =
+                if (loggedInUserViewModel.loggedInUser.value?.mastodonUrl != null) View.VISIBLE
+                    else View.GONE
 
-            btnSendChainToot.visibility = mastodonVisibility
+            // TODO make defaults configurable in settings
+            layoutChainToot.visibility = View.GONE
 
-            toggleGroupSocialMedia.addOnButtonCheckedListener { group, checkedId, isChecked ->
-                when (checkedId) {
-                    R.id.btn_send_toot -> {
-                        if (isChecked) {
-                            group.uncheck(R.id.btn_send_chain_toot)
-                        }
-                        checkInViewModel.toot.value = isChecked
-                    }
-                    R.id.btn_send_chain_toot -> {
-                        if(isChecked) {
-                            group.check(R.id.btn_send_toot)
-                        }
-                        checkInViewModel.chainToot.value = isChecked
-                    }
-                }
+            switchSendToot.setOnCheckedChangeListener { _, isChecked ->
+                checkInViewModel.toot.postValue(isChecked)
+                layoutChainToot.visibility = if (isChecked) View.VISIBLE else View.GONE
+                if (!isChecked)
+                    switchChainToot.isChecked = false
+            }
+
+            switchChainToot.setOnCheckedChangeListener {_, isChecked ->
+                checkInViewModel.chainToot.postValue(isChecked)
             }
         }
 
