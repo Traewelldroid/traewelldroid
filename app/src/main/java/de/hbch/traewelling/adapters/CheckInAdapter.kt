@@ -71,8 +71,6 @@ class CheckInAdapter(
                 binding.checkInBody.visibility = View.GONE
                 binding.iconCheckInBody.visibility = View.GONE
             }
-            if (checkIn.journey.destination.arrivalSave.before(Date()))
-                binding.nextStation.visibility = View.GONE
             binding.executePendingBindings()
         }
     }

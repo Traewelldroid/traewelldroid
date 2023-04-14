@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:paddingRight="4dp">
 
     <data>
+
         <variable
             name="checkIn"
             type="de.hbch.traewelling.api.models.status.Status" />
@@ -48,8 +50,9 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:src="@drawable/ic_perlschnur_main"
+                    app:layout_constraintBottom_toBottomOf="@+id/start_station"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="@+id/start_station" />
 
                 <ImageView
                     android:id="@+id/perlschnur_end"
@@ -57,8 +60,9 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:src="@drawable/ic_perlschnur_main"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:layout_constraintBottom_toBottomOf="@+id/end_station"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/end_station" />
 
                 <ImageView
                     android:id="@+id/imageView"
@@ -79,10 +83,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
                     android:layout_marginEnd="8dp"
+                    android:ellipsize="end"
                     android:gravity="start"
+                    android:maxLines="1"
                     android:onClick="@{() -> checkInCard.onStationNameClicked(checkIn.journey.origin.name)}"
+                    android:singleLine="true"
                     android:text="@{checkIn.journey.origin.name}"
-                    app:layout_constraintEnd_toStartOf="@id/departure_planned_time"
+                    app:layout_constraintEnd_toStartOf="@+id/departure_time"
                     app:layout_constraintStart_toEndOf="@id/perlschnur_start"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="Start Hbf" />
@@ -93,11 +100,14 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
+                    android:ellipsize="end"
                     android:gravity="start"
+                    android:maxLines="1"
                     android:onClick="@{() -> checkInCard.onStationNameClicked(checkIn.journey.destination.name)}"
+                    android:singleLine="true"
                     android:text="@{checkIn.journey.destination.name}"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/arrival_planned_time"
+                    app:layout_constraintBottom_toBottomOf="@+id/arrival_time"
+                    app:layout_constraintEnd_toStartOf="@+id/arrival_time"
                     app:layout_constraintStart_toStartOf="@id/start_station"
                     tools:text="Ende Hbf" />
 
@@ -108,22 +118,19 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:onClick="@{() -> checkInCard.onStationNameClicked(checkIn.journey.origin.name, checkIn.journey.origin.departureRealSave)}"
-                    app:layout_constraintBottom_toBottomOf="@id/perlschnur_start"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/perlschnur_start"
-                    app:layout_constraintVertical_bias="0.75"
+                    app:layout_constraintTop_toTopOf="parent"
                     tools:text="15:25" />
 
                 <TextView
                     android:id="@+id/arrival_time"
                     style="@style/Theme.Traewelling.StatisticTexts"
                     displayTime="@{checkIn.journey.destination.arrivalSave}"
-                    android:onClick="@{() -> checkInCard.onStationNameClicked(checkIn.journey.destination.name, checkIn.journey.destination.arrivalSave)}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toBottomOf="@id/perlschnur_end"
+                    android:onClick="@{() -> checkInCard.onStationNameClicked(checkIn.journey.destination.name, checkIn.journey.destination.arrivalSave)}"
+                    app:layout_constraintBottom_toTopOf="@+id/arrival_planned_time"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/perlschnur_end"
                     tools:text="15:30" />
 
                 <TextView
@@ -133,12 +140,10 @@
                     real="@{checkIn.journey.origin.departureRealSave}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
                     android:onClick="@{() -> checkInCard.onStationNameClicked(checkIn.journey.origin.name, checkIn.journey.origin.departurePlanned)}"
                     android:textSize="16sp"
-                    app:layout_constraintBottom_toBottomOf="@id/departure_time"
-                    app:layout_constraintEnd_toStartOf="@id/departure_time"
-                    app:layout_constraintTop_toTopOf="@id/departure_time"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/departure_time"
                     tools:text="14:25" />
 
                 <TextView
@@ -146,60 +151,76 @@
                     displayTime="@{checkIn.journey.destination.arrivalPlanned}"
                     planned="@{checkIn.journey.destination.arrivalPlanned}"
                     real="@{checkIn.journey.destination.arrivalReal ?? checkIn.journey.origin.arrival}"
-                    android:onClick="@{() -> checkInCard.onStationNameClicked(checkIn.journey.destination.name, checkIn.journey.destination.arrivalPlanned)}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
+                    android:onClick="@{() -> checkInCard.onStationNameClicked(checkIn.journey.destination.name, checkIn.journey.destination.arrivalPlanned)}"
                     android:textSize="16sp"
-                    app:layout_constraintBottom_toBottomOf="@id/arrival_time"
-                    app:layout_constraintEnd_toStartOf="@id/arrival_time"
-                    app:layout_constraintTop_toTopOf="@id/arrival_time"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/arrival_time"
                     tools:text="14:30" />
 
                 <!--Travel connection-->
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/check_in_information_layout"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="10dp"
+                    android:layout_marginVertical="8dp"
                     app:layout_constraintBottom_toTopOf="@+id/end_station"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@id/start_station"
-                    app:layout_constraintTop_toBottomOf="@id/start_station"
-                    app:layout_constraintVertical_bias="0.0">
+                    app:layout_constraintStart_toStartOf="@+id/start_station"
+                    app:layout_constraintTop_toBottomOf="@+id/departure_planned_time">
 
-                    <ImageView
-                        android:id="@+id/icon_product"
-                        productType="@{checkIn.journey.category}"
+                    <androidx.constraintlayout.helper.widget.Flow
+                        android:id="@+id/check_in_flow"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:constraint_referenced_ids="product_layout,distance,travel_time,icon_business_type"
+                        app:flow_horizontalAlign="end"
+                        app:flow_horizontalBias="100"
+                        app:flow_horizontalGap="4dp"
+                        app:flow_horizontalStyle="spread_inside"
+                        app:flow_verticalAlign="center"
+                        app:flow_verticalBias="0"
+                        app:flow_verticalGap="2dp"
+                        app:flow_wrapMode="chain"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <LinearLayout
+                        android:id="@+id/product_layout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:layout_constraintHorizontal_bias="0.093"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:srcCompat="@drawable/ic_suburban" />
+                        android:gravity="center"
+                        android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/train_line"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="4dp"
-                        android:text="@{checkIn.journey.line}"
-                        android:textSize="16sp"
-                        app:layout_constraintBottom_toBottomOf="@id/icon_product"
-                        app:layout_constraintStart_toEndOf="@id/icon_product"
-                        app:layout_constraintTop_toTopOf="@id/icon_product"
-                        tools:text="RB 73" />
+                        <ImageView
+                            android:id="@+id/icon_product"
+                            productType="@{checkIn.journey.category}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:srcCompat="@drawable/ic_suburban" />
+
+                        <TextView
+                            android:id="@+id/train_line"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="4dp"
+                            android:text="@{checkIn.journey.line}"
+                            android:textSize="16sp"
+                            tools:text="RB 73" />
+
+                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/distance"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
                         android:text="@{checkIn.journey.formattedDistance}"
                         android:textSize="16sp"
-                        app:layout_constraintStart_toEndOf="@id/train_line"
-                        app:layout_constraintTop_toTopOf="@id/train_line"
+                        tools:layout_editor_absoluteX="91dp"
+                        tools:layout_editor_absoluteY="2dp"
                         tools:text="64km" />
 
                     <TextView
@@ -207,10 +228,9 @@
                         duration="@{checkIn.journey.duration}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
                         android:textSize="16sp"
-                        app:layout_constraintStart_toEndOf="@id/distance"
-                        app:layout_constraintTop_toTopOf="@id/distance"
+                        tools:layout_editor_absoluteX="100dp"
+                        tools:layout_editor_absoluteY="2dp"
                         tools:text="45min" />
 
                     <ImageView
@@ -218,56 +238,39 @@
                         business="@{checkIn.business}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        app:layout_constraintBottom_toBottomOf="@id/distance"
-                        app:layout_constraintStart_toEndOf="@id/travel_time"
-                        app:layout_constraintTop_toTopOf="@id/distance"
+                        tools:layout_editor_absoluteX="77dp"
                         tools:srcCompat="@drawable/ic_commute" />
 
                     <ImageView
                         android:id="@+id/icon_check_in_body"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
                         android:src="@drawable/ic_quote_right_solid"
                         app:layout_constraintHorizontal_bias="0.093"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/icon_product" />
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/check_in_flow" />
 
                     <TextView
                         android:id="@+id/check_in_body"
                         style="@style/Theme.Traewelling.PrimaryColorTexts"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginEnd="16dp"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginEnd="8dp"
                         android:gravity="center_vertical"
                         android:text="@{checkIn.body}"
                         android:textSize="16sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/icon_check_in_body"
+                        app:layout_constraintStart_toEndOf="@+id/icon_check_in_body"
                         app:layout_constraintTop_toTopOf="@id/icon_check_in_body"
                         tools:text="Hello" />
 
                     <!-- TODO: Enable this once we have current stop information -->
                     <!-- Also see: https://github.com/Traewelldroid/traewelldroid/issues/26 -->
-                    <TextView
-                        android:id="@+id/next_station"
-                        style="@style/Theme.Traewelling.PrimaryColorTexts"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:text="@{@string/next_station(checkIn.journey.origin.name)}"
-                        android:textSize="16sp"
-                        android:visibility="gone"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="@+id/check_in_body"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="@+id/icon_product"
-                        app:layout_constraintTop_toBottomOf="@+id/check_in_body" />
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -310,7 +313,7 @@
                     android:id="@+id/like_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
+                    android:paddingRight="4dp"
                     android:text="@{Integer.toString(viewModel.likes)}"
                     android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="@id/fav"
@@ -336,39 +339,54 @@
                     username="@{checkIn.username}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
                     android:onClick="@{() -> checkInCard.handleUserSelected()}"
                     android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="@id/fav"
                     app:layout_constraintEnd_toStartOf="@id/btn_status_actions"
                     app:layout_constraintTop_toTopOf="@id/fav"
-                    android:layout_marginEnd="8dp"
                     tools:text="username, 31.01.2021 15:25" />
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:id="@+id/btn_status_actions"
                     style="@style/Theme.Traewelling.PrimaryColorIcons"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{() -> checkInCard.showStatusActions()}"
                     android:src="@drawable/ic_more"
                     android:visibility="@{viewModel.isOwnStatus ? View.VISIBLE : View.GONE}"
-                    android:onClick="@{() -> checkInCard.showStatusActions()}"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/fav"
-                    app:layout_constraintBottom_toBottomOf="@id/fav" />
+                    app:layout_constraintTop_toTopOf="@+id/flow" />
+
+                <androidx.constraintlayout.helper.widget.Flow
+                    android:id="@+id/flow"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:constraint_referenced_ids="fav,like_count,icon_status_visibility,status_info"
+                    app:flow_horizontalAlign="start"
+                    app:flow_horizontalBias="0"
+                    app:flow_horizontalGap="4dp"
+                    app:flow_horizontalStyle="packed"
+                    app:flow_verticalAlign="center"
+                    app:flow_wrapMode="chain"
+                    app:layout_constraintEnd_toStartOf="@+id/btn_status_actions"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/travel_progress" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <LinearLayout
+                android:id="@+id/event"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/event"
                 android:layout_marginTop="12dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:visibility="@{checkIn.event == null ? View.GONE : View.VISIBLE}"
-                app:layout_constraintTop_toBottomOf="@id/footer_layout"
+                app:layout_constraintEnd_toEndOf="@id/footer_layout"
                 app:layout_constraintStart_toStartOf="@id/footer_layout"
-                app:layout_constraintEnd_toEndOf="@id/footer_layout">
+                app:layout_constraintTop_toBottomOf="@id/footer_layout">
 
                 <ImageView
                     android:id="@+id/icon_event"
