@@ -19,6 +19,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.MutableLiveData
@@ -63,6 +64,8 @@ class SearchStationCard(
 
     private val autocompleteOptions = MutableLiveData<List<String>>(listOf())
 
+    private val isLocating = MutableLiveData(false)
+
     init {
         addView(binding.root)
         val adapter = ArrayAdapter<String>(
@@ -87,6 +90,10 @@ class SearchStationCard(
             }
         }
         binding.editTextSearchStation.doOnTextChanged { text, _, _, count ->
+            // Cancel location search
+            isLocating.value = false
+            locationManager?.removeUpdates(this)
+
             if (count >= 3) {
                 viewModel.autoCompleteStationSearch(
                     text?.toString() ?: "",
@@ -96,6 +103,11 @@ class SearchStationCard(
                     {}
                 )
             }
+        }
+
+        isLocating.observe(context) { value ->
+            binding.locateProgress.isVisible = value
+            binding.btnLocate.isEnabled = !value
         }
     }
 
@@ -170,9 +182,18 @@ class SearchStationCard(
             location.latitude,
             location.longitude,
             { station ->
+                // Don't override station if something else
+                // cancelled the locating process in the meantime
+                if (isLocating.value != true) {
+                    return@getNearbyStation
+                }
+
                 searchConnections(station)
+                isLocating.value = false
             },
-            {}
+            {
+                isLocating.value = false
+            }
         )
     }
 
@@ -227,7 +248,9 @@ class SearchStationCard(
         else
             LocationManager.GPS_PROVIDER
 
-        locationManager?.requestLocationUpdates(provider, 0L, 0F, this)
+        locationManager?.requestLocationUpdates(provider, 0L, 0F, this)?.let {
+            isLocating.value = true
+        }
     }
 
     fun setOnStationSelectedCallback(callback: StationNameClickListener) {

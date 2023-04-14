@@ -57,16 +57,27 @@
             android:onClick="@{() -> card.searchConnections()}" />
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_locate"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/btn_locate"
+            android:layout_marginEnd="8dp"
+            android:onClick="@{() -> card.findNearbyStations()}"
+            android:text="@string/locate"
             app:icon="@drawable/ic_locate"
             app:layout_constraintEnd_toStartOf="@id/btn_search"
-            app:layout_constraintTop_toTopOf="@id/btn_search"
-            android:layout_marginEnd="8dp"
-            android:text="@string/locate"
-            android:onClick="@{() -> card.findNearbyStations()}"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+            app:layout_constraintTop_toTopOf="@id/btn_search" />
+
+        <ProgressBar
+            android:id="@+id/locate_progress"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_locate"
+            app:layout_constraintEnd_toEndOf="@+id/btn_locate"
+            app:layout_constraintStart_toStartOf="@+id/btn_locate"
+            app:layout_constraintTop_toTopOf="@+id/btn_locate" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
