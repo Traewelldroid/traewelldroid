@@ -19,84 +19,101 @@
         android:background="?android:attr/selectableItemBackground"
         android:id="@+id/layout_connection_list_item">
 
-        <LinearLayout
-            android:id="@+id/layout_product_type"
+        <ImageView
+            android:id="@+id/icon_product_type"
+            productType="@{connection.line.product}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/text_view_line_number"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="@+id/text_view_line_number"
+            tools:srcCompat="@drawable/ic_bus"
+            android:layout_marginTop="4dp" />
 
-            <ImageView
-                android:id="@+id/icon_product_type"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                productType="@{connection.line.product}"
-                tools:srcCompat="@drawable/ic_bus" />
-
-            <TextView
-                android:id="@+id/text_view_line_number"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="8dp"
-                android:text="@{connection.line.name}"
-                android:textSize="18sp"
-                tools:text="RE 75" />
-        </LinearLayout>
+        <ImageView
+            android:id="@+id/icon_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleX="0.8"
+            android:scaleY="0.8"
+            app:layout_constraintBottom_toBottomOf="@+id/text_view_destination"
+            app:layout_constraintEnd_toEndOf="@+id/icon_product_type"
+            app:layout_constraintStart_toStartOf="@+id/icon_product_type"
+            app:layout_constraintTop_toTopOf="@+id/text_view_destination"
+            app:srcCompat="@drawable/ic_arrow_right" />
 
         <TextView
+            android:id="@+id/text_view_line_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@{connection.line.name}"
+            android:textSize="20sp"
+            app:layout_constraintStart_toEndOf="@+id/icon_product_type"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="RE 75" />
+
+        <TextView
+            android:id="@+id/text_view_destination"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:id="@+id/text_view_destination"
-            app:layout_constraintStart_toEndOf="@id/layout_product_type"
-            app:layout_constraintEnd_toStartOf="@id/layout_departure_time"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:gravity="center"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="6dp"
+            android:ellipsize="marquee"
+            android:focusable="auto"
+            android:focusableInTouchMode="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:maxLines="1"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
             android:text="@{connection.finalDestination}"
+            android:textAlignment="textStart"
             android:textSize="18sp"
-            tools:text="Memmingen"
-            tools:ignore="MissingConstraints" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/icon_arrow"
+            app:layout_constraintTop_toBottomOf="@+id/text_view_line_number"
+            tools:text="Memmingen" />
 
         <TextView
             android:id="@+id/text_view_origin"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:paddingTop="5dp"
+            android:layout_marginTop="2dp"
             android:text="@{@string/from_station(connection.station.name)}"
+            android:textSize="14sp"
             android:visibility="gone"
-            app:layout_constraintEnd_toStartOf="@+id/layout_departure_time"
-            app:layout_constraintStart_toEndOf="@+id/layout_product_type"
-            app:layout_constraintTop_toBottomOf="@+id/text_view_destination"
             app:layout_constrainedHeight="true"
+            app:layout_constraintEnd_toEndOf="@+id/text_view_destination"
+            app:layout_constraintStart_toStartOf="@+id/text_view_destination"
+            app:layout_constraintTop_toBottomOf="@+id/text_view_destination"
             tools:text="ab Busbahnhof, Memmingen"
             tools:visibility="visible" />
 
         <LinearLayout
+            android:id="@+id/layout_departure_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/layout_departure_time"
-            app:layout_constraintTop_toTopOf="@id/layout_product_type"
-            app:layout_constraintBottom_toBottomOf="@id/layout_product_type"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintBottom_toBottomOf="@+id/text_view_line_number"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/text_view_line_number">
+
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:id="@+id/text_view_departure_time"
-                tools:text="15:09"
                 displayTime="@{connection.departure ?? connection.plannedDeparture}"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:textSize="18sp"
                 android:visibility="@{connection.cancelled ? View.GONE : View.VISIBLE}"
+                tools:text="15:09"
                 tools:textColor="@color/train_on_time" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/cancelled"
-                android:textSize="18sp"
                 android:textColor="@color/train_delayed"
-                android:visibility="@{connection.cancelled ? View.VISIBLE : View.GONE}"/>
+                android:textSize="18sp"
+                android:visibility="@{connection.cancelled ? View.VISIBLE : View.GONE}" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
