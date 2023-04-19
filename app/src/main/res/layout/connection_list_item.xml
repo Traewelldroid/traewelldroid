@@ -27,7 +27,8 @@
             app:layout_constraintBottom_toBottomOf="@+id/text_view_line_number"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/text_view_line_number"
-            tools:srcCompat="@drawable/ic_bus" />
+            tools:srcCompat="@drawable/ic_bus"
+            android:layout_marginTop="4dp" />
 
         <ImageView
             android:id="@+id/icon_arrow"
@@ -57,7 +58,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="6dp"
             android:ellipsize="marquee"
             android:focusable="auto"
             android:focusableInTouchMode="true"
@@ -71,7 +72,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/icon_arrow"
             app:layout_constraintTop_toBottomOf="@+id/text_view_line_number"
-            tools:ignore="MissingConstraints"
             tools:text="Memmingen" />
 
         <TextView
