@@ -49,7 +49,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/perlschnur_stop"
             app:layout_constraintStart_toStartOf="@id/perlschnur_stop"
-            app:layout_constraintTop_toBottomOf="@+id/perlschnur_stop"
+            app:layout_constraintTop_toBottomOf="@id/perlschnur_stop"
             app:tint="#8A8A8A" />
 
         <TextView
