@@ -1,10 +1,7 @@
 package de.hbch.traewelling.ui.info
 
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,20 +11,18 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import de.hbch.traewelling.BuildConfig
 import de.hbch.traewelling.R
 import de.hbch.traewelling.theme.MainTheme
+import de.hbch.traewelling.ui.composables.OutlinedButtonWithIconAndText
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -97,34 +92,6 @@ fun InfoScreen(
     )
 }
 
-@Composable
-private fun OutlinedButtonWithIconAndText(
-    @StringRes stringId: Int,
-    @DrawableRes drawableId: Int,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit = { }
-) {
-    OutlinedButton(
-        onClick = onClick,
-        modifier = modifier
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                painter = painterResource(id = drawableId),
-                contentDescription = stringResource(id = stringId),
-            )
-            Text(
-                text = stringResource(id = stringId),
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center
-            )
-        }
-    }
-}
-
 @Preview
 @Composable
 private fun InfoScreenPreview() {
@@ -134,17 +101,6 @@ private fun InfoScreenPreview() {
             showProjectRepo = { },
             showLegalInfo = { },
             backPressed = { }
-        )
-    }
-}
-
-@Preview
-@Composable
-private fun OutlinedButtonWithIconAndTextPreview() {
-    MainTheme {
-        OutlinedButtonWithIconAndText(
-            stringId = R.string.app_name,
-            drawableId = R.drawable.ic_train
         )
     }
 }

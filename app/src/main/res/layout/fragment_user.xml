@@ -24,192 +24,20 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-
-                <com.google.android.material.card.MaterialCardView
+                <androidx.compose.ui.platform.ComposeView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/card_user"
+                    android:id="@+id/compose_card_user"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintBaseline_toTopOf="parent"
-                    app:cardCornerRadius="8dp"
-                    app:cardUseCompatPadding="true"
-                    app:cardElevation="2dp"
-                    android:layout_margin="8dp">
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="8dp">
-
-                        <ImageView
-                            android:layout_width="150dp"
-                            android:layout_height="150dp"
-                            android:scaleType="centerCrop"
-                            android:id="@+id/image_profile"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            android:src="@drawable/ic_new_user"
-                            android:layout_marginTop="8dp"/>
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/ic_lock"
-                            app:layout_constraintBottom_toBottomOf="@id/image_profile"
-                            app:layout_constraintEnd_toEndOf="@id/image_profile"
-                            android:visibility="@{viewModel.privateProfile == true ? View.VISIBLE : View.GONE}"
-                            android:tooltipText="@string/private_profile" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/textView_username"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/image_profile"
-                            tools:text="username"
-                            android:text="@{viewModel.username}"
-                            style="@style/TextAppearance.Traewelling.Headline"
-                            android:layout_marginTop="16dp" />
-
-                        <GridLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/layout_stats"
-                            android:columnCount="2"
-                            android:rowCount="2"
-                            android:stretchColumns="*"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/textView_username"
-                            android:useDefaultMargins="true"
-                            android:layout_marginTop="8dp">
-
-                            <LinearLayout
-                                android:layout_rowWeight="1"
-                                android:layout_columnWeight="1"
-                                android:layout_row="0"
-                                android:layout_column="0"
-                                android:orientation="horizontal"
-                                android:gravity="start">
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="match_parent"
-                                    android:src="@drawable/ic_navigation"
-                                    android:layout_marginEnd="8dp"
-                                    style="@style/Theme.Traewelling.PrimaryColorIcons" />
-                                <TextView
-                                    android:id="@+id/textView_kilometres"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="match_parent"
-                                    android:textSize="20sp"
-                                    style="@style/Theme.Traewelling.StatisticTexts"
-                                    android:text="@{viewModel.kilometres}"
-                                    tools:text="1234,56 km" />
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_rowWeight="1"
-                                android:layout_columnWeight="1"
-                                android:layout_row="0"
-                                android:layout_column="1"
-                                android:orientation="horizontal"
-                                android:gravity="end">
-                                <TextView
-                                    android:id="@+id/textView_points"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="match_parent"
-                                    style="@style/Theme.Traewelling.StatisticTexts"
-                                    android:text="@{@string/display_points(viewModel.points)}"
-                                    tools:text="123 points" />
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="match_parent"
-                                    android:src="@drawable/ic_score"
-                                    style="@style/Theme.Traewelling.PrimaryColorIcons"
-                                    android:layout_marginStart="8dp"/>
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_rowWeight="1"
-                                android:layout_columnWeight="1"
-                                android:layout_row="1"
-                                android:layout_column="0"
-                                android:orientation="horizontal"
-                                android:gravity="start">
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="match_parent"
-                                    android:src="@drawable/ic_travel_time"
-                                    style="@style/Theme.Traewelling.PrimaryColorIcons"
-                                    android:layout_marginEnd="8dp"/>
-                                <TextView
-                                    android:id="@+id/textView_travelTime"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="match_parent"
-                                    style="@style/Theme.Traewelling.StatisticTexts"
-                                    duration="@{viewModel.duration}"
-                                    tools:text="14h 5min" />
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_rowWeight="1"
-                                android:layout_columnWeight="1"
-                                android:layout_row="1"
-                                android:layout_column="1"
-                                android:orientation="horizontal"
-                                android:gravity="end">
-                                    <TextView
-                                        android:id="@+id/textView_averageSpeed"
-                                        style="@style/Theme.Traewelling.StatisticTexts"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="match_parent"
-                                        android:text="@{@string/display_average_speed(viewModel.averageSpeed)}"
-                                        tools:text="123,45 km/h" />
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="match_parent"
-                                    android:src="@drawable/ic_speed"
-                                    style="@style/Theme.Traewelling.PrimaryColorIcons"
-                                    android:layout_marginStart="8dp"/>
-                            </LinearLayout>
-                        </GridLayout>
-
-                        <com.google.android.material.button.MaterialButton
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/btn_follow"
-                            tools:text="@string/follow"
-                            app:layout_constraintTop_toBottomOf="@id/layout_stats"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintEnd_toStartOf="@id/btn_mute"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginHorizontal="4dp"
-                            android:visibility="@{isOwnProfile == true ? View.GONE : View.VISIBLE}"
-                            followButton="@{viewModel.user}"
-                            android:onClick="@{() -> viewModel.handleFollowButton()}"/>
-
-                        <com.google.android.material.button.MaterialButton
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/btn_mute"
-                            tools:text="Stummschalten"
-                            app:layout_constraintStart_toEndOf="@id/btn_follow"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="@id/btn_follow"
-                            android:visibility="@{isOwnProfile == true ? View.GONE : View.VISIBLE}"
-                            muteButton="@{viewModel.user}"
-                            android:onClick="@{() -> viewModel.handleMuteButton()}"
-                            android:layout_marginHorizontal="4dp" />
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-                </com.google.android.material.card.MaterialCardView>
+                    android:padding="16dp" />
                 <androidx.recyclerview.widget.RecyclerView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:id="@+id/recycler_view_check_in"
                     tools:listitem="@layout/card_checkin_overview"
                     android:layout_margin="8dp"
-                    app:layout_constraintTop_toBottomOf="@id/card_user"/>
+                    app:layout_constraintTop_toBottomOf="@id/compose_card_user"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

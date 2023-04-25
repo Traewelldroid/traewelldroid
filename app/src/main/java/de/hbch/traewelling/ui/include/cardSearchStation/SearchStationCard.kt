@@ -38,7 +38,7 @@ import java.util.Date
 class SearchStationCard(
     context: Context,
     attrs: AttributeSet? = null
-) : MaterialCardView(context, attrs), LocationListener, PermissionResultReceiver {
+) : MaterialCardView(context, attrs, R.attr.materialCardViewElevatedStyle), LocationListener, PermissionResultReceiver {
 
     private var locationManager: LocationManager? = null
     var requestPermissionCallback: (String) -> Unit = {}
