@@ -11,12 +11,14 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.accompanist.themeadapter.material3.Mdc3Theme
 import com.google.android.material.transition.Hold
 import com.google.android.material.transition.MaterialContainerTransform
 import de.hbch.traewelling.adapters.TravelStopAdapter
 import de.hbch.traewelling.api.models.trip.HafasTrainTripStation
 import de.hbch.traewelling.databinding.FragmentSelectDestinationBinding
 import de.hbch.traewelling.shared.CheckInViewModel
+import de.hbch.traewelling.ui.composables.DataLoading
 
 abstract class AbstractSelectDestinationFragment : Fragment() {
     protected lateinit var binding: FragmentSelectDestinationBinding
@@ -32,9 +34,18 @@ abstract class AbstractSelectDestinationFragment : Fragment() {
     ): View? {
         binding = FragmentSelectDestinationBinding.inflate(inflater, container, false)
 
+        binding.viewConnectionDataLoading.setContent {
+            Mdc3Theme(
+                setDefaultFontFamily = true,
+                setTextColors = true
+            ) {
+                DataLoading()
+            }
+        }
+
         binding.line = checkInViewModel.lineName
         dataLoading.observe(viewLifecycleOwner) { loading ->
-            binding.viewConnectionDataLoading.root.visibility = when (loading) {
+            binding.viewConnectionDataLoading.visibility = when (loading) {
                 true -> View.VISIBLE
                 false -> View.GONE
             }

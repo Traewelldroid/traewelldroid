@@ -20,6 +20,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.accompanist.themeadapter.material3.Mdc3Theme
 import com.google.android.material.chip.Chip
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
@@ -33,6 +34,7 @@ import de.hbch.traewelling.api.models.trip.ProductType
 import de.hbch.traewelling.databinding.FragmentSearchConnectionBinding
 import de.hbch.traewelling.shared.CheckInViewModel
 import de.hbch.traewelling.shared.LoggedInUserViewModel
+import de.hbch.traewelling.ui.composables.DataLoading
 import de.hbch.traewelling.ui.include.cardSearchStation.SearchStationCard
 import de.hbch.traewelling.ui.include.cardSearchStation.SearchStationCardViewModel
 import de.hbch.traewelling.ui.include.homelandStation.HomelandStationBottomSheet
@@ -130,15 +132,23 @@ class SearchConnectionFragment : Fragment() {
     ): View? {
         binding = FragmentSearchConnectionBinding.inflate(inflater, container, false)
 
+        binding.connectionDataLoadingView.setContent {
+            Mdc3Theme(
+                setTextColors = true,
+                setDefaultFontFamily = true
+            ) {
+                DataLoading()
+            }
+        }
         dataLoading.observe(viewLifecycleOwner) { loading ->
             when (loading) {
                 true -> {
                     binding.cardConnections.visibility = GONE
-                    binding.connectionDataLoadingView.root.visibility = VISIBLE
+                    binding.connectionDataLoadingView.visibility = VISIBLE
                 }
                 false -> {
                     binding.cardConnections.visibility = VISIBLE
-                    binding.connectionDataLoadingView.root.visibility = GONE
+                    binding.connectionDataLoadingView.visibility = GONE
                 }
             }
         }

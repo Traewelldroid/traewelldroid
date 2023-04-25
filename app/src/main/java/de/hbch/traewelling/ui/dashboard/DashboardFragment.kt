@@ -13,6 +13,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.accompanist.themeadapter.material3.Mdc3Theme
 import de.hbch.traewelling.R
 import de.hbch.traewelling.adapters.CheckInAdapter
 import de.hbch.traewelling.api.models.trip.ProductType
@@ -20,6 +21,7 @@ import de.hbch.traewelling.databinding.FragmentDashboardBinding
 import de.hbch.traewelling.shared.EventViewModel
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.shared.SharedValues
+import de.hbch.traewelling.ui.composables.DataLoading
 import de.hbch.traewelling.ui.include.alert.AlertBottomSheet
 import de.hbch.traewelling.ui.include.alert.AlertType
 import de.hbch.traewelling.ui.include.cardSearchStation.SearchStationCard
@@ -66,6 +68,14 @@ class DashboardFragment : Fragment() {
 
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
+            layoutDataLoading.setContent {
+                Mdc3Theme(
+                    setTextColors = true,
+                    setDefaultFontFamily = true
+                ) {
+                    DataLoading()
+                }
+            }
         }
 
         val intent = activity?.intent
@@ -130,7 +140,7 @@ class DashboardFragment : Fragment() {
         // Swipe to refresh
         checkInsLoading.observe(viewLifecycleOwner) { loading ->
             binding.swipeRefreshDashboardCheckIns.isRefreshing = loading
-            binding.layoutDataLoading.root.visibility = when (loading) {
+            binding.layoutDataLoading.visibility = when (loading) {
                 true -> View.VISIBLE
                 false -> View.GONE
             }
