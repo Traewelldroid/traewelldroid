@@ -5,13 +5,14 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Base64
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
 import com.jcloquell.androidsecurestorage.SecureStorage
 import de.hbch.traewelling.BuildConfig
-import de.hbch.traewelling.databinding.ActivityLoginBinding
 import de.hbch.traewelling.shared.SharedValues
+import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.info.InfoActivity
 import de.hbch.traewelling.ui.main.MainActivity
 import net.openid.appauth.AppAuthConfiguration
@@ -24,9 +25,7 @@ import net.openid.appauth.browser.AnyBrowserMatcher
 import java.security.MessageDigest
 import java.security.SecureRandom
 
-class LoginActivity : AppCompatActivity() {
-
-    private lateinit var binding: ActivityLoginBinding
+class LoginActivity : ComponentActivity() {
 
     private lateinit var authorizationLauncher: ActivityResultLauncher<Intent>
     private lateinit var authorizationService : AuthorizationService
@@ -34,15 +33,17 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityLoginBinding.inflate(layoutInflater)
-        binding.apply {
-            loginActivity = this@LoginActivity
-            lifecycleOwner = this@LoginActivity
-        }
 
         initAuth()
 
-        setContentView(binding.root)
+        setContent {
+            MainTheme {
+                LoginScreen(
+                    loginAction = { initiateOAuthPKCELogin() },
+                    informationAction = { showInfoActivity() }
+                )
+            }
+        }
     }
 
     private fun initAuth() {
