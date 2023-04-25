@@ -2,12 +2,13 @@ package de.hbch.traewelling.ui.composables
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -17,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import de.hbch.traewelling.R
@@ -26,13 +26,15 @@ import de.hbch.traewelling.theme.MainTheme
 @Composable
 fun OutlinedButtonWithIconAndText(
     @StringRes stringId: Int,
-    @DrawableRes drawableId: Int,
+    @DrawableRes drawableId: Int? = null,
     modifier: Modifier = Modifier,
+    colors: ButtonColors = ButtonDefaults.outlinedButtonColors(),
     onClick: () -> Unit = { }
 ) {
     OutlinedButton(
         onClick = onClick,
-        modifier = modifier
+        modifier = modifier,
+        colors = colors
     ) {
         RowWithIconAndText(stringId = stringId, drawableId = drawableId)
     }
@@ -41,13 +43,15 @@ fun OutlinedButtonWithIconAndText(
 @Composable
 fun ButtonWithIconAndText(
     @StringRes stringId: Int,
-    @DrawableRes drawableId: Int,
+    @DrawableRes drawableId: Int? = null,
     modifier: Modifier = Modifier,
+    colors: ButtonColors = ButtonDefaults.buttonColors(),
     onClick: () -> Unit = { }
 ) {
     Button(
         onClick = onClick,
-        modifier = modifier
+        modifier = modifier,
+        colors = colors
     ) {
         RowWithIconAndText(stringId = stringId, drawableId = drawableId)
     }
@@ -62,7 +66,7 @@ private fun ButtonPreview() {
     MainTheme {
         Row(modifier = Modifier.padding(8.dp)) {
             ButtonWithIconAndText(stringId = stringId, drawableId = drawableId, modifier = Modifier.weight(1f))
-            OutlinedButtonWithIconAndText(stringId = stringId, drawableId = drawableId, modifier = Modifier.weight(1f))
+            OutlinedButtonWithIconAndText(stringId = stringId, modifier = Modifier.weight(1f))
         }
     }
 }
@@ -70,17 +74,19 @@ private fun ButtonPreview() {
 @Composable
 private fun RowWithIconAndText(
     @StringRes stringId: Int,
-    @DrawableRes drawableId: Int
+    @DrawableRes drawableId: Int? = null
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Icon(
-                painter = painterResource(id = drawableId),
-                contentDescription = stringResource(id = stringId),
-                modifier = Modifier.padding(end = 8.dp)
-            )
+            if (drawableId != null) {
+                Icon(
+                    painter = painterResource(id = drawableId),
+                    contentDescription = stringResource(id = stringId),
+                    modifier = Modifier.padding(end = 8.dp)
+                )
+            }
             Text(
                 text = stringResource(id = stringId),
                 modifier = Modifier.fillMaxWidth(),

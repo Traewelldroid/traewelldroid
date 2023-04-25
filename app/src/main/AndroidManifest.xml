@@ -34,7 +34,29 @@
             android:name=".ui.login.LoginActivity"
             android:theme="@style/Theme.Traewelling.Login"
             android:exported="true"
-            android:windowSoftInputMode="stateVisible|adjustResize" />
+            android:windowSoftInputMode="stateVisible|adjustResize">
+            <intent-filter>
+                <action android:name="de.hbch.traewelling.HANDLE_AUTHORIZATION_RESPONSE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name="net.openid.appauth.RedirectUriReceiverActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data
+                    android:scheme="https" />
+                <data
+                    android:scheme="http" />
+                <data
+                    android:host="app.traewelldroid.de" />
+                <data
+                    android:pathPrefix="/oauth2redirect"/>
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ui.launcher.LauncherActivity"
             android:exported="true"
