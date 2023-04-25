@@ -6,9 +6,7 @@ import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import coil.load
-import coil.transform.CircleCropTransformation
-import de.hbch.traewelling.R
+import com.google.accompanist.themeadapter.material3.Mdc3Theme
 import de.hbch.traewelling.adapters.CheckInAdapter
 import de.hbch.traewelling.databinding.FragmentUserBinding
 import de.hbch.traewelling.shared.LoggedInUserViewModel
@@ -30,6 +28,17 @@ abstract class AbstractUserFragment : Fragment() {
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
             viewModel = this@AbstractUserFragment.viewModel
+            composeCardUser.setContent {
+                Mdc3Theme(
+                    setDefaultFontFamily = true,
+                    setTextColors = true
+                ) {
+                    UserCard(
+                        userViewModel = this@AbstractUserFragment.viewModel,
+                        loggedInUserViewModel = loggedInUserViewModel
+                    )
+                }
+            }
         }
         binding.recyclerViewCheckIn.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerViewCheckIn.adapter = CheckInAdapter(
@@ -50,14 +59,6 @@ abstract class AbstractUserFragment : Fragment() {
         binding.swipeRefreshDashboardCheckIns.setOnRefreshListener {
             page = 1
             loadCheckIns()
-        }
-
-        viewModel.profilePictureSrc.observe(viewLifecycleOwner) { src ->
-            binding.imageProfile.load(src) {
-                crossfade(true)
-                placeholder(R.drawable.ic_new_user)
-                transformations(CircleCropTransformation())
-            }
         }
 
         page = 1 // Reset page
