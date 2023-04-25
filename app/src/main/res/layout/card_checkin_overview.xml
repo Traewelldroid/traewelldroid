@@ -26,6 +26,7 @@
         android:focusable="true"
         android:onClick="@{() -> checkInCard.handleCheckInSelected()}"
         app:cardElevation="2dp"
+        style="?attr/materialCardViewElevatedStyle"
         app:cardUseCompatPadding="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout

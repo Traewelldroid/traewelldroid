@@ -44,6 +44,7 @@
                 app:cardCornerRadius="8dp"
                 app:cardElevation="2dp"
                 app:cardUseCompatPadding="true"
+                style="?attr/materialCardViewElevatedStyle"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
