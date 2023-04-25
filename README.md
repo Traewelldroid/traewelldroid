@@ -18,12 +18,13 @@ First of all you should copy the `key.properties.example` file in the root direc
 contents into a `key.properties` file. With those properties the main keys and URLs of the application
 can be set.
 
-| Property name  | Usage                                                                         | Mandatory |
-| -------------- | ----------------------------------------------------------------------------- | --------- |
-| `SENTRY_DSN`   | The DSN used for error logging with Sentry.                                   | No        |
-| `OAUTH_SERVER` | The URL to the OAuth server running the authentication service for Träwelling | No        |
-| `REPO_URL`     | The URL to the repository                                                     | No        |
-| `PRIVACY_URL`  | URL to the privacy statement and imprint.                                     | Yes       |
+| Property name        | Usage                                       | Mandatory |
+|----------------------|---------------------------------------------|-----------|
+| `SENTRY_DSN`         | The DSN used for error logging with Sentry. | No        |
+| `OAUTH_CLIENT_ID`    | The OAuth client id                         | No        |
+| `OAUTH_REDIRECT_URL` | The OAuth redirect URL                      | No        |
+| `REPO_URL`           | The URL to the repository                   | No        |
+| `PRIVACY_URL`        | URL to the privacy statement and imprint.   | Yes       |
 
 After that, open Android Studio and the project should setup itself automatically.
 

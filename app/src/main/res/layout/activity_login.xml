@@ -49,7 +49,7 @@
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="32dp"
             android:backgroundTint="#C72730"
-            android:onClick="@{() -> loginActivity.initiateOAuthLogin()}"
+            android:onClick="@{() -> loginActivity.initiateOAuthPKCELogin()}"
             android:text="@string/login_oauth"
             android:textColor="@color/white"
             app:icon="@drawable/ic_popup"

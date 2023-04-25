@@ -19,10 +19,15 @@ if (sentryDsn == null) {
     sentryDsn = ""
     project.logger.error('Sentry DSN was not set!')
 }
-def oauthServer = properties.getProperty('OAUTH_SERVER')
-if (oauthServer == null) {
-    oauthServer = ""
+def oauthClientId = properties.getProperty('OAUTH_CLIENT_ID')
+if (oauthClientId == null) {
+    oauthClientId = ""
     project.logger.error('OAuth Server was not set!')
+}
+def oauthRedirectUrl = properties.getProperty('OAUTH_REDIRECT_URL')
+if (oauthRedirectUrl == null) {
+    oauthRedirectUrl = ""
+    project.logger.error("OAuth Redirect URL was not set!")
 }
 def repoUrl = properties.getProperty('REPO_URL')
 if (repoUrl == null) {
@@ -39,19 +44,23 @@ android {
     compileSdk 33
 
     defaultConfig {
-        applicationId "de.hbch.traewelling"
+        def packageName = "de.hbch.traewelling"
+
+        applicationId packageName
         minSdk 26
         targetSdk 33
         versionCode 80
         versionName "1.9.0"
 
         manifestPlaceholders = [
-                SENTRY_DSN: sentryDsn
+                SENTRY_DSN: sentryDsn,
+                appAuthRedirectScheme: "app.traewelldroid.de"
         ]
 
         testInstrumentationRunner
 
-        buildConfigField "android.net.Uri", "OAUTH_SERVER", "android.net.Uri.parse(\"${oauthServer}\")"
+        buildConfigField "String", "OAUTH_REDIRECT_URL", "\"${oauthRedirectUrl}\""
+        buildConfigField "String", "OAUTH_CLIENT_ID", "\"${oauthClientId}\""
         buildConfigField "String", "REPO_URL", "\"${repoUrl}\""
         buildConfigField "String", "PRIVACY_URL", "\"${privacyUrl}\""
     }
@@ -80,24 +89,15 @@ android {
 }
 
 dependencies {
-    constraints {
-        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.0") {
-            because("kotlin-stdlib-jdk7 is now a part of kotlin-stdlib")
-        }
-        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.0") {
-            because("kotlin-stdlib-jdk8 is now a part of kotlin-stdlib")
-        }
-    }
-
     // Jetpack Compose
-
-    implementation "androidx.compose.runtime:runtime:1.4.1"
-    implementation "androidx.compose.ui:ui:1.4.1"
-    implementation "androidx.compose.foundation:foundation:1.4.1"
-    implementation "androidx.compose.foundation:foundation-layout:1.4.1"
-    implementation "androidx.compose.material:material:1.4.1"
-    implementation "androidx.compose.runtime:runtime-livedata:1.4.1"
-    implementation "androidx.compose.ui:ui-tooling:1.4.1"
+    def composeVersion = "1.4.2"
+    implementation "androidx.compose.runtime:runtime:$composeVersion"
+    implementation "androidx.compose.ui:ui:$composeVersion"
+    implementation "androidx.compose.foundation:foundation:$composeVersion"
+    implementation "androidx.compose.foundation:foundation-layout:$composeVersion"
+    implementation "androidx.compose.material:material:$composeVersion"
+    implementation "androidx.compose.runtime:runtime-livedata:$composeVersion"
+    implementation "androidx.compose.ui:ui-tooling:$composeVersion"
     implementation "com.google.accompanist:accompanist-themeadapter-material3:0.28.0"
     implementation "com.google.accompanist:accompanist-systemuicontroller:0.31.0-alpha"
     implementation "androidx.compose.material3:material3:1.0.1"
@@ -107,13 +107,14 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.fragment:fragment-ktx:1.5.6'
+    implementation 'androidx.fragment:fragment-ktx:1.5.7'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation "androidx.browser:browser:1.5.0"
-    implementation 'androidx.core:core-splashscreen:1.0.0'
+    implementation 'androidx.core:core-splashscreen:1.0.1'
     implementation 'com.auth0.android:jwtdecode:2.0.1'
+    implementation "net.openid:appauth:0.11.1"
     implementation 'org.greenrobot:eventbus:3.3.1'
 
     // OSM integration
