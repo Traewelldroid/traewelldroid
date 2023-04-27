@@ -64,9 +64,26 @@ private fun ButtonPreview() {
     val drawableId = R.drawable.ic_locate
 
     MainTheme {
-        Row(modifier = Modifier.padding(8.dp)) {
-            ButtonWithIconAndText(stringId = stringId, drawableId = drawableId, modifier = Modifier.weight(1f))
-            OutlinedButtonWithIconAndText(stringId = stringId, modifier = Modifier.weight(1f))
+        Column {
+            Row(modifier = Modifier.padding(8.dp)) {
+                ButtonWithIconAndText(
+                    stringId = stringId,
+                    drawableId = drawableId,
+                    modifier = Modifier.weight(1f)
+                )
+                OutlinedButtonWithIconAndText(stringId = stringId, modifier = Modifier.weight(1f))
+            }
+            Row(modifier = Modifier.padding(8.dp)) {
+                ButtonWithIconAndText(stringId = R.string.login_oauth, drawableId = R.drawable.ic_popup)
+            }
+
+            Row(modifier = Modifier.padding(8.dp)) {
+                ButtonWithIconAndText(
+                    stringId = R.string.login_oauth,
+                    drawableId = R.drawable.ic_popup,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
         }
     }
 }
@@ -76,7 +93,7 @@ private fun RowWithIconAndText(
     @StringRes stringId: Int,
     @DrawableRes drawableId: Int? = null
 ) {
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(modifier = Modifier) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -89,7 +106,6 @@ private fun RowWithIconAndText(
             }
             Text(
                 text = stringResource(id = stringId),
-                modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center
             )
         }
