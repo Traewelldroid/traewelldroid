@@ -9,7 +9,6 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -35,7 +34,7 @@ import de.hbch.traewelling.databinding.FragmentSearchConnectionBinding
 import de.hbch.traewelling.shared.CheckInViewModel
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.ui.composables.DataLoading
-import de.hbch.traewelling.ui.include.cardSearchStation.SearchStationCard
+import de.hbch.traewelling.ui.include.cardSearchStation.CardSearchStation
 import de.hbch.traewelling.ui.include.cardSearchStation.SearchStationCardViewModel
 import de.hbch.traewelling.ui.include.homelandStation.HomelandStationBottomSheet
 import de.hbch.traewelling.util.toShortCut
@@ -45,19 +44,16 @@ import java.util.*
 class SearchConnectionFragment : Fragment() {
 
     private lateinit var binding: FragmentSearchConnectionBinding
-    private lateinit var searchStationCard: SearchStationCard
     private val args: SearchConnectionFragmentArgs by navArgs()
     private val viewModel: SearchConnectionViewModel by viewModels()
     private val checkInViewModel: CheckInViewModel by activityViewModels()
     private val loggedInUserViewModel: LoggedInUserViewModel by activityViewModels()
     private val searchStationCardViewModel: SearchStationCardViewModel by viewModels()
+
     private val onFoundConnectionsCallback: (HafasTripPage) -> Unit = { connections ->
         dataLoading.postValue(false)
         binding.stationName = connections.meta.station.name
         binding.stationId = connections.meta.station.id
-        binding.searchCard.binding.editTextSearchStation.clearFocus()
-        binding.searchCard.loggedInUserViewModel = loggedInUserViewModel
-        binding.searchCard.binding.editTextSearchStation.setText(connections.meta.station.name)
         val adapter = binding.recyclerViewConnections.adapter as ConnectionAdapter
         adapter.addNewConnections(connections.data)
         val availableTypes = connections.data.mapNotNull { it.line?.product }
@@ -104,25 +100,13 @@ class SearchConnectionFragment : Fragment() {
         binding.textNoDepartures.visibility = if (connections.data.isEmpty())
             VISIBLE else GONE
     }
-    private val requestPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        run {
-            searchStationCard.onPermissionResult(isGranted)
-        }
-    }
     private lateinit var currentSearchDate: Date
 
-    private val dataLoading = MutableLiveData<Boolean>(false)
+    private val dataLoading = MutableLiveData(false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         exitTransition = Hold()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        binding.searchCard.removeLocationUpdates()
     }
 
     override fun onCreateView(
@@ -140,6 +124,22 @@ class SearchConnectionFragment : Fragment() {
                 DataLoading()
             }
         }
+
+        binding.searchCard.setContent {
+            Mdc3Theme(
+                setDefaultFontFamily = true
+            ) {
+                CardSearchStation(
+                    searchAction = { station ->
+                        searchConnections(station, currentSearchDate)
+                    },
+                    searchStationCardViewModel = searchStationCardViewModel,
+                    homelandStationData = loggedInUserViewModel.home,
+                    recentStationsData = loggedInUserViewModel.lastVisitedStations
+                )
+            }
+        }
+
         dataLoading.observe(viewLifecycleOwner) { loading ->
             when (loading) {
                 true -> {
@@ -153,19 +153,6 @@ class SearchConnectionFragment : Fragment() {
             }
         }
 
-        searchStationCard = binding.searchCard
-        searchStationCard.viewModel = searchStationCardViewModel
-        searchStationCard.binding.card = searchStationCard
-        searchStationCard.setOnStationSelectedCallback { station, date ->
-            searchConnections(
-                station,
-                date ?: currentSearchDate
-            )
-        }
-        searchStationCard.requestPermissionCallback = { permission ->
-            requestPermissionLauncher.launch(permission)
-        }
-        searchStationCard.binding.editTextSearchStation.setText(args.stationName)
         binding.searchConnectionFragment = this
         binding.lifecycleOwner = viewLifecycleOwner
         binding.chipGroupFilter.setOnCheckedStateChangeListener { _, checkedIds ->
@@ -277,11 +264,10 @@ class SearchConnectionFragment : Fragment() {
         viewModel.searchConnections(
             stationName,
             timestamp,
-            onFoundConnectionsCallback,
-            {
-                dataLoading.postValue(false)
-            }
-        )
+            onFoundConnectionsCallback
+        ) {
+            dataLoading.postValue(false)
+        }
     }
 
     fun requestDepartureTimeAndSearchConnections() {

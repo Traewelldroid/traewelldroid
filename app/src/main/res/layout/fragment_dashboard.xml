@@ -20,44 +20,29 @@
                 android:layout_height="match_parent"
                 android:padding="8dp">
 
-                <LinearLayout
+                <androidx.compose.ui.platform.ComposeView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:id="@+id/layout_search_card"
-                    android:orientation="vertical">
+                    android:padding="8dp"
+                    android:id="@+id/search_card" />
 
-                    <de.hbch.traewelling.ui.include.cardSearchStation.SearchStationCard
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/search_card"
-                        tools:layout="@layout/card_search_station"
-                        app:cardUseCompatPadding="true"
-                        app:cardElevation="3dp"
-                        app:cardCornerRadius="8dp"
-                        android:padding="16dp" />
-
-                    <androidx.compose.ui.platform.ComposeView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/layout_data_loading"
-                        app:layout_constraintTop_toBottomOf="@id/search_card"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        android:layout_gravity="center_horizontal"
-                        android:visibility="gone" />
-
-                </LinearLayout>
-
-
+                <androidx.compose.ui.platform.ComposeView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/layout_data_loading"
+                    app:layout_constraintTop_toBottomOf="@id/search_card"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_gravity="center_horizontal"
+                    android:visibility="gone" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/recycler_view_check_in"
                     tools:listitem="@layout/card_checkin_overview"
-                    app:layout_constraintTop_toBottomOf="@id/layout_search_card"
+                    app:layout_constraintTop_toBottomOf="@id/layout_data_loading"
                     android:nestedScrollingEnabled="false"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>

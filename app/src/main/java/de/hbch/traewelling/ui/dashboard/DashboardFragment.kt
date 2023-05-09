@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -14,7 +13,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.accompanist.themeadapter.material3.Mdc3Theme
-import de.hbch.traewelling.R
 import de.hbch.traewelling.adapters.CheckInAdapter
 import de.hbch.traewelling.api.models.trip.ProductType
 import de.hbch.traewelling.databinding.FragmentDashboardBinding
@@ -22,28 +20,19 @@ import de.hbch.traewelling.shared.EventViewModel
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.shared.SharedValues
 import de.hbch.traewelling.ui.composables.DataLoading
-import de.hbch.traewelling.ui.include.alert.AlertBottomSheet
-import de.hbch.traewelling.ui.include.alert.AlertType
-import de.hbch.traewelling.ui.include.cardSearchStation.SearchStationCard
+import de.hbch.traewelling.ui.include.cardSearchStation.CardSearchStation
 import de.hbch.traewelling.ui.include.cardSearchStation.SearchStationCardViewModel
 import de.hbch.traewelling.util.publishStationShortcuts
+import java.util.Date
 
 class DashboardFragment : Fragment() {
 
     private lateinit var binding: FragmentDashboardBinding
-    private lateinit var searchStationCard: SearchStationCard
     private val loggedInUserViewModel: LoggedInUserViewModel by activityViewModels()
     private val eventViewModel: EventViewModel by activityViewModels()
     private val searchStationCardViewModel: SearchStationCardViewModel by viewModels()
     private val dashboardFragmentViewModel: DashboardFragmentViewModel by viewModels()
     private var currentPage = 1
-    private val requestPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        run {
-            searchStationCard.onPermissionResult(isGranted)
-        }
-    }
 
     private var checkInsLoading = MutableLiveData(false)
 
@@ -53,13 +42,22 @@ class DashboardFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentDashboardBinding.inflate(inflater, container, false)
-        searchStationCard = binding.searchCard
-        searchStationCard.viewModel = searchStationCardViewModel
-        searchStationCard.loggedInUserViewModel = loggedInUserViewModel
-        searchStationCard.binding.card = searchStationCard
-        searchStationCard.requestPermissionCallback = { permission ->
-            requestPermissionLauncher.launch(permission)
+
+        binding.searchCard.setContent {
+            Mdc3Theme(
+                setDefaultFontFamily = true
+            ) {
+                CardSearchStation(
+                    searchAction = { station ->
+                        searchConnections(station)
+                    },
+                    searchStationCardViewModel = searchStationCardViewModel,
+                    homelandStationData = loggedInUserViewModel.home,
+                    recentStationsData = loggedInUserViewModel.lastVisitedStations
+                )
+            }
         }
+
         loggedInUserViewModel.getLoggedInUser()
         loggedInUserViewModel.getLastVisitedStations {
             publishStationShortcuts(requireContext(), it)
@@ -127,13 +125,14 @@ class DashboardFragment : Fragment() {
         return binding.root
     }
 
-    private fun handleNotificationMenuClick() {
-        val alertBottomSheet = AlertBottomSheet(
-            AlertType.ERROR,
-            requireContext().getString(R.string.notifications_not_implemented_text),
-            5000
-        )
-        alertBottomSheet.show(parentFragmentManager, AlertBottomSheet.TAG)
+    private fun searchConnections(station: String, date: Date = Date()) {
+        findNavController()
+            .navigate(
+                DashboardFragmentDirections.actionDashboardFragmentToSearchConnectionFragment(
+                    station,
+                    date
+                )
+            )
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -150,15 +149,6 @@ class DashboardFragment : Fragment() {
             currentPage = 1
             loadCheckins(currentPage)
         }
-        binding.searchCard.setOnStationSelectedCallback { station, date ->
-            findNavController()
-                .navigate(
-                    DashboardFragmentDirections.actionDashboardFragmentToSearchConnectionFragment(
-                        station,
-                        date
-                    )
-                )
-        }
 
         // Init recycler view
         val recyclerView = binding.recyclerViewCheckIn
@@ -168,7 +158,13 @@ class DashboardFragment : Fragment() {
                 mutableListOf(),
                 loggedInUserViewModel.userId
             ) { stationName, date ->
-                searchStationCard.searchConnections(stationName, date)
+                findNavController()
+                    .navigate(
+                        DashboardFragmentDirections.actionDashboardFragmentToSearchConnectionFragment(
+                            stationName,
+                            date
+                        )
+                    )
             }
 
         binding.nestedScrollViewDashboard.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, _, _, _, _ ->
@@ -184,11 +180,6 @@ class DashboardFragment : Fragment() {
         })
 
         loadCheckins(currentPage)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        binding.searchCard.removeLocationUpdates()
     }
 
     private fun loadCheckins(page: Int) {
