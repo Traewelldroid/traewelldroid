@@ -30,8 +30,7 @@ abstract class AbstractUserFragment : Fragment() {
             viewModel = this@AbstractUserFragment.viewModel
             composeCardUser.setContent {
                 Mdc3Theme(
-                    setDefaultFontFamily = true,
-                    setTextColors = true
+                    setDefaultFontFamily = true
                 ) {
                     UserCard(
                         userViewModel = this@AbstractUserFragment.viewModel,
