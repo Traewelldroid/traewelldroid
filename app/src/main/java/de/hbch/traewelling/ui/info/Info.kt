@@ -55,7 +55,7 @@ fun InfoScreen(
                     .padding(horizontal = 16.dp)
                     .fillMaxHeight()
             ) {
-                val verticalPadding = Modifier.padding(vertical = 8.dp)
+                val verticalPadding = Modifier.padding(vertical = 8.dp).fillMaxWidth()
                 OutlinedButtonWithIconAndText(
                     stringId = R.string.open_source_licenses,
                     drawableId = R.drawable.ic_library,

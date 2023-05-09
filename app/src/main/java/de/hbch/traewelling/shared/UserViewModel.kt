@@ -58,6 +58,12 @@ open class UserViewModel : ViewModel() {
         get() = _user.map { user ->
             user?.home?.name ?: ""
         }
+
+    val home: LiveData<Station?>
+        get() = _user.map { user ->
+            user?.home
+        }
+
     val defaultStatusVisibility: StatusVisibility
         get() = _user.value?.defaultStatusVisibility ?: StatusVisibility.PUBLIC
 

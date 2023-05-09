@@ -21,7 +21,7 @@ import java.util.Date
 class CardCheckInOverview(
     context: Context?,
     attrs: AttributeSet?,
-    private val adapter: CheckInAdapter
+    private val adapter: CheckInAdapter?
 ) :
     MaterialCardView(context, attrs, 0) {
 
@@ -38,10 +38,10 @@ class CardCheckInOverview(
         val bottomSheet = DeleteStatusBottomSheet { bottomSheet ->
             bottomSheet.dismiss()
             binding.viewModel?.deleteStatus({
-                adapter.notifyItemRemoved(
+                adapter?.notifyItemRemoved(
                     adapter.checkIns.indexOf(binding.checkIn)
                 )
-                adapter.checkIns.remove(binding.checkIn)
+                adapter?.checkIns?.remove(binding.checkIn)
                 val alertBottomSheet = AlertBottomSheet(
                     AlertType.SUCCESS,
                     context.resources.getString(R.string.status_delete_success),
