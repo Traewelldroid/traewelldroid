@@ -223,8 +223,8 @@ fun CardSearchStation(
                 if (isLocating) {
                     RequestLocationPermissionAndLocation(
                         locationReceivedAction = { location ->
+                            isLocating = false
                             location?.let {
-                                isLocating = false
                                 searchStationCardViewModel?.getNearbyStation(
                                     location.latitude,
                                     location.longitude,
@@ -271,14 +271,16 @@ private fun RequestLocationPermissionAndLocation(locationReceivedAction: (Locati
             else
                 LocationManager.GPS_PROVIDER
 
-            try {
-                val location = locationManager.getLastKnownLocation(provider)
+            locationManager.getCurrentLocation(
+                provider,
+                null,
+                LocalContext.current.mainExecutor
+            ) { location ->
                 locationReceivedAction(location)
-            } catch (_: SecurityException) {
-                // Won't occur
             }
         }
     } else {
+        locationReceivedAction(null)
         LaunchedEffect(true) {
             locationPermissionState.launchMultiplePermissionRequest()
         }
