@@ -132,6 +132,7 @@
                         android:id="@+id/layout_share_options"
                         app:layout_constraintTop_toBottomOf="@id/btn_select_event"
                         android:orientation="vertical"
+                        android:visibility="@{editMode ? View.GONE : View.VISIBLE}"
                         android:layout_marginTop="8dp">
 
                         <LinearLayout
