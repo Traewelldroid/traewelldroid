@@ -5,7 +5,9 @@ import androidx.lifecycle.ViewModel
 import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.api.models.Data
 import de.hbch.traewelling.api.models.statistics.PersonalStatistics
+import de.hbch.traewelling.events.UnauthorizedEvent
 import io.sentry.Sentry
+import org.greenrobot.eventbus.EventBus
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -67,6 +69,9 @@ class StatisticsViewModel : ViewModel() {
                             successfulCallback(data)
                             return
                         }
+                    }
+                    if (response.code() == 403) {
+                        EventBus.getDefault().post(UnauthorizedEvent())
                     }
                     failureCallback()
                     Sentry.captureMessage(response.errorBody()?.string() ?: "")
