@@ -3,6 +3,9 @@
 This is a community app for the open source project
 [Träwelling](https://github.com/Traewelling/traewelling).
 
+[![Übersetzungsstatus](https://translate.codeberg.org/widgets/traewelldroid/en/app/svg-badge.svg)](https://translate.codeberg.org/engage/traewelldroid/en/)
+[![Gitmoji](https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg)](https://gitmoji.dev)
+
 ## How it is developed
 
 The app is using the official AndroidX framework by Google. Crashes of the app are detected and
@@ -19,7 +22,7 @@ contents into a `key.properties` file. With those properties the main keys and U
 can be set.
 
 | Property name        | Usage                                       | Mandatory |
-|----------------------|---------------------------------------------|-----------|
+| -------------------- | ------------------------------------------- | --------- |
 | `SENTRY_DSN`         | The DSN used for error logging with Sentry. | No        |
 | `OAUTH_CLIENT_ID`    | The OAuth client id                         | No        |
 | `OAUTH_REDIRECT_URL` | The OAuth redirect URL                      | No        |
