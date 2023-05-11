@@ -2,13 +2,17 @@ package de.hbch.traewelling.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material.MaterialTheme.colors
+import androidx.compose.material.lightColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -67,7 +71,13 @@ fun MainTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        content = content,
         typography = AppTypography
-    )
+    ) {
+        CompositionLocalProvider(
+            LocalColorScheme provides colorScheme,
+            content = content
+        )
+    }
 }
+
+internal val LocalColorScheme = staticCompositionLocalOf { LightColorScheme }

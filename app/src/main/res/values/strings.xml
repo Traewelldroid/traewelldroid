@@ -140,4 +140,6 @@
     <string name="status_invisible">This status is invisible for you.</string>
     <string name="send_toot">Share this check-in on Mastodon</string>
     <string name="chain_toot">Chain this toot to the last tooted Mastodon post</string>
+    <string name="settings_check_in_providers">Check-in providers</string>
+    <string name="settings_check_in_providers_description">You can manage your check-in providers.</string>
 </resources>
