@@ -88,6 +88,10 @@
         Träwelldroid can now open URLs from traewelling.de. Would you like to set up?
         This also can be changed at any time in the system settings.
     </string>
+    <string name="request_url_login_verification">
+        For using Träwelldroid you need to enable that Träwelldroid can open links.
+        Please do this in the settings.
+    </string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="title_also_check_in">Also check-in</string>
