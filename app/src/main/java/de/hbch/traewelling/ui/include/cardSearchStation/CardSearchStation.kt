@@ -115,6 +115,7 @@ fun CardSearchStation(
                     ),
                     keyboardActions = KeyboardActions(
                         onSearch = {
+                            autocompleteVisible = false
                             // TODO remove delay after compose migration
                             val handler = Handler(Looper.getMainLooper())
                             handler.postDelayed({
