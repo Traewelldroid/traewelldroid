@@ -115,8 +115,12 @@ fun CardSearchStation(
                     ),
                     keyboardActions = KeyboardActions(
                         onSearch = {
-                            shortcutsVisible = false
-                            searchAction(text)
+                            // TODO remove delay after compose migration
+                            val handler = Handler(Looper.getMainLooper())
+                            handler.postDelayed({
+                                shortcutsVisible = false
+                                searchAction(text)
+                            }, 500)
                         }
                     ),
                     trailingIcon = {
@@ -160,7 +164,7 @@ fun CardSearchStation(
                                     val handler = Handler(Looper.getMainLooper())
                                     handler.postDelayed({
                                         searchAction(option)
-                                    }, 20)
+                                    }, 500)
                                 }
                             )
                         }
