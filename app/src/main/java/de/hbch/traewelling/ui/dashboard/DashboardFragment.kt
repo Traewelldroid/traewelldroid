@@ -19,6 +19,7 @@ import de.hbch.traewelling.databinding.FragmentDashboardBinding
 import de.hbch.traewelling.shared.EventViewModel
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.shared.SharedValues
+import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.composables.DataLoading
 import de.hbch.traewelling.ui.include.cardSearchStation.CardSearchStation
 import de.hbch.traewelling.ui.include.cardSearchStation.SearchStationCardViewModel
@@ -44,9 +45,7 @@ class DashboardFragment : Fragment() {
         binding = FragmentDashboardBinding.inflate(inflater, container, false)
 
         binding.searchCard.setContent {
-            Mdc3Theme(
-                setDefaultFontFamily = true
-            ) {
+            MainTheme {
                 CardSearchStation(
                     searchAction = { station ->
                         searchConnections(station)

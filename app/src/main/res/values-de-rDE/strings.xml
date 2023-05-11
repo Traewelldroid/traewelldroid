@@ -138,4 +138,6 @@
     <string name="status_invisible">Dieser Status ist für Dich nicht sichtbar.</string>
     <string name="send_toot">Diesen Check-In auf Mastodon teilen</string>
     <string name="chain_toot">Mastodon-Post an den letzten Post anhängen</string>
+    <string name="settings_check_in_providers">Check-In-Anbieter</string>
+    <string name="settings_check_in_providers_description">Hier kannst du deine Check-In-Anbieter konfigurieren.</string>
 </resources>

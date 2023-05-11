@@ -19,7 +19,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.accompanist.themeadapter.material3.Mdc3Theme
 import com.google.android.material.chip.Chip
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
@@ -33,6 +32,7 @@ import de.hbch.traewelling.api.models.trip.ProductType
 import de.hbch.traewelling.databinding.FragmentSearchConnectionBinding
 import de.hbch.traewelling.shared.CheckInViewModel
 import de.hbch.traewelling.shared.LoggedInUserViewModel
+import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.composables.DataLoading
 import de.hbch.traewelling.ui.include.cardSearchStation.CardSearchStation
 import de.hbch.traewelling.ui.include.cardSearchStation.SearchStationCardViewModel
@@ -117,18 +117,13 @@ class SearchConnectionFragment : Fragment() {
         binding = FragmentSearchConnectionBinding.inflate(inflater, container, false)
 
         binding.connectionDataLoadingView.setContent {
-            Mdc3Theme(
-                setTextColors = true,
-                setDefaultFontFamily = true
-            ) {
+            MainTheme {
                 DataLoading()
             }
         }
 
         binding.searchCard.setContent {
-            Mdc3Theme(
-                setDefaultFontFamily = true
-            ) {
+            MainTheme {
                 CardSearchStation(
                     searchAction = { station ->
                         searchConnections(station, currentSearchDate)
