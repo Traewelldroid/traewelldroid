@@ -86,6 +86,10 @@
         Träwelldroid kann nun Links von traewelling.de öffnen. Möchtest du das einrichten?
         Dies kann jederzeit in den Systemeinstellungen geändert werden.
     </string>
+    <string name="request_url_login_verification">
+        Damit Du Dich mit Träwelling einloggen kannst, musst Du Träwelldroid so konfigurieren, dass Links automatisch geöffnet werden können.
+        Bitte tu dies in den Einstellung.
+    </string>
     <string name="yes">Ja</string>
     <string name="no">Nein</string>
     <string name="title_also_check_in">Auch einchecken</string>

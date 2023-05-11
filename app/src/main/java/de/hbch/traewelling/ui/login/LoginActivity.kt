@@ -2,15 +2,22 @@ package de.hbch.traewelling.ui.login
 
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.content.pm.PackageManager.ResolveInfoFlags
 import android.net.Uri
+import android.os.Build
+import android.os.Build.VERSION
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Base64
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import com.jcloquell.androidsecurestorage.SecureStorage
 import de.hbch.traewelling.BuildConfig
+import de.hbch.traewelling.R
 import de.hbch.traewelling.shared.SharedValues
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.info.InfoActivity
@@ -99,11 +106,34 @@ class LoginActivity : ComponentActivity() {
                     }
         }
     }
-    fun initiateOAuthPKCELogin() {
-        authorizationLauncher.launch(authIntent)
+    private fun initiateOAuthPKCELogin() {
+        if (appCanHandleLinks()) {
+            authorizationLauncher.launch(authIntent)
+        } else {
+            val alertDialog = AlertDialog.Builder(this).create()
+            alertDialog.setTitle(getString(R.string.request_url_verification))
+            alertDialog.setMessage(getString(R.string.request_url_login_verification))
+            alertDialog.setButton(
+                AlertDialog.BUTTON_POSITIVE,
+                getString(R.string.yes)
+            ) { _, _ ->
+                val settingsDestination =
+                    if (VERSION.SDK_INT >= Build.VERSION_CODES.S)
+                        Settings.ACTION_APP_OPEN_BY_DEFAULT_SETTINGS
+                    else
+                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                startActivity(
+                    Intent(
+                        settingsDestination,
+                        Uri.parse("package:${packageName}")
+                    )
+                )
+            }
+            alertDialog.show()
+        }
     }
 
-    fun handleAuthorizationResponse(intent: Intent) {
+    private fun handleAuthorizationResponse(intent: Intent) {
         val authorizationResponse: AuthorizationResponse? = AuthorizationResponse.fromIntent(intent)
 
         if (authorizationResponse != null) {
@@ -119,7 +149,21 @@ class LoginActivity : ComponentActivity() {
         }
     }
 
-    fun showInfoActivity() {
+    private fun showInfoActivity() {
         startActivity(Intent(this, InfoActivity::class.java))
+    }
+
+    private fun appCanHandleLinks(): Boolean {
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.data = Uri.parse(BuildConfig.OAUTH_REDIRECT_URL)
+        val resolveInfo =
+            if (VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                packageManager.queryIntentActivities(intent, ResolveInfoFlags.of(PackageManager.MATCH_DEFAULT_ONLY.toLong()))
+            else
+                packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
+
+        return resolveInfo.all {
+            it.activityInfo.packageName == BuildConfig.APPLICATION_ID
+        }
     }
 }
