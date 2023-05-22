@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name" translatable="false">Träwelldroid</string>
     <string name="ok">Ok</string>
@@ -69,7 +70,7 @@
     <string name="product_type_regional_express">Regional express</string>
     <string name="product_type_national_express">National express</string>
     <string name="product_type_national">Regional express</string>
-    <string name="data_loading" tools:ignore="TypographyEllipsis">Loading data...</string>
+    <string name="data_loading" tools:ignore="TypographyEllipsis">Loading data…</string>
     <string name="status_details">Status details</string>
     <string name="title_statistics">Statistics</string>
     <string name="date_range" translatable="false">%1$s - %2$s</string>
