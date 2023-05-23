@@ -3,7 +3,7 @@
 This is a community app for the open source project
 [Träwelling](https://github.com/Traewelling/traewelling).
 
-[![Übersetzungsstatus](https://translate.codeberg.org/widgets/traewelldroid/en/app/svg-badge.svg)](https://translate.codeberg.org/engage/traewelldroid/en/)
+[![Übersetzungsstatus](https://translate.codeberg.org/widgets/traewelldroid/-/svg-badge.svg)](https://translate.codeberg.org/engage/traewelldroid/)
 [![Gitmoji](https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg)](https://gitmoji.dev)
 
 ## How it is developed
