@@ -30,10 +30,7 @@ object SharedValues {
         "write-settings-profile-picture",
         "write-settings-privacy",
         "read-settings-followers",
-        "write-settings-calendar",
-        "extra-write-password",
-        "extra-terminate-sessions",
-        "extra-delete"
+        "write-settings-calendar"
     )
 
     val URL_AUTHORIZATION = "https://traewelling.de/oauth/authorize"
