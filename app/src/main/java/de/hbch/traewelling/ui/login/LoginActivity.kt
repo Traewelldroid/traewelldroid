@@ -29,6 +29,8 @@ import net.openid.appauth.AuthorizationService
 import net.openid.appauth.AuthorizationServiceConfiguration
 import net.openid.appauth.ResponseTypeValues
 import net.openid.appauth.browser.AnyBrowserMatcher
+import net.openid.appauth.browser.BrowserDenyList
+import net.openid.appauth.browser.VersionedBrowserMatcher
 import java.security.MessageDigest
 import java.security.SecureRandom
 
@@ -60,7 +62,12 @@ class LoginActivity : ComponentActivity() {
         )
 
         val appAuthConfiguration = AppAuthConfiguration.Builder()
-            .setBrowserMatcher(AnyBrowserMatcher.INSTANCE)
+            .setBrowserMatcher(
+                BrowserDenyList(
+                    VersionedBrowserMatcher.FIREFOX_BROWSER,
+                    VersionedBrowserMatcher.FIREFOX_CUSTOM_TAB
+                )
+            )
             .build()
 
         authorizationService = AuthorizationService(
