@@ -19,6 +19,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.accompanist.themeadapter.material3.Mdc3Theme
 import com.google.android.material.chip.Chip
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
@@ -117,7 +118,10 @@ class SearchConnectionFragment : Fragment() {
         binding = FragmentSearchConnectionBinding.inflate(inflater, container, false)
 
         binding.connectionDataLoadingView.setContent {
-            MainTheme {
+            Mdc3Theme(
+                setDefaultFontFamily = true,
+                setTextColors = true
+            ) {
                 DataLoading()
             }
         }
