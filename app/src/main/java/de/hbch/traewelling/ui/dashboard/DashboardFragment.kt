@@ -124,7 +124,7 @@ class DashboardFragment : Fragment() {
         return binding.root
     }
 
-    private fun searchConnections(station: String, date: Date = Date()) {
+    private fun searchConnections(station: String, date: Date? = null) {
         findNavController()
             .navigate(
                 DashboardFragmentDirections.actionDashboardFragmentToSearchConnectionFragment(
