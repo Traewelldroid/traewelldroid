@@ -49,8 +49,8 @@ android {
         applicationId packageName
         minSdk 26
         targetSdk 33
-        versionCode 86
-        versionName "1.12.2"
+        versionCode 87
+        versionName "1.12.3"
 
         manifestPlaceholders = [
                 SENTRY_DSN: sentryDsn,
