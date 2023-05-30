@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import de.hbch.traewelling.api.models.trip.HafasTrainTripStation
+import de.hbch.traewelling.api.dtos.TripStation
 
 class SelectDestinationFragment : AbstractSelectDestinationFragment() {
 
@@ -20,14 +20,13 @@ class SelectDestinationFragment : AbstractSelectDestinationFragment() {
     ): View? {
         val response = super.onCreateView(inflater, container, savedInstanceState)
         binding.apply {
-            layoutSelectDestination.transitionName = args.transitionName
-            destination = args.destination
+            selectDestinationView.transitionName = args.transitionName
         }
 
         return response
     }
 
-    override fun select(itemView: View, stop: HafasTrainTripStation) {
+    override fun select(itemView: View, stop: TripStation) {
         val transitionName = stop.name
         val extras = FragmentNavigatorExtras(
             itemView to transitionName

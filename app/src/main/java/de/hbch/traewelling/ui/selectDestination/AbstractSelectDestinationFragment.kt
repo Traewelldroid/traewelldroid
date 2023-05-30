@@ -6,26 +6,27 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.accompanist.themeadapter.material3.Mdc3Theme
 import com.google.android.material.transition.Hold
 import com.google.android.material.transition.MaterialContainerTransform
-import de.hbch.traewelling.adapters.TravelStopAdapter
-import de.hbch.traewelling.api.models.trip.HafasTrainTripStation
+import de.hbch.traewelling.api.dtos.Trip
+import de.hbch.traewelling.api.dtos.TripStation
 import de.hbch.traewelling.databinding.FragmentSelectDestinationBinding
 import de.hbch.traewelling.shared.CheckInViewModel
-import de.hbch.traewelling.ui.composables.DataLoading
+import de.hbch.traewelling.theme.MainTheme
 
 abstract class AbstractSelectDestinationFragment : Fragment() {
     protected lateinit var binding: FragmentSelectDestinationBinding
     private val viewModel: SelectDestinationViewModel by viewModels()
     protected val checkInViewModel: CheckInViewModel by activityViewModels()
 
-    private val dataLoading = MutableLiveData(false)
+    private val tripData = MutableLiveData<Trip?>(null)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,20 +35,17 @@ abstract class AbstractSelectDestinationFragment : Fragment() {
     ): View? {
         binding = FragmentSelectDestinationBinding.inflate(inflater, container, false)
 
-        binding.viewConnectionDataLoading.setContent {
-            Mdc3Theme(
-                setDefaultFontFamily = true,
-                setTextColors = true
-            ) {
-                DataLoading()
-            }
-        }
-
-        binding.line = checkInViewModel.lineName
-        dataLoading.observe(viewLifecycleOwner) { loading ->
-            binding.viewConnectionDataLoading.visibility = when (loading) {
-                true -> View.VISIBLE
-                false -> View.GONE
+        binding.selectDestinationView.setContent {
+            MainTheme {
+                SelectDestination(
+                    modifier = Modifier.padding(16.dp),
+                    tripData = tripData,
+                    stationSelectedAction = { station ->
+                        checkInViewModel.destinationStationId = station.id
+                        checkInViewModel.arrivalTime = station.arrivalPlanned
+                        select(binding.selectDestinationView, station)
+                    }
+                )
             }
         }
 
@@ -62,15 +60,11 @@ abstract class AbstractSelectDestinationFragment : Fragment() {
         sharedElementEnterTransition = transition
         exitTransition = Hold()
 
-        val recyclerView = binding.recyclerViewTravelStops
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        dataLoading.postValue(true)
         viewModel.getTrip(
             checkInViewModel.tripId,
             checkInViewModel.lineName,
             checkInViewModel.startStationId,
             { trip ->
-                dataLoading.postValue(false)
                 val relevantStations = trip.stopovers.subList(
                     trip.stopovers.indexOf(
                         trip.stopovers.find {
@@ -78,22 +72,16 @@ abstract class AbstractSelectDestinationFragment : Fragment() {
                         }
                     ) + 1, trip.stopovers.lastIndex + 1)
 
-                recyclerView.adapter = TravelStopAdapter(relevantStations) { itemView, stop ->
-                    println(relevantStations)
+                trip.stopovers = relevantStations
 
-                    checkInViewModel.destinationStationId = stop.id
-                    checkInViewModel.arrivalTime = stop.arrivalPlanned
-
-                    select(itemView, stop)
-                }
+                tripData.postValue(trip)
             },
             {
-                dataLoading.postValue(false)
             }
         )
 
         return binding.root
     }
 
-    protected abstract fun select(itemView: View, stop: HafasTrainTripStation)
+    protected abstract fun select(itemView: View, stop: TripStation)
 }

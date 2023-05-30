@@ -19,13 +19,21 @@ enum class ProductType {
     @SerializedName("ferry")
     FERRY,
     @SerializedName("bus")
-    BUS,
+    BUS {
+        override fun getIcon() = R.drawable.ic_bus
+    },
     @SerializedName("suburban")
-    SUBURBAN,
+    SUBURBAN {
+        override fun getIcon() = R.drawable.ic_suburban
+    },
     @SerializedName("subway")
-    SUBWAY,
+    SUBWAY {
+        override fun getIcon() = R.drawable.ic_subway
+    },
     @SerializedName("tram")
-    TRAM,
+    TRAM {
+        override fun getIcon() = R.drawable.ic_tram
+    },
     // RE, RB, RS
     @SerializedName("regional")
     REGIONAL,
@@ -39,6 +47,8 @@ enum class ProductType {
     @SerializedName("national")
     NATIONAL,
     LONG_DISTANCE;
+
+    open fun getIcon() = R.drawable.ic_train
 
     companion object {
         fun toString(resources: Resources, productType: ProductType): String {
