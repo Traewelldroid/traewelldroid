@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import de.hbch.traewelling.api.models.trip.HafasTrainTripStation
+import de.hbch.traewelling.api.dtos.TripStation
 
 class UpdateDestinationFragment : AbstractSelectDestinationFragment() {
     private val args: UpdateDestinationFragmentArgs by navArgs()
@@ -19,13 +19,11 @@ class UpdateDestinationFragment : AbstractSelectDestinationFragment() {
         checkInViewModel.tripId = args.tripId
         checkInViewModel.lineName = args.lineName
         checkInViewModel.startStationId = args.startStationId
-        val response = super.onCreateView(inflater, container, savedInstanceState)
-        binding.destination = args.destination
 
-        return response
+        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
-    override fun select(itemView: View, stop: HafasTrainTripStation) {
+    override fun select(itemView: View, stop: TripStation) {
         findNavController().navigate(
             UpdateDestinationFragmentDirections.actionSelectDestinationFragmentToEditCheckIn(
                 args.transitionName,
