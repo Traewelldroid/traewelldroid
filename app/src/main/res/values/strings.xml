@@ -41,13 +41,13 @@
     <string name="check_in_conflict">You are already checked in another connection!</string>
     <string name="title_select_date">Select the departure date</string>
     <string name="title_select_time">Select the departure time</string>
-    <string name="title_select_visibility">Select the desired status visibility:</string>
+    <string name="title_select_visibility">Select the desired status visibility</string>
     <string name="visibility_public">Public</string>
     <string name="visibility_unlisted">Unlisted</string>
     <string name="visibility_followers">Just for followers</string>
     <string name="visibility_private">Just for you</string>
     <string name="visibility_only_authenticated">Only authenticated users</string>
-    <string name="title_select_business">Select the desired business type:</string>
+    <string name="title_select_business">Select the desired business type</string>
     <string name="travel_purpose">Travel purpose</string>
     <string name="business_private">Private</string>
     <string name="business">Business</string>

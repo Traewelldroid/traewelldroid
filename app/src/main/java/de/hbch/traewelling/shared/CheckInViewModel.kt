@@ -3,6 +3,8 @@ package de.hbch.traewelling.shared
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import de.hbch.traewelling.api.TraewellingApi
+import de.hbch.traewelling.api.dtos.Trip
+import de.hbch.traewelling.api.dtos.TripStation
 import de.hbch.traewelling.api.models.Data
 import de.hbch.traewelling.api.models.event.Event
 import de.hbch.traewelling.api.models.status.CheckInRequest
@@ -17,11 +19,11 @@ import java.util.*
 
 class CheckInViewModel : ViewModel() {
 
+    val trip: MutableLiveData<Trip?> = MutableLiveData(null)
+    val destinationTripStation: MutableLiveData<TripStation?> = MutableLiveData(null)
     var lineName: String = ""
     var tripId: String = ""
     var startStationId: Int = 0
-    var destinationStationId: Int = 0
-    var arrivalTime: Date? = null
     var departureTime: Date? = null
     val message = MutableLiveData<String>()
     val toot = MutableLiveData(false)
@@ -35,11 +37,11 @@ class CheckInViewModel : ViewModel() {
     }
 
     fun reset() {
-        lineName = ""
+        trip.postValue(null)
+        destinationTripStation.postValue(null)
         tripId = ""
+        lineName = ""
         startStationId = 0
-        destinationStationId = 0
-        arrivalTime = null
         departureTime = null
         message.value = ""
         toot.value = false
@@ -61,11 +63,11 @@ class CheckInViewModel : ViewModel() {
             toot.value ?: false,
             chainToot.value ?: false,
             tripId,
-            lineName,
+            trip.value?.lineName ?: "",
             startStationId,
-            destinationStationId,
+            destinationTripStation.value?.id ?: 0,
             departureTime ?: Date(),
-            arrivalTime ?: Date()
+             destinationTripStation.value?.arrivalReal ?: Date()
         )
         TraewellingApi.checkInService.checkIn(checkInRequest)
             .enqueue(object: Callback<Data<CheckInResponse>> {

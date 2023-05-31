@@ -219,8 +219,8 @@ class StatusDetailFragment : Fragment() {
         checkInViewModel.tripId = status.journey.hafasTripId
         checkInViewModel.startStationId = status.journey.origin.id
         checkInViewModel.departureTime = status.journey.origin.departurePlanned
-        checkInViewModel.destinationStationId = status.journey.destination.id
-        checkInViewModel.arrivalTime = status.journey.destination.arrivalPlanned
+        //checkInViewModel.destinationStationId = status.journey.destination.id
+        //checkInViewModel.arrivalTime = status.journey.destination.arrivalPlanned
 
         findNavController().navigate(
             StatusDetailFragmentDirections.actionStatusDetailFragmentToCheckInFragment(

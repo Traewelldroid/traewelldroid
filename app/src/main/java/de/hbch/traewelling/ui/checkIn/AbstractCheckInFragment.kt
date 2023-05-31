@@ -6,6 +6,10 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.transition.MaterialContainerTransform
@@ -16,6 +20,7 @@ import de.hbch.traewelling.shared.CheckInViewModel
 import de.hbch.traewelling.shared.EventViewModel
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.shared.SharedValues
+import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.include.selectBusinessType.SelectBusinessTypeBottomSheet
 import de.hbch.traewelling.ui.include.selectEvent.SelectEventBottomSheet
 import de.hbch.traewelling.ui.include.selectStatusVisibility.SelectStatusVisibilityBottomSheet
@@ -36,7 +41,20 @@ abstract class AbstractCheckInFragment : Fragment() {
 
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
-            viewModel = checkInViewModel
+
+            checkInCard.setContent {
+                MainTheme {
+                    CheckIn(
+                        modifier = Modifier.fillMaxWidth().padding(8.dp),
+                        checkInViewModel = checkInViewModel,
+                        checkInAction = {
+                            submit()
+                        }
+                    )
+                }
+            }
+
+            /*viewModel = checkInViewModel
             checkInFragment = this@AbstractCheckInFragment
             eventViewModel = this@AbstractCheckInFragment.eventViewModel
             layoutSendToot.visibility =
@@ -55,14 +73,14 @@ abstract class AbstractCheckInFragment : Fragment() {
 
             switchChainToot.setOnCheckedChangeListener {_, isChecked ->
                 checkInViewModel.chainToot.postValue(isChecked)
-            }
+            }*/
         }
 
         secureStorage = SecureStorage(requireContext())
         val storedHashtag = secureStorage.getObject(SharedValues.SS_HASHTAG, String::class.java)
         if (storedHashtag != null && storedHashtag != "") {
             checkInViewModel.message.postValue("\n#${storedHashtag}")
-            binding.editTextStatusMessage.setSelection(0)
+            //binding.editTextStatusMessage.setSelection(0)
         }
 
         sharedElementEnterTransition = MaterialContainerTransform().apply {

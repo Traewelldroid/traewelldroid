@@ -29,18 +29,18 @@ class EditCheckInFragment : AbstractCheckInFragment() {
     ): View? {
         val response = super.onCreateView(inflater, container, savedInstanceState)
         binding.apply {
-            editMode = true
+            /*editMode = true
             layoutCheckIn.transitionName = args.transitionName
             destination = args.destination
             viewModel!!.message.postValue(args.body)
             viewModel!!.lineName = args.line
             viewModel!!.statusVisibility.postValue(enumValues<StatusVisibility>()[args.visibility])
-            viewModel!!.statusBusiness.postValue(enumValues<StatusBusiness>()[args.business])
+            viewModel!!.statusBusiness.postValue(enumValues<StatusBusiness>()[args.business])*/
         }
 
         // if this is true a new destination has already been selectedJoa
         if (!args.changeDestination) {
-            binding.btnChangeDestination.visibility = View.VISIBLE
+            //binding.btnChangeDestination.visibility = View.VISIBLE
         }
 
         return response
@@ -65,7 +65,7 @@ class EditCheckInFragment : AbstractCheckInFragment() {
     }
 
     override fun submit() {
-        val model = binding.viewModel!!
+        /*val model = binding.viewModel!!
         val callback = object : Callback<Data<Status>> {
             override fun onResponse(call: Call<Data<Status>>, response: Response<Data<Status>>) {
                 val body = response.body()
@@ -99,7 +99,7 @@ class EditCheckInFragment : AbstractCheckInFragment() {
             ).enqueue(callback)
         } else {
             checkInViewModel.startStationId = args.startStationId
-            checkInViewModel.destinationStationId = args.destinationId
+            //checkInViewModel.destinationStationId = args.destinationId
             checkInViewModel.departureTime = args.departureTime
             TraewellingApi.checkInService.updateCheckIn(
                 args.statusId, UpdateStatusRequest(
@@ -110,6 +110,6 @@ class EditCheckInFragment : AbstractCheckInFragment() {
                     args.departureTime
                 )
             ).enqueue(callback)
-        }
+        }*/
     }
 }

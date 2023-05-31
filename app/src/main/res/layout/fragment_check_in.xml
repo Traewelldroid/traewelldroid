@@ -5,7 +5,7 @@
 
     <data>
 
-        <variable
+        <!--<variable
             name="destination"
             type="String" />
 
@@ -24,14 +24,20 @@
             name="editMode"
             type="boolean" />
 
-        <import type="android.view.View" />
+        <import type="android.view.View" />-->
     </data>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:padding="8dp">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.compose.ui.platform.ComposeView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/check_in_card" />
+
+        <!--<androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_check_in"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -200,6 +206,6 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>-->
     </ScrollView>
 </layout>

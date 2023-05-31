@@ -30,9 +30,9 @@ class CheckInFragment : AbstractCheckInFragment() {
     ): View? {
         val response = super.onCreateView(inflater, container, savedInstanceState)
         binding.apply {
-            layoutCheckIn.transitionName = args.transitionName
-            destination = args.destination
-            binding.viewModel!!.statusVisibility.postValue(loggedInUserViewModel.defaultStatusVisibility)
+            checkInCard.transitionName = args.transitionName
+            /*destination = args.destination
+            binding.viewModel!!.statusVisibility.postValue(loggedInUserViewModel.defaultStatusVisibility)*/
         }
         return response
     }
