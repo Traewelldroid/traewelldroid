@@ -90,6 +90,7 @@ class CardCheckInOverview(
                 "statusId" to binding.checkIn?.id,
                 "tripId" to binding.checkIn?.journey?.hafasTripId,
                 "startStationId" to binding.checkIn?.journey?.origin?.id,
+                "category" to binding.checkIn?.journey?.category
             )
         )
     }

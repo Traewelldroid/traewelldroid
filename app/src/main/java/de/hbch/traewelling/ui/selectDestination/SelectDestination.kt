@@ -64,7 +64,11 @@ fun SelectDestination(
             if (trip == null) {
                 DataLoading()
             } else {
-                FromToTextRow(trip = trip!!)
+                FromToTextRow(
+                    category = trip!!.category,
+                    lineName = trip!!.lineName,
+                    destination = trip!!.destination
+                )
                 Column(
                     modifier = Modifier.padding(top = 16.dp)
                 ) {
@@ -88,22 +92,26 @@ fun SelectDestination(
 @Composable
 fun FromToTextRow(
     modifier: Modifier = Modifier,
-    trip: Trip
+    category: ProductType?,
+    lineName: String,
+    destination: String
 ) {
     Row(
         modifier = modifier
     ) {
-        Image(
-            modifier = Modifier.size(24.dp),
-            painter = painterResource(id = trip.category.getIcon()),
-            contentDescription = null
-        )
+        if (category != null) {
+            Image(
+                modifier = Modifier.size(24.dp),
+                painter = painterResource(id = category.getIcon()),
+                contentDescription = null
+            )
+        }
         Text(
             modifier = Modifier.padding(start = 4.dp),
             text = stringResource(
                 R.string.line_destination,
-                trip.lineName,
-                trip.destination
+                lineName,
+                destination
             ),
             style = AppTypography.titleLarge,
             overflow = TextOverflow.Ellipsis,

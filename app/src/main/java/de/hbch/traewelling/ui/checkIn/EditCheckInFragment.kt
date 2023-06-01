@@ -4,6 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import de.hbch.traewelling.R
@@ -13,6 +17,7 @@ import de.hbch.traewelling.api.models.status.Status
 import de.hbch.traewelling.api.models.status.StatusBusiness
 import de.hbch.traewelling.api.models.status.StatusVisibility
 import de.hbch.traewelling.api.models.status.UpdateStatusRequest
+import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.include.alert.AlertBottomSheet
 import de.hbch.traewelling.ui.include.alert.AlertType
 import retrofit2.Call
@@ -29,18 +34,29 @@ class EditCheckInFragment : AbstractCheckInFragment() {
     ): View? {
         val response = super.onCreateView(inflater, container, savedInstanceState)
         binding.apply {
-            /*editMode = true
-            layoutCheckIn.transitionName = args.transitionName
-            destination = args.destination
-            viewModel!!.message.postValue(args.body)
-            viewModel!!.lineName = args.line
-            viewModel!!.statusVisibility.postValue(enumValues<StatusVisibility>()[args.visibility])
-            viewModel!!.statusBusiness.postValue(enumValues<StatusBusiness>()[args.business])*/
-        }
 
-        // if this is true a new destination has already been selectedJoa
-        if (!args.changeDestination) {
-            //binding.btnChangeDestination.visibility = View.VISIBLE
+            checkInCard.setContent {
+                MainTheme {
+                    CheckIn(
+                        modifier = Modifier.fillMaxWidth().padding(8.dp),
+                        checkInViewModel = checkInViewModel,
+                        checkInAction = {
+                            submit()
+                        },
+                        isEditMode = true,
+                        eventViewModel = eventViewModel,
+                        changeDestinationAction = {
+                            onChangeDestination()
+                        }
+                    )
+                }
+            }
+
+            checkInViewModel.lineName = args.line
+            checkInViewModel.message.postValue(args.body)
+            checkInViewModel.statusVisibility.postValue(enumValues<StatusVisibility>()[args.visibility])
+            checkInViewModel.statusBusiness.postValue(enumValues<StatusBusiness>()[args.business])
+            checkInViewModel.destination = args.destination
         }
 
         return response
@@ -65,7 +81,7 @@ class EditCheckInFragment : AbstractCheckInFragment() {
     }
 
     override fun submit() {
-        /*val model = binding.viewModel!!
+        val model = checkInViewModel
         val callback = object : Callback<Data<Status>> {
             override fun onResponse(call: Call<Data<Status>>, response: Response<Data<Status>>) {
                 val body = response.body()
@@ -99,7 +115,6 @@ class EditCheckInFragment : AbstractCheckInFragment() {
             ).enqueue(callback)
         } else {
             checkInViewModel.startStationId = args.startStationId
-            //checkInViewModel.destinationStationId = args.destinationId
             checkInViewModel.departureTime = args.departureTime
             TraewellingApi.checkInService.updateCheckIn(
                 args.statusId, UpdateStatusRequest(
@@ -110,6 +125,6 @@ class EditCheckInFragment : AbstractCheckInFragment() {
                     args.departureTime
                 )
             ).enqueue(callback)
-        }*/
+        }
     }
 }

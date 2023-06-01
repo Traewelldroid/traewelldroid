@@ -8,20 +8,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.AlertDialogDefaults
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -33,177 +27,222 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.Dimension
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.dtos.Trip
 import de.hbch.traewelling.api.dtos.TripStation
+import de.hbch.traewelling.api.models.event.Event
 import de.hbch.traewelling.api.models.status.StatusBusiness
 import de.hbch.traewelling.api.models.status.StatusVisibility
 import de.hbch.traewelling.api.models.trip.ProductType
 import de.hbch.traewelling.shared.CheckInViewModel
+import de.hbch.traewelling.shared.EventViewModel
 import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.LocalColorScheme
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
-import de.hbch.traewelling.ui.composables.DataLoading
+import de.hbch.traewelling.ui.composables.Dialog
 import de.hbch.traewelling.ui.composables.OutlinedButtonWithIconAndText
 import de.hbch.traewelling.ui.composables.SwitchWithIconAndText
 import de.hbch.traewelling.ui.selectDestination.FromToTextRow
+import java.text.DateFormat
 import java.util.Date
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CheckIn(
     modifier: Modifier = Modifier,
     checkInViewModel: CheckInViewModel,
-    checkInAction: () -> Unit = { }
+    eventViewModel: EventViewModel,
+    checkInAction: () -> Unit = { },
+    isEditMode: Boolean = false,
+    changeDestinationAction: () -> Unit = { }
 ) {
     var businessSelectionVisible by remember { mutableStateOf(false) }
     var visibilitySelectionVisible by remember { mutableStateOf(false) }
-    var statusMessage by remember { mutableStateOf("") }
-    val trip by checkInViewModel.trip.observeAsState()
+    var eventSelectionVisible by remember { mutableStateOf(false) }
+    val statusMessage by checkInViewModel.message.observeAsState("")
     val selectedVisibility by checkInViewModel.statusVisibility.observeAsState()
     val selectedBusiness by checkInViewModel.statusBusiness.observeAsState()
+    val activeEvents by eventViewModel.activeEvents.observeAsState()
+    val selectedEvent by checkInViewModel.event.observeAsState()
+    val dialogModifier = Modifier.fillMaxWidth(0.99f)
 
     if (businessSelectionVisible) {
-        AlertDialog(
-            modifier = Modifier.fillMaxWidth(),
+        Dialog(
+            modifier = dialogModifier,
             onDismissRequest = {
                 businessSelectionVisible = false
             }
         ) {
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = MaterialTheme.shapes.large,
-                tonalElevation = AlertDialogDefaults.TonalElevation
-            ) {
-                SelectStatusBusinessDialog(
-                    businessSelectedAction = {
-                        businessSelectionVisible = false
-                        checkInViewModel.statusBusiness.postValue(it)
-                    }
-                )
-            }
+            SelectStatusBusinessDialog(
+                businessSelectedAction = {
+                    businessSelectionVisible = false
+                    checkInViewModel.statusBusiness.postValue(it)
+                }
+            )
         }
     }
 
     if (visibilitySelectionVisible) {
-        AlertDialog(
-            modifier = Modifier.fillMaxWidth(),
+        Dialog(
+            modifier = dialogModifier,
             onDismissRequest = {
                 visibilitySelectionVisible = false
             }
         ) {
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = MaterialTheme.shapes.large,
-                tonalElevation = AlertDialogDefaults.TonalElevation
-            ) {
-                SelectStatusVisibilityDialog(
-                    visibilitySelectedAction = {
-                        visibilitySelectionVisible = false
-                        checkInViewModel.statusVisibility.postValue(it)
-                    }
-                )
-            }
+            SelectStatusVisibilityDialog(
+                visibilitySelectedAction = {
+                    visibilitySelectionVisible = false
+                    checkInViewModel.statusVisibility.postValue(it)
+                }
+            )
         }
     }
 
-    if (trip != null) {
-        ElevatedCard(
-            modifier = modifier.fillMaxWidth(),
-            elevation = CardDefaults.elevatedCardElevation(
-                defaultElevation = 2.dp
-            )
+    if (eventSelectionVisible && activeEvents !== null) {
+        Dialog(
+            modifier = dialogModifier,
+            onDismissRequest = {
+                eventSelectionVisible = false
+            }
         ) {
+            SelectEventDialog(
+                activeEvents = activeEvents!!,
+                eventSelectedAction = {
+                    checkInViewModel.event.postValue(it)
+                    eventSelectionVisible = false
+                }
+            )
+        }
+    }
+
+    ElevatedCard(
+        modifier = modifier
+            .fillMaxWidth(),
+        elevation = CardDefaults.elevatedCardElevation(
+            defaultElevation = 2.dp
+        )
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalAlignment = Alignment.End
+        ) {
+            FromToTextRow(
+                modifier = Modifier.fillMaxWidth(),
+                category = checkInViewModel.category,
+                lineName = checkInViewModel.lineName,
+                destination = checkInViewModel.destination
+            )
+
+            // Text field
             Column(
-                modifier = Modifier.padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
                 horizontalAlignment = Alignment.End
             ) {
-                FromToTextRow(
-                    modifier = Modifier.fillMaxWidth(),
-                    trip = trip!!
+                OutlinedTextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .widthIn(
+                            min = 72.dp,
+                            max = Dp.Unspecified
+                        ),
+                    value = statusMessage,
+                    onValueChange = {
+                        if (it.count() > 280)
+                            return@OutlinedTextField
+                        checkInViewModel.message.postValue(it)
+                    },
+                    label = {
+                        Text(
+                            text = stringResource(id = R.string.status_message)
+                        )
+                    }
                 )
+                Text(
+                    modifier = Modifier.padding(4.dp),
+                    text = "${statusMessage.count()}/280",
+                    style = AppTypography.labelSmall
+                )
+            }
 
-                // Text field
-                Column(
-                    horizontalAlignment = Alignment.End
-                ) {
-                    OutlinedTextField(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .widthIn(
-                                min = 72.dp,
-                                max = Dp.Unspecified
-                            ),
-                        value = statusMessage,
-                        onValueChange = {
-                            if (it.count() > 280)
-                                return@OutlinedTextField
-                            statusMessage = it
-                            checkInViewModel.message.postValue(it)
-                        },
-                        label = {
-                            Text(
-                                text = stringResource(id = R.string.status_message)
-                            )
+            // Option buttons
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                val optionButtonModifier = Modifier
+                    .weight(1f)
+
+                if (selectedVisibility != null) {
+                    OutlinedButtonWithIconAndText(
+                        modifier = optionButtonModifier,
+                        stringId = selectedVisibility!!.getTitle(),
+                        drawableId = selectedVisibility!!.getIcon(),
+                        onClick = {
+                            visibilitySelectionVisible = true
                         }
                     )
-                    Text(
-                        modifier = Modifier.padding(4.dp),
-                        text = "${statusMessage.count()}/280",
-                        style = AppTypography.labelSmall
+                }
+                if (selectedBusiness != null) {
+                    OutlinedButtonWithIconAndText(
+                        modifier = optionButtonModifier,
+                        stringId = selectedBusiness!!.getTitle(),
+                        drawableId = selectedBusiness!!.getIcon(),
+                        onClick = {
+                            businessSelectionVisible = true
+                        }
                     )
                 }
+            }
 
-                // Option buttons
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    val optionButtonModifier = Modifier
-                        .weight(1f)
-
-                    if (selectedVisibility != null) {
-                        OutlinedButtonWithIconAndText(
-                            modifier = optionButtonModifier,
-                            stringId = selectedVisibility!!.getTitle(),
-                            drawableId = selectedVisibility!!.getIcon(),
-                            onClick = {
-                                visibilitySelectionVisible = true
-                            }
-                        )
+            // Event button
+            if (!isEditMode && activeEvents?.isNotEmpty() == true) {
+                OutlinedButtonWithIconAndText(
+                    modifier = Modifier.fillMaxWidth(),
+                    drawableId = if (selectedEvent == null)
+                            R.drawable.ic_calendar
+                        else
+                            R.drawable.ic_calendar_checked,
+                    stringId = R.string.title_select_event,
+                    text = selectedEvent?.name,
+                    onClick = {
+                        eventSelectionVisible = true
                     }
-                    if (selectedBusiness != null) {
-                        OutlinedButtonWithIconAndText(
-                            modifier = optionButtonModifier,
-                            stringId = selectedBusiness!!.getTitle(),
-                            drawableId = selectedBusiness!!.getIcon(),
-                            onClick = {
-                                businessSelectionVisible = true
-                            }
-                        )
-                    }
-                }
+                )
+            }
 
-                // Share options
+            // Share options
+            if (!isEditMode) {
                 ShareOptions(
                     modifier = Modifier.fillMaxWidth(),
                     checkInViewModel = checkInViewModel
                 )
+            }
 
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                if (isEditMode) {
+                    ButtonWithIconAndText(
+                        stringId = R.string.change_destination,
+                        drawableId = R.drawable.ic_edit,
+                        onClick = changeDestinationAction
+                    )
+                } else {
+                    Box {}
+                }
                 ButtonWithIconAndText(
-                    stringId = R.string.check_in,
+                    stringId = if (isEditMode) R.string.save else R.string.check_in,
                     drawableId = R.drawable.ic_check_in,
-                    onClick = {
-                        checkInAction()
-                    }
+                    onClick = checkInAction
                 )
             }
         }
@@ -215,19 +254,24 @@ private fun SelectStatusVisibilityDialog(
     visibilitySelectedAction: (StatusVisibility) -> Unit = { }
 ) {
     Column(
-        modifier = Modifier.fillMaxWidth().padding(16.dp)
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
     ) {
         Text(
             modifier = Modifier.padding(bottom = 8.dp),
             text = stringResource(id = R.string.title_select_visibility),
-            style = AppTypography.headlineSmall,
+            style = AppTypography.titleLarge,
             color = LocalColorScheme.current.primary
         )
         StatusVisibility.values().forEach { visibility ->
             Row(
-                modifier = Modifier.fillMaxWidth().clickable {
-                    visibilitySelectedAction(visibility)
-                }.padding(8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        visibilitySelectedAction(visibility)
+                    }
+                    .padding(8.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -249,19 +293,26 @@ private fun SelectStatusBusinessDialog(
     businessSelectedAction: (StatusBusiness) -> Unit = { }
 ) {
     Column(
-        modifier = Modifier.fillMaxWidth().padding(16.dp)
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
     ) {
         Text(
-            modifier = Modifier.padding(bottom = 8.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 8.dp),
             text = stringResource(id = R.string.title_select_business),
-            style = AppTypography.headlineSmall,
+            style = AppTypography.titleLarge,
             color = LocalColorScheme.current.primary
         )
         StatusBusiness.values().forEach { business ->
             Row(
-                modifier = Modifier.fillMaxWidth().clickable {
-                    businessSelectedAction(business)
-                }.padding(8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        businessSelectedAction(business)
+                    }
+                    .padding(8.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -272,6 +323,90 @@ private fun SelectStatusBusinessDialog(
                 Text(
                     text = stringResource(id = business.getTitle()),
                     style = AppTypography.titleLarge
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun SelectEventDialog(
+    activeEvents: List<Event?>,
+    eventSelectedAction: (Event?) -> Unit = { }
+) {
+    val dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault())
+    val events = mutableListOf<Event?>(null)
+    events.addAll(activeEvents)
+    Column(
+        modifier = Modifier
+            .verticalScroll(rememberScrollState())
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 8.dp),
+            text = stringResource(id = R.string.title_select_event),
+            style = AppTypography.titleLarge,
+            color = LocalColorScheme.current.primary
+        )
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 8.dp),
+            text = stringResource(id = R.string.hint_event_missing),
+            style = AppTypography.labelLarge
+        )
+        events.forEach { event ->
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        eventSelectedAction(event)
+                    }
+                    .padding(8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column {
+                    Icon(
+                        painter = painterResource(id =
+                            if (event == null)
+                                R.drawable.ic_remove
+                            else
+                                R.drawable.ic_calendar
+                        ),
+                        contentDescription = null
+                    )
+                }
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 16.dp)
+                ) {
+                    Text(
+                        text = event?.name ?: stringResource(id = R.string.reset_selection),
+                        style = AppTypography.titleLarge,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Text(
+                        text = if (event == null) {
+                            stringResource(R.string.no_event_check_in)
+                        } else {
+                            stringResource(
+                                id = R.string.date_range,
+                                dateFormat.format(event.begin),
+                                dateFormat.format(event.end)
+                            )
+                        },
+                        style = AppTypography.titleSmall
+                    )
+                }
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_select),
+                    contentDescription = null
                 )
             }
         }
@@ -381,15 +516,39 @@ private fun CheckInPreview() {
         stopovers = stopoverList
     )
 
-    viewModel.trip.value = trip
+    viewModel.lineName = trip.lineName
+    viewModel.destination = trip.destination
+    viewModel.category = trip.category
     viewModel.toot.value = true
+
+    val eventViewModel = EventViewModel()
+    eventViewModel.activeEvents.value = listOf(
+        Event(
+            0,
+            "Tolle Veranstaltung",
+            "tv",
+            "#toll",
+            "Host",
+            "url",
+            Date(),
+            Date(),
+            null
+        )
+    )
 
     MainTheme {
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             CheckIn(
-                checkInViewModel = viewModel
+                checkInViewModel = viewModel,
+                isEditMode = false,
+                eventViewModel = eventViewModel
+            )
+            CheckIn(
+                checkInViewModel = viewModel,
+                isEditMode = true,
+                eventViewModel = eventViewModel
             )
         }
     }
@@ -404,6 +563,7 @@ private fun DialogPreviews() {
         ) {
             SelectStatusBusinessDialog()
             SelectStatusVisibilityDialog()
+            SelectEventDialog(activeEvents = listOf())
         }
     }
 }

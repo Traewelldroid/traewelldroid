@@ -3,14 +3,13 @@ package de.hbch.traewelling.shared
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import de.hbch.traewelling.api.TraewellingApi
-import de.hbch.traewelling.api.dtos.Trip
-import de.hbch.traewelling.api.dtos.TripStation
 import de.hbch.traewelling.api.models.Data
 import de.hbch.traewelling.api.models.event.Event
 import de.hbch.traewelling.api.models.status.CheckInRequest
 import de.hbch.traewelling.api.models.status.CheckInResponse
 import de.hbch.traewelling.api.models.status.StatusBusiness
 import de.hbch.traewelling.api.models.status.StatusVisibility
+import de.hbch.traewelling.api.models.trip.ProductType
 import io.sentry.Sentry
 import retrofit2.Call
 import retrofit2.Callback
@@ -18,32 +17,34 @@ import retrofit2.Response
 import java.util.*
 
 class CheckInViewModel : ViewModel() {
-
-    val trip: MutableLiveData<Trip?> = MutableLiveData(null)
-    val destinationTripStation: MutableLiveData<TripStation?> = MutableLiveData(null)
     var lineName: String = ""
     var tripId: String = ""
     var startStationId: Int = 0
+    var destinationStationId: Int = 0
     var departureTime: Date? = null
+    var arrivalTime: Date? = null
     val message = MutableLiveData<String>()
     val toot = MutableLiveData(false)
     val chainToot = MutableLiveData(false)
     val statusVisibility = MutableLiveData(StatusVisibility.PUBLIC)
     val statusBusiness = MutableLiveData(StatusBusiness.PRIVATE)
     val event = MutableLiveData<Event?>()
+    var category: ProductType = ProductType.ALL
+    var destination: String = ""
 
     init {
         reset()
     }
 
     fun reset() {
-        trip.postValue(null)
-        destinationTripStation.postValue(null)
+        destinationStationId = 0
+        arrivalTime = null
         tripId = ""
         lineName = ""
         startStationId = 0
         departureTime = null
         message.value = ""
+        destination = ""
         toot.value = false
         chainToot.value = false
         statusVisibility.postValue(StatusVisibility.PUBLIC)
@@ -63,11 +64,11 @@ class CheckInViewModel : ViewModel() {
             toot.value ?: false,
             chainToot.value ?: false,
             tripId,
-            trip.value?.lineName ?: "",
+            lineName,
             startStationId,
-            destinationTripStation.value?.id ?: 0,
+            destinationStationId,
             departureTime ?: Date(),
-             destinationTripStation.value?.arrivalReal ?: Date()
+             arrivalTime ?: Date()
         )
         TraewellingApi.checkInService.checkIn(checkInRequest)
             .enqueue(object: Callback<Data<CheckInResponse>> {

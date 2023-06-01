@@ -39,6 +39,7 @@ import kotlinx.coroutines.launch
 fun OutlinedButtonWithIconAndText(
     modifier: Modifier = Modifier,
     @StringRes stringId: Int,
+    text: String? = null,
     @DrawableRes drawableId: Int? = null,
     colors: ButtonColors = ButtonDefaults.outlinedButtonColors(),
     onClick: () -> Unit = { },
@@ -52,6 +53,7 @@ fun OutlinedButtonWithIconAndText(
     ) {
         RowWithIconAndText(
             stringId = stringId,
+            text = text,
             drawableId = drawableId,
             isLoading = isLoading
         )
@@ -62,6 +64,7 @@ fun OutlinedButtonWithIconAndText(
 fun ButtonWithIconAndText(
     modifier: Modifier = Modifier,
     @StringRes stringId: Int,
+    text: String? = null,
     @DrawableRes drawableId: Int? = null,
     colors: ButtonColors = ButtonDefaults.buttonColors(),
     onClick: () -> Unit = { },
@@ -75,6 +78,7 @@ fun ButtonWithIconAndText(
     ) {
         RowWithIconAndText(
             stringId = stringId,
+            text = text,
             drawableId = drawableId,
             isLoading = isLoading,
             progressColor = Color.White
@@ -85,6 +89,7 @@ fun ButtonWithIconAndText(
 @Composable
 private fun RowWithIconAndText(
     @StringRes stringId: Int,
+    text: String? = null,
     @DrawableRes drawableId: Int? = null,
     progressColor: Color = ProgressIndicatorDefaults.circularColor,
     isLoading: Boolean = false
@@ -108,7 +113,7 @@ private fun RowWithIconAndText(
                 )
             }
             Text(
-                text = stringResource(id = stringId),
+                text = text ?: stringResource(id = stringId),
                 textAlign = TextAlign.Center
             )
         }

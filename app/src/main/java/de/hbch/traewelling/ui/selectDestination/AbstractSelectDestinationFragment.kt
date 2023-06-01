@@ -44,7 +44,9 @@ abstract class AbstractSelectDestinationFragment : Fragment() {
                         tripData.value?.let { trip ->
                             trip.destination = station.name
                         }
-                        checkInViewModel.destinationTripStation.postValue(station)
+                        checkInViewModel.destination = station.name
+                        checkInViewModel.destinationStationId = station.id
+                        checkInViewModel.arrivalTime = station.arrivalPlanned
                         select(binding.selectDestinationView, station)
                     }
                 )
@@ -77,7 +79,9 @@ abstract class AbstractSelectDestinationFragment : Fragment() {
                 trip.stopovers = relevantStations
 
                 tripData.postValue(trip)
-                checkInViewModel.trip.postValue(trip)
+                checkInViewModel.destination = trip.destination
+                checkInViewModel.lineName = trip.lineName
+                checkInViewModel.category = trip.category
             },
             {
             }

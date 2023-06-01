@@ -13,8 +13,7 @@ import retrofit2.Response
 
 class EventViewModel : ViewModel() {
 
-    private val _activeEvents: MutableLiveData<List<Event>> = MutableLiveData(listOf())
-    val activeEvents: LiveData<List<Event>> get() = _activeEvents
+    val activeEvents: MutableLiveData<List<Event>> = MutableLiveData(listOf())
 
     fun activeEvents() {
         TraewellingApi
@@ -27,7 +26,7 @@ class EventViewModel : ViewModel() {
                 ) {
                     if (response.isSuccessful) {
                         val data = response.body()?.data ?: return
-                        _activeEvents.postValue(data)
+                        activeEvents.postValue(data)
                         return
                     }
                     Sentry.captureMessage(response.errorBody()?.string() ?: "getActiveEvents Error")
