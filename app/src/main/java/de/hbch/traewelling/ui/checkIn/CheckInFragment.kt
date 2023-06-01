@@ -4,12 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.status.PointReason
 import de.hbch.traewelling.shared.LoggedInUserViewModel
+import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.include.alert.AlertBottomSheet
 import de.hbch.traewelling.ui.include.alert.AlertType
 import de.hbch.traewelling.ui.include.checkInSuccessful.CheckInSuccessfulBottomSheet
@@ -30,9 +35,24 @@ class CheckInFragment : AbstractCheckInFragment() {
     ): View? {
         val response = super.onCreateView(inflater, container, savedInstanceState)
         binding.apply {
-            layoutCheckIn.transitionName = args.transitionName
-            destination = args.destination
-            binding.viewModel!!.statusVisibility.postValue(loggedInUserViewModel.defaultStatusVisibility)
+            checkInCard.transitionName = args.transitionName
+
+            checkInCard.setContent {
+                MainTheme {
+                    CheckIn(
+                        modifier = Modifier.fillMaxWidth().padding(8.dp),
+                        checkInViewModel = checkInViewModel,
+                        checkInAction = {
+                            submit()
+                        },
+                        isEditMode = false,
+                        eventViewModel = eventViewModel
+                    )
+                }
+            }
+
+            checkInViewModel.statusVisibility.postValue(loggedInUserViewModel.defaultStatusVisibility)
+            checkInViewModel.destination = args.destination
         }
         return response
     }

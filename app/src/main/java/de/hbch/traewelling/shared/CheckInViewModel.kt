@@ -9,6 +9,7 @@ import de.hbch.traewelling.api.models.status.CheckInRequest
 import de.hbch.traewelling.api.models.status.CheckInResponse
 import de.hbch.traewelling.api.models.status.StatusBusiness
 import de.hbch.traewelling.api.models.status.StatusVisibility
+import de.hbch.traewelling.api.models.trip.ProductType
 import io.sentry.Sentry
 import retrofit2.Call
 import retrofit2.Callback
@@ -16,32 +17,34 @@ import retrofit2.Response
 import java.util.*
 
 class CheckInViewModel : ViewModel() {
-
     var lineName: String = ""
     var tripId: String = ""
     var startStationId: Int = 0
     var destinationStationId: Int = 0
-    var arrivalTime: Date? = null
     var departureTime: Date? = null
+    var arrivalTime: Date? = null
     val message = MutableLiveData<String>()
     val toot = MutableLiveData(false)
     val chainToot = MutableLiveData(false)
     val statusVisibility = MutableLiveData(StatusVisibility.PUBLIC)
     val statusBusiness = MutableLiveData(StatusBusiness.PRIVATE)
     val event = MutableLiveData<Event?>()
+    var category: ProductType = ProductType.ALL
+    var destination: String = ""
 
     init {
         reset()
     }
 
     fun reset() {
-        lineName = ""
-        tripId = ""
-        startStationId = 0
         destinationStationId = 0
         arrivalTime = null
+        tripId = ""
+        lineName = ""
+        startStationId = 0
         departureTime = null
         message.value = ""
+        destination = ""
         toot.value = false
         chainToot.value = false
         statusVisibility.postValue(StatusVisibility.PUBLIC)
@@ -65,7 +68,7 @@ class CheckInViewModel : ViewModel() {
             startStationId,
             destinationStationId,
             departureTime ?: Date(),
-            arrivalTime ?: Date()
+             arrivalTime ?: Date()
         )
         TraewellingApi.checkInService.checkIn(checkInRequest)
             .enqueue(object: Callback<Data<CheckInResponse>> {

@@ -39,13 +39,13 @@
     <string name="check_in_conflict">Du bist bereits in einer anderen Verbindung eingecheckt!</string>
     <string name="title_select_date">Wähle das Abfahrtsdatum</string>
     <string name="title_select_time">Wähle die Abfahrtszeit</string>
-    <string name="title_select_visibility">Wähle die gewünschte Sichtbarkeit des Status:</string>
+    <string name="title_select_visibility">Wähle die gewünschte Sichtbarkeit des Status</string>
     <string name="visibility_public">Öffentlich</string>
     <string name="visibility_unlisted">Ungelistet</string>
     <string name="visibility_followers">Nur für Follower</string>
     <string name="visibility_private">Nur für dich</string>
     <string name="visibility_only_authenticated">Nur angemeldete Nutzer</string>
-    <string name="title_select_business">Wähle den gewünschten Fahrttyp:</string>
+    <string name="title_select_business">Wähle den gewünschten Fahrttyp</string>
     <string name="travel_purpose">Reisezweck</string>
     <string name="business_private">Privatreise</string>
     <string name="business">Geschäftsreise</string>

@@ -7,7 +7,7 @@ data class Trip(
     val category: ProductType,
     val lineName: String,
     val origin: String,
-    val destination: String,
+    var destination: String,
     var stopovers: List<TripStation>
 ) {
 }

@@ -200,6 +200,10 @@
             android:name="destinationId"
             android:defaultValue="-1"
             app:argType="integer" />
+        <argument
+            android:name="category"
+            app:argType="de.hbch.traewelling.api.models.trip.ProductType"
+            android:defaultValue="ALL" />
     </fragment>
     <fragment
         android:id="@+id/statusDetailFragment"

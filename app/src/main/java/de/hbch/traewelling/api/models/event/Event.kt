@@ -13,7 +13,7 @@ data class Event(
     @SerializedName("url") val url: String,
     @SerializedName("begin") val begin: Date,
     @SerializedName("end") val end: Date,
-    @SerializedName("station") val station: Station
+    @SerializedName("station") val station: Station?
 ) {
     val dateRange: Pair<Date, Date> get() = Pair(begin, end)
 }

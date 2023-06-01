@@ -37,7 +37,8 @@ class UpdateDestinationFragment : AbstractSelectDestinationFragment() {
                 args.tripId,
                 args.startStationId,
                 changeDestination = true,
-                destinationId = stop.id
+                destinationId = stop.id,
+                category = checkInViewModel.category
             )
         )
     }
