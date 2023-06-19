@@ -247,7 +247,7 @@ private fun MuteButton(
 }
 
 @Composable
-private fun getDurationString(
+fun getDurationString(
     duration: Int
 ): String {
     val minutes = duration % 60

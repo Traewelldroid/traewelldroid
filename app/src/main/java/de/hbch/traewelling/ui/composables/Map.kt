@@ -1,5 +1,6 @@
 package de.hbch.traewelling.ui.composables
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
@@ -28,7 +29,7 @@ private val MAPNIK: OnlineTileSourceBase = XYTileSource(
     19,
     256,
     ".png",
-    arrayOf("https://tile.openstreetmap.org/"),
+    arrayOf("https://a.tile.openstreetmap.org/","https://b.tile.openstreetmap.org/","https://c.tile.openstreetmap.org/"),
     "Mapnik",
     TileSourcePolicy(
         2,
@@ -45,14 +46,17 @@ private val OPENRAILWAYMAP = XYTileSource(
     19,
     256,
     ".png",
-    arrayOf("https://tiles.openrailwaymap.org/standard/")
+    arrayOf("https://tiles.openrailwaymap.org/standard/"),
+    "Copyright oder so"
 )
 
 @Composable
 fun rememberMapViewWithLifecycle(): MapView {
     val context = LocalContext.current
     val mapView = remember {
-        MapView(context)
+        MapView(context).apply {
+            clipToOutline = true
+        }
     }
 
     // Makes MapView follow the lifecycle of this composable
@@ -72,10 +76,15 @@ fun rememberMapViewWithLifecycle(): MapView {
 fun rememberMapLifecycleObserver(mapView: MapView): LifecycleEventObserver =
     remember(mapView) {
         LifecycleEventObserver { _, event ->
+            Log.d("MapEvent", event.name)
             when (event) {
                 Lifecycle.Event.ON_RESUME -> mapView.onResume()
-                Lifecycle.Event.ON_PAUSE -> mapView.onPause()
-                else -> {}
+                Lifecycle.Event.ON_PAUSE -> {
+                    mapView.onDetach()
+                    mapView.onPause()
+                }
+                else -> {
+                }
             }
         }
     }
@@ -83,14 +92,20 @@ fun rememberMapLifecycleObserver(mapView: MapView): LifecycleEventObserver =
 @Composable
 fun MapView(
     modifier: Modifier = Modifier,
-    onLoad: (map: MapView) -> Unit = { }
+    onInit: (MapView) -> Unit = { },
+    onLoad: (MapView) -> Unit = { }
 ) {
     val mapViewState = rememberMapViewWithLifecycle()
 
     AndroidView(
-        { mapViewState },
-        modifier
+        factory = {
+            Log.d("MapEvents", "init!")
+            onInit(mapViewState)
+            mapViewState
+        },
+        modifier = modifier,
     ) { mapView ->
+        Log.d("MapEvents", "update!")
         Configuration.getInstance().userAgentValue = "${BuildConfig.APPLICATION_ID}/${BuildConfig.VERSION_NAME}"
         onLoad(mapView)
     }
@@ -106,6 +121,8 @@ fun OpenRailwayMapView(
     MapView(
         modifier = modifier,
         onLoad = { mapView ->
+        },
+        onInit = { mapView ->
             mapView.setTileSource(MAPNIK)
             mapView.setMultiTouchControls(true)
 
