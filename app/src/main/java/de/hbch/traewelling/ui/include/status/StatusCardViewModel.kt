@@ -17,10 +17,10 @@ class StatusCardViewModel(
 ) : ViewModel() {
 
     private val _liked = MutableLiveData(status.liked)
-    val liked: LiveData<Boolean> get() = _liked
+    val liked: LiveData<Boolean?> get() = _liked
 
     private val _likes = MutableLiveData(status.likes)
-    val likes: LiveData<Int> get() = _likes
+    val likes: LiveData<Int?> get() = _likes
 
     val isOwnStatus = MutableLiveData(false)
 
@@ -58,9 +58,9 @@ class StatusCardViewModel(
                 override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
                     if (response.isSuccessful) {
                         _liked.postValue(true)
-                        _likes.postValue(_likes.value!! + 1)
+                        _likes.postValue((_likes.value ?: 0) + 1)
                         status.liked = true
-                        status.likes++
+                        status.likes = status.likes?.inc()
                     }
                     else
                         Log.e("StatusCardViewModel", response.toString())
@@ -77,9 +77,9 @@ class StatusCardViewModel(
                 override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
                     if (response.isSuccessful) {
                         _liked.postValue(false)
-                        _likes.postValue(_likes.value!! - 1)
+                        _likes.postValue((_likes.value ?: 0) - 1)
                         status.liked = false
-                        status.likes--
+                        status.likes = status.likes?.dec()
                     }
                     else
                         Log.e("StatusCardViewModel", response.toString())

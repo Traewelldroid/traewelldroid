@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -23,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,10 +42,11 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import de.hbch.traewelling.R
-import de.hbch.traewelling.api.models.status.Status
+import de.hbch.traewelling.api.dtos.Status
 import de.hbch.traewelling.api.models.status.StatusBusiness
 import de.hbch.traewelling.api.models.status.StatusVisibility
 import de.hbch.traewelling.api.models.trip.ProductType
+import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.LocalColorScheme
 import de.hbch.traewelling.theme.MainTheme
@@ -59,7 +62,9 @@ import java.util.concurrent.TimeUnit
 @Composable
 fun CheckInCard(
     modifier: Modifier = Modifier,
-    statusCardViewModel: StatusCardViewModel,
+    checkInCardViewModel: CheckInCardViewModel,
+    status: Status,
+    loggedInUserViewModel: LoggedInUserViewModel? = null,
     stationSelected: (String, Date?) -> Unit = { _, _ -> }
 ) {
     val primaryColor = LocalColorScheme.current.primary
@@ -130,9 +135,9 @@ fun CheckInCard(
                         top.linkTo(parent.top)
                         width = Dimension.fillToConstraints
                     },
-                    stationName = "ZOB, Wendlingen am Neckar",
-                    timePlanned = Date(),
-                    timeReal = Date(),
+                    stationName = status.origin,
+                    timePlanned = status.departurePlanned,
+                    timeReal = status.departureReal,
                     stationSelected = stationSelected
                 )
 
@@ -144,9 +149,9 @@ fun CheckInCard(
                         bottom.linkTo(parent.bottom)
                         width = Dimension.fillToConstraints
                     },
-                    stationName = "ZOB, Wendlingen am Neckar2",
-                    timePlanned = Date(),
-                    timeReal = Date(),
+                    stationName = status.destination,
+                    timePlanned = status.arrivalPlanned,
+                    timeReal = status.arrivalReal,
                     stationSelected = stationSelected
                 )
 
@@ -161,31 +166,36 @@ fun CheckInCard(
                             end.linkTo(stationRowTop.end)
                             width = Dimension.fillToConstraints
                         },
-                    productType = ProductType.SUBWAY,
-                    line = "U 5",
-                    kilometers = 3,
-                    duration = 42,
-                    statusBusiness = StatusBusiness.COMMUTE,
-                    message = "U5 Theresienwiese zrckblmbidde"
+                    productType = status.productType,
+                    line = status.line,
+                    kilometers = status.distance,
+                    duration = status.duration,
+                    statusBusiness = status.business,
+                    message = status.message
                 )
             }
+            val progress = calculateProgress(
+                from = status.departureReal ?: status.departurePlanned,
+                to = status.arrivalReal ?: status.arrivalPlanned
+            )
             LinearProgressIndicator(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 4.dp),
-                progress = calculateProgress(
-                    from = Date(),
-                    to = Date()
-                )
+                progress = if (progress.isNaN()) 1f else progress
             )
             CheckInCardFooter(
                 modifier = Modifier.fillMaxWidth(),
-                username = "username",
-                createdAt = Date(),
-                visibility = StatusVisibility.ONLY_AUTHENTICATED,
-                isOwnStatus = true,
-                eventName = "CSD Hintertupfing",
-                statusCardViewModel = statusCardViewModel
+                statusId = status.statusId,
+                username = status.username,
+                createdAt = status.createdAt,
+                liked = status.liked,
+                likeCount = status.likeCount,
+                visibility = status.visibility,
+                isOwnStatus =
+                    (loggedInUserViewModel?.loggedInUser?.value?.id ?: -1) == status.userId,
+                eventName = status.eventName,
+                checkInCardViewModel = checkInCardViewModel
             )
         }
     }
@@ -298,7 +308,7 @@ private fun CheckInCardContent(
             )
             Text(
                 modifier = Modifier.padding(start = 12.dp),
-                text = stringResource(id = R.string.format_distance_kilometers, kilometers),
+                text = stringResource(id = R.string.format_distance_kilometers, kilometers / 1000),
                 style = AppTypography.bodySmall
             )
             Text(
@@ -313,7 +323,9 @@ private fun CheckInCardContent(
             )
         }
         if (!message.isNullOrEmpty()) {
-            Row {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_quote),
                     contentDescription = null
@@ -331,15 +343,18 @@ private fun CheckInCardContent(
 @Composable
 private fun CheckInCardFooter(
     modifier: Modifier = Modifier,
+    statusId: Int,
     username: String,
     createdAt: Date,
     visibility: StatusVisibility,
+    liked: Boolean?,
+    likeCount: Int?,
     isOwnStatus: Boolean = false,
     eventName: String?,
-    statusCardViewModel: StatusCardViewModel
+    checkInCardViewModel: CheckInCardViewModel
 ) {
-    val likedState by statusCardViewModel.liked.observeAsState(false)
-    val likeCountState by statusCardViewModel.likes.observeAsState(0)
+    var likedState by rememberSaveable { mutableStateOf(liked ?: false) }
+    var likeCountState by rememberSaveable { mutableStateOf(likeCount ?: 0) }
 
     Row(
         modifier = modifier,
@@ -349,26 +364,40 @@ private fun CheckInCardFooter(
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Row(
-                modifier = Modifier
-                    .clickable {
-                        statusCardViewModel.handleFavoriteClick()
+            if (liked != null && likeCount != null) {
+                Row(
+                    modifier = Modifier
+                        .clickable {
+                            if (likedState) {
+                                checkInCardViewModel.deleteFavorite(statusId) {
+                                    likedState = false
+                                    likeCountState--
+                                }
+                            } else {
+                                checkInCardViewModel.createFavorite(statusId) {
+                                    likedState = true
+                                    likeCountState++
+                                }
+                            }
+                        }
+                        .padding(2.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    AnimatedContent(targetState = likedState) {
+                        val icon = if (it) R.drawable.ic_faved else R.drawable.ic_not_faved
+                        Icon(
+                            painterResource(id = icon),
+                            contentDescription = null,
+                            tint = StarYellow
+                        )
                     }
-                    .padding(2.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                AnimatedContent(targetState = likedState) {
-                    val icon = if (it) R.drawable.ic_faved else R.drawable.ic_not_faved
-                    Icon(
-                        painterResource(id = icon),
-                        contentDescription = null,
-                        tint = StarYellow
+                    Text(
+                        text = likeCountState.toString()
                     )
                 }
-                Text(
-                    text = likeCountState.toString()
-                )
+            } else {
+                Box { }
             }
         }
         Row(
@@ -436,10 +465,36 @@ private fun CheckInCardFooter(
 @Composable
 private fun CheckInCardPreview() {
     MainTheme {
+        val checkInCardViewModel = CheckInCardViewModel()
+        val status = Status(
+            0,
+            "Start Hbf",
+            Date(),
+            Date(),
+            "Ende Hp",
+            Date(),
+            Date(),
+            ProductType.TRAM,
+            "STB U1",
+            1234,
+            1234,
+            StatusBusiness.COMMUTE,
+            "Testnachricht 123456789",
+            true,
+            10,
+            0,
+            "username",
+            Date(),
+            StatusVisibility.PRIVATE,
+            "Tolle Veranstaltung!"
+        )
         Column(
             modifier = Modifier.padding(8.dp)
         ) {
-            CheckInCard()
+            CheckInCard(
+                checkInCardViewModel = checkInCardViewModel,
+                status = status
+            )
         }
     }
 }
