@@ -22,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -65,7 +66,7 @@ fun CheckIn(
     var businessSelectionVisible by remember { mutableStateOf(false) }
     var visibilitySelectionVisible by remember { mutableStateOf(false) }
     var eventSelectionVisible by remember { mutableStateOf(false) }
-    val statusMessage by checkInViewModel.message.observeAsState("")
+    var statusText by rememberSaveable{ mutableStateOf(checkInViewModel.message.value ?: "") }
     val selectedVisibility by checkInViewModel.statusVisibility.observeAsState()
     val selectedBusiness by checkInViewModel.statusBusiness.observeAsState()
     val activeEvents by eventViewModel.activeEvents.observeAsState()
@@ -151,10 +152,11 @@ fun CheckIn(
                             min = 72.dp,
                             max = Dp.Unspecified
                         ),
-                    value = statusMessage,
+                    value = statusText,
                     onValueChange = {
                         if (it.count() > 280)
                             return@OutlinedTextField
+                        statusText = it
                         checkInViewModel.message.postValue(it)
                     },
                     label = {
@@ -165,7 +167,7 @@ fun CheckIn(
                 )
                 Text(
                     modifier = Modifier.padding(4.dp),
-                    text = "${statusMessage.count()}/280",
+                    text = "${statusText.count()}/280",
                     style = AppTypography.labelSmall
                 )
             }
@@ -242,7 +244,10 @@ fun CheckIn(
                 ButtonWithIconAndText(
                     stringId = if (isEditMode) R.string.save else R.string.check_in,
                     drawableId = R.drawable.ic_check_in,
-                    onClick = checkInAction
+                    onClick = {
+                        checkInViewModel.message.postValue(statusText)
+                        checkInAction()
+                    }
                 )
             }
         }
