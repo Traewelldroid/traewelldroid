@@ -13,7 +13,7 @@
         <import type="android.view.View" />
     </data>
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    <!--<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/swipe_refresh_dashboard_check_ins">
@@ -23,15 +23,12 @@
             android:id="@+id/nested_scroll_view_user">
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content">-->
                 <androidx.compose.ui.platform.ComposeView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/compose_card_user"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBaseline_toTopOf="parent"
-                    android:padding="16dp" />
-                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_height="match_parent"
+                    android:id="@+id/user_content" />
+                <!--<androidx.recyclerview.widget.RecyclerView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:id="@+id/recycler_view_check_in"
@@ -40,5 +37,5 @@
                     app:layout_constraintTop_toBottomOf="@id/compose_card_user"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>-->
 </layout>

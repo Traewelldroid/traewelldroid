@@ -54,6 +54,24 @@ fun UserCard(
 }
 
 @Composable
+fun UserCard(
+    modifier: Modifier = Modifier,
+    user: User?,
+    loggedInUser: User?
+) {
+    user?.let {
+        loggedInUser?.let {
+            UserCardContent(
+                user = user,
+                loggedInUser = loggedInUser,
+                modifier = modifier,
+                followAction = { }
+            )
+        }
+    }
+}
+
+@Composable
 private fun UserCardContent(
     user: User,
     loggedInUser: User,

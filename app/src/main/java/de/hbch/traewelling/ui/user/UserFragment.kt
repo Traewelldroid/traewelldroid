@@ -20,8 +20,9 @@ class UserFragment : AbstractUserFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        loadCheckIns(args.userName)
+        loadUser(args.userName)
         viewModel.loadUser(args.userName) {
-            loadCheckIns()
             binding.isOwnProfile =
                 (loggedInUserViewModel.user.value?.id ?: -1) == (it.data.id)
         }

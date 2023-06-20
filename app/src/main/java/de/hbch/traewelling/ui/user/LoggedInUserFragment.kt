@@ -10,19 +10,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
 import de.hbch.traewelling.R
 import de.hbch.traewelling.adapters.CheckInAdapter
-import de.hbch.traewelling.api.TraewellingApi
-import de.hbch.traewelling.api.models.Data
 import de.hbch.traewelling.api.models.station.Station
 import de.hbch.traewelling.shared.LoggedInUserViewModel
-import de.hbch.traewelling.ui.dashboard.DashboardFragmentDirections
 import de.hbch.traewelling.ui.info.InfoActivity
-import io.sentry.Sentry
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 
-class LoggedInAbstractUserFragment : AbstractUserFragment() {
+class LoggedInUserFragment : AbstractUserFragment() {
     override val viewModel: LoggedInUserViewModel by activityViewModels()
     private lateinit var menuItems: List<MenuItem>
     private lateinit var menuProvider: MenuProvider
@@ -72,6 +65,10 @@ class LoggedInAbstractUserFragment : AbstractUserFragment() {
         }
 
         requireActivity().addMenuProvider(menuProvider)
+
+        val username = loggedInUserViewModel.loggedInUser.value?.username ?: ""
+        loadUser(username)
+        loadCheckIns(username, 1)
 
         val view = super.onCreateView(inflater, container, savedInstanceState)
         binding.isOwnProfile = true

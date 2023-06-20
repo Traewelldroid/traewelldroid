@@ -1,6 +1,7 @@
 package de.hbch.traewelling.ui.activeCheckins
 
 import android.util.Log
+import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,25 +14,32 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class ActiveCheckinsViewModel : ViewModel() {
-    fun getActiveCheckins(
-        successCallback: (List<Status>) -> Unit,
-        failureCallback: () -> Unit
-    ) {
+
+    val isRefreshing = MutableLiveData(false)
+    val checkIns = mutableStateListOf<Status>()
+
+    init {
+        getActiveCheckins()
+    }
+
+    fun getActiveCheckins() {
+        isRefreshing.postValue(true)
         TraewellingApi.checkInService.getStatuses()
             .enqueue(object: Callback<StatusPage> {
                 override fun onResponse(call: Call<StatusPage>, response: Response<StatusPage>) {
+                    isRefreshing.postValue(false)
                     if (response.isSuccessful) {
                         val statuses = response.body()
                         if (statuses != null) {
-                            successCallback(statuses.data)
+                            checkIns.clear()
+                            checkIns.addAll(statuses.data)
                             return
                         }
                     }
-                    failureCallback()
                     Sentry.captureMessage(response.errorBody()?.string() ?: "")
                 }
                 override fun onFailure(call: Call<StatusPage>, t: Throwable) {
-                    failureCallback()
+                    isRefreshing.postValue(false)
                     Sentry.captureException(t)
                 }
             })

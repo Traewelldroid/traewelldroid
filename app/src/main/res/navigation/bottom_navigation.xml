@@ -31,7 +31,7 @@
     </fragment>
     <fragment
         android:id="@+id/user_fragment"
-        android:name="de.hbch.traewelling.ui.user.LoggedInAbstractUserFragment"
+        android:name="de.hbch.traewelling.ui.user.LoggedInUserFragment"
         android:label="@string/title_user"
         tools:layout="@layout/fragment_user">
         <action

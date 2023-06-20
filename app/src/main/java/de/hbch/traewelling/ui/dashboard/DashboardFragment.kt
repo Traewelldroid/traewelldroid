@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
@@ -123,25 +124,26 @@ class DashboardFragment : Fragment() {
                             )
                         }
 
-                        checkIns.forEach { status ->
-                            item {
-                                CheckInCard(
-                                    checkInCardViewModel = checkInCardViewModel,
-                                    status = status.toStatusDto(),
-                                    loggedInUserViewModel = loggedInUserViewModel,
-                                    stationSelected = { station, date ->
-                                        findNavController()
-                                            .navigate(
-                                                DashboardFragmentDirections.actionDashboardFragmentToSearchConnectionFragment(
-                                                    station,
-                                                    date
-                                                )
+                        items(
+                            items = checkIns
+                        ) { status ->
+                            CheckInCard(
+                                checkInCardViewModel = checkInCardViewModel,
+                                status = status.toStatusDto(),
+                                loggedInUserViewModel = loggedInUserViewModel,
+                                stationSelected = { station, date ->
+                                    findNavController()
+                                        .navigate(
+                                            DashboardFragmentDirections.actionDashboardFragmentToSearchConnectionFragment(
+                                                station,
+                                                date
                                             )
-                                    }
-                                )
-                            }
+                                        )
+                                }
+                            )
                         }
                     }
+
                     PullRefreshIndicator(
                         modifier = Modifier.align(Alignment.TopCenter),
                         refreshing = refreshing,
