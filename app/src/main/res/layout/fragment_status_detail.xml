@@ -5,7 +5,7 @@
 
     <data>
 
-        <variable
+        <!--<variable
             name="status"
             type="de.hbch.traewelling.api.models.status.Status" />
 
@@ -14,25 +14,19 @@
             type="de.hbch.traewelling.ui.statusDetail.StatusDetailFragment" />
 
         <import
-            type="android.view.View" />
+            type="android.view.View" />-->
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <!--<androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent">-->
 
         <androidx.compose.ui.platform.ComposeView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/view_status_data_loading"
-            android:layout_marginTop="32dp"
-            android:visibility="gone"
-            tools:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="match_parent"
+            android:id="@+id/fragment_status_content" />
         
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <!--<androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="@{(!fragment.statusLoadingSuccess) ? View.VISIBLE : View.GONE}">
@@ -87,8 +81,8 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <!--Perlschnur-->
-                    <ImageView
+                    <-Perlschnur-->
+                    <!--<ImageView
                         android:id="@+id/perlschnur_start"
                         style="@style/Theme.Traewelling.PrimaryColorIcons"
                         android:layout_width="20dp"
@@ -284,5 +278,5 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>-->
 </layout>

@@ -17,8 +17,8 @@
             android:id="@+id/action_dashboard_fragment_to_statusDetailFragment"
             app:destination="@id/statusDetailFragment" />
         <action
-            android:id="@+id/action_dashboard_fragment_to_profile"
-            app:destination="@id/userProfileFragment" />
+            android:id="@+id/action_dashboard_fragment_to_user_profile_fragment"
+            app:destination="@id/user_profile_fragment" />
     </fragment>
     <fragment
         android:id="@+id/active_checkins_fragment"
@@ -28,10 +28,13 @@
         <action
             android:id="@+id/action_active_checkins_fragment_to_statusDetailFragment"
             app:destination="@id/statusDetailFragment" />
+        <action
+            android:id="@+id/action_active_checkins_fragment_to_user_profile_fragment"
+            app:destination="@id/user_profile_fragment" />
     </fragment>
     <fragment
         android:id="@+id/user_fragment"
-        android:name="de.hbch.traewelling.ui.user.LoggedInUserFragment"
+        android:name="de.hbch.traewelling.ui.user.UserFragment"
         android:label="@string/title_user"
         tools:layout="@layout/fragment_user">
         <action
@@ -41,8 +44,33 @@
             android:id="@+id/action_user_fragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
         <action
-            android:id="@+id/action_logged_in_user_fragment_to_searchConnectionFragment"
+            android:id="@+id/action_user_fragment_to_searchConnectionFragment"
             app:destination="@id/searchConnectionFragment" />
+        <argument
+            android:name="username"
+            app:argType="string"
+            android:defaultValue="@null"
+            app:nullable="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/user_profile_fragment"
+        android:name="de.hbch.traewelling.ui.user.UserFragment"
+        android:label="@string/title_user"
+        tools:layout="@layout/fragment_user">
+        <action
+            android:id="@+id/action_user_fragment_to_statusDetailFragment"
+            app:destination="@id/statusDetailFragment" />
+        <action
+            android:id="@+id/action_user_fragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_user_fragment_to_searchConnectionFragment"
+            app:destination="@id/searchConnectionFragment" />
+        <argument
+            android:name="username"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/statisticsFragment"
@@ -221,17 +249,6 @@
         <argument
             android:name="userId"
             app:argType="integer" />
-    </fragment>
-    <fragment
-        android:id="@+id/userProfileFragment"
-        android:name="de.hbch.traewelling.ui.user.UserFragment"
-        android:label="@string/title_user">
-        <argument
-            android:name="userName"
-            app:argType="string" />
-        <action
-            android:id="@+id/action_user_profile_fragment_to_searchConnectionFragment"
-            app:destination="@id/searchConnectionFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"

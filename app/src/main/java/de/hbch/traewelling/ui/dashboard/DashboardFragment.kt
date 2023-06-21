@@ -95,7 +95,9 @@ class DashboardFragment : Fragment() {
                 val checkInListState = rememberLazyListState()
 
                 checkInListState.onBottomReached {
-                    dashboardFragmentViewModel.loadCheckIns(++currentPage)
+                    if (dashboardFragmentViewModel.checkIns.size > 0) {
+                        dashboardFragmentViewModel.loadCheckIns(++currentPage)
+                    }
                 }
 
                 Box(
@@ -134,10 +136,30 @@ class DashboardFragment : Fragment() {
                                 stationSelected = { station, date ->
                                     findNavController()
                                         .navigate(
-                                            DashboardFragmentDirections.actionDashboardFragmentToSearchConnectionFragment(
-                                                station,
-                                                date
-                                            )
+                                            DashboardFragmentDirections
+                                                .actionDashboardFragmentToSearchConnectionFragment(
+                                                    station,
+                                                    date
+                                                )
+                                        )
+                                },
+                                userSelected = { username ->
+                                    findNavController()
+                                        .navigate(
+                                            DashboardFragmentDirections
+                                                .actionDashboardFragmentToUserProfileFragment(
+                                                    username
+                                                )
+                                        )
+                                },
+                                statusSelected = { statusId, userId ->
+                                    findNavController()
+                                        .navigate(
+                                            DashboardFragmentDirections
+                                                .actionDashboardFragmentToStatusDetailFragment(
+                                                    statusId,
+                                                    userId
+                                                )
                                         )
                                 }
                             )
@@ -182,7 +204,7 @@ class DashboardFragment : Fragment() {
                         findNavController()
                             .navigate(
                                 DashboardFragmentDirections
-                                    .actionDashboardFragmentToProfile(userName)
+                                    .actionDashboardFragmentToUserProfileFragment(userName)
                             )
                     }
                 } else if (it.hasExtra(SharedValues.EXTRA_STATION_ID)) {

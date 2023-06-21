@@ -1,6 +1,7 @@
 package de.hbch.traewelling.ui.include.status
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -63,140 +64,146 @@ import java.util.concurrent.TimeUnit
 fun CheckInCard(
     modifier: Modifier = Modifier,
     checkInCardViewModel: CheckInCardViewModel,
-    status: Status,
+    status: Status?,
     loggedInUserViewModel: LoggedInUserViewModel? = null,
-    stationSelected: (String, Date?) -> Unit = { _, _ -> }
+    stationSelected: (String, Date?) -> Unit = { _, _ -> },
+    userSelected: (String) -> Unit = { },
+    statusSelected: (Int, Int) -> Unit = { _, _ -> }
 ) {
     val primaryColor = LocalColorScheme.current.primary
-
-    ElevatedCard(
-        modifier = modifier.fillMaxWidth(),
-        onClick = { }
-    ) {
-        Column(
-            modifier = Modifier.padding(12.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+    if(status != null) {
+        ElevatedCard(
+            modifier = modifier.fillMaxWidth(),
+            onClick = {
+                statusSelected(status.statusId, status.userId)
+            }
         ) {
-            ConstraintLayout(
-                modifier = Modifier.fillMaxWidth()
+            Column(
+                modifier = Modifier.padding(12.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                val (
-                    perlschnurTop,
-                    perlschnurConnection,
-                    perlschnurBottom,
-                    stationRowTop,
-                    stationRowBottom,
-                    content
-                ) = createRefs()
+                ConstraintLayout(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    val (
+                        perlschnurTop,
+                        perlschnurConnection,
+                        perlschnurBottom,
+                        stationRowTop,
+                        stationRowBottom,
+                        content
+                    ) = createRefs()
 
-                // Perlschnur
-                Icon(
-                    modifier = Modifier
-                        .constrainAs(perlschnurTop) {
-                            start.linkTo(parent.start)
+                    // Perlschnur
+                    Icon(
+                        modifier = Modifier
+                            .constrainAs(perlschnurTop) {
+                                start.linkTo(parent.start)
+                                top.linkTo(parent.top)
+                            }
+                            .size(20.dp),
+                        painter = painterResource(id = R.drawable.ic_perlschnur_main),
+                        contentDescription = null,
+                        tint = primaryColor
+                    )
+                    Image(
+                        modifier = Modifier.constrainAs(perlschnurConnection) {
+                            start.linkTo(perlschnurTop.start)
+                            end.linkTo(perlschnurTop.end)
+                            top.linkTo(perlschnurTop.bottom)
+                            bottom.linkTo(perlschnurBottom.top)
+                            height = Dimension.fillToConstraints
+                            width = Dimension.value(2.dp)
+                        },
+                        painter = painterResource(id = R.drawable.ic_perlschnur_connection),
+                        contentDescription = null,
+                        colorFilter = ColorFilter.tint(Color.Gray),
+                        contentScale = ContentScale.Crop
+                    )
+                    Icon(
+                        modifier = Modifier
+                            .constrainAs(perlschnurBottom) {
+                                start.linkTo(parent.start)
+                                bottom.linkTo(parent.bottom)
+                            }
+                            .size(20.dp),
+                        painter = painterResource(id = R.drawable.ic_perlschnur_main),
+                        contentDescription = null,
+                        tint = primaryColor
+                    )
+
+                    // Station row top
+                    StationRow(
+                        modifier = Modifier.constrainAs(stationRowTop) {
+                            start.linkTo(perlschnurTop.end, 8.dp)
+                            end.linkTo(parent.end)
                             top.linkTo(parent.top)
-                        }
-                        .size(20.dp),
-                    painter = painterResource(id = R.drawable.ic_perlschnur_main),
-                    contentDescription = null,
-                    tint = primaryColor
-                )
-                Image(
-                    modifier = Modifier.constrainAs(perlschnurConnection) {
-                        start.linkTo(perlschnurTop.start)
-                        end.linkTo(perlschnurTop.end)
-                        top.linkTo(perlschnurTop.bottom)
-                        bottom.linkTo(perlschnurBottom.top)
-                        height = Dimension.fillToConstraints
-                        width = Dimension.value(2.dp)
-                    },
-                    painter = painterResource(id = R.drawable.ic_perlschnur_connection),
-                    contentDescription = null,
-                    colorFilter = ColorFilter.tint(Color.Gray),
-                    contentScale = ContentScale.Crop
-                )
-                Icon(
-                    modifier = Modifier
-                        .constrainAs(perlschnurBottom) {
-                            start.linkTo(parent.start)
-                            bottom.linkTo(parent.bottom)
-                        }
-                        .size(20.dp),
-                    painter = painterResource(id = R.drawable.ic_perlschnur_main),
-                    contentDescription = null,
-                    tint = primaryColor
-                )
-
-                // Station row top
-                StationRow(
-                    modifier = Modifier.constrainAs(stationRowTop) {
-                        start.linkTo(perlschnurTop.end, 8.dp)
-                        end.linkTo(parent.end)
-                        top.linkTo(parent.top)
-                        width = Dimension.fillToConstraints
-                    },
-                    stationName = status.origin,
-                    timePlanned = status.departurePlanned,
-                    timeReal = status.departureReal,
-                    stationSelected = stationSelected
-                )
-
-                // Station row bottom
-                StationRow(
-                    modifier = Modifier.constrainAs(stationRowBottom) {
-                        start.linkTo(perlschnurBottom.end, 12.dp)
-                        end.linkTo(parent.end)
-                        bottom.linkTo(parent.bottom)
-                        width = Dimension.fillToConstraints
-                    },
-                    stationName = status.destination,
-                    timePlanned = status.arrivalPlanned,
-                    timeReal = status.arrivalReal,
-                    stationSelected = stationSelected
-                )
-
-                // Main content
-                CheckInCardContent(
-                    modifier = Modifier
-                        .padding(vertical = 8.dp)
-                        .constrainAs(content) {
-                            top.linkTo(stationRowTop.bottom)
-                            bottom.linkTo(stationRowBottom.top)
-                            start.linkTo(stationRowTop.start)
-                            end.linkTo(stationRowTop.end)
                             width = Dimension.fillToConstraints
                         },
-                    productType = status.productType,
-                    line = status.line,
-                    kilometers = status.distance,
-                    duration = status.duration,
-                    statusBusiness = status.business,
-                    message = status.message
+                        stationName = status.origin,
+                        timePlanned = status.departurePlanned,
+                        timeReal = status.departureReal,
+                        stationSelected = stationSelected
+                    )
+
+                    // Station row bottom
+                    StationRow(
+                        modifier = Modifier.constrainAs(stationRowBottom) {
+                            start.linkTo(perlschnurBottom.end, 12.dp)
+                            end.linkTo(parent.end)
+                            bottom.linkTo(parent.bottom)
+                            width = Dimension.fillToConstraints
+                        },
+                        stationName = status.destination,
+                        timePlanned = status.arrivalPlanned,
+                        timeReal = status.arrivalReal,
+                        stationSelected = stationSelected
+                    )
+
+                    // Main content
+                    CheckInCardContent(
+                        modifier = Modifier
+                            .padding(vertical = 8.dp)
+                            .constrainAs(content) {
+                                top.linkTo(stationRowTop.bottom)
+                                bottom.linkTo(stationRowBottom.top)
+                                start.linkTo(stationRowTop.start)
+                                end.linkTo(stationRowTop.end)
+                                width = Dimension.fillToConstraints
+                            },
+                        productType = status.productType,
+                        line = status.line,
+                        kilometers = status.distance,
+                        duration = status.duration,
+                        statusBusiness = status.business,
+                        message = status.message
+                    )
+                }
+                val progress = calculateProgress(
+                    from = status.departureReal ?: status.departurePlanned,
+                    to = status.arrivalReal ?: status.arrivalPlanned
+                )
+                LinearProgressIndicator(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 4.dp),
+                    progress = if (progress.isNaN()) 1f else progress
+                )
+                CheckInCardFooter(
+                    modifier = Modifier.fillMaxWidth(),
+                    statusId = status.statusId,
+                    username = status.username,
+                    createdAt = status.createdAt,
+                    liked = status.liked,
+                    likeCount = status.likeCount,
+                    visibility = status.visibility,
+                    isOwnStatus =
+                    (loggedInUserViewModel?.loggedInUser?.value?.id ?: -1) == status.userId,
+                    eventName = status.eventName,
+                    checkInCardViewModel = checkInCardViewModel,
+                    userSelected = userSelected
                 )
             }
-            val progress = calculateProgress(
-                from = status.departureReal ?: status.departurePlanned,
-                to = status.arrivalReal ?: status.arrivalPlanned
-            )
-            LinearProgressIndicator(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 4.dp),
-                progress = if (progress.isNaN()) 1f else progress
-            )
-            CheckInCardFooter(
-                modifier = Modifier.fillMaxWidth(),
-                statusId = status.statusId,
-                username = status.username,
-                createdAt = status.createdAt,
-                liked = status.liked,
-                likeCount = status.likeCount,
-                visibility = status.visibility,
-                isOwnStatus =
-                    (loggedInUserViewModel?.loggedInUser?.value?.id ?: -1) == status.userId,
-                eventName = status.eventName,
-                checkInCardViewModel = checkInCardViewModel
-            )
         }
     }
 }
@@ -351,7 +358,8 @@ private fun CheckInCardFooter(
     likeCount: Int?,
     isOwnStatus: Boolean = false,
     eventName: String?,
-    checkInCardViewModel: CheckInCardViewModel
+    checkInCardViewModel: CheckInCardViewModel,
+    userSelected: (String) -> Unit = { }
 ) {
     var likedState by rememberSaveable { mutableStateOf(liked ?: false) }
     var likeCountState by rememberSaveable { mutableStateOf(likeCount ?: 0) }
@@ -411,7 +419,7 @@ private fun CheckInCardFooter(
             ) {
                 Text(
                     modifier = Modifier
-                        .clickable { }
+                        .clickable { userSelected(username) }
                         .padding(2.dp),
                     text = stringResource(
                         id = R.string.check_in_user_time,
@@ -469,12 +477,15 @@ private fun CheckInCardPreview() {
         val status = Status(
             0,
             "Start Hbf",
+            123,
             Date(),
             Date(),
             "Ende Hp",
+            123,
             Date(),
             Date(),
             ProductType.TRAM,
+            "lalal",
             "STB U1",
             1234,
             1234,

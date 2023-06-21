@@ -18,6 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Traewelling"
         android:usesCleartextTraffic="true"
+        android:enableOnBackInvokedCallback="true"
         tools:targetApi="33">
         <activity
             android:name=".ui.info.InfoActivity"

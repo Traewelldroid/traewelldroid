@@ -34,7 +34,7 @@ import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
 @Composable
 fun UserCard(
     modifier: Modifier = Modifier,
-    userViewModel: UserViewModel,
+    userViewModel: UserStatusViewModel,
     loggedInUserViewModel: LoggedInUserViewModel
 ) {
     val stateUser by userViewModel.user.observeAsState()
@@ -48,24 +48,6 @@ fun UserCard(
                 modifier = modifier,
                 followAction = { userViewModel.handleFollowButton() },
                 muteAction = { userViewModel.handleMuteButton() }
-            )
-        }
-    }
-}
-
-@Composable
-fun UserCard(
-    modifier: Modifier = Modifier,
-    user: User?,
-    loggedInUser: User?
-) {
-    user?.let {
-        loggedInUser?.let {
-            UserCardContent(
-                user = user,
-                loggedInUser = loggedInUser,
-                modifier = modifier,
-                followAction = { }
             )
         }
     }

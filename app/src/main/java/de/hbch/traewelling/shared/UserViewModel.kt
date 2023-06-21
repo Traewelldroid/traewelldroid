@@ -31,14 +31,6 @@ open class UserViewModel : ViewModel() {
             user?.username ?: ""
         }
 
-    val kilometres: LiveData<String>
-        get() = _user.map { user ->
-            when (user != null) {
-                true -> "${user.distance / 1000} km"
-                false -> ""
-            }
-        }
-
     val points: LiveData<Int>
         get() = _user.map { user ->
             user?.points ?: 0
@@ -48,17 +40,6 @@ open class UserViewModel : ViewModel() {
         get() = _user.map { user ->
             user?.duration ?: 0
         }
-
-    val averageSpeed: LiveData<Double>
-        get() = _user.map { user ->
-            (user?.averageSpeed?.div(1000)) ?: 0.0
-        }
-
-    val homelandStation: LiveData<String>
-        get() = _user.map { user ->
-            user?.home?.name ?: ""
-        }
-
     val home: LiveData<Station?>
         get() = _user.map { user ->
             user?.home
@@ -66,16 +47,6 @@ open class UserViewModel : ViewModel() {
 
     val defaultStatusVisibility: StatusVisibility
         get() = _user.value?.defaultStatusVisibility ?: StatusVisibility.PUBLIC
-
-    val profilePictureSrc: LiveData<String>
-        get() = _user.map { user ->
-            user?.avatarUrl ?: ""
-        }
-
-    val privateProfile: LiveData<Boolean>
-        get() = _user.map { user ->
-            user?.privateProfile ?: false
-        }
 
     fun setHomelandStation(station: Station) {
         _user.value?.home = station
@@ -86,7 +57,7 @@ open class UserViewModel : ViewModel() {
             override fun onResponse(call: Call<Data<User>>, response: Response<Data<User>>) {
                 if (response.isSuccessful) {
                     val data = response.body()
-                    _user.value = data?.data
+                    _user.postValue(data?.data)
                     data?.let { onSuccess(it) }
                 } else {
                     Log.e("UserViewModel", response.toString())

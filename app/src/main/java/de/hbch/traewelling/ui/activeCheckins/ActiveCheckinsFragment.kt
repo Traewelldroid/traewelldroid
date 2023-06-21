@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import de.hbch.traewelling.adapters.CheckInAdapter
 import de.hbch.traewelling.databinding.FragmentActiveCheckinsBinding
@@ -79,7 +80,24 @@ class ActiveCheckinsFragment : Fragment() {
                             CheckInCard(
                                 checkInCardViewModel = checkInCardViewModel,
                                 status = status.toStatusDto(),
-                                loggedInUserViewModel = loggedInUserViewModel
+                                loggedInUserViewModel = loggedInUserViewModel,
+                                userSelected = { username ->
+                                    findNavController()
+                                        .navigate(
+                                            ActiveCheckinsFragmentDirections
+                                                .actionActiveCheckinsFragmentToUserProfileFragment(username)
+                                        )
+                                },
+                                statusSelected = { statusId, userId ->
+                                    findNavController()
+                                        .navigate(
+                                            ActiveCheckinsFragmentDirections
+                                                .actionActiveCheckinsFragmentToStatusDetailFragment(
+                                                    statusId,
+                                                    userId
+                                                )
+                                        )
+                                }
                             )
                         }
                     }
