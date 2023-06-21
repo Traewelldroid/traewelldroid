@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ColorScheme
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -68,7 +70,9 @@ fun CheckInCard(
     loggedInUserViewModel: LoggedInUserViewModel? = null,
     stationSelected: (String, Date?) -> Unit = { _, _ -> },
     userSelected: (String) -> Unit = { },
-    statusSelected: (Int, Int) -> Unit = { _, _ -> }
+    statusSelected: (Int, Int) -> Unit = { _, _ -> },
+    handleEditClicked: (Status) -> Unit = { },
+    handleDeleteClicked: (Status) -> Unit = { }
 ) {
     val primaryColor = LocalColorScheme.current.primary
     if(status != null) {
@@ -201,7 +205,13 @@ fun CheckInCard(
                     (loggedInUserViewModel?.loggedInUser?.value?.id ?: -1) == status.userId,
                     eventName = status.eventName,
                     checkInCardViewModel = checkInCardViewModel,
-                    userSelected = userSelected
+                    userSelected = userSelected,
+                    handleEditClicked = {
+                        handleEditClicked(status)
+                    },
+                    handleDeleteClicked = {
+                        handleDeleteClicked(status)
+                    }
                 )
             }
         }
@@ -359,7 +369,9 @@ private fun CheckInCardFooter(
     isOwnStatus: Boolean = false,
     eventName: String?,
     checkInCardViewModel: CheckInCardViewModel,
-    userSelected: (String) -> Unit = { }
+    userSelected: (String) -> Unit = { },
+    handleEditClicked: () -> Unit = { },
+    handleDeleteClicked: () -> Unit = { }
 ) {
     var likedState by rememberSaveable { mutableStateOf(liked ?: false) }
     var likeCountState by rememberSaveable { mutableStateOf(likeCount ?: 0) }
@@ -438,14 +450,52 @@ private fun CheckInCardFooter(
                 )
             }
             if (isOwnStatus) {
-                Icon(
-                    modifier = Modifier
-                        .clickable { }
-                        .padding(2.dp),
-                    painter = painterResource(id = R.drawable.ic_more),
-                    contentDescription = null,
-                    tint = LocalColorScheme.current.primary
-                )
+                var menuExpanded by remember { mutableStateOf(false) }
+                Box {
+                    Icon(
+                        modifier = Modifier
+                            .clickable {
+                                menuExpanded = true
+                            }
+                            .padding(2.dp),
+                        painter = painterResource(id = R.drawable.ic_more),
+                        contentDescription = null,
+                        tint = LocalColorScheme.current.primary
+                    )
+                    DropdownMenu(
+                        expanded = menuExpanded,
+                        onDismissRequest = { menuExpanded = false }
+                    ) {
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    text = stringResource(id = R.string.title_edit)
+                                )
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_edit),
+                                    contentDescription = null
+                                )
+                            },
+                            onClick = handleEditClicked
+                        )
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    text = stringResource(id = R.string.delete)
+                                )
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_delete),
+                                    contentDescription = null
+                                )
+                            },
+                            onClick = handleDeleteClicked
+                        )
+                    }
+                }
             }
         }
     }

@@ -31,14 +31,17 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.core.os.bundleOf
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.accompanist.themeadapter.material3.Mdc3Theme
+import de.hbch.traewelling.R
 import de.hbch.traewelling.adapters.CheckInAdapter
 import de.hbch.traewelling.api.models.status.Status
 import de.hbch.traewelling.api.models.trip.ProductType
@@ -49,8 +52,11 @@ import de.hbch.traewelling.shared.SharedValues
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.composables.DataLoading
 import de.hbch.traewelling.ui.composables.onBottomReached
+import de.hbch.traewelling.ui.include.alert.AlertBottomSheet
+import de.hbch.traewelling.ui.include.alert.AlertType
 import de.hbch.traewelling.ui.include.cardSearchStation.CardSearchStation
 import de.hbch.traewelling.ui.include.cardSearchStation.SearchStationCardViewModel
+import de.hbch.traewelling.ui.include.deleteStatus.DeleteStatusBottomSheet
 import de.hbch.traewelling.ui.include.status.CheckInCard
 import de.hbch.traewelling.ui.include.status.CheckInCardViewModel
 import de.hbch.traewelling.util.publishStationShortcuts
@@ -161,6 +167,48 @@ class DashboardFragment : Fragment() {
                                                     userId
                                                 )
                                         )
+                                },
+                                handleEditClicked = { statusValue ->
+                                    findNavController().navigate(
+                                        R.id.editStatusFragment,
+                                        bundleOf(
+                                            "transitionName" to statusValue.origin,
+                                            "destination" to statusValue.destination,
+                                            "body" to statusValue.message,
+                                            "departureTime" to statusValue.departurePlanned,
+                                            "business" to statusValue.business.ordinal,
+                                            "visibility" to statusValue.visibility.ordinal,
+                                            "line" to statusValue.line,
+                                            "statusId" to statusValue.statusId,
+                                            "tripId" to statusValue.hafasTripId,
+                                            "startStationId" to statusValue.originId,
+                                            "category" to statusValue.productType
+                                        )
+                                    )
+                                },
+                                handleDeleteClicked = { statusValue ->
+                                    val bottomSheet = DeleteStatusBottomSheet { bottomSheet ->
+                                        bottomSheet.dismiss()
+                                        checkInCardViewModel.deleteStatus(statusValue.statusId, {
+                                            dashboardFragmentViewModel.checkIns.removeIf { it.id == statusValue.statusId }
+                                            val alertBottomSheet = AlertBottomSheet(
+                                                AlertType.SUCCESS,
+                                                requireContext().resources.getString(R.string.status_delete_success),
+                                                3000
+                                            )
+                                            alertBottomSheet.show(parentFragmentManager, AlertBottomSheet.TAG)
+                                        }, {
+                                            val alertBottomSheet = AlertBottomSheet(
+                                                AlertType.ERROR,
+                                                requireContext().resources.getString(R.string.status_delete_failure),
+                                                3000
+                                            )
+                                            alertBottomSheet.show(parentFragmentManager, AlertBottomSheet.TAG)
+                                        })
+                                    }
+                                    if (context is FragmentActivity) {
+                                        bottomSheet.show(parentFragmentManager, DeleteStatusBottomSheet.TAG)
+                                    }
                                 }
                             )
                         }
