@@ -26,7 +26,6 @@ import coil.compose.AsyncImage
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.user.User
 import de.hbch.traewelling.shared.LoggedInUserViewModel
-import de.hbch.traewelling.shared.UserViewModel
 import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.composables.ButtonWithIconAndText

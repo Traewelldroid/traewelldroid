@@ -160,6 +160,7 @@ class LoginActivity : ComponentActivity() {
         startActivity(Intent(this, InfoActivity::class.java))
     }
 
+    @Suppress("DEPRECATION")
     private fun appCanHandleLinks(): Boolean {
         val intent = Intent(Intent.ACTION_VIEW)
         intent.data = Uri.parse(BuildConfig.OAUTH_REDIRECT_URL)

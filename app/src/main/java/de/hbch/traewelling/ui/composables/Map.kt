@@ -120,8 +120,7 @@ fun OpenRailwayMapView(
 
     MapView(
         modifier = modifier,
-        onLoad = { mapView ->
-        },
+        onLoad = onLoad,
         onInit = { mapView ->
             mapView.setTileSource(MAPNIK)
             mapView.setMultiTouchControls(true)

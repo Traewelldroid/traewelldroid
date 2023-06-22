@@ -15,12 +15,12 @@ class CheckInCardViewModel : ViewModel() {
                 override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
                     if (response.isSuccessful) {
                         successCallback()
+                        return
                     }
-                    else
-                        Log.e("StatusCardViewModel", response.toString())
+                    Sentry.captureMessage(response.errorBody()?.string() ?: "")
                 }
                 override fun onFailure(call: Call<Unit>, t: Throwable) {
-                    Log.e("StatusCardViewModel", t.stackTraceToString())
+                    Sentry.captureException(t)
                 }
             })
     }
@@ -31,12 +31,12 @@ class CheckInCardViewModel : ViewModel() {
                 override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
                     if (response.isSuccessful) {
                         successCallback()
+                        return
                     }
-                    else
-                        Log.e("StatusCardViewModel", response.toString())
+                    Sentry.captureMessage(response.errorBody()?.string() ?: "")
                 }
                 override fun onFailure(call: Call<Unit>, t: Throwable) {
-                    Log.e("StatusCardViewModel", t.stackTraceToString())
+                    Sentry.captureException(t)
                 }
             })
     }

@@ -54,9 +54,6 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/train_line"
                 android:layout_marginStart="4dp"
-                app:layout_constraintStart_toEndOf="@id/icon_product"
-                app:layout_constraintTop_toTopOf="@id/icon_product"
-                app:layout_constraintBottom_toBottomOf="@id/icon_product"
                 android:textSize="16sp"
                 tools:text="RB 73"
                 android:text="@{checkIn.status.journey.line}" />
@@ -65,8 +62,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/distance"
-                app:layout_constraintStart_toEndOf="@id/train_line"
-                app:layout_constraintTop_toTopOf="@id/train_line"
                 android:layout_marginStart="16dp"
                 android:textSize="16sp"
                 tools:text="64km"

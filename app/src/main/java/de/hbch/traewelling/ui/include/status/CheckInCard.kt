@@ -152,15 +152,17 @@ fun CheckInCard(
 
                     // Station row bottom
                     StationRow(
-                        modifier = Modifier.constrainAs(stationRowBottom) {
-                            start.linkTo(perlschnurBottom.end, 12.dp)
-                            end.linkTo(parent.end)
-                            bottom.linkTo(parent.bottom)
-                            width = Dimension.fillToConstraints
-                        },
+                        modifier = Modifier
+                            .constrainAs(stationRowBottom) {
+                                start.linkTo(perlschnurBottom.end, 12.dp)
+                                end.linkTo(parent.end)
+                                bottom.linkTo(parent.bottom)
+                                width = Dimension.fillToConstraints
+                            },
                         stationName = status.destination,
                         timePlanned = status.arrivalPlanned,
                         timeReal = status.arrivalReal,
+                        verticalAlignment = Alignment.Bottom,
                         stationSelected = stationSelected
                     )
 
@@ -243,24 +245,29 @@ private fun StationRow(
     stationName: String,
     timePlanned: Date,
     timeReal: Date?,
+    verticalAlignment: Alignment.Vertical = Alignment.Top,
     stationSelected: (String, Date?) -> Unit = { _, _ -> }
 ) {
     val primaryColor = LocalColorScheme.current.primary
 
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = verticalAlignment
     ) {
-        Text(
-            modifier = Modifier
-                .weight(1f)
-                .clickable { stationSelected(stationName, null) },
-            text = stationName,
-            style = AppTypography.titleLarge,
-            overflow = TextOverflow.Ellipsis,
-            maxLines = 2,
-            color = primaryColor
-        )
+        Box(
+            modifier = Modifier.weight(1f)
+        ) {
+            Text(
+                modifier = Modifier
+                    .clickable { stationSelected(stationName, null) },
+                text = stationName,
+                style = AppTypography.titleLarge,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 2,
+                color = primaryColor
+            )
+        }
         Column(
             horizontalAlignment = Alignment.End
         ) {

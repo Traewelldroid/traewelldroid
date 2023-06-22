@@ -346,7 +346,6 @@ private fun StationShortcut(
 @Composable
 private fun CardSearchStationPreview() {
     MainTheme {
-        var isLocating by remember { mutableStateOf(false) }
         var search by remember { mutableStateOf("") }
 
         val searchAction: (String) -> Unit = {

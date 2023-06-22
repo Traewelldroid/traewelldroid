@@ -106,10 +106,6 @@ class UserStatusViewModel : ViewModel() {
         }
     }
 
-    fun deleteStatus(statusId: Int,) {
-
-    }
-
     private fun followUser(userId: Int) {
         TraewellingApi.userService.followUser(userId)
             .enqueue(object: Callback<Data<Unit>> {

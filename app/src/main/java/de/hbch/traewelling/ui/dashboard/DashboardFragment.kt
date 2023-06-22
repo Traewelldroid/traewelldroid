@@ -2,7 +2,6 @@ package de.hbch.traewelling.ui.dashboard
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,39 +17,27 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.os.bundleOf
-import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.accompanist.themeadapter.material3.Mdc3Theme
 import de.hbch.traewelling.R
-import de.hbch.traewelling.adapters.CheckInAdapter
-import de.hbch.traewelling.api.models.status.Status
 import de.hbch.traewelling.api.models.trip.ProductType
 import de.hbch.traewelling.databinding.FragmentDashboardBinding
 import de.hbch.traewelling.shared.EventViewModel
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.shared.SharedValues
 import de.hbch.traewelling.theme.MainTheme
-import de.hbch.traewelling.ui.composables.DataLoading
 import de.hbch.traewelling.ui.composables.onBottomReached
 import de.hbch.traewelling.ui.include.alert.AlertBottomSheet
 import de.hbch.traewelling.ui.include.alert.AlertType
@@ -60,9 +47,7 @@ import de.hbch.traewelling.ui.include.deleteStatus.DeleteStatusBottomSheet
 import de.hbch.traewelling.ui.include.status.CheckInCard
 import de.hbch.traewelling.ui.include.status.CheckInCardViewModel
 import de.hbch.traewelling.util.publishStationShortcuts
-import kotlinx.coroutines.flow.distinctUntilChanged
 import java.util.Date
-import kotlin.math.log
 
 class DashboardFragment : Fragment() {
 
@@ -72,17 +57,13 @@ class DashboardFragment : Fragment() {
     private val searchStationCardViewModel: SearchStationCardViewModel by viewModels()
     private val dashboardFragmentViewModel: DashboardFragmentViewModel by viewModels()
     private val checkInCardViewModel: CheckInCardViewModel by viewModels()
-    //private var currentPage = 1
-    //private var checkIns = mutableStateListOf<Status>()
-
-    private var checkInsLoading = MutableLiveData(false)
 
     @OptIn(ExperimentalMaterialApi::class)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentDashboardBinding.inflate(inflater, container, false)
 
 
@@ -287,73 +268,4 @@ class DashboardFragment : Fragment() {
                 )
             )
     }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        // Swipe to refresh
-        /*checkInsLoading.observe(viewLifecycleOwner) { loading ->
-            binding.swipeRefreshDashboardCheckIns.isRefreshing = loading
-            binding.layoutDataLoading.visibility = when (loading) {
-                true -> View.VISIBLE
-                false -> View.GONE
-            }
-        }
-        binding.swipeRefreshDashboardCheckIns.setOnRefreshListener {
-            loggedInUserViewModel.getLoggedInUser()
-            currentPage = 1
-            loadCheckins(currentPage)
-        }*/
-
-        // Init recycler view
-        /*val recyclerView = binding.recyclerViewCheckIn
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.adapter =
-            CheckInAdapter(
-                mutableListOf(),
-                loggedInUserViewModel.userId
-            ) { stationName, date ->
-                findNavController()
-                    .navigate(
-                        DashboardFragmentDirections.actionDashboardFragmentToSearchConnectionFragment(
-                            stationName,
-                            date
-                        )
-                    )
-            }
-
-        binding.nestedScrollViewDashboard.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, _, _, _, _ ->
-            val vw = v.getChildAt(v.childCount - 1)
-            val diff = (vw?.bottom?.minus((v.height + v.scrollY)))
-            if (diff!! == 0) {
-                if (!checkInsLoading.value!!) {
-                    currentPage++
-                    loadCheckins(currentPage)
-                    checkInsLoading.postValue(true)
-                }
-            }
-        })*/
-
-        //loadCheckins(currentPage)
-    }
-/*
-    private fun loadCheckins(page: Int) {
-        checkInsLoading.postValue(true)
-        dashboardFragmentViewModel.loadCheckIns(
-            page,
-            { statuses ->
-                // val checkInAdapter = binding.recyclerViewCheckIn.adapter as CheckInAdapter
-                if (page == 1) {
-                    // checkInAdapter.clearAndAddCheckIns(statuses)
-                    //checkIns.clear()
-                    //checkIns.addAll(statuses)
-                } else {
-                    // checkInAdapter.concatCheckIns(statuses)
-                    //checkIns.addAll(statuses)
-                }
-                checkInsLoading.postValue(false)
-            },
-            {
-                checkInsLoading.postValue(false)
-            }
-        )
-    }*/
 }
