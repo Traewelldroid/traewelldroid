@@ -1,5 +1,6 @@
 package de.hbch.traewelling.ui.statusDetail
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.api.models.Data
@@ -46,6 +47,7 @@ class StatusDetailViewModel: ViewModel() {
         successfulCallback: (FeatureCollection) -> Unit,
         failureCallback: () -> Unit
     ) {
+        Log.d("MapEvents", "Loading polyline!")
         TraewellingApi
             .checkInService
             .getPolylinesForStatuses(listOf(statusId).joinToString(","))

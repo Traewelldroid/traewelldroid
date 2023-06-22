@@ -5,24 +5,47 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.widget.NestedScrollView
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.accompanist.themeadapter.material3.Mdc3Theme
-import de.hbch.traewelling.adapters.CheckInAdapter
+import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.trip.ProductType
 import de.hbch.traewelling.databinding.FragmentDashboardBinding
 import de.hbch.traewelling.shared.EventViewModel
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.shared.SharedValues
 import de.hbch.traewelling.theme.MainTheme
-import de.hbch.traewelling.ui.composables.DataLoading
+import de.hbch.traewelling.ui.composables.onBottomReached
+import de.hbch.traewelling.ui.include.alert.AlertBottomSheet
+import de.hbch.traewelling.ui.include.alert.AlertType
 import de.hbch.traewelling.ui.include.cardSearchStation.CardSearchStation
 import de.hbch.traewelling.ui.include.cardSearchStation.SearchStationCardViewModel
+import de.hbch.traewelling.ui.include.deleteStatus.DeleteStatusBottomSheet
+import de.hbch.traewelling.ui.include.status.CheckInCard
+import de.hbch.traewelling.ui.include.status.CheckInCardViewModel
 import de.hbch.traewelling.util.publishStationShortcuts
 import java.util.Date
 
@@ -33,27 +56,151 @@ class DashboardFragment : Fragment() {
     private val eventViewModel: EventViewModel by activityViewModels()
     private val searchStationCardViewModel: SearchStationCardViewModel by viewModels()
     private val dashboardFragmentViewModel: DashboardFragmentViewModel by viewModels()
-    private var currentPage = 1
+    private val checkInCardViewModel: CheckInCardViewModel by viewModels()
 
-    private var checkInsLoading = MutableLiveData(false)
-
+    @OptIn(ExperimentalMaterialApi::class)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentDashboardBinding.inflate(inflater, container, false)
 
-        binding.searchCard.setContent {
+
+        binding.dashboardContent.setContent {
             MainTheme {
-                CardSearchStation(
-                    searchAction = { station ->
-                        searchConnections(station)
-                    },
-                    searchStationCardViewModel = searchStationCardViewModel,
-                    homelandStationData = loggedInUserViewModel.home,
-                    recentStationsData = loggedInUserViewModel.lastVisitedStations
+                val refreshing by dashboardFragmentViewModel.isRefreshing.observeAsState(false)
+                val checkIns = remember { dashboardFragmentViewModel.checkIns }
+                var currentPage by remember { mutableStateOf(1) }
+                val pullRefreshState = rememberPullRefreshState(
+                    refreshing = refreshing,
+                    onRefresh = {
+                        currentPage = 1
+                        dashboardFragmentViewModel.refresh()
+                    }
                 )
+                val checkInListState = rememberLazyListState()
+
+                checkInListState.onBottomReached {
+                    if (dashboardFragmentViewModel.checkIns.size > 0) {
+                        dashboardFragmentViewModel.loadCheckIns(++currentPage)
+                    }
+                }
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight()
+                        .pullRefresh(pullRefreshState)
+                ) {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight()
+                            .padding(horizontal = 16.dp),
+                        userScrollEnabled = true,
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        state = checkInListState
+                    ) {
+                        item {
+                            CardSearchStation(
+                                searchAction = { station ->
+                                    searchConnections(station)
+                                },
+                                searchStationCardViewModel = searchStationCardViewModel,
+                                homelandStationData = loggedInUserViewModel.home,
+                                recentStationsData = loggedInUserViewModel.lastVisitedStations
+                            )
+                        }
+
+                        items(
+                            items = checkIns
+                        ) { status ->
+                            CheckInCard(
+                                checkInCardViewModel = checkInCardViewModel,
+                                status = status.toStatusDto(),
+                                loggedInUserViewModel = loggedInUserViewModel,
+                                stationSelected = { station, date ->
+                                    findNavController()
+                                        .navigate(
+                                            DashboardFragmentDirections
+                                                .actionDashboardFragmentToSearchConnectionFragment(
+                                                    station,
+                                                    date
+                                                )
+                                        )
+                                },
+                                userSelected = { username ->
+                                    findNavController()
+                                        .navigate(
+                                            DashboardFragmentDirections
+                                                .actionDashboardFragmentToUserProfileFragment(
+                                                    username
+                                                )
+                                        )
+                                },
+                                statusSelected = { statusId, userId ->
+                                    findNavController()
+                                        .navigate(
+                                            DashboardFragmentDirections
+                                                .actionDashboardFragmentToStatusDetailFragment(
+                                                    statusId,
+                                                    userId
+                                                )
+                                        )
+                                },
+                                handleEditClicked = { statusValue ->
+                                    findNavController().navigate(
+                                        R.id.editStatusFragment,
+                                        bundleOf(
+                                            "transitionName" to statusValue.origin,
+                                            "destination" to statusValue.destination,
+                                            "body" to statusValue.message,
+                                            "departureTime" to statusValue.departurePlanned,
+                                            "business" to statusValue.business.ordinal,
+                                            "visibility" to statusValue.visibility.ordinal,
+                                            "line" to statusValue.line,
+                                            "statusId" to statusValue.statusId,
+                                            "tripId" to statusValue.hafasTripId,
+                                            "startStationId" to statusValue.originId,
+                                            "category" to statusValue.productType
+                                        )
+                                    )
+                                },
+                                handleDeleteClicked = { statusValue ->
+                                    val bottomSheet = DeleteStatusBottomSheet { bottomSheet ->
+                                        bottomSheet.dismiss()
+                                        checkInCardViewModel.deleteStatus(statusValue.statusId, {
+                                            dashboardFragmentViewModel.checkIns.removeIf { it.id == statusValue.statusId }
+                                            val alertBottomSheet = AlertBottomSheet(
+                                                AlertType.SUCCESS,
+                                                requireContext().resources.getString(R.string.status_delete_success),
+                                                3000
+                                            )
+                                            alertBottomSheet.show(parentFragmentManager, AlertBottomSheet.TAG)
+                                        }, {
+                                            val alertBottomSheet = AlertBottomSheet(
+                                                AlertType.ERROR,
+                                                requireContext().resources.getString(R.string.status_delete_failure),
+                                                3000
+                                            )
+                                            alertBottomSheet.show(parentFragmentManager, AlertBottomSheet.TAG)
+                                        })
+                                    }
+                                    if (context is FragmentActivity) {
+                                        bottomSheet.show(parentFragmentManager, DeleteStatusBottomSheet.TAG)
+                                    }
+                                }
+                            )
+                        }
+                    }
+
+                    PullRefreshIndicator(
+                        modifier = Modifier.align(Alignment.TopCenter),
+                        refreshing = refreshing,
+                        state = pullRefreshState
+                    )
+                }
             }
         }
 
@@ -62,18 +209,6 @@ class DashboardFragment : Fragment() {
             publishStationShortcuts(requireContext(), it)
         }
         eventViewModel.activeEvents()
-
-        binding.apply {
-            lifecycleOwner = viewLifecycleOwner
-            layoutDataLoading.setContent {
-                Mdc3Theme(
-                    setTextColors = true,
-                    setDefaultFontFamily = true
-                ) {
-                    DataLoading()
-                }
-            }
-        }
 
         val intent = activity?.intent
         intent?.let {
@@ -98,7 +233,7 @@ class DashboardFragment : Fragment() {
                         findNavController()
                             .navigate(
                                 DashboardFragmentDirections
-                                    .actionDashboardFragmentToProfile(userName)
+                                    .actionDashboardFragmentToUserProfileFragment(userName)
                             )
                     }
                 } else if (it.hasExtra(SharedValues.EXTRA_STATION_ID)) {
@@ -132,71 +267,5 @@ class DashboardFragment : Fragment() {
                     date
                 )
             )
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        // Swipe to refresh
-        checkInsLoading.observe(viewLifecycleOwner) { loading ->
-            binding.swipeRefreshDashboardCheckIns.isRefreshing = loading
-            binding.layoutDataLoading.visibility = when (loading) {
-                true -> View.VISIBLE
-                false -> View.GONE
-            }
-        }
-        binding.swipeRefreshDashboardCheckIns.setOnRefreshListener {
-            loggedInUserViewModel.getLoggedInUser()
-            currentPage = 1
-            loadCheckins(currentPage)
-        }
-
-        // Init recycler view
-        val recyclerView = binding.recyclerViewCheckIn
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.adapter =
-            CheckInAdapter(
-                mutableListOf(),
-                loggedInUserViewModel.userId
-            ) { stationName, date ->
-                findNavController()
-                    .navigate(
-                        DashboardFragmentDirections.actionDashboardFragmentToSearchConnectionFragment(
-                            stationName,
-                            date
-                        )
-                    )
-            }
-
-        binding.nestedScrollViewDashboard.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, _, _, _, _ ->
-            val vw = v.getChildAt(v.childCount - 1)
-            val diff = (vw?.bottom?.minus((v.height + v.scrollY)))
-            if (diff!! == 0) {
-                if (!checkInsLoading.value!!) {
-                    currentPage++
-                    loadCheckins(currentPage)
-                    checkInsLoading.postValue(true)
-                }
-            }
-        })
-
-        loadCheckins(currentPage)
-    }
-
-    private fun loadCheckins(page: Int) {
-        checkInsLoading.postValue(true)
-        dashboardFragmentViewModel.loadCheckIns(
-            page,
-            { statuses ->
-                val checkInAdapter = binding.recyclerViewCheckIn.adapter as CheckInAdapter
-                if (page == 1) {
-                    checkInAdapter.clearAndAddCheckIns(statuses)
-                } else {
-                    checkInAdapter.concatCheckIns(statuses)
-                }
-                checkInsLoading.postValue(false)
-            },
-            {
-                checkInsLoading.postValue(false)
-            }
-        )
     }
 }

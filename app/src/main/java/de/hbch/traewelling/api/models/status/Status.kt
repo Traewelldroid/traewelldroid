@@ -19,8 +19,8 @@ data class Status(
     @SerializedName("preventIndex") val preventIndex: Boolean,
     @SerializedName("visibility") val visibility: StatusVisibility,
     @SerializedName("business") val business: StatusBusiness,
-    @SerializedName("likes") var likes: Int,
-    @SerializedName("liked") var liked: Boolean,
+    @SerializedName("likes") var likes: Int?,
+    @SerializedName("liked") var liked: Boolean?,
     @SerializedName("train") val journey: Journey,
     @SerializedName("event") val event: Event?,
     @SerializedName("socialText") val socialText: String?
@@ -31,6 +31,34 @@ data class Status(
 
     override fun describeContents(): Int {
         return 0
+    }
+
+    fun toStatusDto(): de.hbch.traewelling.api.dtos.Status {
+        return de.hbch.traewelling.api.dtos.Status(
+            id,
+            journey.origin.name,
+            journey.origin.id,
+            journey.origin.departurePlanned,
+            journey.origin.departureReal,
+            journey.destination.name,
+            journey.destination.id,
+            journey.destination.arrivalPlanned,
+            journey.destination.arrivalReal,
+            journey.category,
+            journey.hafasTripId,
+            journey.line,
+            journey.distance,
+            journey.duration,
+            business,
+            body ?: "",
+            liked,
+            likes,
+            userId,
+            username,
+            createdAt,
+            visibility,
+            event?.name
+        )
     }
 
     companion object CREATOR : Parcelable.Creator<Status> {

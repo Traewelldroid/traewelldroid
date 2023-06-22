@@ -40,8 +40,10 @@ import de.hbch.traewelling.theme.LocalColorScheme
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.composables.DataLoading
 import java.text.DateFormat
+import java.text.DateFormat.getDateTimeInstance
 import java.text.DateFormat.getTimeInstance
 import java.util.Date
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 @Composable
@@ -246,6 +248,11 @@ private fun TravelStopListItem(
 @Composable
 fun getLocalTimeString(date: Date): String {
     return getTimeInstance(DateFormat.SHORT).format(date)
+}
+
+@Composable
+fun getLocalDateTimeString(date: Date): String {
+    return getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.getDefault()).format(date)
 }
 
 @Composable

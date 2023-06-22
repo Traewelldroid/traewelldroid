@@ -1,5 +1,9 @@
 package de.hbch.traewelling.ui.dashboard
 
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.api.models.status.Status
@@ -10,30 +14,42 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class DashboardFragmentViewModel : ViewModel() {
+
+    val checkIns = mutableStateListOf<Status>()
+    var isRefreshing = MutableLiveData(false)
+
+    init {
+        loadCheckIns(1)
+    }
+
     fun loadCheckIns(
-        page: Int,
-        successCallback: (List<Status>) -> Unit,
-        failureCallback: () -> Unit
+        page: Int
     ) {
+        isRefreshing.postValue(true)
         TraewellingApi
             .checkInService
             .getPersonalDashboard(page)
             .enqueue(object: Callback<StatusPage> {
                 override fun onResponse(call: Call<StatusPage>, response: Response<StatusPage>) {
+                    isRefreshing.postValue(false)
                     if (response.isSuccessful) {
                         val statusPage = response.body()
                         if (statusPage != null) {
-                            successCallback(statusPage.data)
+                            checkIns.addAll(statusPage.data)
                         }
                         return
                     }
-                    failureCallback()
                     Sentry.captureMessage(response.errorBody()?.string() ?: "")
                 }
                 override fun onFailure(call: Call<StatusPage>, t: Throwable) {
-                    failureCallback()
+                    isRefreshing.postValue(false)
                     Sentry.captureException(t)
                 }
             })
+    }
+
+    fun refresh() {
+        checkIns.clear()
+        loadCheckIns(1)
     }
 }

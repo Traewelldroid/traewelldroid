@@ -108,7 +108,7 @@ private fun TraewellingProviderSettings(
     logoutAction: () -> Unit = { }
 ) {
     if (loggedInUserViewModel != null) {
-        var secureStorage: SecureStorage? = null
+        var secureStorage: SecureStorage?
         var jwt by remember { mutableStateOf("") }
         val username by loggedInUserViewModel.username.observeAsState("")
 
@@ -161,7 +161,6 @@ private fun getJwtExpiration(jwt: String): String {
     return dateTimeString
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun HashtagSettings(
     modifier: Modifier = Modifier
