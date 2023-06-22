@@ -1,6 +1,5 @@
 package de.hbch.traewelling.ui.composables
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
@@ -30,7 +29,7 @@ private val MAPNIK: OnlineTileSourceBase = XYTileSource(
     256,
     ".png",
     arrayOf("https://a.tile.openstreetmap.org/","https://b.tile.openstreetmap.org/","https://c.tile.openstreetmap.org/"),
-    "Mapnik",
+    "© OpenStreetMap contributors, Style: CC-BY-SA 2.0, OpenRailwayMap",
     TileSourcePolicy(
         2,
         TileSourcePolicy.FLAG_NO_BULK
@@ -47,7 +46,7 @@ private val OPENRAILWAYMAP = XYTileSource(
     256,
     ".png",
     arrayOf("https://tiles.openrailwaymap.org/standard/"),
-    "Copyright oder so"
+    "© OpenStreetMap contributors, Style: CC-BY-SA 2.0, OpenRailwayMap"
 )
 
 @Composable
@@ -76,7 +75,6 @@ fun rememberMapViewWithLifecycle(): MapView {
 fun rememberMapLifecycleObserver(mapView: MapView): LifecycleEventObserver =
     remember(mapView) {
         LifecycleEventObserver { _, event ->
-            Log.d("MapEvent", event.name)
             when (event) {
                 Lifecycle.Event.ON_RESUME -> mapView.onResume()
                 Lifecycle.Event.ON_PAUSE -> {
@@ -99,13 +97,11 @@ fun MapView(
 
     AndroidView(
         factory = {
-            Log.d("MapEvents", "init!")
             onInit(mapViewState)
             mapViewState
         },
         modifier = modifier,
     ) { mapView ->
-        Log.d("MapEvents", "update!")
         Configuration.getInstance().userAgentValue = "${BuildConfig.APPLICATION_ID}/${BuildConfig.VERSION_NAME}"
         onLoad(mapView)
     }
