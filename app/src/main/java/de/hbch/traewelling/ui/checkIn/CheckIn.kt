@@ -60,13 +60,14 @@ fun CheckIn(
     checkInViewModel: CheckInViewModel,
     eventViewModel: EventViewModel,
     checkInAction: () -> Unit = { },
+    initText: String = "",
     isEditMode: Boolean = false,
     changeDestinationAction: () -> Unit = { }
 ) {
     var businessSelectionVisible by remember { mutableStateOf(false) }
     var visibilitySelectionVisible by remember { mutableStateOf(false) }
     var eventSelectionVisible by remember { mutableStateOf(false) }
-    var statusText by rememberSaveable{ mutableStateOf(checkInViewModel.message.value ?: "") }
+    var statusText by rememberSaveable { mutableStateOf(initText) }
     val selectedVisibility by checkInViewModel.statusVisibility.observeAsState()
     val selectedBusiness by checkInViewModel.statusBusiness.observeAsState()
     val activeEvents by eventViewModel.activeEvents.observeAsState()

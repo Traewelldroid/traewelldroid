@@ -11,9 +11,11 @@ import androidx.compose.ui.unit.dp
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.jcloquell.androidsecurestorage.SecureStorage
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.status.PointReason
 import de.hbch.traewelling.shared.LoggedInUserViewModel
+import de.hbch.traewelling.shared.SharedValues
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.include.alert.AlertBottomSheet
 import de.hbch.traewelling.ui.include.alert.AlertType
@@ -34,6 +36,14 @@ class CheckInFragment : AbstractCheckInFragment() {
         savedInstanceState: Bundle?
     ): View? {
         val response = super.onCreateView(inflater, container, savedInstanceState)
+
+        secureStorage = SecureStorage(requireContext())
+        val storedHashtag = secureStorage.getObject(SharedValues.SS_HASHTAG, String::class.java)
+        var initText = ""
+        if (storedHashtag != null && storedHashtag != "") {
+            initText ="\n#${storedHashtag}"
+        }
+
         binding.apply {
             checkInCard.transitionName = args.transitionName
 
@@ -46,7 +56,8 @@ class CheckInFragment : AbstractCheckInFragment() {
                             submit()
                         },
                         isEditMode = false,
-                        eventViewModel = eventViewModel
+                        eventViewModel = eventViewModel,
+                        initText = initText
                     )
                 }
             }

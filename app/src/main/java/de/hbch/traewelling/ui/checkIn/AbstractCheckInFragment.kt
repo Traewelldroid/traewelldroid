@@ -20,19 +20,13 @@ abstract class AbstractCheckInFragment : Fragment() {
     protected lateinit var binding: FragmentCheckInBinding
     protected val checkInViewModel: CheckInViewModel by activityViewModels()
     protected val eventViewModel: EventViewModel by activityViewModels()
-    private lateinit var secureStorage: SecureStorage
+    protected lateinit var secureStorage: SecureStorage
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentCheckInBinding.inflate(inflater, container, false)
-
-        secureStorage = SecureStorage(requireContext())
-        val storedHashtag = secureStorage.getObject(SharedValues.SS_HASHTAG, String::class.java)
-        if (storedHashtag != null && storedHashtag != "") {
-            checkInViewModel.message.postValue("\n#${storedHashtag}")
-        }
 
         sharedElementEnterTransition = MaterialContainerTransform().apply {
             scrimColor = Color.TRANSPARENT

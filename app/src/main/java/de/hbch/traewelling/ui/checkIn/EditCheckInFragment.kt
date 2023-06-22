@@ -47,7 +47,8 @@ class EditCheckInFragment : AbstractCheckInFragment() {
                         eventViewModel = eventViewModel,
                         changeDestinationAction = {
                             onChangeDestination()
-                        }
+                        },
+                        initText = args.body ?: ""
                     )
                 }
             }
