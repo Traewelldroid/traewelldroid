@@ -101,7 +101,7 @@ dependencies {
     implementation "com.google.accompanist:accompanist-themeadapter-material3:0.28.0"
     implementation "com.google.accompanist:accompanist-systemuicontroller:0.31.0-alpha"
     implementation "com.google.accompanist:accompanist-permissions:0.31.1-alpha"
-    implementation "androidx.compose.material3:material3:1.1.0"
+    implementation "androidx.compose.material3:material3:1.1.1"
     implementation "androidx.activity:activity-compose:1.7.2"
     implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
 
@@ -109,7 +109,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.fragment:fragment-ktx:1.5.7'
+    implementation 'androidx.fragment:fragment-ktx:1.6.0'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
@@ -130,7 +130,7 @@ dependencies {
     implementation 'com.jcloquell:androidsecurestorage:0.1.3'
 
     // Navigation Component
-    def nav_version_ktx = "2.6.0-alpha09"
+    def nav_version_ktx = "2.7.0-beta01"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version_ktx"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version_ktx"
 
@@ -146,12 +146,13 @@ dependencies {
 
     // Charts
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+    implementation "com.patrykandpatrick.vico:compose-m3:1.6.6"
 
     // Emoji pack support
     implementation 'de.c1710:filemojicompat-autoinit:3.2.5'
 
     // OSS licenses
-    implementation 'com.google.android.gms:play-services-oss-licenses:17.0.0'
+    implementation 'com.google.android.gms:play-services-oss-licenses:17.0.1'
 
     // Shortcuts
     implementation 'androidx.core:core-google-shortcuts:1.1.0'

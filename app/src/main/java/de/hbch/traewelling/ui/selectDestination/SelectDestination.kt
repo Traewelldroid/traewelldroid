@@ -40,6 +40,7 @@ import de.hbch.traewelling.theme.LocalColorScheme
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.composables.DataLoading
 import java.text.DateFormat
+import java.text.DateFormat.getDateInstance
 import java.text.DateFormat.getDateTimeInstance
 import java.text.DateFormat.getTimeInstance
 import java.util.Date
@@ -253,6 +254,11 @@ fun getLocalTimeString(date: Date): String {
 @Composable
 fun getLocalDateTimeString(date: Date): String {
     return getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.getDefault()).format(date)
+}
+
+@Composable
+fun getLocalDateString(date: Date): String {
+    return getDateInstance(DateFormat.SHORT).format(date)
 }
 
 @Composable

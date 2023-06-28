@@ -15,7 +15,8 @@ import java.util.*
 
 class StatisticsViewModel : ViewModel() {
 
-    var dateRange = MutableLiveData<Pair<Date, Date>>()
+    val dateRange = MutableLiveData<Pair<Date, Date>>()
+    val statistics = MutableLiveData<PersonalStatistics>()
 
     init {
         val startCalendar = GregorianCalendar()
@@ -30,6 +31,12 @@ class StatisticsViewModel : ViewModel() {
         endCalendar.set(Calendar.MINUTE, 59)
 
         dateRange.postValue(Pair(startCalendar.time, endCalendar.time))
+
+        getPersonalStatisticsForSelectedTimeRange(
+            {
+                statistics.postValue(it)
+            }, { }
+        )
     }
 
 
