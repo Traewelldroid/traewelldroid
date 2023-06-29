@@ -38,8 +38,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun OutlinedButtonWithIconAndText(
     modifier: Modifier = Modifier,
-    @StringRes stringId: Int,
-    text: String? = null,
+    text: String = "",
     @DrawableRes drawableId: Int? = null,
     colors: ButtonColors = ButtonDefaults.outlinedButtonColors(),
     onClick: () -> Unit = { },
@@ -52,7 +51,6 @@ fun OutlinedButtonWithIconAndText(
         enabled = !isLoading
     ) {
         RowWithIconAndText(
-            stringId = stringId,
             text = text,
             drawableId = drawableId,
             isLoading = isLoading
@@ -61,10 +59,28 @@ fun OutlinedButtonWithIconAndText(
 }
 
 @Composable
-fun ButtonWithIconAndText(
+fun OutlinedButtonWithIconAndText(
     modifier: Modifier = Modifier,
     @StringRes stringId: Int,
-    text: String? = null,
+    @DrawableRes drawableId: Int? = null,
+    colors: ButtonColors = ButtonDefaults.outlinedButtonColors(),
+    onClick: () -> Unit = { },
+    isLoading: Boolean = false,
+) {
+    OutlinedButtonWithIconAndText(
+        modifier = modifier,
+        text = stringResource(id = stringId),
+        drawableId = drawableId,
+        colors = colors,
+        onClick = onClick,
+        isLoading = isLoading
+    )
+}
+
+@Composable
+fun ButtonWithIconAndText(
+    modifier: Modifier = Modifier,
+    text: String = "",
     @DrawableRes drawableId: Int? = null,
     colors: ButtonColors = ButtonDefaults.buttonColors(),
     onClick: () -> Unit = { },
@@ -77,7 +93,6 @@ fun ButtonWithIconAndText(
         enabled = !isLoading
     ) {
         RowWithIconAndText(
-            stringId = stringId,
             text = text,
             drawableId = drawableId,
             isLoading = isLoading,
@@ -87,9 +102,27 @@ fun ButtonWithIconAndText(
 }
 
 @Composable
-private fun RowWithIconAndText(
+fun ButtonWithIconAndText(
+    modifier: Modifier = Modifier,
     @StringRes stringId: Int,
-    text: String? = null,
+    @DrawableRes drawableId: Int? = null,
+    colors: ButtonColors = ButtonDefaults.buttonColors(),
+    onClick: () -> Unit = { },
+    isLoading: Boolean = false
+) {
+    ButtonWithIconAndText(
+        modifier = modifier,
+        text = stringResource(id = stringId),
+        drawableId = drawableId,
+        colors = colors,
+        onClick = onClick,
+        isLoading = isLoading
+    )
+}
+
+@Composable
+private fun RowWithIconAndText(
+    text: String,
     @DrawableRes drawableId: Int? = null,
     progressColor: Color = ProgressIndicatorDefaults.circularColor,
     isLoading: Boolean = false
@@ -102,7 +135,7 @@ private fun RowWithIconAndText(
             if (drawableId != null && !isLoading) {
                 Icon(
                     painter = painterResource(id = drawableId),
-                    contentDescription = stringResource(id = stringId),
+                    contentDescription = text,
                     modifier = iconModifier
                 )
             } else if (isLoading) {
@@ -113,7 +146,7 @@ private fun RowWithIconAndText(
                 )
             }
             Text(
-                text = text ?: stringResource(id = stringId),
+                text = text,
                 textAlign = TextAlign.Center
             )
         }

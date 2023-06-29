@@ -15,9 +15,14 @@ import java.util.*
 
 class StatisticsViewModel : ViewModel() {
 
-    var dateRange = MutableLiveData<Pair<Date, Date>>()
+    val dateRange = MutableLiveData<Pair<Date, Date>>()
+    val statistics = MutableLiveData<PersonalStatistics?>()
 
     init {
+        dateRange.postValue(initDateRange())
+    }
+
+    private fun initDateRange(): Pair<Date, Date> {
         val startCalendar = GregorianCalendar()
         startCalendar.time = Date()
         startCalendar.set(Calendar.DATE, 1)
@@ -29,28 +34,12 @@ class StatisticsViewModel : ViewModel() {
         endCalendar.set(Calendar.HOUR_OF_DAY, 23)
         endCalendar.set(Calendar.MINUTE, 59)
 
-        dateRange.postValue(Pair(startCalendar.time, endCalendar.time))
+        return Pair(startCalendar.time, endCalendar.time)
     }
 
-
-    fun getPersonalStatisticsForTimeRange(
-        from: Date,
-        until: Date,
-        successfulCallback: (PersonalStatistics) -> Unit,
-        failureCallback: () -> Unit
-    ) {
-        dateRange.postValue(Pair(from, until))
-        getPersonalStatisticsForSelectedTimeRange(
-            successfulCallback,
-            failureCallback
-        )
-    }
-
-    fun getPersonalStatisticsForSelectedTimeRange(
-        successfulCallback: (PersonalStatistics) -> Unit,
-        failureCallback: () -> Unit
-    ) {
-        val range = dateRange.value ?: return
+    fun getPersonalStatisticsForSelectedTimeRange() {
+        val range = dateRange.value ?: initDateRange()
+        dateRange.postValue(range)
 
         val from = range.first
         val until = range.second
@@ -66,19 +55,17 @@ class StatisticsViewModel : ViewModel() {
                     if (response.isSuccessful) {
                         val data = response.body()?.data
                         if (data != null) {
-                            successfulCallback(data)
+                            statistics.postValue(data)
                             return
                         }
                     }
                     if (response.code() == 403) {
                         EventBus.getDefault().post(UnauthorizedEvent())
                     }
-                    failureCallback()
                     Sentry.captureMessage(response.errorBody()?.string() ?: "")
                 }
 
                 override fun onFailure(call: Call<Data<PersonalStatistics>>, t: Throwable) {
-                    failureCallback()
                     Sentry.captureException(t)
                 }
             })

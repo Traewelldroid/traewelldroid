@@ -1,6 +1,11 @@
 package de.hbch.traewelling.api.models.statistics
 
+import android.content.Context
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import com.google.gson.annotations.SerializedName
+import de.hbch.traewelling.R
+import de.hbch.traewelling.api.Exclude
 import de.hbch.traewelling.api.models.status.StatusBusiness
 import de.hbch.traewelling.api.models.trip.ProductType
 import java.util.*
@@ -11,23 +16,36 @@ data class PersonalStatistics(
     @SerializedName("purpose") val purposes: List<PurposeStatistics>
 )
 
+abstract class AbstractStatistics(
+    @Exclude open val checkInCount: Int = 0,
+    @Exclude open val duration: Int = 0
+) {
+    abstract fun getLabel(context: Context): String
+}
+
 data class CategoryStatistics(
     @SerializedName("name") val productType: ProductType,
-    @SerializedName("count") val checkInCount: Int,
-    @SerializedName("duration") val duration: Int
-)
+    @SerializedName("count") override val checkInCount: Int,
+    @SerializedName("duration") override val duration: Int
+) : AbstractStatistics() {
+    override fun getLabel(context: Context) = context.getString(productType.getString())
+}
 
 data class OperatorStatistics(
     @SerializedName("name") val operatorName: String?,
-    @SerializedName("count") val checkInCount: Int,
-    @SerializedName("duration") val duration: Int
-)
+    @SerializedName("count") override val checkInCount: Int,
+    @SerializedName("duration") override val duration: Int
+) : AbstractStatistics() {
+    override fun getLabel(context: Context) = operatorName ?: context.getString(R.string.other_operators)
+}
 
 data class PurposeStatistics(
     @SerializedName("name") val businessType: StatusBusiness,
-    @SerializedName("count") val checkInCount: Int,
-    @SerializedName("duration") val duration: Int
-)
+    @SerializedName("count") override val checkInCount: Int,
+    @SerializedName("duration") override val duration: Int
+) : AbstractStatistics() {
+    override fun getLabel(context: Context) = context.getString(businessType.getTitle())
+}
 
 data class TimeStatistics(
     @SerializedName("date") val date: Date,

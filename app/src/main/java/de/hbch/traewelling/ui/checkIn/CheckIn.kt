@@ -213,8 +213,7 @@ fun CheckIn(
                             R.drawable.ic_calendar
                         else
                             R.drawable.ic_calendar_checked,
-                    stringId = R.string.title_select_event,
-                    text = selectedEvent?.name,
+                    text = selectedEvent?.name ?: stringResource(id = R.string.title_select_event),
                     onClick = {
                         eventSelectionVisible = true
                     }

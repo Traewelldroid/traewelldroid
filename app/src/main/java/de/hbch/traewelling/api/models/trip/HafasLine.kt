@@ -17,38 +17,55 @@ enum class ProductType {
     @SerializedName("all")
     ALL,
     @SerializedName("ferry")
-    FERRY,
+    FERRY {
+        override fun getString() = R.string.product_type_ferry
+    },
     @SerializedName("bus")
     BUS {
         override fun getIcon() = R.drawable.ic_bus
+        override fun getString() = R.string.product_type_bus
     },
     @SerializedName("suburban")
     SUBURBAN {
         override fun getIcon() = R.drawable.ic_suburban
+        override fun getString() = R.string.product_type_suburban
     },
     @SerializedName("subway")
     SUBWAY {
         override fun getIcon() = R.drawable.ic_subway
+        override fun getString() = R.string.product_type_subway
     },
     @SerializedName("tram")
     TRAM {
         override fun getIcon() = R.drawable.ic_tram
+        override fun getString() = R.string.product_type_tram
     },
     // RE, RB, RS
     @SerializedName("regional")
-    REGIONAL,
+    REGIONAL {
+        override fun getString() = R.string.product_type_regional
+    },
     // IRE, IR
     @SerializedName("regionalExp")
-    REGIONAL_EXPRESS,
+    REGIONAL_EXPRESS {
+        override fun getString() = R.string.product_type_regional_express
+    },
     // ICE, ECE
     @SerializedName("nationalExpress")
-    NATIONAL_EXPRESS,
+    NATIONAL_EXPRESS {
+        override fun getString() = R.string.product_type_national_express
+    },
     // IC, EC
     @SerializedName("national")
-    NATIONAL,
-    LONG_DISTANCE;
+    NATIONAL {
+        override fun getString() = R.string.product_type_national
+    },
+    LONG_DISTANCE {
+        override fun getString() = R.string.product_type_national_express
+    };
 
     open fun getIcon() = R.drawable.ic_train
+    open fun getString() = R.string.product_type_bus
 
     companion object {
         fun toString(resources: Resources, productType: ProductType): String {
