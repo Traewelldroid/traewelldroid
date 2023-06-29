@@ -1,7 +1,15 @@
 package de.hbch.traewelling.ui.statistics
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.DateRangePicker
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDateRangePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -11,21 +19,21 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.patrykandpatrick.vico.compose.chart.Chart
-import com.patrykandpatrick.vico.compose.chart.column.columnChart
-import com.patrykandpatrick.vico.compose.legend.verticalLegend
-import com.patrykandpatrick.vico.core.entry.ChartEntry
-import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
-import com.patrykandpatrick.vico.core.entry.entryOf
+import androidx.compose.ui.unit.dp
 import de.hbch.traewelling.R
 import de.hbch.traewelling.theme.MainTheme
+import de.hbch.traewelling.ui.composables.ColumnChart
+import de.hbch.traewelling.ui.composables.Dialog
 import de.hbch.traewelling.ui.composables.FilterChipGroup
 import de.hbch.traewelling.ui.composables.OutlinedButtonWithIconAndText
 import de.hbch.traewelling.ui.selectDestination.getLocalDateString
+import de.hbch.traewelling.ui.user.getDurationString
 import java.util.Date
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Statistics(
     modifier: Modifier = Modifier,
@@ -35,25 +43,84 @@ fun Statistics(
     val selectedDateRange by statisticsViewModel.dateRange.observeAsState()
     var selectedUnit by remember { mutableStateOf(StatisticsUnit.CHECK_IN_COUNT) }
     var selectedType by remember { mutableStateOf(StatisticsType.TRANSPORT_TYPES) }
-    val chartEntryModelProducer = remember { ChartEntryModelProducer() }
+    var dateRangePickerVisible by remember { mutableStateOf(false) }
+    val dateRangePickerState = rememberDateRangePickerState()
 
-    val chartEntries = remember { mutableStateListOf<ChartEntry>() }
+    val chartEntries = remember { mutableStateListOf<Pair<String, Int>>() }
+    var chartInput = remember {
+        mutableStateOf<Pair<List<Pair<String, Int>>, @Composable (Int) -> String>>(
+            Pair(listOf()) { "" }
+        )
+    }
+    val context = LocalContext.current
 
-    LaunchedEffect(statistics) {
+    LaunchedEffect(selectedDateRange) {
+        val range = selectedDateRange
+        if (range != null) {
+            statisticsViewModel.getPersonalStatisticsForSelectedTimeRange()
+            dateRangePickerState.setSelection(
+                range.first.time,
+                range.second.time
+            )
+        }
+    }
+
+    LaunchedEffect(statistics, selectedUnit, selectedType) {
         chartEntries.clear()
         when (selectedType) {
             StatisticsType.TRANSPORT_TYPES -> statistics?.categories
             StatisticsType.OPERATORS -> statistics?.operators
             StatisticsType.TRAVEL_PURPOSE -> statistics?.purposes
-        }?.forEachIndexed { i, stat ->
+        }?.forEach { stat ->
             chartEntries.add(
-                entryOf(i, when(selectedUnit) {
+                Pair(stat.getLabel(context), when(selectedUnit) {
                     StatisticsUnit.CHECK_IN_COUNT -> stat.checkInCount
                     StatisticsUnit.TRAVEL_TIME -> stat.duration
                 })
             )
         }
-        chartEntryModelProducer.setEntries(chartEntries)
+        chartInput.value = Pair(
+            chartEntries.sortedByDescending { it.second }
+        ) { value ->
+            selectedUnit.formatValue(value)
+        }
+    }
+
+    if (dateRangePickerVisible) {
+        Dialog(
+            onDismissRequest = { dateRangePickerVisible = false }
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                DateRangePicker(
+                    modifier = Modifier.weight(1f),
+                    state = dateRangePickerState
+                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    OutlinedButton(
+                        onClick = {
+                            statisticsViewModel.dateRange.postValue(
+                                Pair(
+                                    Date(dateRangePickerState.selectedStartDateMillis!!),
+                                    Date(dateRangePickerState.selectedEndDateMillis!!)
+                                )
+                            )
+                            dateRangePickerVisible = false
+                        },
+                        enabled = dateRangePickerState.selectedEndDateMillis != null
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.ok)
+                        )
+                    }
+                }
+            }
+        }
     }
 
     Column(
@@ -63,7 +130,9 @@ fun Statistics(
             modifier = Modifier.fillMaxWidth(),
             text = getDateRangeString(range = selectedDateRange),
             drawableId = R.drawable.ic_calendar,
-            onClick = {}
+            onClick = {
+                dateRangePickerVisible = true
+            }
         )
         val unitMap = mutableMapOf<StatisticsUnit, String>()
         unitMap.putAll(
@@ -78,24 +147,25 @@ fun Statistics(
             }
         )
         FilterChipGroup(
+            modifier = Modifier.fillMaxWidth(),
             chips = unitMap,
             preSelection = StatisticsUnit.CHECK_IN_COUNT,
             onSelectionChanged = { selectedUnit = it }
         )
         FilterChipGroup(
+            modifier = Modifier.fillMaxWidth(),
             chips = typeMap,
             preSelection = StatisticsType.TRANSPORT_TYPES,
             onSelectionChanged = { selectedType = it }
         )
 
         // Chart, weight 1f
-        Chart(
+        ColumnChart(
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(top = 8.dp)
                 .weight(1f),
-            chart = columnChart(),
-            chartModelProducer = chartEntryModelProducer,
-            //legend = verticalLegend()
+            input = chartInput.value
         )
     }
 }
@@ -114,12 +184,18 @@ fun getDateRangeString(range: Pair<Date, Date>?): String {
 enum class StatisticsUnit {
     CHECK_IN_COUNT {
         override fun getStringId() = R.string.check_in_count
+        @Composable
+        override fun formatValue(value: Int) = "${value}x"
     },
     TRAVEL_TIME {
         override fun getStringId() = R.string.travel_time
+        @Composable
+        override fun formatValue(value: Int) = getDurationString(value)
     };
 
     abstract fun getStringId(): Int
+    @Composable
+    abstract fun formatValue(value: Int): String
 }
 
 enum class StatisticsType {

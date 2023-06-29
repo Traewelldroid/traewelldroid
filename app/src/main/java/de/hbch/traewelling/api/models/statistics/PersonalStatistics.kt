@@ -1,9 +1,11 @@
 package de.hbch.traewelling.api.models.statistics
 
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.google.gson.annotations.SerializedName
 import de.hbch.traewelling.R
+import de.hbch.traewelling.api.Exclude
 import de.hbch.traewelling.api.models.status.StatusBusiness
 import de.hbch.traewelling.api.models.trip.ProductType
 import java.util.*
@@ -15,11 +17,10 @@ data class PersonalStatistics(
 )
 
 abstract class AbstractStatistics(
-    @SerializedName("count") open val checkInCount: Int = 0,
-    @SerializedName("duration") open val duration: Int = 0
+    @Exclude open val checkInCount: Int = 0,
+    @Exclude open val duration: Int = 0
 ) {
-    @Composable
-    abstract fun getLabel(): String
+    abstract fun getLabel(context: Context): String
 }
 
 data class CategoryStatistics(
@@ -27,8 +28,7 @@ data class CategoryStatistics(
     @SerializedName("count") override val checkInCount: Int,
     @SerializedName("duration") override val duration: Int
 ) : AbstractStatistics() {
-    @Composable
-    override fun getLabel() = stringResource(productType.getString())
+    override fun getLabel(context: Context) = context.getString(productType.getString())
 }
 
 data class OperatorStatistics(
@@ -36,8 +36,7 @@ data class OperatorStatistics(
     @SerializedName("count") override val checkInCount: Int,
     @SerializedName("duration") override val duration: Int
 ) : AbstractStatistics() {
-    @Composable
-    override fun getLabel() = operatorName ?: stringResource(R.string.other_operators)
+    override fun getLabel(context: Context) = operatorName ?: context.getString(R.string.other_operators)
 }
 
 data class PurposeStatistics(
@@ -45,8 +44,7 @@ data class PurposeStatistics(
     @SerializedName("count") override val checkInCount: Int,
     @SerializedName("duration") override val duration: Int
 ) : AbstractStatistics() {
-    @Composable
-    override fun getLabel() = stringResource(businessType.getTitle())
+    override fun getLabel(context: Context) = context.getString(businessType.getTitle())
 }
 
 data class TimeStatistics(

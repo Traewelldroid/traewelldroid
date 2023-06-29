@@ -144,10 +144,6 @@ dependencies {
     implementation 'io.coil-kt:coil:2.3.0'
     implementation "io.coil-kt:coil-compose:2.3.0"
 
-    // Charts
-    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
-    implementation "com.patrykandpatrick.vico:compose-m3:1.6.6"
-
     // Emoji pack support
     implementation 'de.c1710:filemojicompat-autoinit:3.2.5'
 

@@ -31,7 +31,7 @@ private val client = OkHttpClient.Builder().readTimeout(60, TimeUnit.SECONDS)
     .addInterceptor(ErrorInterceptor())
     .build()
 
-private val gson = GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssX").create()
+private val gson = GsonBuilder().setExclusionStrategies(ExcludeAnnotationExclusionStrategy()).setDateFormat("yyyy-MM-dd'T'HH:mm:ssX").create()
 
 private val retrofit =
     Retrofit.Builder()
