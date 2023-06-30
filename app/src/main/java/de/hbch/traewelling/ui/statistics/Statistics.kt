@@ -150,13 +150,15 @@ fun Statistics(
             modifier = Modifier.fillMaxWidth(),
             chips = unitMap,
             preSelection = StatisticsUnit.CHECK_IN_COUNT,
-            onSelectionChanged = { selectedUnit = it }
+            onSelectionChanged = { selectedUnit = it!! },
+            selectionRequired = true
         )
         FilterChipGroup(
             modifier = Modifier.fillMaxWidth(),
             chips = typeMap,
             preSelection = StatisticsType.TRANSPORT_TYPES,
-            onSelectionChanged = { selectedType = it }
+            onSelectionChanged = { selectedType = it!! },
+            selectionRequired = true
         )
 
         // Chart, weight 1f

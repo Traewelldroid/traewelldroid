@@ -9,6 +9,18 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -50,57 +62,6 @@ class SearchConnectionFragment : Fragment() {
     private val checkInViewModel: CheckInViewModel by activityViewModels()
     private val loggedInUserViewModel: LoggedInUserViewModel by activityViewModels()
     private val searchStationCardViewModel: SearchStationCardViewModel by viewModels()
-
-    private val onFoundConnectionsCallback: (HafasTripPage) -> Unit = { connections ->
-        dataLoading.postValue(false)
-        binding.stationName = connections.meta.station.name
-        binding.stationId = connections.meta.station.id
-        val adapter = binding.recyclerViewConnections.adapter as ConnectionAdapter
-        adapter.addNewConnections(connections.data)
-        val availableTypes = connections.data.mapNotNull { it.line?.product }
-        fun Chip.setStatus(vararg types: ProductType) {
-            visibility = if (types.any { it in availableTypes }) VISIBLE else GONE
-            if (args.travelType in types) {
-                performClick()
-            }
-        }
-        binding.executePendingBindings()
-        binding.chipFilterBus.visibility = if (connections.data.any {
-                it.line?.product == ProductType.BUS
-            }) VISIBLE else GONE
-        binding.chipFilterTram.visibility = if (connections.data.any {
-                it.line?.product == ProductType.TRAM
-            }) VISIBLE else GONE
-        binding.chipFilterFerry.visibility = if (connections.data.any {
-                it.line?.product == ProductType.FERRY
-            }) VISIBLE else GONE
-        binding.chipFilterRegional.visibility = if (connections.data.any {
-                it.line?.product == ProductType.REGIONAL ||
-                        it.line?.product == ProductType.REGIONAL_EXPRESS
-            }) VISIBLE else GONE
-        binding.chipFilterSuburban.visibility = if (connections.data.any {
-                it.line?.product == ProductType.SUBURBAN
-            }) VISIBLE else GONE
-        binding.chipFilterSubway.visibility = if (connections.data.any {
-                it.line?.product == ProductType.SUBWAY
-            }) VISIBLE else GONE
-        binding.chipFilterExpress.visibility = if (connections.data.any {
-                it.line?.product == ProductType.NATIONAL
-                        || it.line?.product == ProductType.NATIONAL_EXPRESS
-            }) VISIBLE else GONE
-        binding.chipFilterBus.setStatus(ProductType.BUS)
-        binding.chipFilterTram.setStatus(ProductType.TRAM)
-        binding.chipFilterFerry.setStatus(ProductType.FERRY)
-        binding.chipFilterRegional.setStatus(ProductType.REGIONAL, ProductType.REGIONAL_EXPRESS)
-        binding.chipFilterSuburban.setStatus(ProductType.SUBURBAN)
-        binding.chipFilterSubway.setStatus(ProductType.SUBWAY)
-        binding.chipFilterExpress.setStatus(ProductType.NATIONAL, ProductType.NATIONAL_EXPRESS)
-
-        binding.chipGroupFilter.visibility = if (connections.data.isNotEmpty())
-            VISIBLE else GONE
-        binding.textNoDepartures.visibility = if (connections.data.isEmpty())
-            VISIBLE else GONE
-    }
     private lateinit var currentSearchDate: Date
 
     private val dataLoading = MutableLiveData(false)
@@ -116,93 +77,6 @@ class SearchConnectionFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentSearchConnectionBinding.inflate(inflater, container, false)
-
-        binding.connectionDataLoadingView.setContent {
-            Mdc3Theme(
-                setDefaultFontFamily = true,
-                setTextColors = true
-            ) {
-                DataLoading()
-            }
-        }
-
-        binding.searchCard.setContent {
-            MainTheme {
-                CardSearchStation(
-                    searchAction = { station ->
-                        searchConnections(station, currentSearchDate)
-                    },
-                    searchStationCardViewModel = searchStationCardViewModel,
-                    homelandStationData = loggedInUserViewModel.home,
-                    recentStationsData = loggedInUserViewModel.lastVisitedStations
-                )
-            }
-        }
-
-        dataLoading.observe(viewLifecycleOwner) { loading ->
-            when (loading) {
-                true -> {
-                    binding.cardConnections.visibility = GONE
-                    binding.connectionDataLoadingView.visibility = VISIBLE
-                }
-                false -> {
-                    binding.cardConnections.visibility = VISIBLE
-                    binding.connectionDataLoadingView.visibility = GONE
-                }
-            }
-        }
-
-        binding.searchConnectionFragment = this
-        binding.lifecycleOwner = viewLifecycleOwner
-        binding.chipGroupFilter.setOnCheckedStateChangeListener { _, checkedIds ->
-            val adapter = binding.recyclerViewConnections.adapter as ConnectionAdapter
-            val checkedId = if (checkedIds.size == 0) null else checkedIds[0]
-            adapter.applyFilter(
-                when (checkedId) {
-                    R.id.chip_filter_bus -> ProductType.BUS
-                    R.id.chip_filter_express -> ProductType.LONG_DISTANCE
-                    R.id.chip_filter_ferry -> ProductType.FERRY
-                    R.id.chip_filter_regional -> ProductType.REGIONAL
-                    R.id.chip_filter_suburban -> ProductType.SUBURBAN
-                    R.id.chip_filter_subway -> ProductType.SUBWAY
-                    R.id.chip_filter_tram -> ProductType.TRAM
-                    else -> null
-                }
-            )
-        }
-
-        val connectionRecyclerView = binding.recyclerViewConnections
-        connectionRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        connectionRecyclerView.addItemDecoration(
-            DividerItemDecoration(
-                requireContext(),
-                DividerItemDecoration.VERTICAL
-            )
-        )
-        binding.recyclerViewConnections.adapter =
-            ConnectionAdapter(mutableListOf(), binding) { itemView, connection ->
-                checkInViewModel.reset()
-                checkInViewModel.lineName = connection.line?.name ?: ""
-                checkInViewModel.tripId = connection.tripId
-                checkInViewModel.startStationId = connection.station?.id ?: -1
-                checkInViewModel.departureTime = connection.plannedDeparture
-
-                val transitionName = connection.tripId
-                val extras = FragmentNavigatorExtras(itemView to transitionName)
-                val action =
-                    SearchConnectionFragmentDirections.actionSearchConnectionFragmentToSelectDestinationFragment(
-                        transitionName,
-                        connection.finalDestination
-                    )
-                findNavController().navigate(action, extras)
-            }
-
-        binding.stationName = args.stationName
-
-        binding.apply {
-            viewModel = (this@SearchConnectionFragment).viewModel
-        }
-
         if (args.date != null) {
             currentSearchDate = args.date!!
         } else {
@@ -211,14 +85,41 @@ class SearchConnectionFragment : Fragment() {
             cal.add(Calendar.MINUTE, -5)
             currentSearchDate = cal.time
         }
-        searchConnections(
-            binding.stationName.toString(),
-            currentSearchDate
-        )
+
+        binding.searchConnectionContent.setContent {
+            MainTheme {
+                var stationName by rememberSaveable { mutableStateOf(args.stationName) }
+                var scrollState = rememberScrollState()
+
+                Column(
+                    modifier = Modifier
+                        .verticalScroll(scrollState)
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    CardSearchStation(
+                        searchAction = { station ->
+                            stationName = station
+                            //searchConnections(station, currentSearchDate)
+                        },
+                        searchStationCardViewModel = searchStationCardViewModel,
+                        homelandStationData = loggedInUserViewModel.home,
+                        recentStationsData = loggedInUserViewModel.lastVisitedStations
+                    )
+                    SearchConnection(
+                        searchConnectionViewModel = viewModel,
+                        stationName = stationName,
+                        searchTime = currentSearchDate
+                    )
+                }
+            }
+        }
+
         return binding.root
     }
 
-    fun setHomelandStation(context: Context) {
+    /*fun setHomelandStation(context: Context) {
         viewModel.setUserHomelandStation(
             binding.stationName ?: "",
             { station ->
@@ -234,7 +135,7 @@ class SearchConnectionFragment : Fragment() {
             },
             {}
         )
-    }
+    }*/
 
     private fun createHomelandStationShortCut(context: Context, station: Station) {
         if (ShortcutManagerCompat.isRequestPinShortcutSupported(context)) {
@@ -254,7 +155,7 @@ class SearchConnectionFragment : Fragment() {
         }
     }
 
-    fun searchConnections(
+    /*fun searchConnections(
         stationName: String,
         timestamp: Date
     ) {
@@ -267,7 +168,7 @@ class SearchConnectionFragment : Fragment() {
         ) {
             dataLoading.postValue(false)
         }
-    }
+    }*/
 
     fun requestDepartureTimeAndSearchConnections() {
         val datePicker = MaterialDatePicker
@@ -304,10 +205,10 @@ class SearchConnectionFragment : Fragment() {
                 cal.set(Calendar.HOUR, timePicker.hour)
                 cal.set(Calendar.MINUTE, timePicker.minute)
 
-                searchConnections(
+                /*searchConnections(
                     binding.stationName.toString(),
                     cal.time
-                )
+                )*/
             }
 
             timePicker.show(childFragmentManager, "SearchConnectionTimePicker")

@@ -40,6 +40,7 @@ fun OutlinedButtonWithIconAndText(
     modifier: Modifier = Modifier,
     text: String = "",
     @DrawableRes drawableId: Int? = null,
+    drawableOnStart: Boolean = true,
     colors: ButtonColors = ButtonDefaults.outlinedButtonColors(),
     onClick: () -> Unit = { },
     isLoading: Boolean = false,
@@ -53,7 +54,8 @@ fun OutlinedButtonWithIconAndText(
         RowWithIconAndText(
             text = text,
             drawableId = drawableId,
-            isLoading = isLoading
+            isLoading = isLoading,
+            drawableOnStart = drawableOnStart
         )
     }
 }
@@ -125,14 +127,15 @@ private fun RowWithIconAndText(
     text: String,
     @DrawableRes drawableId: Int? = null,
     progressColor: Color = ProgressIndicatorDefaults.circularColor,
-    isLoading: Boolean = false
+    isLoading: Boolean = false,
+    drawableOnStart: Boolean = true
 ) {
     Column(modifier = Modifier) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             val iconModifier = Modifier.padding(end = 8.dp)
-            if (drawableId != null && !isLoading) {
+            if (drawableId != null && !isLoading && drawableOnStart) {
                 Icon(
                     painter = painterResource(id = drawableId),
                     contentDescription = text,
@@ -149,6 +152,13 @@ private fun RowWithIconAndText(
                 text = text,
                 textAlign = TextAlign.Center
             )
+            if (!drawableOnStart && drawableId != null && !isLoading) {
+                Icon(
+                    painter = painterResource(id = drawableId),
+                    contentDescription = text,
+                    modifier = Modifier.padding(start = 8.dp)
+                )
+            }
         }
     }
 }
