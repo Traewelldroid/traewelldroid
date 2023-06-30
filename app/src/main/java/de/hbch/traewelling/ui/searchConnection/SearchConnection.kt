@@ -3,24 +3,24 @@ package de.hbch.traewelling.ui.searchConnection
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.DatePicker
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TimePicker
+import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -41,175 +42,205 @@ import de.hbch.traewelling.api.models.trip.ProductType
 import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
+import de.hbch.traewelling.ui.composables.Dialog
 import de.hbch.traewelling.ui.composables.FilterChipGroup
 import de.hbch.traewelling.ui.composables.OutlinedButtonWithIconAndText
 import de.hbch.traewelling.ui.selectDestination.getDelayColor
 import de.hbch.traewelling.ui.selectDestination.getLocalTimeString
-import de.hbch.traewelling.ui.statistics.StatisticsType
+import java.util.Calendar
 import java.util.Date
-import java.util.logging.Filter
+import java.util.GregorianCalendar
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchConnection(
-    searchConnectionViewModel: SearchConnectionViewModel,
     modifier: Modifier = Modifier,
     stationId: Int? = null,
-    stationName: String = "",
-    searchTime: Date = Date()
+    searchTime: Date = Date(),
+    trips: List<HafasTrip>? = null,
+    onPreviousTime: () -> Unit = { },
+    onNextTime: () -> Unit = { },
+    onTripSelection: (HafasTrip) -> Unit = { },
+    onHomelandStationSelection: () -> Unit = { },
+    onTimeSelection: (Date) -> Unit = { }
 ) {
-    var selectedTime by remember { mutableStateOf(searchTime) }
-    val times by searchConnectionViewModel.pageTimes.observeAsState()
     var selectedFilter by remember { mutableStateOf<FilterType?>(null) }
-    var searchStationId by remember { mutableStateOf(stationId) }
-    var searchStationName by remember { mutableStateOf(stationName) }
-    val trips = remember { mutableStateListOf<HafasTrip>() }
     val filteredTrips = remember { mutableStateListOf<HafasTrip>() }
+    var datePickerVisible by remember { mutableStateOf(false) }
+    val datePickerState = rememberDatePickerState(initialSelectedDateMillis = searchTime.time)
+    var timePickerVisible by remember { mutableStateOf(false) }
+    val timePickerState = rememberTimePickerState()
 
-    // Start new request when time changed
-    LaunchedEffect(selectedTime) {
-        Log.d("Compose", "Requesting deps")
-        searchConnectionViewModel.searchConnections(
-            stationName,
-            selectedTime,
-            {
-                Log.d("Compose", "Data arrived!")
-                trips.clear()
-                trips.addAll(it.data)
-            }, { }
-        )
-    }
-
-    // Filter list on list or filter change
-    LaunchedEffect(selectedFilter, trips) {
-        Log.d("Compose", "Data arrived, filtering")
-        val filter = selectedFilter
-        filteredTrips.clear()
-        if (filter == null) {
-            filteredTrips.addAll(trips)
-        } else {
-            filteredTrips.addAll(
-                trips.filter {
-                    filter.matchesProduct(it.line?.product)
+    if (datePickerVisible) {
+        Dialog(
+            modifier = Modifier.fillMaxWidth(0.85f),
+            onDismissRequest = { datePickerVisible = false }
+        ) {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                DatePicker(state = datePickerState)
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    OutlinedButtonWithIconAndText(
+                        text = stringResource(id = R.string.ok),
+                        onClick = {
+                            datePickerVisible = false
+                            timePickerVisible = true
+                        }
+                    )
                 }
-            )
+            }
         }
     }
 
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        Text(
-            text = stringResource(id = R.string.departures_at, "Memmingen")
-        )
-        ElevatedCard(
-            modifier = Modifier.fillMaxWidth()
+    if (timePickerVisible) {
+        Dialog(
+            modifier = Modifier.fillMaxWidth(0.85f),
+            onDismissRequest = { timePickerVisible = false }
         ) {
             Column(
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Time selection and home
+                TimePicker(state = timePickerState)
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                    horizontalArrangement = Arrangement.End
                 ) {
-                    ButtonWithIconAndText(
-                        drawableId = R.drawable.ic_time,
-                        text = getLocalTimeString(selectedTime)
-                    )
-                    IconButton(onClick = {}) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_home),
-                            contentDescription = null
-                        )
-                    }
-                }
-                Divider(
-                    modifier = Modifier.fillMaxWidth()
-                )
+                    OutlinedButtonWithIconAndText(
+                        text = stringResource(id = R.string.ok),
+                        onClick = {
+                            timePickerVisible = false
 
-                // Filter chips
-                FilterChipGroup(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp),
-                    chips = getFilterableProductTypes(trips),
-                    preSelection = null,
-                    selectionRequired = false,
-                    onSelectionChanged = { selectedFilter = it }
-                )
-                Divider(
-                    modifier = Modifier.fillMaxWidth()
-                )
+                            val selectedDate = datePickerState.selectedDateMillis
+                            val calendar = GregorianCalendar()
+                            if (selectedDate != null) {
+                                calendar.timeInMillis = selectedDate
+                                calendar.set(Calendar.HOUR_OF_DAY, timePickerState.hour)
+                                calendar.set(Calendar.MINUTE, timePickerState.minute)
 
-                // Previous/Next top
-                PreviousNextButtons(
-                    modifier = Modifier
-                        .padding(horizontal = 8.dp)
-                        .fillMaxWidth(),
-                    nextSelected = {
-                        val time = times
-                        if (time?.next != null) {
-                            selectedTime = time.next
+                                onTimeSelection(calendar.time)
+                            }
                         }
-                    },
-                    previousSelected = {
-                        val time = times
-                        if (time?.previous != null) {
-                            selectedTime = time.previous
-                        }
-                    }
-                )
-                Divider(
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                // Connections
-                filteredTrips.forEach { trip ->
-                    ConnectionListItem(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { }
-                            .padding(horizontal = 8.dp),
-                        productType = trip.line?.product ?: ProductType.BUS,
-                        line = trip.line?.name ?: "",
-                        departurePlanned = trip.plannedDeparture ?: Date(),
-                        departureReal = trip.departure ?: trip.plannedDeparture,
-                        isCancelled = trip.isCancelled,
-                        destination = getLastDestination(trip),
-                        departureStation =
-                            if (!trip.station?.name.isNullOrBlank() && searchStationId != null && trip.station?.id != searchStationId)
-                                trip.station?.name
-                            else
-                                null
-                    )
-                    Divider(
-                        modifier = Modifier.fillMaxWidth()
                     )
                 }
+            }
+        }
+    }
 
-                // Previous/Next bottom
-                PreviousNextButtons(
-                    modifier = Modifier
-                        .padding(horizontal = 8.dp)
-                        .fillMaxWidth(),
-                    nextSelected = {
-                        val time = times
-                        if (time?.next != null) {
-                            selectedTime = time.next
-                        }
-                    },
-                    previousSelected = {
-                        val time = times
-                        if (time?.previous != null) {
-                            selectedTime = time.previous
-                        }
+    // Filter list on list or filter change
+    LaunchedEffect(selectedFilter) {
+        Log.d("Compose", "Data arrived, filtering")
+        val filter = selectedFilter
+        filteredTrips.clear()
+        if (trips != null) {
+            if (filter == null) {
+                filteredTrips.addAll(trips)
+            } else {
+                filteredTrips.addAll(
+                    trips.filter {
+                        filter.matchesProduct(it.line?.product)
                     }
                 )
             }
         }
+    }
+
+    Column(
+        verticalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        // Time selection and home
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            ButtonWithIconAndText(
+                drawableId = R.drawable.ic_time,
+                text = getLocalTimeString(searchTime),
+                onClick = {
+                    datePickerVisible = true
+                }
+            )
+            IconButton(onClick = onHomelandStationSelection) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_home),
+                    contentDescription = null
+                )
+            }
+        }
+        Divider(
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        // Filter chips
+        FilterChipGroup(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp),
+            chips = getFilterableProductTypes(trips),
+            preSelection = null,
+            selectionRequired = false,
+            onSelectionChanged = { selectedFilter = it }
+        )
+        Divider(
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        // Previous/Next top
+        PreviousNextButtons(
+            modifier = Modifier
+                .padding(horizontal = 8.dp)
+                .fillMaxWidth(),
+            nextSelected = onNextTime,
+            previousSelected = onPreviousTime
+        )
+        Divider(
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        // Connections
+        filteredTrips.forEach { trip ->
+            ConnectionListItem(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        if (!trip.isCancelled) {
+                            onTripSelection(trip)
+                        }
+                    }
+                    .padding(8.dp),
+                productType = trip.line?.product ?: ProductType.BUS,
+                line = trip.line?.name ?: "",
+                departurePlanned = trip.plannedDeparture ?: Date(),
+                departureReal = trip.departure ?: trip.plannedDeparture,
+                isCancelled = trip.isCancelled,
+                destination = getLastDestination(trip),
+                departureStation =
+                    if (!trip.station?.name.isNullOrBlank() && stationId != null && trip.station?.id != stationId)
+                        trip.station?.name
+                    else
+                        null
+            )
+            Divider(
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+
+        // Previous/Next bottom
+        PreviousNextButtons(
+            modifier = Modifier
+                .padding(horizontal = 8.dp)
+                .padding(bottom = 8.dp)
+                .fillMaxWidth(),
+            nextSelected = onNextTime,
+            previousSelected = onPreviousTime
+        )
     }
 }
 
@@ -225,7 +256,7 @@ fun ConnectionListItem(
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier.padding(12.dp),
+        modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         // Product image, line and time
@@ -242,7 +273,10 @@ fun ConnectionListItem(
                     painter = painterResource(id = productType.getIcon()),
                     contentDescription = stringResource(id = productType.getString())
                 )
-                Text(text = line)
+                Text(
+                    text = line,
+                    fontWeight = FontWeight.ExtraBold
+                )
             }
             Column(
                 horizontalAlignment = Alignment.End
@@ -398,10 +432,7 @@ private enum class FilterType {
 fun SearchConnectionPreview() {
     val viewModel = SearchConnectionViewModel()
     MainTheme {
-        SearchConnection(
-            searchConnectionViewModel = viewModel,
-            stationName = "Memmingen"
-        )
+        SearchConnection()
     }
 }
 

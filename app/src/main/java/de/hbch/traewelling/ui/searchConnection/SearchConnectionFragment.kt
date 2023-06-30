@@ -3,48 +3,44 @@ package de.hbch.traewelling.ui.searchConnection
 import android.app.PendingIntent
 import android.content.Context
 import android.os.Bundle
-import android.text.format.DateFormat.is24HourFormat
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
-import android.view.View.VISIBLE
 import android.view.ViewGroup
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Divider
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Text
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.MutableLiveData
-import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.accompanist.themeadapter.material3.Mdc3Theme
-import com.google.android.material.chip.Chip
-import com.google.android.material.datepicker.MaterialDatePicker
-import com.google.android.material.timepicker.MaterialTimePicker
-import com.google.android.material.timepicker.TimeFormat
 import com.google.android.material.transition.Hold
 import de.hbch.traewelling.R
-import de.hbch.traewelling.adapters.ConnectionAdapter
 import de.hbch.traewelling.api.models.station.Station
-import de.hbch.traewelling.api.models.trip.HafasTripPage
-import de.hbch.traewelling.api.models.trip.ProductType
+import de.hbch.traewelling.api.models.trip.HafasTrip
 import de.hbch.traewelling.databinding.FragmentSearchConnectionBinding
 import de.hbch.traewelling.shared.CheckInViewModel
 import de.hbch.traewelling.shared.LoggedInUserViewModel
+import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.composables.DataLoading
 import de.hbch.traewelling.ui.include.cardSearchStation.CardSearchStation
@@ -64,8 +60,6 @@ class SearchConnectionFragment : Fragment() {
     private val searchStationCardViewModel: SearchStationCardViewModel by viewModels()
     private lateinit var currentSearchDate: Date
 
-    private val dataLoading = MutableLiveData(false)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         exitTransition = Hold()
@@ -75,7 +69,7 @@ class SearchConnectionFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentSearchConnectionBinding.inflate(inflater, container, false)
         if (args.date != null) {
             currentSearchDate = args.date!!
@@ -86,32 +80,103 @@ class SearchConnectionFragment : Fragment() {
             currentSearchDate = cal.time
         }
 
+        binding.searchConnectionContent.transitionName = "transition"
         binding.searchConnectionContent.setContent {
+            val context = LocalContext.current
             MainTheme {
-                var stationName by rememberSaveable { mutableStateOf(args.stationName) }
-                var scrollState = rememberScrollState()
+                var stationName by remember { mutableStateOf(args.stationName) }
+                val scrollState = rememberScrollState()
+                val trips = remember { mutableStateListOf<HafasTrip>() }
+                val times by viewModel.pageTimes.observeAsState()
+                var searchDate by remember { mutableStateOf(currentSearchDate) }
+                var loading by remember { mutableStateOf(false) }
+
+                LaunchedEffect(stationName, searchDate) {
+                    loading = true
+                    viewModel.searchConnections(
+                        stationName,
+                        searchDate,
+                        {
+                            loading = false
+                            trips.clear()
+                            trips.addAll(it.data)
+                        },
+                        { }
+                    )
+                }
 
                 Column(
                     modifier = Modifier
+                        .animateContentSize()
                         .verticalScroll(scrollState)
                         .fillMaxWidth()
-                        .padding(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                        .padding(horizontal = 8.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     CardSearchStation(
+                        modifier = Modifier.padding(8.dp),
                         searchAction = { station ->
                             stationName = station
-                            //searchConnections(station, currentSearchDate)
                         },
                         searchStationCardViewModel = searchStationCardViewModel,
                         homelandStationData = loggedInUserViewModel.home,
                         recentStationsData = loggedInUserViewModel.lastVisitedStations
                     )
-                    SearchConnection(
-                        searchConnectionViewModel = viewModel,
-                        stationName = stationName,
-                        searchTime = currentSearchDate
-                    )
+                    ElevatedCard(
+                        modifier = Modifier.padding(8.dp).fillMaxWidth()
+                    ) {
+                        Column {
+                            Text(
+                                modifier = Modifier
+                                    .fillMaxWidth().padding(horizontal = 8.dp, vertical = 12.dp),
+                                text = stringResource(id = R.string.departures_at, stationName),
+                                style = AppTypography.headlineSmall
+                            )
+                            Divider(
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            if (loading) {
+                                DataLoading()
+                            } else {
+                                SearchConnection(
+                                    searchTime = searchDate,
+                                    trips = trips,
+                                    onPreviousTime = {
+                                        val time = times?.previous
+                                        time?.let {
+                                            searchDate = it
+                                        }
+                                    },
+                                    onNextTime = {
+                                        val time = times?.next
+                                        time?.let {
+                                            searchDate = it
+                                        }
+                                    },
+                                    onTripSelection = { trip ->
+                                        checkInViewModel.reset()
+                                        checkInViewModel.lineName = trip.line?.name ?: ""
+                                        checkInViewModel.tripId = trip.tripId
+                                        checkInViewModel.startStationId = trip.station?.id ?: -1
+                                        checkInViewModel.departureTime = trip.plannedDeparture
+
+                                        val action =
+                                            SearchConnectionFragmentDirections.actionSearchConnectionFragmentToSelectDestinationFragment(
+                                                trip.tripId,
+                                                trip.finalDestination
+                                            )
+                                        findNavController().navigate(action)
+                                    },
+                                    onTimeSelection = {
+                                        searchDate = it
+                                    },
+                                    onHomelandStationSelection = {
+                                        setHomelandStation(context, stationName)
+                                    }
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -119,9 +184,9 @@ class SearchConnectionFragment : Fragment() {
         return binding.root
     }
 
-    /*fun setHomelandStation(context: Context) {
+    private fun setHomelandStation(context: Context, station: String) {
         viewModel.setUserHomelandStation(
-            binding.stationName ?: "",
+            station,
             { station ->
                 loggedInUserViewModel.setHomelandStation(station)
                 val bottomSheet = HomelandStationBottomSheet(station.name)
@@ -135,7 +200,7 @@ class SearchConnectionFragment : Fragment() {
             },
             {}
         )
-    }*/
+    }
 
     private fun createHomelandStationShortCut(context: Context, station: Station) {
         if (ShortcutManagerCompat.isRequestPinShortcutSupported(context)) {
@@ -153,67 +218,5 @@ class SearchConnectionFragment : Fragment() {
                 successCallback.intentSender
             )
         }
-    }
-
-    /*fun searchConnections(
-        stationName: String,
-        timestamp: Date
-    ) {
-        binding.stationName = stationName
-        dataLoading.postValue(true)
-        viewModel.searchConnections(
-            stationName,
-            timestamp,
-            onFoundConnectionsCallback
-        ) {
-            dataLoading.postValue(false)
-        }
-    }*/
-
-    fun requestDepartureTimeAndSearchConnections() {
-        val datePicker = MaterialDatePicker
-            .Builder
-            .datePicker()
-            .setTitleText(R.string.title_select_date)
-            .setSelection(Date().time)
-            .build()
-
-        datePicker.addOnPositiveButtonClickListener { selectedDateLong ->
-            val selectedDate = Date(selectedDateLong)
-
-            val currentDate = Calendar.getInstance()
-            currentDate.time = Date()
-
-            val timePickerBuilder = MaterialTimePicker
-                .Builder()
-                .setTitleText(R.string.title_select_time)
-                .setHour(currentDate.get(Calendar.HOUR_OF_DAY))
-                .setMinute(currentDate.get(Calendar.MINUTE))
-
-            timePickerBuilder.setTimeFormat(
-                when (is24HourFormat(requireContext())) {
-                    true -> TimeFormat.CLOCK_24H
-                    false -> TimeFormat.CLOCK_12H
-                }
-            )
-
-            val timePicker = timePickerBuilder.build()
-
-            timePicker.addOnPositiveButtonClickListener {
-                val cal = Calendar.getInstance()
-                cal.time = selectedDate
-                cal.set(Calendar.HOUR, timePicker.hour)
-                cal.set(Calendar.MINUTE, timePicker.minute)
-
-                /*searchConnections(
-                    binding.stationName.toString(),
-                    cal.time
-                )*/
-            }
-
-            timePicker.show(childFragmentManager, "SearchConnectionTimePicker")
-        }
-
-        datePicker.show(childFragmentManager, "SearchConnectionDatePicker")
     }
 }
