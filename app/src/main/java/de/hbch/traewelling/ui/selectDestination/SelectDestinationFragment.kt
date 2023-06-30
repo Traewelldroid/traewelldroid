@@ -20,7 +20,7 @@ class SelectDestinationFragment : AbstractSelectDestinationFragment() {
     ): View? {
         val response = super.onCreateView(inflater, container, savedInstanceState)
         binding.apply {
-            selectDestinationView.transitionName = args.transitionName
+            selectDestinationView.transitionName = "transition"
         }
 
         return response

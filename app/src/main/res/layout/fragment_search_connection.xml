@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <variable
+        <!--<variable
             name="stationName"
             type="String" />
         <variable
@@ -15,10 +15,15 @@
             type="de.hbch.traewelling.ui.searchConnection.SearchConnectionViewModel" />
         <variable
             name="searchConnectionFragment"
-            type="de.hbch.traewelling.ui.searchConnection.SearchConnectionFragment" />
+            type="de.hbch.traewelling.ui.searchConnection.SearchConnectionFragment" />-->
     </data>
 
-    <androidx.core.widget.NestedScrollView
+    <androidx.compose.ui.platform.ComposeView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/search_connection_content" />
+
+    <!--<androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/layout_search_connection">
@@ -237,5 +242,5 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.core.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>-->
 </layout>

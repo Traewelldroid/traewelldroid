@@ -3,36 +3,44 @@ package de.hbch.traewelling.ui.searchConnection
 import android.app.PendingIntent
 import android.content.Context
 import android.os.Bundle
-import android.text.format.DateFormat.is24HourFormat
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
-import android.view.View.VISIBLE
 import android.view.ViewGroup
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Divider
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Text
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.MutableLiveData
-import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.accompanist.themeadapter.material3.Mdc3Theme
-import com.google.android.material.chip.Chip
-import com.google.android.material.datepicker.MaterialDatePicker
-import com.google.android.material.timepicker.MaterialTimePicker
-import com.google.android.material.timepicker.TimeFormat
 import com.google.android.material.transition.Hold
 import de.hbch.traewelling.R
-import de.hbch.traewelling.adapters.ConnectionAdapter
 import de.hbch.traewelling.api.models.station.Station
-import de.hbch.traewelling.api.models.trip.HafasTripPage
-import de.hbch.traewelling.api.models.trip.ProductType
+import de.hbch.traewelling.api.models.trip.HafasTrip
 import de.hbch.traewelling.databinding.FragmentSearchConnectionBinding
 import de.hbch.traewelling.shared.CheckInViewModel
 import de.hbch.traewelling.shared.LoggedInUserViewModel
+import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.composables.DataLoading
 import de.hbch.traewelling.ui.include.cardSearchStation.CardSearchStation
@@ -50,60 +58,7 @@ class SearchConnectionFragment : Fragment() {
     private val checkInViewModel: CheckInViewModel by activityViewModels()
     private val loggedInUserViewModel: LoggedInUserViewModel by activityViewModels()
     private val searchStationCardViewModel: SearchStationCardViewModel by viewModels()
-
-    private val onFoundConnectionsCallback: (HafasTripPage) -> Unit = { connections ->
-        dataLoading.postValue(false)
-        binding.stationName = connections.meta.station.name
-        binding.stationId = connections.meta.station.id
-        val adapter = binding.recyclerViewConnections.adapter as ConnectionAdapter
-        adapter.addNewConnections(connections.data)
-        val availableTypes = connections.data.mapNotNull { it.line?.product }
-        fun Chip.setStatus(vararg types: ProductType) {
-            visibility = if (types.any { it in availableTypes }) VISIBLE else GONE
-            if (args.travelType in types) {
-                performClick()
-            }
-        }
-        binding.executePendingBindings()
-        binding.chipFilterBus.visibility = if (connections.data.any {
-                it.line?.product == ProductType.BUS
-            }) VISIBLE else GONE
-        binding.chipFilterTram.visibility = if (connections.data.any {
-                it.line?.product == ProductType.TRAM
-            }) VISIBLE else GONE
-        binding.chipFilterFerry.visibility = if (connections.data.any {
-                it.line?.product == ProductType.FERRY
-            }) VISIBLE else GONE
-        binding.chipFilterRegional.visibility = if (connections.data.any {
-                it.line?.product == ProductType.REGIONAL ||
-                        it.line?.product == ProductType.REGIONAL_EXPRESS
-            }) VISIBLE else GONE
-        binding.chipFilterSuburban.visibility = if (connections.data.any {
-                it.line?.product == ProductType.SUBURBAN
-            }) VISIBLE else GONE
-        binding.chipFilterSubway.visibility = if (connections.data.any {
-                it.line?.product == ProductType.SUBWAY
-            }) VISIBLE else GONE
-        binding.chipFilterExpress.visibility = if (connections.data.any {
-                it.line?.product == ProductType.NATIONAL
-                        || it.line?.product == ProductType.NATIONAL_EXPRESS
-            }) VISIBLE else GONE
-        binding.chipFilterBus.setStatus(ProductType.BUS)
-        binding.chipFilterTram.setStatus(ProductType.TRAM)
-        binding.chipFilterFerry.setStatus(ProductType.FERRY)
-        binding.chipFilterRegional.setStatus(ProductType.REGIONAL, ProductType.REGIONAL_EXPRESS)
-        binding.chipFilterSuburban.setStatus(ProductType.SUBURBAN)
-        binding.chipFilterSubway.setStatus(ProductType.SUBWAY)
-        binding.chipFilterExpress.setStatus(ProductType.NATIONAL, ProductType.NATIONAL_EXPRESS)
-
-        binding.chipGroupFilter.visibility = if (connections.data.isNotEmpty())
-            VISIBLE else GONE
-        binding.textNoDepartures.visibility = if (connections.data.isEmpty())
-            VISIBLE else GONE
-    }
     private lateinit var currentSearchDate: Date
-
-    private val dataLoading = MutableLiveData(false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -114,95 +69,8 @@ class SearchConnectionFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentSearchConnectionBinding.inflate(inflater, container, false)
-
-        binding.connectionDataLoadingView.setContent {
-            Mdc3Theme(
-                setDefaultFontFamily = true,
-                setTextColors = true
-            ) {
-                DataLoading()
-            }
-        }
-
-        binding.searchCard.setContent {
-            MainTheme {
-                CardSearchStation(
-                    searchAction = { station ->
-                        searchConnections(station, currentSearchDate)
-                    },
-                    searchStationCardViewModel = searchStationCardViewModel,
-                    homelandStationData = loggedInUserViewModel.home,
-                    recentStationsData = loggedInUserViewModel.lastVisitedStations
-                )
-            }
-        }
-
-        dataLoading.observe(viewLifecycleOwner) { loading ->
-            when (loading) {
-                true -> {
-                    binding.cardConnections.visibility = GONE
-                    binding.connectionDataLoadingView.visibility = VISIBLE
-                }
-                false -> {
-                    binding.cardConnections.visibility = VISIBLE
-                    binding.connectionDataLoadingView.visibility = GONE
-                }
-            }
-        }
-
-        binding.searchConnectionFragment = this
-        binding.lifecycleOwner = viewLifecycleOwner
-        binding.chipGroupFilter.setOnCheckedStateChangeListener { _, checkedIds ->
-            val adapter = binding.recyclerViewConnections.adapter as ConnectionAdapter
-            val checkedId = if (checkedIds.size == 0) null else checkedIds[0]
-            adapter.applyFilter(
-                when (checkedId) {
-                    R.id.chip_filter_bus -> ProductType.BUS
-                    R.id.chip_filter_express -> ProductType.LONG_DISTANCE
-                    R.id.chip_filter_ferry -> ProductType.FERRY
-                    R.id.chip_filter_regional -> ProductType.REGIONAL
-                    R.id.chip_filter_suburban -> ProductType.SUBURBAN
-                    R.id.chip_filter_subway -> ProductType.SUBWAY
-                    R.id.chip_filter_tram -> ProductType.TRAM
-                    else -> null
-                }
-            )
-        }
-
-        val connectionRecyclerView = binding.recyclerViewConnections
-        connectionRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        connectionRecyclerView.addItemDecoration(
-            DividerItemDecoration(
-                requireContext(),
-                DividerItemDecoration.VERTICAL
-            )
-        )
-        binding.recyclerViewConnections.adapter =
-            ConnectionAdapter(mutableListOf(), binding) { itemView, connection ->
-                checkInViewModel.reset()
-                checkInViewModel.lineName = connection.line?.name ?: ""
-                checkInViewModel.tripId = connection.tripId
-                checkInViewModel.startStationId = connection.station?.id ?: -1
-                checkInViewModel.departureTime = connection.plannedDeparture
-
-                val transitionName = connection.tripId
-                val extras = FragmentNavigatorExtras(itemView to transitionName)
-                val action =
-                    SearchConnectionFragmentDirections.actionSearchConnectionFragmentToSelectDestinationFragment(
-                        transitionName,
-                        connection.finalDestination
-                    )
-                findNavController().navigate(action, extras)
-            }
-
-        binding.stationName = args.stationName
-
-        binding.apply {
-            viewModel = (this@SearchConnectionFragment).viewModel
-        }
-
         if (args.date != null) {
             currentSearchDate = args.date!!
         } else {
@@ -211,16 +79,114 @@ class SearchConnectionFragment : Fragment() {
             cal.add(Calendar.MINUTE, -5)
             currentSearchDate = cal.time
         }
-        searchConnections(
-            binding.stationName.toString(),
-            currentSearchDate
-        )
+
+        binding.searchConnectionContent.transitionName = "transition"
+        binding.searchConnectionContent.setContent {
+            val context = LocalContext.current
+            MainTheme {
+                var stationName by remember { mutableStateOf(args.stationName) }
+                val scrollState = rememberScrollState()
+                val trips = remember { mutableStateListOf<HafasTrip>() }
+                val times by viewModel.pageTimes.observeAsState()
+                var searchDate by remember { mutableStateOf(currentSearchDate) }
+                var loading by remember { mutableStateOf(false) }
+
+                LaunchedEffect(stationName, searchDate) {
+                    loading = true
+                    viewModel.searchConnections(
+                        stationName,
+                        searchDate,
+                        {
+                            loading = false
+                            trips.clear()
+                            trips.addAll(it.data)
+                        },
+                        { }
+                    )
+                }
+
+                Column(
+                    modifier = Modifier
+                        .animateContentSize()
+                        .verticalScroll(scrollState)
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    CardSearchStation(
+                        modifier = Modifier.padding(8.dp),
+                        searchAction = { station ->
+                            stationName = station
+                        },
+                        searchStationCardViewModel = searchStationCardViewModel,
+                        homelandStationData = loggedInUserViewModel.home,
+                        recentStationsData = loggedInUserViewModel.lastVisitedStations
+                    )
+                    ElevatedCard(
+                        modifier = Modifier.padding(8.dp).fillMaxWidth()
+                    ) {
+                        Column {
+                            Text(
+                                modifier = Modifier
+                                    .fillMaxWidth().padding(horizontal = 8.dp, vertical = 12.dp),
+                                text = stringResource(id = R.string.departures_at, stationName),
+                                style = AppTypography.headlineSmall
+                            )
+                            Divider(
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            if (loading) {
+                                DataLoading()
+                            } else {
+                                SearchConnection(
+                                    searchTime = searchDate,
+                                    trips = trips,
+                                    onPreviousTime = {
+                                        val time = times?.previous
+                                        time?.let {
+                                            searchDate = it
+                                        }
+                                    },
+                                    onNextTime = {
+                                        val time = times?.next
+                                        time?.let {
+                                            searchDate = it
+                                        }
+                                    },
+                                    onTripSelection = { trip ->
+                                        checkInViewModel.reset()
+                                        checkInViewModel.lineName = trip.line?.name ?: ""
+                                        checkInViewModel.tripId = trip.tripId
+                                        checkInViewModel.startStationId = trip.station?.id ?: -1
+                                        checkInViewModel.departureTime = trip.plannedDeparture
+
+                                        val action =
+                                            SearchConnectionFragmentDirections.actionSearchConnectionFragmentToSelectDestinationFragment(
+                                                trip.tripId,
+                                                trip.finalDestination
+                                            )
+                                        findNavController().navigate(action)
+                                    },
+                                    onTimeSelection = {
+                                        searchDate = it
+                                    },
+                                    onHomelandStationSelection = {
+                                        setHomelandStation(context, stationName)
+                                    }
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         return binding.root
     }
 
-    fun setHomelandStation(context: Context) {
+    private fun setHomelandStation(context: Context, station: String) {
         viewModel.setUserHomelandStation(
-            binding.stationName ?: "",
+            station,
             { station ->
                 loggedInUserViewModel.setHomelandStation(station)
                 val bottomSheet = HomelandStationBottomSheet(station.name)
@@ -252,67 +218,5 @@ class SearchConnectionFragment : Fragment() {
                 successCallback.intentSender
             )
         }
-    }
-
-    fun searchConnections(
-        stationName: String,
-        timestamp: Date
-    ) {
-        binding.stationName = stationName
-        dataLoading.postValue(true)
-        viewModel.searchConnections(
-            stationName,
-            timestamp,
-            onFoundConnectionsCallback
-        ) {
-            dataLoading.postValue(false)
-        }
-    }
-
-    fun requestDepartureTimeAndSearchConnections() {
-        val datePicker = MaterialDatePicker
-            .Builder
-            .datePicker()
-            .setTitleText(R.string.title_select_date)
-            .setSelection(Date().time)
-            .build()
-
-        datePicker.addOnPositiveButtonClickListener { selectedDateLong ->
-            val selectedDate = Date(selectedDateLong)
-
-            val currentDate = Calendar.getInstance()
-            currentDate.time = Date()
-
-            val timePickerBuilder = MaterialTimePicker
-                .Builder()
-                .setTitleText(R.string.title_select_time)
-                .setHour(currentDate.get(Calendar.HOUR_OF_DAY))
-                .setMinute(currentDate.get(Calendar.MINUTE))
-
-            timePickerBuilder.setTimeFormat(
-                when (is24HourFormat(requireContext())) {
-                    true -> TimeFormat.CLOCK_24H
-                    false -> TimeFormat.CLOCK_12H
-                }
-            )
-
-            val timePicker = timePickerBuilder.build()
-
-            timePicker.addOnPositiveButtonClickListener {
-                val cal = Calendar.getInstance()
-                cal.time = selectedDate
-                cal.set(Calendar.HOUR, timePicker.hour)
-                cal.set(Calendar.MINUTE, timePicker.minute)
-
-                searchConnections(
-                    binding.stationName.toString(),
-                    cal.time
-                )
-            }
-
-            timePicker.show(childFragmentManager, "SearchConnectionTimePicker")
-        }
-
-        datePicker.show(childFragmentManager, "SearchConnectionDatePicker")
     }
 }

@@ -22,8 +22,9 @@ import androidx.compose.ui.unit.dp
 fun <T> FilterChipGroup(
     modifier: Modifier = Modifier,
     chips: Map<T, String>,
-    preSelection: T,
-    onSelectionChanged: (T) -> Unit = { }
+    preSelection: T?,
+    onSelectionChanged: (T?) -> Unit = { },
+    selectionRequired: Boolean = true
 ) {
     var selection by rememberSaveable { mutableStateOf(preSelection) }
     FlowRow(
@@ -47,8 +48,9 @@ fun <T> FilterChipGroup(
                     }
                 },
                 onClick = {
-                    selection = key
-                    onSelectionChanged(key)
+                    val newSelection = if (selectionRequired || selection != key) key else null
+                    selection = newSelection
+                    onSelectionChanged(newSelection)
                 }
             )
         }
