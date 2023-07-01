@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="ok">Ok</string>
+    <string name="abort">Abbrächä</string>
+    <string name="input_username">Benutzernamä</string>
+    <string name="input_password">Passwort</string>
+    <string name="input_stop">Haltestell / Ril100</string>
+    <string name="login">Amäldä</string>
+    <string name="title_dashboard">Start</string>
+    <string name="title_active_checkins">Unterwägs</string>
+    <string name="title_user">Profil</string>
+    <string name="title_search_connection">Verbindigssuechi</string>
+    <string name="display_points">%1$d Pünkt</string>
+    <string name="display_travel_time_minutes">%1$d Min.</string>
+    <string name="display_travel_time_hours_minutes">%1$d Std. %2$d Min.</string>
+    <string name="display_travel_time_days_hours_minutes">%1$d T. %2$d Std. %3$d Min.</string>
+    <string name="display_average_speed">%1$.2f km/h</string>
+    <string name="where_are_you">Wo bisch?</string>
+    <string name="search">Suech</string>
+    <string name="next_station">Nächschti Station: %1$s</string>
+    <string name="from_station">ab %1$s</string>
+    <string name="logout">Abmäldä</string>
+    <string name="previous">Vorherigi</string>
+    <string name="next">Nächschti</string>
+    <string name="locate">Ortig</string>
+    <string name="title_select_destination">Ziel uswählä</string>
+    <string name="line_destination">%1$s nach %2$s</string>
+    <string name="check_in">Iitscheggä</string>
+    <string name="edit_status">Schtatus bearbeitä</string>
+    <string name="change_destination">Ziel änderä</string>
+    <string name="status_message">Schtatus-Nachricht</string>
+    <string name="departures_at">Abfahrtä i %1$s</string>
+    <string name="error_credentials">Bitte überprüef dini Amäldedatä</string>
+    <string name="error_logout">Abmäldig nöd erfolgriich!</string>
+    <string name="error_missing_location_permission">Zum diä Funktion z\'nutzä, muesch d\'Standortberächtigung i dinä Gräätischtelligä aktivierä.</string>
+    <string name="username_or_email">Benutzernamä oder E-Mail-Adrässä</string>
+    <string name="check_in_successful">Du bisch iitscheggt!</string>
+    <string name="check_in_failure">Bim Iitscheggä isch än Fehler passiert</string>
+    <string name="check_in_conflict">Du bisch scho in\'erä anderä Verbindig iitscheggt!</string>
+    <string name="title_select_date">Wähl s\'Abfahrtsdatum</string>
+    <string name="title_select_time">Wähl d\'Abfahrtszeit</string>
+    <string name="title_select_visibility">Wähl di gwünscht Sichtbarkeit vom Schtatus</string>
+    <string name="visibility_public">Öffentlich</string>
+    <string name="visibility_unlisted">Unglischtet</string>
+    <string name="visibility_followers">Nur für Follower</string>
+    <string name="visibility_private">Nur für dich</string>
+    <string name="visibility_only_authenticated">Nur agmeldeti Nutzer</string>
+    <string name="title_select_business">Wähl dä gwünschti Fahrttyp</string>
+    <string name="travel_purpose">Reisezwäck</string>
+    <string name="business_private">Privatreis</string>
+    <string name="business">Gschäftsreis</string>
+    <string name="business_commute">Arbetswäg</string>
+    <string name="set_homeland">Heimatstation feschtleggä</string>
+    <string name="set_homeland_success">Du häsch jetzt %1$s als Heimatstation feschtgleit.</string>
+    <string name="delete_status">Bisch\'dr sicher, dass das Check-In löschä willsch?</string>
+    <string name="delete">Löschä</string>
+    <string name="status_delete_success">Dis Check-In isch erfolgriich glöscht wordä.</string>
+    <string name="status_delete_failure">Beim Löschä vom Check-In isch än Fehler passiert.</string>
+    <string name="co_travellers">Au i dinerä Verbindig:</string>
+    <string name="no_departures">Für diä Ziit git\'s kei verfügbari Abfahrtä.</string>
+    <string name="product_type_regional">Regional</string>
+    <string name="product_type_express">Fernverkehr</string>
+    <string name="product_type_bus">Bus</string>
+    <string name="product_type_suburban">S-Bahn</string>
+    <string name="product_type_subway">U-Bahn</string>
+    <string name="product_type_tram">Tram</string>
+    <string name="product_type_ferry">Schiff</string>
+    <string name="product_type_regional_express">Interregio</string>
+    <string name="product_type_national_express">Fernverkehr (ICE/ECE)</string>
+    <string name="product_type_national">Fernverkehr (IC/EC)</string>
+    <string name="data_loading" tools:ignore="TypographyEllipsis">Datä werded gladä…</string>
+    <string name="status_details">Schtatusdetails</string>
+    <string name="title_statistics">Schtatistik</string>
+    <string name="title_select_statistics_date_range">Wähl dä Ziitraum für d\'Schtatistikä</string>
+    <string name="transport_types">Verkehrsmittel</string>
+    <string name="operators">Betriiber</string>
+    <string name="travel_time">Reiseziit</string>
+    <string name="check_in_count">Azahl Check-Ins</string>
+    <string name="title_notifications">Benachrichtigunge</string>
+    <string name="notifications_not_implemented_text">
+        Die Funktion isch aktuell nöd implementiert. Bitte nutz d\'Träwelling-Websiitä,
+        um dini Benachrichtigunge azluegä oder zu löschä.
+    </string>
+    <string name="request_url_verification">Links öffnä</string>
+    <string name="request_url_verification_text">
+        Träwelldroid cha jetzt Links vo traewelling.de öffnen. Willsch das so irichtä?
+        Chasch\'s jederziit i dä Syschtemischtelligä zruggänderä.
+    </string>
+    <string name="request_url_login_verification">
+        Dämit dich mit Träwelling amäldä chasch, muesch Träwelldroid so konfigurierä, dass Links automatisch göffnet werde chönd.
+        Bitte mach das i dä Ischtelligä.
+    </string>
+    <string name="yes">Ja</string>
+    <string name="no">Nei</string>
+    <string name="title_also_check_in">Au itscheggä</string>
+    <string name="title_select_event">Event uswählä</string>
+    <string name="hint_event_missing">Vermissisch än Event? Uf dä Träwelling-Websiitä chasch än gärn vorschlah! https://traewelling.de/events</string>
+    <string name="cancelled">entfallt</string>
+    <string name="reset_selection">Uswahl zruggsetzä</string>
+    <string name="no_event_check_in">Keis Event-Check-In</string>
+    <string name="settings">Ischtelligä</string>
+    <string name="jwt_expiration">D\'Amäldig lauft ab am: %1$s</string>
+    <string name="signed_in_as">Agmeldet als %1$s</string>
+    <string name="renew_login">D\'Amäldig ernüüerä</string>
+    <string name="renew_login_success">D\'Ernüüerig isch erfolgriich!</string>
+    <string name="renew_login_failed">D\'Ernüüerig vo dä Amäldig isch fählgschlagä. Bitte meld di manuell ab und wieder a, zum dini Amäldig z\'ernüüerä.</string>
+    <string name="default_hashtag_text">Du chasch hieä ä Standardhashtag feschtlegä, wo automatisch zu dinä Check-Ins däzuegfüägt wird.</string>
+    <string name="store_hashtag">Hashtag speicherä</string>
+    <string name="emoji">Emoji-Paket</string>
+    <string name="emoji_text">Du chasch s\'Emoji-Paket für die App änderä</string>
+    <string name="information">Informatzionä</string>
+    <string name="open_source_licenses">Open-Source-Lizänzä</string>
+    <string name="view_on_github">S\'Projekt auf GitHub azeigä</string>
+    <string name="legal">Impressum und Datäschutzerklärig</string>
+    <string name="title_edit">Bearbeitä</string>
+    <string name="point_reason_good_enough">
+        Weil Du chli z\'schpat itscheggt häsch, häsch nöd all Pünkt übercho.
+        Versuech s\'nächscht Mal, kurz vor dä Abfahrt oder während dä Reis iiztscheggä, um all
+        Pünkt überzcho.
+    </string>
+    <string name="point_reason_not_sufficient">
+        Will z\'früeh oder z\'schpat itscheggt häsch, häsch nöd all Pünkt übercho.
+        Versuech s\'nächscht Mal, kurz vor dä Abfahrt oder während dä Reis iiztscheggä, um all
+        Pünkt überzcho.
+    </string>
+    <string name="point_reason_forced">
+        Will Du das Check-In erzwungä häsch, häsch nur 0 Pünkt übercho.
+    </string>
+    <string name="title_share">Teilä</string>
+    <string name="or">oder</string>
+    <string name="login_oauth">Mit Träwelling amäldä</string>
+    <string name="other_operators">Anderi Betriiber</string>
+    <string name="private_profile">Privats Profil</string>
+    <string name="follow">Folgä</string>
+    <string name="request_follow">Folgeafrag</string>
+    <string name="request_follow_pending">Afragahnam usschtehend</string>
+    <string name="unfollow">Entfolgä</string>
+    <string name="mute">Stummschaltä</string>
+    <string name="unmute">Stummschaltig ufhebä</string>
+    <string name="welcome">Willkommä!</string>
+    <string name="account_notice">Zum Träwelldroid nutze z\'chöne, bruchsch än Account bi Träwelling. Wänn scho äs Benutzerkonto häsch, chasch di eifach mit dem Button undä amäldä. Suscht chasch\'dr det äs Konto erschtellä.</string>
+    <string name="status_invisible">de Schtatus isch für Dich nöd sichtbar.</string>
+    <string name="send_toot">Das Check-In uf Mastodon teilä</string>
+    <string name="chain_toot">Dä Mastodon-Post a letschti Post ahänkä</string>
+    <string name="settings_check_in_providers">Check-In-Abüter</string>
+    <string name="settings_check_in_providers_description">Da chasch dini Check-In-Abüter konfigurierä.</string>
+</resources>
