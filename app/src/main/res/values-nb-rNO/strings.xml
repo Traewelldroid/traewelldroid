@@ -1,2 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="ok">Ok</string>
+    <string name="abort">Avbryt</string>
+    <string name="input_username">Brukernavn</string>
+    <string name="input_password">Passord</string>
+    <string name="input_stop">Stasjon</string>
+    <string name="login">Logg på</string>
+    <string name="title_dashboard">Hjem</string>
+    <string name="title_active_checkins">På vei</string>
+    <string name="title_select_destination">Velg destinasjonen</string>
+    <string name="display_points">%1$d poeng</string>
+    <string name="display_travel_time_minutes">%1$dmin</string>
+    <string name="display_travel_time_hours_minutes">%1$dt %2$dmin</string>
+    <string name="display_travel_time_days_hours_minutes">%1$dd %2$dt %3$dmin</string>
+    <string name="display_average_speed">%1$.2f km/t</string>
+    <string name="where_are_you">Hvor er du\?</string>
+    <string name="search">Søk</string>
+    <string name="next_station">Neste stasjon: %1$s</string>
+    <string name="from_station">av %1$s</string>
+    <string name="logout">Logg ut</string>
+    <string name="next">Neste</string>
+    <string name="line_destination">%1$s til %2$s</string>
+    <string name="check_in">Check-In</string>
+    <string name="edit_status">Rediger status</string>
+    <string name="change_destination">Rediger destinasjonen</string>
+    <string name="status_message">Status melding</string>
+    <string name="departures_at">Avgang kl %1$s</string>
+    <string name="title_select_date">Velg avgangstid</string>
+    <string name="title_select_time">Velg avgangstid</string>
+    <string name="title_search_connection">Søk reise</string>
+    <string name="previous">Tidligere</string>
+    <string name="username_or_email">Brukernavn eller epost adresse</string>
+</resources>
