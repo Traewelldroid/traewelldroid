@@ -3,8 +3,10 @@ package de.hbch.traewelling.ui.include.cardSearchStation
 import android.annotation.SuppressLint
 import android.content.Context.LOCATION_SERVICE
 import android.location.Location
+import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Build
+import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import androidx.annotation.DrawableRes
@@ -30,7 +32,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -272,25 +274,44 @@ private fun RequestLocationPermissionAndLocation(locationReceivedAction: (Locati
     val locationManager =
         LocalContext.current.getSystemService(LOCATION_SERVICE)
 
-    if (locationPermissionState.allPermissionsGranted) {
-        if (locationManager is LocationManager) {
-            val provider = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-                LocationManager.FUSED_PROVIDER
-            else
-                LocationManager.GPS_PROVIDER
-
-            locationManager.getCurrentLocation(
-                provider,
-                null,
-                LocalContext.current.mainExecutor
-            ) { location ->
+    DisposableEffect(Unit) {
+        val locationListener = object : LocationListener {
+            override fun onLocationChanged(location: Location) {
                 locationReceivedAction(location)
+                if (locationManager is LocationManager) {
+                    locationManager.removeUpdates(this)
+                }
             }
+
+            override fun onProviderDisabled(provider: String) {}
+            override fun onProviderEnabled(provider: String) {}
+            @Deprecated("Deprecated in Java")
+            override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
         }
-    } else {
-        locationReceivedAction(null)
-        LaunchedEffect(true) {
+
+        if (locationPermissionState.allPermissionsGranted) {
+            if (locationManager is LocationManager) {
+                val provider = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+                    LocationManager.FUSED_PROVIDER
+                else
+                    LocationManager.GPS_PROVIDER
+
+                locationManager.requestLocationUpdates(
+                    provider,
+                    0L,
+                    0f,
+                    locationListener
+                )
+            }
+        } else {
+            locationReceivedAction(null)
             locationPermissionState.launchMultiplePermissionRequest()
+        }
+
+        onDispose {
+            if (locationManager is LocationManager) {
+                locationManager.removeUpdates(locationListener)
+            }
         }
     }
 }
