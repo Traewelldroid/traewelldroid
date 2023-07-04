@@ -187,16 +187,16 @@ class SearchConnectionFragment : Fragment() {
     private fun setHomelandStation(context: Context, station: String) {
         viewModel.setUserHomelandStation(
             station,
-            { station ->
-                loggedInUserViewModel.setHomelandStation(station)
-                val bottomSheet = HomelandStationBottomSheet(station.name)
+            { s ->
+                loggedInUserViewModel.setHomelandStation(s)
+                val bottomSheet = HomelandStationBottomSheet(s.name)
                 bottomSheet.show(parentFragmentManager, "SetHomelandStationBottomSheet")
                 CoroutineScope(Dispatchers.Main).launch {
                     delay(3000)
                     bottomSheet.dismiss()
                 }
 
-                createHomelandStationShortCut(context, station)
+                createHomelandStationShortCut(context, s)
             },
             {}
         )

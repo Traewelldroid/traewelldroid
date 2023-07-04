@@ -108,7 +108,7 @@ private fun TraewellingProviderSettings(
     logoutAction: () -> Unit = { }
 ) {
     if (loggedInUserViewModel != null) {
-        var secureStorage: SecureStorage?
+        @Suppress("CanBeVal") var secureStorage: SecureStorage?
         var jwt by remember { mutableStateOf("") }
         val username by loggedInUserViewModel.username.observeAsState("")
 
@@ -151,14 +151,12 @@ private fun getJwtExpiration(jwt: String): String {
     if (jwt != "") {
         try {
             expiresAt = JWT(jwt).expiresAt ?: Date()
+        } catch (_: Exception) {
         }
-        catch(_: Exception) { }
     }
-    var dateTimeString = ""
     val df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.getDefault())
-    dateTimeString = df.format(expiresAt)
 
-    return dateTimeString
+    return df.format(expiresAt)
 }
 
 @Composable
@@ -166,7 +164,7 @@ private fun HashtagSettings(
     modifier: Modifier = Modifier
 ) {
     var hashtagText by remember { mutableStateOf("") }
-    var secureStorage: SecureStorage? = null
+    @Suppress("CanBeVal") var secureStorage: SecureStorage?
     var saveHashtagAction: () -> Unit = { }
     val defaultColor = LocalColorScheme.current.primary
     val buttonColor = remember { Animatable(defaultColor) }

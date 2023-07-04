@@ -151,6 +151,7 @@ fun SearchConnection(
     }
 
     Column(
+        modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         // Time selection and home
@@ -430,7 +431,6 @@ private enum class FilterType {
 @Preview
 @Composable
 fun SearchConnectionPreview() {
-    val viewModel = SearchConnectionViewModel()
     MainTheme {
         SearchConnection()
     }

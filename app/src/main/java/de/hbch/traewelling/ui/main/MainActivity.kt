@@ -46,8 +46,9 @@ class MainActivity : AppCompatActivity() {
         EventBus.getDefault().unregister(this)
     }
 
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onUnauthorizedEvent(unauthorizedEvent: UnauthorizedEvent) {
+    fun onUnauthorizedEvent(@Suppress("UNUSED_PARAMETER") unauthorizedEvent: UnauthorizedEvent) {
         startActivity(
             Intent(
                 this,

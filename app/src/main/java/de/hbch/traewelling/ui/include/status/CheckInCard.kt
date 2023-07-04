@@ -1,7 +1,7 @@
 package de.hbch.traewelling.ui.include.status
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -13,18 +13,15 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -54,7 +51,6 @@ import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.LocalColorScheme
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.theme.StarYellow
-import de.hbch.traewelling.ui.selectDestination.getDelayColor
 import de.hbch.traewelling.ui.selectDestination.getLocalDateTimeString
 import de.hbch.traewelling.ui.selectDestination.getLocalTimeString
 import de.hbch.traewelling.ui.user.getDurationString
@@ -236,7 +232,7 @@ private fun calculateProgress(
     val fullTimeSpanMillis = to.time - from.time
     val elapsedTimeSpanMillis = currentDate.time - from.time
 
-    return elapsedTimeSpanMillis.toFloat() / fullTimeSpanMillis.toFloat();
+    return elapsedTimeSpanMillis.toFloat() / fullTimeSpanMillis.toFloat()
 }
 
 @Composable
@@ -363,7 +359,7 @@ private fun CheckInCardContent(
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class, ExperimentalAnimationApi::class)
 @Composable
 private fun CheckInCardFooter(
     modifier: Modifier = Modifier,

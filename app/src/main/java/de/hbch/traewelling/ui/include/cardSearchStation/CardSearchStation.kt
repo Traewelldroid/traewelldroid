@@ -1,5 +1,6 @@
 package de.hbch.traewelling.ui.include.cardSearchStation
 
+import android.annotation.SuppressLint
 import android.content.Context.LOCATION_SERVICE
 import android.location.Location
 import android.location.LocationManager
@@ -9,6 +10,7 @@ import android.os.Looper
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -55,7 +57,7 @@ import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
 import de.hbch.traewelling.ui.composables.OutlinedButtonWithIconAndText
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun CardSearchStation(
     modifier: Modifier = Modifier,
@@ -257,6 +259,7 @@ fun CardSearchStation(
     }
 }
 
+@SuppressLint("MissingPermission")
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 private fun RequestLocationPermissionAndLocation(locationReceivedAction: (Location?) -> Unit) {
