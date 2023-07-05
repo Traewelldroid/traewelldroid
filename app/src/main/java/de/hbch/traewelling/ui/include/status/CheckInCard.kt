@@ -1,5 +1,8 @@
 package de.hbch.traewelling.ui.include.status
 
+import android.icu.text.MeasureFormat
+import android.icu.util.Measure
+import android.icu.util.MeasureUnit
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
@@ -55,6 +58,7 @@ import de.hbch.traewelling.ui.selectDestination.getLocalDateTimeString
 import de.hbch.traewelling.ui.selectDestination.getLocalTimeString
 import de.hbch.traewelling.ui.user.getDurationString
 import java.util.Date
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -337,7 +341,7 @@ private fun CheckInCardContent(
             }
             Text(
                 modifier = Modifier.padding(start = 12.dp),
-                text = stringResource(id = R.string.format_distance_kilometers, kilometers / 1000),
+                text = getFormattedDistance(kilometers),
                 style = AppTypography.bodySmall
             )
             Text(
@@ -529,6 +533,19 @@ private fun CheckInCardFooter(
             )
         }
     }
+}
+
+@Composable
+fun getFormattedDistance(distance: Int): String {
+    val roundedDistance =
+        if (distance < 1000)
+            Measure(distance, MeasureUnit.METER)
+        else
+            Measure(distance / 1000, MeasureUnit.KILOMETER)
+
+    return MeasureFormat
+        .getInstance(Locale.getDefault(), MeasureFormat.FormatWidth.SHORT)
+        .formatMeasures(roundedDistance)
 }
 
 @Preview
