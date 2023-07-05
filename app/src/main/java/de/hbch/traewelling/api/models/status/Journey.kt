@@ -23,7 +23,7 @@ data class Journey(
     @SerializedName("origin") val origin: HafasTrainTripStation,
     @SerializedName("destination") val destination: HafasTrainTripStation
 ) {
-    val roundedDistance: Measure
+    private val roundedDistance: Measure
         get() = if (distance < 1000) Measure(distance, MeasureUnit.METER) else Measure(distance / 1000, MeasureUnit.KILOMETER)
 
     val formattedDistance: String
