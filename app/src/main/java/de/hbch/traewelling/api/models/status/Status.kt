@@ -47,6 +47,7 @@ data class Status(
             journey.category,
             journey.hafasTripId,
             journey.line,
+            journey.journeyNumber,
             journey.distance,
             journey.duration,
             business,

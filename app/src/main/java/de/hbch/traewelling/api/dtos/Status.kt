@@ -18,6 +18,7 @@ data class Status(
     val productType: ProductType,
     val hafasTripId: String,
     val line: String,
+    val journeyNumber: Int?,
     val distance: Int,
     val duration: Int,
     val business: StatusBusiness,
