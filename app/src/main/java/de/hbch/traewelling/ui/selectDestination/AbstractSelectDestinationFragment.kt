@@ -73,6 +73,7 @@ abstract class AbstractSelectDestinationFragment : Fragment() {
                     trip.stopovers.indexOf(
                         trip.stopovers.find {
                             it.id == checkInViewModel.startStationId
+                                    && it.departurePlanned == checkInViewModel.departureTime
                         }
                     ) + 1, trip.stopovers.lastIndex + 1)
 

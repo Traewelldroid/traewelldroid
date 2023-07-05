@@ -36,6 +36,8 @@ data class HafasTrainTripStation(
             id,
             name,
             ds100,
+            departurePlanned,
+            departureReal,
             arrivalPlanned,
             arrivalReal,
             isCancelled
