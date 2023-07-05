@@ -19,9 +19,9 @@ import androidx.compose.ui.platform.LocalView
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Traewelldroid,
-    secondary = Traewelldroid,
-    tertiary = Traewelldroid
+    primary = TraewelldroidDark,
+    secondary = TraewelldroidDark,
+    tertiary = TraewelldroidDark
 )
 
 private val LightColorScheme = lightColorScheme(
