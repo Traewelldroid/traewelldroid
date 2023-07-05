@@ -14,6 +14,7 @@ data class Journey(
     @SerializedName("category") val category: ProductType,
     @SerializedName("number") val number: String,
     @SerializedName("lineName") val line: String,
+    @SerializedName("journeyNumber") val journeyNumber: Int?,
     @SerializedName("distance") val distance: Int,
     @SerializedName("points") val points: Int,
     @SerializedName("delay") val delay: Int,

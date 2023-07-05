@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
@@ -177,7 +178,8 @@ fun CheckInCard(
                         kilometers = status.distance,
                         duration = status.duration,
                         statusBusiness = status.business,
-                        message = status.message
+                        message = status.message,
+                        journeyNumber = status.journeyNumber
                     )
                 }
                 val progress = calculateProgress(
@@ -302,6 +304,7 @@ private fun CheckInCardContent(
     modifier: Modifier = Modifier,
     productType: ProductType,
     line: String,
+    journeyNumber: Int?,
     kilometers: Int,
     duration: Int,
     statusBusiness: StatusBusiness,
@@ -325,6 +328,13 @@ private fun CheckInCardContent(
                 style = AppTypography.bodyLarge,
                 fontWeight = FontWeight.ExtraBold
             )
+            if (journeyNumber != null && !line.contains(journeyNumber.toString())) {
+                Text(
+                    modifier = Modifier.padding(start = 4.dp),
+                    text = "($journeyNumber)",
+                    style = AppTypography.bodySmall
+                )
+            }
             Text(
                 modifier = Modifier.padding(start = 12.dp),
                 text = stringResource(id = R.string.format_distance_kilometers, kilometers / 1000),
@@ -539,6 +549,7 @@ private fun CheckInCardPreview() {
             ProductType.TRAM,
             "lalal",
             "STB U1",
+            4711,
             1234,
             1234,
             StatusBusiness.COMMUTE,
