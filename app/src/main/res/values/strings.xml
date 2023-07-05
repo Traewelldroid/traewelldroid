@@ -147,4 +147,5 @@
     <string name="chain_toot">Chain this toot to the last tooted Mastodon post</string>
     <string name="settings_check_in_providers">Check-in providers</string>
     <string name="settings_check_in_providers_description">You can manage your check-in providers.</string>
+    <string name="open_with_bahnexpert">Open with <b>bahn.expert</b></string>
 </resources>

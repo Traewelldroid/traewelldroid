@@ -27,6 +27,7 @@ enum class ProductType {
     },
     @SerializedName("suburban")
     SUBURBAN {
+        override val isTrain = true
         override fun getIcon() = R.drawable.ic_suburban
         override fun getString() = R.string.product_type_suburban
     },
@@ -43,27 +44,33 @@ enum class ProductType {
     // RE, RB, RS
     @SerializedName("regional")
     REGIONAL {
+        override val isTrain = true
         override fun getString() = R.string.product_type_regional
     },
     // IRE, IR
     @SerializedName("regionalExp")
     REGIONAL_EXPRESS {
+        override val isTrain = true
         override fun getString() = R.string.product_type_regional_express
     },
     // ICE, ECE
     @SerializedName("nationalExpress")
     NATIONAL_EXPRESS {
+        override val isTrain = true
         override fun getString() = R.string.product_type_national_express
     },
     // IC, EC
     @SerializedName("national")
     NATIONAL {
+        override val isTrain = true
         override fun getString() = R.string.product_type_national
     },
     LONG_DISTANCE {
+        override val isTrain = true
         override fun getString() = R.string.product_type_national_express
     };
 
+    open val isTrain = false
     open fun getIcon() = R.drawable.ic_train
     open fun getString() = R.string.product_type_bus
 

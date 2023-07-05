@@ -144,4 +144,5 @@
     <string name="chain_toot">Dä Mastodon-Post a letschti Post ahänkä</string>
     <string name="settings_check_in_providers">Check-In-Abüter</string>
     <string name="settings_check_in_providers_description">Da chasch dini Check-In-Abüter konfigurierä.</string>
+    <string name="open_with_bahnexpert">Mit <b>bahn.expert</b> ufmachä</string>
 </resources>

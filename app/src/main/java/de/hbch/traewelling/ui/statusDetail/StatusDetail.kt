@@ -1,5 +1,7 @@
 package de.hbch.traewelling.ui.statusDetail
 
+import android.net.Uri
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -10,6 +12,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
@@ -23,18 +27,23 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.dtos.Status
 import de.hbch.traewelling.theme.LocalColorScheme
 import de.hbch.traewelling.theme.MainTheme
+import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
 import de.hbch.traewelling.ui.composables.OpenRailwayMapView
 import de.hbch.traewelling.ui.composables.getPolylinesFromFeatureCollection
 import de.hbch.traewelling.ui.include.status.CheckInCard
 import de.hbch.traewelling.ui.include.status.CheckInCardViewModel
 import org.osmdroid.views.overlay.Polyline
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -47,6 +56,7 @@ fun StatusDetail(
 ) {
     var mapExpanded by remember { mutableStateOf(false) }
     var status by remember { mutableStateOf<Status?>(null) }
+    val context = LocalContext.current
 
     LaunchedEffect(status == null) {
         statusDetailViewModel.getStatusById(statusId, {
@@ -92,10 +102,42 @@ fun StatusDetail(
             }
         }
         AnimatedVisibility (!mapExpanded) {
-            CheckInCard(
-                checkInCardViewModel = checkInCardViewModel,
-                status = status
-            )
+            val scrollState = rememberScrollState()
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(scrollState),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                CheckInCard(
+                    checkInCardViewModel = checkInCardViewModel,
+                    status = status
+                )
+                if (status?.productType?.isTrain == true) {
+                    ButtonWithIconAndText(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = stringResource(id = R.string.open_with_bahnexpert),
+                        drawableId = R.drawable.ic_train,
+                        onClick = {
+                            val dStatus = status
+                            if (dStatus != null) {
+                                val intent = CustomTabsIntent.Builder()
+                                    .setShowTitle(false)
+                                    .build()
+
+                                val trainNo = dStatus.line.split(' ')[0].plus(" ${dStatus.journeyNumber}")
+                                val isoDate = dStatus.departurePlanned.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime().format(
+                                    DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+
+                                intent.launchUrl(
+                                    context,
+                                    Uri.parse("https://bahn.expert/details/$trainNo/$isoDate")
+                                )
+                            }
+                        }
+                    )
+                }
+            }
         }
     }
 }
