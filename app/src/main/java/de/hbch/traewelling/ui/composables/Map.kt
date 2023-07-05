@@ -77,10 +77,6 @@ fun rememberMapLifecycleObserver(mapView: MapView): LifecycleEventObserver =
         LifecycleEventObserver { _, event ->
             when (event) {
                 Lifecycle.Event.ON_RESUME -> mapView.onResume()
-                Lifecycle.Event.ON_PAUSE -> {
-                    mapView.onDetach()
-                    mapView.onPause()
-                }
                 else -> {
                 }
             }
