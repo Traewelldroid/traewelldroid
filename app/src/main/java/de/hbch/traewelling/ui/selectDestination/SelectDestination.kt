@@ -282,6 +282,8 @@ private fun TravelStopListItemPreview() {
         id = 0,
         name = "Bregenz",
         rilIdentifier = null,
+        departurePlanned = Date(1685365200L * 1000),
+        departureReal = Date(1685365200L * 1000),
         arrivalPlanned = Date(1685365200L * 1000),
         arrivalReal = Date(1685365200L * 1000),
         isCancelled = false
@@ -290,6 +292,8 @@ private fun TravelStopListItemPreview() {
         id = 1,
         name = "Lindau-Reutin",
         rilIdentifier = "MLIR",
+        departurePlanned = Date(1685365680L * 1000),
+        departureReal = Date(1685365800L * 1000),
         arrivalPlanned = Date(1685365680L * 1000),
         arrivalReal = Date(1685365800L * 1000),
         isCancelled = false
@@ -298,6 +302,8 @@ private fun TravelStopListItemPreview() {
         id = 1,
         name = "Memmingen",
         rilIdentifier = "MM",
+        departurePlanned = Date(1685368680L * 1000),
+        departureReal = Date(1685369280L * 1000),
         arrivalPlanned = Date(1685368680L * 1000),
         arrivalReal = Date(1685369280L * 1000),
         isCancelled = false
@@ -306,6 +312,8 @@ private fun TravelStopListItemPreview() {
         id = 1,
         name = "München Hbf Gl.27-36 langlanglanglang",
         rilIdentifier = "MH N",
+        departurePlanned= Date(1685372640L * 1000),
+        departureReal = null,
         arrivalPlanned = Date(1685372640L * 1000),
         arrivalReal = null,
         isCancelled = true
