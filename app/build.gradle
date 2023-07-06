@@ -133,6 +133,7 @@ dependencies {
     def nav_version_ktx = "2.6.0"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version_ktx"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version_ktx"
+    implementation "androidx.navigation:navigation-compose:$nav_version_ktx"
 
     // Retrofit
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
