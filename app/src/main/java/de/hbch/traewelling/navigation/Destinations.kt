@@ -1,10 +1,13 @@
 package de.hbch.traewelling.navigation
 
+import android.view.Menu
+import androidx.compose.runtime.Composable
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavArgument
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import de.hbch.traewelling.R
+import de.hbch.traewelling.ui.dashboard.Dashboard
 import java.util.Date
 
 interface Destination {
@@ -18,6 +21,10 @@ interface ArgumentDestination : Destination {
 
 interface MainDestination : Destination {
     val icon: Int
+}
+
+interface MenuDestination {
+    val menuItems: List<ComposeMenuItem>
 }
 
 object Dashboard : MainDestination {
@@ -53,7 +60,6 @@ object SearchConnection : ArgumentDestination {
         },
         navArgument("date") {
             type = NavType.LongType
-            defaultValue = 0L
         }
     )
 }
@@ -100,4 +106,10 @@ val BOTTOM_NAVIGATION = listOf(
     EnRoute,
     Statistics,
     PersonalProfile
+)
+
+data class ComposeMenuItem(
+    val label: Int,
+    val icon: Int,
+    val onClick: () -> Unit
 )

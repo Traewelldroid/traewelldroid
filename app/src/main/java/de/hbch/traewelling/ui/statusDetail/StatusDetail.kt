@@ -32,6 +32,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.dtos.Status
 import de.hbch.traewelling.theme.LocalColorScheme
@@ -48,12 +49,12 @@ import java.time.format.DateTimeFormatter
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun StatusDetail(
-    modifier: Modifier = Modifier,
     statusId: Int,
-    statusDetailViewModel: StatusDetailViewModel,
-    checkInCardViewModel: CheckInCardViewModel,
+    modifier: Modifier = Modifier,
     statusLoaded: (Status) -> Unit = { }
 ) {
+    val statusDetailViewModel: StatusDetailViewModel by viewModel()
+    val checkInCardViewModel: CheckInCardViewModel by viewModel()
     var mapExpanded by remember { mutableStateOf(false) }
     var status by remember { mutableStateOf<Status?>(null) }
     val context = LocalContext.current
@@ -174,14 +175,10 @@ private fun StatusDetailMap(
 @Preview
 @Composable
 private fun StatusDetailPreview() {
-    val statusDetailViewModel = StatusDetailViewModel()
-    val checkInCardViewModel = CheckInCardViewModel()
     MainTheme {
         StatusDetail(
             modifier = Modifier.fillMaxWidth(),
-            statusDetailViewModel = statusDetailViewModel,
             statusId = 1117900,
-            checkInCardViewModel = checkInCardViewModel
         )
     }
 }

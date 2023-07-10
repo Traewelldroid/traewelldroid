@@ -103,8 +103,6 @@ class StatusDetailFragment : Fragment() {
                 StatusDetail(
                     modifier = Modifier.fillMaxWidth(),
                     statusId = args.statusId,
-                    statusDetailViewModel = viewModel,
-                    checkInCardViewModel = checkInCardViewModel,
                     statusLoaded = {
                         status = it
                     }
