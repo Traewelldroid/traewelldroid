@@ -1,4 +1,4 @@
-package de.hbch.traewelling.ui.dashboard
+package de.hbch.traewelling.ui.user
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,6 +13,7 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -24,15 +25,12 @@ import androidx.compose.ui.unit.dp
 import androidx.core.os.bundleOf
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import de.hbch.traewelling.R
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.ui.composables.onBottomReached
 import de.hbch.traewelling.ui.include.alert.AlertBottomSheet
 import de.hbch.traewelling.ui.include.alert.AlertType
-import de.hbch.traewelling.ui.include.cardSearchStation.CardSearchStation
-import de.hbch.traewelling.ui.include.cardSearchStation.SearchStationCardViewModel
 import de.hbch.traewelling.ui.include.deleteStatus.DeleteStatusBottomSheet
 import de.hbch.traewelling.ui.include.status.CheckInCard
 import de.hbch.traewelling.ui.include.status.CheckInCardViewModel
@@ -40,37 +38,41 @@ import java.util.Date
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun Dashboard(
+fun Profile(
+    username: String?,
     loggedInUserViewModel: LoggedInUserViewModel,
-    searchConnectionsAction: (String, Date?) -> Unit = { _, _ -> },
-    userSelectedAction: (String) -> Unit = { }
+    stationSelectedAction: (String, Date?) -> Unit = { _, _ -> }
 ) {
-    val dashboardViewModel: DashboardFragmentViewModel = viewModel()
-    val searchStationCardViewModel: SearchStationCardViewModel = viewModel()
-    val checkInCardViewModel : CheckInCardViewModel = viewModel()
-    val refreshing by dashboardViewModel.isRefreshing.observeAsState(false)
-    val checkIns = remember { dashboardViewModel.checkIns }
+    val user = username ?: loggedInUserViewModel.loggedInUser.value?.username
     var currentPage by remember { mutableStateOf(1) }
+    val userStatusViewModel: UserStatusViewModel = viewModel()
+    val checkInCardViewModel: CheckInCardViewModel = viewModel()
+    val refreshing by userStatusViewModel.isRefreshing.observeAsState(false)
     val pullRefreshState = rememberPullRefreshState(
         refreshing = refreshing,
         onRefresh = {
             currentPage = 1
-            dashboardViewModel.refresh()
+            userStatusViewModel.loadUser(user)
         }
     )
-    val checkInListState = rememberLazyListState()
+    val listState = rememberLazyListState()
+    var initialized by remember { mutableStateOf(false) }
 
-    checkInListState.onBottomReached {
-        if (dashboardViewModel.checkIns.size > 0) {
-            dashboardViewModel.loadCheckIns(++currentPage)
+    listState.onBottomReached {
+        if (userStatusViewModel.checkIns.size > 0) {
+            userStatusViewModel.loadStatusesForUser(page = ++currentPage)
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        if (!initialized) {
+            userStatusViewModel.loadUser(user)
+            initialized = true
         }
     }
 
     Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-            .pullRefresh(pullRefreshState)
+        modifier = Modifier.pullRefresh(pullRefreshState)
     ) {
         LazyColumn(
             modifier = Modifier
@@ -79,42 +81,34 @@ fun Dashboard(
                 .padding(horizontal = 16.dp),
             userScrollEnabled = true,
             verticalArrangement = Arrangement.spacedBy(16.dp),
-            state = checkInListState
+            state = listState
         ) {
             item {
-                CardSearchStation(
-                    searchAction = { station ->
-                        searchConnectionsAction(station, null)
-                    },
-                    searchStationCardViewModel = searchStationCardViewModel,
-                    homelandStationData = loggedInUserViewModel.home,
-                    recentStationsData = loggedInUserViewModel.lastVisitedStations
+                UserCard(
+                    userViewModel = userStatusViewModel,
+                    loggedInUserViewModel = loggedInUserViewModel
                 )
             }
-
             items(
-                items = checkIns
+                items = userStatusViewModel.checkIns
             ) { status ->
                 CheckInCard(
                     checkInCardViewModel = checkInCardViewModel,
                     status = status.toStatusDto(),
                     loggedInUserViewModel = loggedInUserViewModel,
-                    stationSelected = searchConnectionsAction,
-                    userSelected = userSelectedAction,
+                    stationSelected = stationSelectedAction,
                     statusSelected = { statusId, userId ->
-                        // TODO
-                        /*findNavController()
+                        /*TODO findNavController()
                             .navigate(
-                                DashboardFragmentDirections
-                                    .actionDashboardFragmentToStatusDetailFragment(
+                                UserFragmentDirections
+                                    .actionUserFragmentToStatusDetailFragment(
                                         statusId,
                                         userId
                                     )
                             )*/
                     },
                     handleEditClicked = { statusValue ->
-                        // TODO
-                        /*findNavController().navigate(
+                        /*TODO findNavController().navigate(
                             R.id.editStatusFragment,
                             bundleOf(
                                 "transitionName" to statusValue.origin,
@@ -132,11 +126,10 @@ fun Dashboard(
                         )*/
                     },
                     handleDeleteClicked = { statusValue ->
-                        // TODO
-                        /*val bottomSheet = DeleteStatusBottomSheet { bottomSheet ->
+                        /*TODO val bottomSheet = DeleteStatusBottomSheet { bottomSheet ->
                             bottomSheet.dismiss()
                             checkInCardViewModel.deleteStatus(statusValue.statusId, {
-                                dashboardFragmentViewModel.checkIns.removeIf { it.id == statusValue.statusId }
+                                userStatusViewModel.checkIns.removeIf { it.id == statusValue.statusId }
                                 val alertBottomSheet = AlertBottomSheet(
                                     AlertType.SUCCESS,
                                     requireContext().resources.getString(R.string.status_delete_success),
@@ -159,7 +152,6 @@ fun Dashboard(
                 )
             }
         }
-
         PullRefreshIndicator(
             modifier = Modifier.align(Alignment.TopCenter),
             refreshing = refreshing,

@@ -23,6 +23,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import de.hbch.traewelling.R
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.composables.ColumnChart
@@ -35,10 +36,8 @@ import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Statistics(
-    modifier: Modifier = Modifier,
-    statisticsViewModel: StatisticsViewModel
-) {
+fun Statistics() {
+    val statisticsViewModel: StatisticsViewModel = viewModel()
     val statistics by statisticsViewModel.statistics.observeAsState()
     val selectedDateRange by statisticsViewModel.dateRange.observeAsState()
     var selectedUnit by remember { mutableStateOf(StatisticsUnit.CHECK_IN_COUNT) }
@@ -47,7 +46,7 @@ fun Statistics(
     val dateRangePickerState = rememberDateRangePickerState()
 
     val chartEntries = remember { mutableStateListOf<Pair<String, Int>>() }
-    var chartInput = remember {
+    val chartInput = remember {
         mutableStateOf<Pair<List<Pair<String, Int>>, @Composable (Int) -> String>>(
             Pair(listOf()) { "" }
         )
@@ -123,9 +122,7 @@ fun Statistics(
         }
     }
 
-    Column(
-        modifier = modifier
-    ) {
+    Column {
         OutlinedButtonWithIconAndText(
             modifier = Modifier.fillMaxWidth(),
             text = getDateRangeString(range = selectedDateRange),
@@ -217,10 +214,7 @@ enum class StatisticsType {
 @Preview
 @Composable
 private fun StatisticsPreview() {
-    val statisticsViewModel = StatisticsViewModel()
     MainTheme {
-        Statistics(
-            statisticsViewModel = statisticsViewModel
-        )
+        Statistics()
     }
 }

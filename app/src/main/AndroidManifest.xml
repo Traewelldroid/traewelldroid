@@ -31,6 +31,7 @@
         <activity
             android:name=".ui.main.MainActivity"
             android:exported="true" />
+        <activity android:name=".ui.main.NewMainActivity" android:exported="true" />
         <activity
             android:name=".ui.login.LoginActivity"
             android:theme="@style/Theme.Traewelling.Login"

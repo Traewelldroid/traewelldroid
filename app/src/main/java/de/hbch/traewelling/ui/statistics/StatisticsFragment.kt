@@ -29,8 +29,6 @@ class StatisticsFragment : Fragment() {
             statisticsContent.setContent {
                 MainTheme {
                     Statistics(
-                        modifier = Modifier.padding(16.dp),
-                        statisticsViewModel = viewModel
                     )
                 }
             }

@@ -5,6 +5,7 @@ import androidx.navigation.NavArgument
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import de.hbch.traewelling.R
+import java.util.Date
 
 interface Destination {
     val label: Int
@@ -43,9 +44,18 @@ object PersonalProfile : MainDestination {
     override val route = "personal-profile"
 }
 
-object SearchConnection : Destination {
+object SearchConnection : ArgumentDestination {
     override val label = R.string.title_search_connection
-    override val route = "search-connection"
+    override val route = "search-connection/{station}/{date}"
+    override val arguments = listOf(
+        navArgument("station") {
+            type = NavType.StringType
+        },
+        navArgument("date") {
+            type = NavType.LongType
+            defaultValue = 0L
+        }
+    )
 }
 
 object SelectDestination : Destination {
