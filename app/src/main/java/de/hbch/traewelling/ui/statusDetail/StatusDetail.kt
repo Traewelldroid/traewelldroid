@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ElevatedCard
@@ -32,8 +31,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.dtos.Status
+import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.theme.LocalColorScheme
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
@@ -48,12 +49,15 @@ import java.time.format.DateTimeFormatter
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun StatusDetail(
-    modifier: Modifier = Modifier,
     statusId: Int,
-    statusDetailViewModel: StatusDetailViewModel,
-    checkInCardViewModel: CheckInCardViewModel,
-    statusLoaded: (Status) -> Unit = { }
+    modifier: Modifier = Modifier,
+    statusLoaded: (Status) -> Unit = { },
+    statusDeleted: (Status) -> Unit = { },
+    statusEdit: (Status) -> Unit = { },
+    loggedInUserViewModel: LoggedInUserViewModel? = null
 ) {
+    val statusDetailViewModel: StatusDetailViewModel = viewModel()
+    val checkInCardViewModel: CheckInCardViewModel = viewModel()
     var mapExpanded by remember { mutableStateOf(false) }
     var status by remember { mutableStateOf<Status?>(null) }
     val context = LocalContext.current
@@ -68,7 +72,6 @@ fun StatusDetail(
 
     Column(
         modifier = modifier
-            .padding(if (mapExpanded) 0.dp else 12.dp)
             .fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
@@ -111,7 +114,10 @@ fun StatusDetail(
             ) {
                 CheckInCard(
                     checkInCardViewModel = checkInCardViewModel,
-                    status = status
+                    status = status,
+                    loggedInUserViewModel = loggedInUserViewModel,
+                    onDeleted = statusDeleted,
+                    handleEditClicked = statusEdit
                 )
                 if (status?.productType?.isTrain == true) {
                     ButtonWithIconAndText(
@@ -162,8 +168,10 @@ private fun StatusDetailMap(
                 if (polylines.isEmpty()) {
                     statusDetailViewModel.getPolylineForStatus(statusId, { collection ->
                         polylines = getPolylinesFromFeatureCollection(collection, color)
-                        it.overlays.addAll(polylines)
-                        it.zoomToBoundingBox(polylines[0].bounds.increaseByScale(1.1f), false)
+                        if (polylines.isNotEmpty()) {
+                            it.overlays.addAll(polylines)
+                            it.zoomToBoundingBox(polylines[0].bounds.increaseByScale(1.1f), false)
+                        }
                     }, { })
                 }
             }
@@ -174,14 +182,10 @@ private fun StatusDetailMap(
 @Preview
 @Composable
 private fun StatusDetailPreview() {
-    val statusDetailViewModel = StatusDetailViewModel()
-    val checkInCardViewModel = CheckInCardViewModel()
     MainTheme {
         StatusDetail(
             modifier = Modifier.fillMaxWidth(),
-            statusDetailViewModel = statusDetailViewModel,
             statusId = 1117900,
-            checkInCardViewModel = checkInCardViewModel
         )
     }
 }

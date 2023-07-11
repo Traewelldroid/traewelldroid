@@ -20,6 +20,7 @@
         android:usesCleartextTraffic="true"
         android:enableOnBackInvokedCallback="true"
         tools:targetApi="33">
+
         <activity
             android:name=".ui.info.InfoActivity"
             android:exported="false" />
@@ -28,9 +29,24 @@
             android:name="io.sentry.dsn"
             android:value="${SENTRY_DSN}" />
 
-        <activity
-            android:name=".ui.main.MainActivity"
-            android:exported="true" />
+        <activity android:name=".ui.main.NewMainActivity" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+                <data android:scheme="traewelldroid"/>
+                <data android:host="traewelling.de" />
+                <data android:host="app.traewelldroid.de"/>
+                <data android:pathPrefix="/status" />
+                <data android:pathPrefix="/trains/stationboard" />
+                <data android:pathPrefix="/@" />
+                <data android:pathPrefix="/auth/login" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".ui.login.LoginActivity"
             android:theme="@style/Theme.Traewelling.Login"
@@ -41,35 +57,32 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name="net.openid.appauth.RedirectUriReceiverActivity"
+
+        <activity
+            android:name="net.openid.appauth.RedirectUriReceiverActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
 
-                <data
-                    android:scheme="https" />
-                <data
-                    android:scheme="http" />
-                <data
-                    android:host="app.traewelldroid.de" />
-                <data
-                    android:pathPrefix="/oauth2redirect"/>
+                <data android:scheme="https" />
+                <data android:scheme="http" />
+                <data android:host="app.traewelldroid.de" />
+                <data android:pathPrefix="/oauth2redirect"/>
             </intent-filter>
         </activity>
+
         <activity
             android:name=".ui.launcher.LauncherActivity"
             android:exported="true"
             android:theme="@style/Theme.Traewelling.Starting">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
@@ -78,29 +91,6 @@
                 <data android:host="app.traewelldroid.de" />
                 <data android:pathPrefix="/auth/login" />
             </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="http" />
-                <data android:scheme="https" />
-                <data android:host="traewelling.de" />
-                <data android:pathPrefix="/status" />
-                <data android:pathPrefix="/trains/stationboard" />
-                <data android:pathPrefix="/@" />
-                <data android:scheme="http" />
-                <data android:scheme="https" />
-                <data
-                    android:host="app.traewelldroid.de"
-                    android:scheme="https" />
-                <data
-                    android:host="app.traewelldroid.de"
-                    android:scheme="traewelldroid" />
-                <data android:pathPrefix="/auth/login" />
-            </intent-filter>
         </activity>
     </application>
-
 </manifest>

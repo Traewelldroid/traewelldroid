@@ -62,20 +62,15 @@ fun Settings(
     traewellingLogoutAction: () -> Unit = { }
 ) {
     Column(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        val cardModifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-
         CheckInProviderSettings(
-            modifier = cardModifier,
             loggedInUserViewModel = loggedInUserViewModel,
             traewellingLogoutAction = traewellingLogoutAction
         )
-        HashtagSettings(
-            modifier = cardModifier
-        )
+        HashtagSettings()
         EmojiSettings(
-            modifier = cardModifier,
             emojiPackItemAdapter = emojiPackItemAdapter
         )
     }

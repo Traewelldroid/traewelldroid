@@ -1,6 +1,7 @@
 package de.hbch.traewelling.ui.searchConnection
 
 import android.util.Log
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -9,8 +10,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -21,6 +25,7 @@ import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,21 +40,126 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import de.hbch.traewelling.R
 import de.hbch.traewelling.adapters.getLastDestination
 import de.hbch.traewelling.api.models.trip.HafasTrip
 import de.hbch.traewelling.api.models.trip.ProductType
+import de.hbch.traewelling.shared.CheckInViewModel
+import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
+import de.hbch.traewelling.ui.composables.DataLoading
 import de.hbch.traewelling.ui.composables.Dialog
 import de.hbch.traewelling.ui.composables.FilterChipGroup
 import de.hbch.traewelling.ui.composables.OutlinedButtonWithIconAndText
+import de.hbch.traewelling.ui.include.cardSearchStation.CardSearchStation
+import de.hbch.traewelling.ui.include.cardSearchStation.SearchStationCardViewModel
 import de.hbch.traewelling.ui.selectDestination.getDelayColor
 import de.hbch.traewelling.ui.selectDestination.getLocalTimeString
 import java.util.Calendar
 import java.util.Date
 import java.util.GregorianCalendar
+
+@Composable
+fun SearchConnection(
+    loggedInUserViewModel: LoggedInUserViewModel,
+    checkInViewModel: CheckInViewModel,
+    station: String,
+    currentSearchDate: Date,
+    onTripSelected: () -> Unit = { }
+) {
+    val viewModel: SearchConnectionViewModel = viewModel()
+    val searchStationCardViewModel: SearchStationCardViewModel = viewModel()
+    var stationName by remember { mutableStateOf(station) }
+    val scrollState = rememberScrollState()
+    val trips = remember { mutableStateListOf<HafasTrip>() }
+    val times by viewModel.pageTimes.observeAsState()
+    var searchDate by remember { mutableStateOf(currentSearchDate) }
+    var loading by remember { mutableStateOf(false) }
+
+    LaunchedEffect(stationName, searchDate) {
+        loading = true
+        viewModel.searchConnections(
+            stationName,
+            searchDate,
+            {
+                loading = false
+                trips.clear()
+                trips.addAll(it.data)
+            },
+            { }
+        )
+    }
+
+    Column(
+        modifier = Modifier
+            .animateContentSize()
+            .verticalScroll(scrollState)
+            .fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        CardSearchStation(
+            searchAction = { station ->
+                stationName = station
+            },
+            searchStationCardViewModel = searchStationCardViewModel,
+            homelandStationData = loggedInUserViewModel.home,
+            recentStationsData = loggedInUserViewModel.lastVisitedStations
+        )
+        ElevatedCard(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Column {
+                Text(
+                    modifier = Modifier
+                        .padding(8.dp).fillMaxWidth(),
+                    text = stringResource(id = R.string.departures_at, stationName),
+                    style = AppTypography.headlineSmall
+                )
+                Divider(
+                    modifier = Modifier.fillMaxWidth()
+                )
+                if (loading) {
+                    DataLoading()
+                } else {
+                    SearchConnection(
+                        searchTime = searchDate,
+                        trips = trips,
+                        onPreviousTime = {
+                            val time = times?.previous
+                            time?.let {
+                                searchDate = it
+                            }
+                        },
+                        onNextTime = {
+                            val time = times?.next
+                            time?.let {
+                                searchDate = it
+                            }
+                        },
+                        onTripSelection = { trip ->
+                            checkInViewModel.reset()
+                            checkInViewModel.lineName = trip.line?.name ?: ""
+                            checkInViewModel.tripId = trip.tripId
+                            checkInViewModel.startStationId = trip.station?.id ?: -1
+                            checkInViewModel.departureTime = trip.plannedDeparture
+
+                            onTripSelected()
+                        },
+                        onTimeSelection = {
+                            searchDate = it
+                        },
+                        onHomelandStationSelection = {
+                            //TODO setHomelandStation(context, stationName)
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -157,8 +267,7 @@ fun SearchConnection(
         // Time selection and home
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             ButtonWithIconAndText(

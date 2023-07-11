@@ -2,7 +2,6 @@ package de.hbch.traewelling.ui.selectDestination
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,8 +12,11 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,19 +27,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewmodel.compose.viewModel
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.dtos.Trip
 import de.hbch.traewelling.api.dtos.TripStation
 import de.hbch.traewelling.api.models.trip.ProductType
+import de.hbch.traewelling.shared.CheckInViewModel
 import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.LocalColorScheme
-import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.composables.DataLoading
 import java.text.DateFormat
 import java.text.DateFormat.getDateInstance
@@ -49,11 +49,24 @@ import java.util.concurrent.TimeUnit
 
 @Composable
 fun SelectDestination(
+    checkInViewModel: CheckInViewModel,
     modifier: Modifier = Modifier,
-    stationSelectedAction: (TripStation) -> Unit = { },
-    tripData: LiveData<Trip?>
+    onStationSelected: (TripStation) -> Unit = { }
 ) {
-    val trip by tripData.observeAsState()
+    val selectDestinationViewModel: SelectDestinationViewModel = viewModel()
+    var trip by remember { mutableStateOf<Trip?>(null) }
+
+    LaunchedEffect(trip) {
+        if (trip == null) {
+            selectDestinationViewModel.getTrip(
+                checkInViewModel.tripId,
+                checkInViewModel.lineName,
+                checkInViewModel.startStationId,
+                { trip = it },
+                { }
+            )
+        }
+    }
 
     ElevatedCard(
         modifier = modifier.fillMaxWidth(),
@@ -79,7 +92,10 @@ fun SelectDestination(
                         TravelStopListItem(
                             modifier = Modifier.clickable(onClick = {
                                 if (!tripStation.isCancelled) {
-                                    stationSelectedAction(tripStation)
+                                    checkInViewModel.arrivalTime = tripStation.arrivalPlanned
+                                    checkInViewModel.destination = tripStation.name
+                                    checkInViewModel.destinationStationId = tripStation.id
+                                    onStationSelected(tripStation)
                                 }
                             }),
                             station = tripStation,
@@ -273,74 +289,4 @@ fun getDelayColor(planned: Date, real: Date?): Color {
     }
 
     return colorResource(id = color)
-}
-
-@Preview
-@Composable
-private fun TravelStopListItemPreview() {
-    val station1 = TripStation(
-        id = 0,
-        name = "Bregenz",
-        rilIdentifier = null,
-        departurePlanned = Date(1685365200L * 1000),
-        departureReal = Date(1685365200L * 1000),
-        arrivalPlanned = Date(1685365200L * 1000),
-        arrivalReal = Date(1685365200L * 1000),
-        isCancelled = false
-    )
-    val station2 = TripStation(
-        id = 1,
-        name = "Lindau-Reutin",
-        rilIdentifier = "MLIR",
-        departurePlanned = Date(1685365680L * 1000),
-        departureReal = Date(1685365800L * 1000),
-        arrivalPlanned = Date(1685365680L * 1000),
-        arrivalReal = Date(1685365800L * 1000),
-        isCancelled = false
-    )
-    val station3 = TripStation(
-        id = 1,
-        name = "Memmingen",
-        rilIdentifier = "MM",
-        departurePlanned = Date(1685368680L * 1000),
-        departureReal = Date(1685369280L * 1000),
-        arrivalPlanned = Date(1685368680L * 1000),
-        arrivalReal = Date(1685369280L * 1000),
-        isCancelled = false
-    )
-    val station4 = TripStation(
-        id = 1,
-        name = "München Hbf Gl.27-36 langlanglanglang",
-        rilIdentifier = "MH N",
-        departurePlanned= Date(1685372640L * 1000),
-        departureReal = null,
-        arrivalPlanned = Date(1685372640L * 1000),
-        arrivalReal = null,
-        isCancelled = true
-    )
-    val stopoverList = listOf(
-        station1,
-        station2,
-        station3,
-        station4
-    )
-
-    val trip = Trip(
-        0,
-        ProductType.NATIONAL_EXPRESS,
-        "ECE 193",
-        "Zürich HB",
-        "München Hbf Gl.27-36 langlanglanglang",
-        stopovers = stopoverList
-    )
-
-    MainTheme {
-        Column(
-            modifier = Modifier.padding(8.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            SelectDestination(tripData = MutableLiveData(trip))
-            SelectDestination(tripData = MutableLiveData(null))
-        }
-    }
 }

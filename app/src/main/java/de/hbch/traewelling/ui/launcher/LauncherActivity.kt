@@ -8,7 +8,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.jcloquell.androidsecurestorage.SecureStorage
 import de.hbch.traewelling.shared.SharedValues
 import de.hbch.traewelling.ui.login.LoginActivity
-import de.hbch.traewelling.ui.main.MainActivity
+import de.hbch.traewelling.ui.main.NewMainActivity
 
 class LauncherActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,7 +19,7 @@ class LauncherActivity : AppCompatActivity() {
         val startupActivity =
             when (secureStorage.getObject(SharedValues.SS_JWT, String::class.java)) {
                 null -> LoginActivity::class.java
-                else -> MainActivity::class.java
+                else -> NewMainActivity::class.java
             }
 
         var startupIntent: Intent? = null

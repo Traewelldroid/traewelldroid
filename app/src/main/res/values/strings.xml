@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name" translatable="false">Träwelldroid</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
     <string name="abort">Abort</string>
     <string name="input_username">Username</string>
     <string name="input_password">Password</string>
@@ -141,11 +141,14 @@
     <string name="mute">Mute</string>
     <string name="unmute">Unmute</string>
     <string name="welcome">Welcome!</string>
-    <string name="account_notice">To use Träwelldroid, you are required to need to have created an account with Träwelling. If you have one already, just sign in by clicking the button below. Otherwise you can create an account there.</string>
+    <string name="account_notice">To use Träwelldroid, you are required to have created an account with Träwelling. If you have one already, just sign in by clicking the button below. Otherwise you can create an account there.</string>
     <string name="status_invisible">This status is invisible for you.</string>
     <string name="send_toot">Share this check-in on Mastodon</string>
     <string name="chain_toot">Chain this toot to the last tooted Mastodon post</string>
     <string name="settings_check_in_providers">Check-in providers</string>
     <string name="settings_check_in_providers_description">You can manage your check-in providers.</string>
     <string name="open_with_bahnexpert">Open with <b>bahn.expert</b></string>
+    <string name="finish">Finish</string>
+    <string name="force_check_in">Force check-in</string>
+    <string name="share_text">I\'m currently travelling with %1$s towards %2$s!</string>
 </resources>

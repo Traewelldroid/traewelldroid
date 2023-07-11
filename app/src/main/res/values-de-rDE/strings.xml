@@ -145,4 +145,7 @@
     <string name="settings_check_in_providers">Check-In-Anbieter</string>
     <string name="settings_check_in_providers_description">Hier kannst du deine Check-In-Anbieter konfigurieren.</string>
     <string name="open_with_bahnexpert">Mit <b>bahn.expert</b> öffnen</string>
+    <string name="finish">Fertig</string>
+    <string name="force_check_in">Check-In erzwingen</string>
+    <string name="share_text">Ich bin gerade in %1$s nach %2$s!</string>
 </resources>

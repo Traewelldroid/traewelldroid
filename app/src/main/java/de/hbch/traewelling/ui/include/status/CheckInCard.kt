@@ -35,7 +35,6 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
@@ -70,16 +69,16 @@ fun CheckInCard(
     loggedInUserViewModel: LoggedInUserViewModel? = null,
     stationSelected: (String, Date?) -> Unit = { _, _ -> },
     userSelected: (String) -> Unit = { },
-    statusSelected: (Int, Int) -> Unit = { _, _ -> },
+    statusSelected: (Int) -> Unit = { },
     handleEditClicked: (Status) -> Unit = { },
-    handleDeleteClicked: (Status) -> Unit = { }
+    onDeleted: (Status) -> Unit = { }
 ) {
     val primaryColor = LocalColorScheme.current.primary
     if(status != null) {
         ElevatedCard(
             modifier = modifier.fillMaxWidth(),
             onClick = {
-                statusSelected(status.statusId, status.userId)
+                statusSelected(status.statusId)
             }
         ) {
             Column(
@@ -213,7 +212,9 @@ fun CheckInCard(
                         handleEditClicked(status)
                     },
                     handleDeleteClicked = {
-                        handleDeleteClicked(status)
+                        checkInCardViewModel.deleteStatus(status.statusId, {
+                            onDeleted(status)
+                        }, { })
                     }
                 )
             }
@@ -318,43 +319,14 @@ private fun CheckInCardContent(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        FlowRow(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Image(
-                painter = painterResource(id = productType.getIcon()),
-                contentDescription = null
-            )
-            Text(
-                modifier = Modifier.padding(start = 4.dp),
-                text = line,
-                style = AppTypography.bodyLarge,
-                fontWeight = FontWeight.ExtraBold
-            )
-            if (journeyNumber != null && !line.contains(journeyNumber.toString())) {
-                Text(
-                    modifier = Modifier.padding(start = 4.dp),
-                    text = "($journeyNumber)",
-                    style = AppTypography.bodySmall
-                )
-            }
-            Text(
-                modifier = Modifier.padding(start = 12.dp),
-                text = getFormattedDistance(kilometers),
-                style = AppTypography.bodySmall
-            )
-            Text(
-                modifier = Modifier.padding(start = 8.dp),
-                text = getDurationString(duration = duration),
-                style = AppTypography.bodySmall
-            )
-            Icon(
-                modifier = Modifier.padding(start = 8.dp),
-                painter = painterResource(id = statusBusiness.getIcon()),
-                contentDescription = null
-            )
-        }
+        StatusDetailsRow(
+            productType = productType,
+            line = line,
+            journeyNumber = journeyNumber,
+            kilometers = kilometers,
+            duration = duration,
+            statusBusiness = statusBusiness
+        )
         if (!message.isNullOrEmpty()) {
             Row(
                 verticalAlignment = Alignment.CenterVertically
@@ -369,6 +341,56 @@ private fun CheckInCardContent(
                 )
             }
         }
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun StatusDetailsRow(
+    productType: ProductType,
+    line: String,
+    journeyNumber: Int?,
+    kilometers: Int,
+    duration: Int,
+    statusBusiness: StatusBusiness,
+    modifier: Modifier = Modifier
+) {
+    FlowRow(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Image(
+            painter = painterResource(id = productType.getIcon()),
+            contentDescription = null
+        )
+        Text(
+            modifier = Modifier.padding(start = 4.dp),
+            text = line,
+            style = AppTypography.bodyLarge,
+            fontWeight = FontWeight.ExtraBold
+        )
+        if (journeyNumber != null && !line.contains(journeyNumber.toString())) {
+            Text(
+                modifier = Modifier.padding(start = 4.dp),
+                text = "($journeyNumber)",
+                style = AppTypography.bodySmall
+            )
+        }
+        Text(
+            modifier = Modifier.padding(start = 12.dp),
+            text = getFormattedDistance(kilometers),
+            style = AppTypography.bodySmall
+        )
+        Text(
+            modifier = Modifier.padding(start = 8.dp),
+            text = getDurationString(duration = duration),
+            style = AppTypography.bodySmall
+        )
+        Icon(
+            modifier = Modifier.padding(start = 8.dp),
+            painter = painterResource(id = statusBusiness.getIcon()),
+            contentDescription = null
+        )
     }
 }
 
