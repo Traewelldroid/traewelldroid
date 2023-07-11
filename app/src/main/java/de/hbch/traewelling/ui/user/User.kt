@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -61,10 +60,7 @@ private fun UserCardContent(
     muteAction: () -> Unit = { }
 ) {
     ElevatedCard(
-        modifier = modifier.fillMaxWidth(),
-        elevation = CardDefaults.outlinedCardElevation(
-            defaultElevation = 2.dp
-        )
+        modifier = modifier.fillMaxWidth()
     ) {
         Column(
             modifier = Modifier
