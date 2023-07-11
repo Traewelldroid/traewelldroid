@@ -45,6 +45,7 @@ import androidx.navigation.compose.rememberNavController
 import com.jcloquell.androidsecurestorage.SecureStorage
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.TraewellingApi
+import de.hbch.traewelling.events.UnauthorizedEvent
 import de.hbch.traewelling.navigation.BOTTOM_NAVIGATION
 import de.hbch.traewelling.navigation.ComposeMenuItem
 import de.hbch.traewelling.navigation.Dashboard
@@ -55,7 +56,11 @@ import de.hbch.traewelling.shared.EventViewModel
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.shared.SharedValues
 import de.hbch.traewelling.theme.MainTheme
+import de.hbch.traewelling.ui.login.LoginActivity
 import de.hbch.traewelling.util.publishStationShortcuts
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 class MainActivity : ComponentActivity()
 {
@@ -63,10 +68,35 @@ class MainActivity : ComponentActivity()
     private val eventViewModel: EventViewModel by viewModels()
     private val checkInViewModel: CheckInViewModel by viewModels()
     private var newIntentReceived: ((Intent?) -> Unit)? = null
+    private lateinit var secureStorage: SecureStorage
+
+    override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        EventBus.getDefault().unregister(this)
+    }
+
+    @Suppress("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onUnauthorizedEvent(@Suppress("UNUSED_PARAMETER") unauthorizedEvent: UnauthorizedEvent) {
+        startActivity(
+            Intent(
+                this,
+                LoginActivity::class.java
+            )
+        )
+        secureStorage.removeObject(SharedValues.SS_JWT)
+        TraewellingApi.jwt = ""
+        finish()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val secureStorage = SecureStorage(this)
+        secureStorage = SecureStorage(this)
         TraewellingApi.jwt = secureStorage.getObject(SharedValues.SS_JWT, String::class.java)!!
 
         loggedInUserViewModel.getLoggedInUser()
