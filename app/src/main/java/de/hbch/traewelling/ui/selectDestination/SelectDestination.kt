@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Text
@@ -62,14 +64,26 @@ fun SelectDestination(
                 checkInViewModel.tripId,
                 checkInViewModel.lineName,
                 checkInViewModel.startStationId,
-                { trip = it },
+                { tripData ->
+                    val relevantStations = tripData.stopovers.subList(
+                        tripData.stopovers.indexOf(
+                            tripData.stopovers.find {
+                                it.id == checkInViewModel.startStationId
+                                        && it.departurePlanned == checkInViewModel.departureTime
+                            }
+                        ) + 1, tripData.stopovers.lastIndex + 1)
+
+                    tripData.stopovers = relevantStations
+                    trip = tripData
+                },
                 { }
             )
         }
     }
 
+    val scrollstate = rememberScrollState()
     ElevatedCard(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth().verticalScroll(scrollstate),
         elevation = CardDefaults.elevatedCardElevation(
             defaultElevation = 2.dp
         )
