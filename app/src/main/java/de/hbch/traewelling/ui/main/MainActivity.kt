@@ -57,7 +57,7 @@ import de.hbch.traewelling.shared.SharedValues
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.util.publishStationShortcuts
 
-class NewMainActivity : ComponentActivity()
+class MainActivity : ComponentActivity()
 {
     private val loggedInUserViewModel: LoggedInUserViewModel by viewModels()
     private val eventViewModel: EventViewModel by viewModels()

@@ -29,7 +29,7 @@
             android:name="io.sentry.dsn"
             android:value="${SENTRY_DSN}" />
 
-        <activity android:name=".ui.main.NewMainActivity" android:exported="true">
+        <activity android:name=".ui.main.MainActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
