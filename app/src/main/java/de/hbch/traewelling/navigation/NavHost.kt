@@ -112,7 +112,10 @@ fun TraewelldroidNavHost(
             onMenuChange(listOf())
             onResetFloatingActionButton()
         }
-        composable(PersonalProfile.route) {
+        composable(
+            PersonalProfile.route,
+            deepLinks = PersonalProfile.deepLinks
+        ) {
             val username = it.arguments?.getString("username")
 
             Profile(
@@ -123,26 +126,29 @@ fun TraewelldroidNavHost(
                 statusEditAction = navToEditCheckIn
             )
 
+            val menuItems = mutableListOf<ComposeMenuItem>()
             if (username == null) {
-                val menuItems = listOf(
-                    ComposeMenuItem(
-                        R.string.information,
-                        R.drawable.ic_privacy
-                    ) {
-                        context.startActivity(Intent(context, InfoActivity::class.java))
-                    },
-                    ComposeMenuItem(
-                        R.string.settings,
-                        R.drawable.ic_settings
-                    ) {
-                        navController.navigate(Settings.route) {
-                            launchSingleTop = true
+                menuItems.addAll(
+                    listOf(
+                        ComposeMenuItem(
+                            R.string.information,
+                            R.drawable.ic_privacy
+                        ) {
+                            context.startActivity(Intent(context, InfoActivity::class.java))
+                        },
+                        ComposeMenuItem(
+                            R.string.settings,
+                            R.drawable.ic_settings
+                        ) {
+                            navController.navigate(Settings.route) {
+                                launchSingleTop = true
+                            }
                         }
-                    }
+                    )
                 )
-                onMenuChange(menuItems)
-                onResetFloatingActionButton()
             }
+            onMenuChange(menuItems)
+            onResetFloatingActionButton()
         }
         composable(Settings.route) {
             Settings(
@@ -158,7 +164,10 @@ fun TraewelldroidNavHost(
             onMenuChange(listOf())
             onResetFloatingActionButton()
         }
-        composable(StatusDetails.route) {
+        composable(
+            StatusDetails.route,
+            deepLinks = StatusDetails.deepLinks
+        ) {
             val statusId = it.arguments?.getString("statusId")?.toInt()
             if (statusId == null || statusId == 0) {
                 navController.popBackStack()
@@ -170,48 +179,54 @@ fun TraewelldroidNavHost(
                 loggedInUserViewModel = loggedInUserViewModel,
                 statusLoaded = { status ->
                     val menuItems = mutableListOf<ComposeMenuItem>()
-                    if (status.userId == loggedInUserViewModel.loggedInUser.value?.id) {
-                        menuItems.add(
-                            ComposeMenuItem(
-                                R.string.title_share,
-                                R.drawable.ic_share
-                            ) {
-                                var shareText = context.getString(
-                                    R.string.share_text,
-                                    status.line,
-                                    status.destination
-                                )
-                                shareText = shareText.plus("\n\nhttps://traewelling.de/status/${status.statusId}")
-                                val sendIntent: Intent = Intent().apply {
-                                    action = Intent.ACTION_SEND
-                                    putExtra(Intent.EXTRA_TEXT, shareText)
-                                    type = "text/plain"
+                    if (loggedInUserViewModel.loggedInUser.value != null) {
+                        if (status.userId == loggedInUserViewModel.loggedInUser.value?.id) {
+                            menuItems.add(
+                                ComposeMenuItem(
+                                    R.string.title_share,
+                                    R.drawable.ic_share
+                                ) {
+                                    var shareText = context.getString(
+                                        R.string.share_text,
+                                        status.line,
+                                        status.destination
+                                    )
+                                    shareText =
+                                        shareText.plus("\n\nhttps://traewelling.de/status/${status.statusId}")
+                                    val sendIntent: Intent = Intent().apply {
+                                        action = Intent.ACTION_SEND
+                                        putExtra(Intent.EXTRA_TEXT, shareText)
+                                        type = "text/plain"
+                                    }
+
+                                    val shareIntent = Intent.createChooser(
+                                        sendIntent,
+                                        context.getString(R.string.title_share)
+                                    )
+                                    context.startActivity(shareIntent)
                                 }
+                            )
+                        } else {
+                            menuItems.add(
+                                ComposeMenuItem(
+                                    R.string.title_also_check_in,
+                                    R.drawable.ic_also_check_in
+                                ) {
+                                    checkInViewModel.lineName = status.line
+                                    checkInViewModel.tripId = status.hafasTripId
+                                    checkInViewModel.startStationId = status.originId
+                                    checkInViewModel.departureTime = status.departurePlanned
+                                    checkInViewModel.destinationStationId = status.destinationId
+                                    checkInViewModel.arrivalTime = status.arrivalPlanned
+                                    checkInViewModel.category = status.productType
+                                    checkInViewModel.destination = status.destination
 
-                                val shareIntent = Intent.createChooser(sendIntent, context.getString(R.string.title_share))
-                                context.startActivity(shareIntent)
-                            }
-                        )
-                    } else {
-                        menuItems.add(
-                            ComposeMenuItem(
-                                R.string.title_also_check_in,
-                                R.drawable.ic_also_check_in
-                            ) {
-                                checkInViewModel.lineName = status.line
-                                checkInViewModel.tripId = status.hafasTripId
-                                checkInViewModel.startStationId = status.originId
-                                checkInViewModel.departureTime = status.departurePlanned
-                                checkInViewModel.destinationStationId = status.destinationId
-                                checkInViewModel.arrivalTime = status.arrivalPlanned
-                                checkInViewModel.category = status.productType
-                                checkInViewModel.destination = status.destination
-
-                                navController.navigate(
-                                    CheckIn.route
-                                )
-                            }
-                        )
+                                    navController.navigate(
+                                        CheckIn.route
+                                    )
+                                }
+                            )
+                        }
                     }
                     onMenuChange(menuItems)
                     onResetFloatingActionButton()

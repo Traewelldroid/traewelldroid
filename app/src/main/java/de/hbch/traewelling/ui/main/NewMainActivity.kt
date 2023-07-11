@@ -1,5 +1,6 @@
 package de.hbch.traewelling.ui.main
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -8,6 +9,8 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -36,6 +39,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.jcloquell.androidsecurestorage.SecureStorage
@@ -58,6 +62,7 @@ class NewMainActivity : ComponentActivity()
     private val loggedInUserViewModel: LoggedInUserViewModel by viewModels()
     private val eventViewModel: EventViewModel by viewModels()
     private val checkInViewModel: CheckInViewModel by viewModels()
+    private var newIntentReceived: ((Intent?) -> Unit)? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,24 +78,36 @@ class NewMainActivity : ComponentActivity()
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
+            val navController = rememberNavController()
+
+            newIntentReceived = {
+                navController.handleDeepLink(it)
+            }
+
             TraewelldroidApp(
+                navController = navController,
                 loggedInUserViewModel = loggedInUserViewModel,
                 eventViewModel = eventViewModel,
                 checkInViewModel = checkInViewModel
             )
         }
     }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        newIntentReceived?.invoke(intent)
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TraewelldroidApp(
+    navController: NavHostController,
     loggedInUserViewModel: LoggedInUserViewModel,
     eventViewModel: EventViewModel,
     checkInViewModel: CheckInViewModel
 ) {
     MainTheme {
-        val navController = rememberNavController()
         val currentBackStack by navController.currentBackStackEntryAsState()
         val currentDestination = currentBackStack?.destination
         val currentScreen = SCREENS.find { it.route == currentDestination?.route } ?: Dashboard
@@ -242,6 +259,8 @@ fun TraewelldroidApp(
                 eventViewModel = eventViewModel,
                 checkInViewModel = checkInViewModel,
                 modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
                     .padding(innerPadding)
                     .padding(horizontal = 16.dp),
                 onMenuChange = menuItemsChanged,

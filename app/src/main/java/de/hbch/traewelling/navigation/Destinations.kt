@@ -1,9 +1,13 @@
 package de.hbch.traewelling.navigation
 
 import androidx.navigation.NamedNavArgument
+import androidx.navigation.NavDeepLink
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import de.hbch.traewelling.R
+
+val TRWL_BASE_URI = "https://traewelling.de"
 
 interface Destination {
     val label: Int
@@ -16,6 +20,10 @@ interface ArgumentDestination : Destination {
 
 interface MainDestination : Destination {
     val icon: Int
+}
+
+interface DeepLinkedDestination: Destination {
+    val deepLinks: List<NavDeepLink>
 }
 
 object Dashboard : MainDestination {
@@ -36,7 +44,7 @@ object Statistics : MainDestination {
     override val route = "statistics"
 }
 
-object PersonalProfile : MainDestination, ArgumentDestination {
+object PersonalProfile : MainDestination, ArgumentDestination, DeepLinkedDestination {
     override val icon = R.drawable.ic_account
     override val label = R.string.title_user
     override val route = "personal-profile/?username={username}"
@@ -45,6 +53,11 @@ object PersonalProfile : MainDestination, ArgumentDestination {
             type = NavType.StringType
             nullable = true
             defaultValue = null
+        }
+    )
+    override val deepLinks = listOf(
+        navDeepLink {
+            uriPattern = "$TRWL_BASE_URI/@{username}"
         }
     )
 }
@@ -89,12 +102,17 @@ object CheckInResult: Destination {
     override val route = "check-in-result"
 }
 
-object StatusDetails : ArgumentDestination {
+object StatusDetails : ArgumentDestination, DeepLinkedDestination {
     override val label = R.string.status_details
     override val route = "status-details/{statusId}"
     override val arguments = listOf(
         navArgument("statusId") {
             type = NavType.IntType
+        }
+    )
+    override val deepLinks = listOf(
+        navDeepLink {
+            uriPattern = "$TRWL_BASE_URI/status/{statusId}"
         }
     )
 }
