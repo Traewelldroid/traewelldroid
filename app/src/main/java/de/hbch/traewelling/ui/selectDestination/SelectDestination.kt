@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -83,10 +82,7 @@ fun SelectDestination(
 
     val scrollstate = rememberScrollState()
     ElevatedCard(
-        modifier = modifier.fillMaxWidth().verticalScroll(scrollstate),
-        elevation = CardDefaults.elevatedCardElevation(
-            defaultElevation = 2.dp
-        )
+        modifier = modifier.fillMaxWidth().verticalScroll(scrollstate)
     ) {
         Column(
             modifier = Modifier.padding(16.dp)

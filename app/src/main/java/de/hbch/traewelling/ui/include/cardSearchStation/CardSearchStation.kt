@@ -22,7 +22,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -77,10 +76,7 @@ fun CardSearchStation(
     var autocompleteOptions by remember { mutableStateOf(listOf<String>()) }
 
     ElevatedCard(
-        modifier = modifier.fillMaxWidth(),
-        elevation = CardDefaults.elevatedCardElevation(
-            defaultElevation = 2.dp
-        )
+        modifier = modifier.fillMaxWidth()
     ) {
         Column(
             modifier = Modifier.padding(16.dp)
