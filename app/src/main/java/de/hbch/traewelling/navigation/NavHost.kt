@@ -23,6 +23,7 @@ import de.hbch.traewelling.ui.checkInResult.CheckInResultView
 import de.hbch.traewelling.ui.dashboard.Dashboard
 import de.hbch.traewelling.ui.info.InfoActivity
 import de.hbch.traewelling.ui.login.LoginActivity
+import de.hbch.traewelling.ui.main.MainActivity
 import de.hbch.traewelling.ui.searchConnection.SearchConnection
 import de.hbch.traewelling.ui.selectDestination.SelectDestination
 import de.hbch.traewelling.ui.settings.Settings
@@ -153,6 +154,7 @@ fun TraewelldroidNavHost(
         composable(Settings.route) {
             Settings(
                 loggedInUserViewModel = loggedInUserViewModel,
+                emojiPackItemAdapter = (context as? MainActivity)?.emojiPackItemAdapter,
                 traewellingLogoutAction = {
                     loggedInUserViewModel.logout( {
                         secureStorage.removeObject(SharedValues.SS_JWT)

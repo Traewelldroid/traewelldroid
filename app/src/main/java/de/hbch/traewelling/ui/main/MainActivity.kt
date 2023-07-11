@@ -43,6 +43,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.jcloquell.androidsecurestorage.SecureStorage
+import de.c1710.filemojicompat_ui.views.picker.EmojiPackItemAdapter
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.events.UnauthorizedEvent
@@ -69,6 +70,7 @@ class MainActivity : ComponentActivity()
     private val checkInViewModel: CheckInViewModel by viewModels()
     private var newIntentReceived: ((Intent?) -> Unit)? = null
     private lateinit var secureStorage: SecureStorage
+    lateinit var emojiPackItemAdapter: EmojiPackItemAdapter
 
     override fun onStart() {
         super.onStart()
@@ -97,6 +99,7 @@ class MainActivity : ComponentActivity()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         secureStorage = SecureStorage(this)
+        emojiPackItemAdapter = EmojiPackItemAdapter.get(this)
         TraewellingApi.jwt = secureStorage.getObject(SharedValues.SS_JWT, String::class.java)!!
 
         loggedInUserViewModel.getLoggedInUser()
