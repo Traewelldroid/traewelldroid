@@ -1,2 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="ok">oké</string>
+    <string name="input_username">Gebruikersnaam</string>
+    <string name="input_password">Wachtwoord</string>
+    <string name="login">aanmelden</string>
+    <string name="title_dashboard">Start</string>
+    <string name="title_active_checkins">onderweg</string>
+    <string name="title_user">profiel</string>
+    <string name="title_search_connection">zoek verbinding</string>
+    <string name="title_select_destination">Selecteer bestemming</string>
+    <string name="display_points">%1$d punten</string>
+    <string name="display_travel_time_minutes">%1$dmin</string>
+    <string name="display_travel_time_hours_minutes">%1$du %2$dm</string>
+    <string name="display_average_speed">%1$.2f km/u</string>
+    <string name="where_are_you">Waar ben je\?</string>
+    <string name="search">zoeken</string>
+    <string name="next_station">Volgend station: %1$s</string>
+    <string name="previous">Vorig</string>
+    <string name="next">Volgende</string>
+    <string name="edit_status">Status bewerken</string>
+    <string name="error_credentials">Controleer uw inloggegevens</string>
+    <string name="error_logout">Uitloggen is niet gelukt!</string>
+    <string name="username_or_email">Gebruikersnaam of e-mailadres</string>
+    <string name="check_in_successful">U bent ingecheckt!</string>
+    <string name="check_in_failure">Er is een fout opgetreden bij het inchecken.</string>
+    <string name="check_in_conflict">U bent al ingecheckt in een andere aansluiting!</string>
+    <string name="title_select_date">Selecteer de vertrekdatum</string>
+    <string name="title_select_visibility">Selecteer de gewenste statuszichtbaarheid</string>
+    <string name="visibility_public">Publiek</string>
+    <string name="visibility_followers">Alleen voor volgers</string>
+    <string name="visibility_private">Alleen voor jou</string>
+    <string name="visibility_only_authenticated">Alleen geauthenticeerde gebruikers</string>
+    <string name="travel_purpose">Doel van de reis</string>
+    <string name="business_commute">Pendelen</string>
+    <string name="set_homeland">Huisstation instellen</string>
+    <string name="set_homeland_success">Uw thuisstation is nu ingesteld op %1$s.</string>
+    <string name="delete">Verwijderen</string>
+    <string name="line_destination">%1$s naar %2$s</string>
+    <string name="error_missing_location_permission">Om deze functie te gebruiken, moet u de locatietoestemming inschakelen in uw apparaatinstellingen.</string>
+    <string name="title_select_time">Selecteer de vertrektijd</string>
+    <string name="business_private">Privaat</string>
+    <string name="delete_status">Weet u zeker dat u deze check-in wilt verwijderen\?</string>
+</resources>
