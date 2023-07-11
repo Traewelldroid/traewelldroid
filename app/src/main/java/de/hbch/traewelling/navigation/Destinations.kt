@@ -1,14 +1,9 @@
 package de.hbch.traewelling.navigation
 
-import android.view.Menu
-import androidx.compose.runtime.Composable
 import androidx.navigation.NamedNavArgument
-import androidx.navigation.NavArgument
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import de.hbch.traewelling.R
-import de.hbch.traewelling.ui.dashboard.Dashboard
-import java.util.Date
 
 interface Destination {
     val label: Int
@@ -21,10 +16,6 @@ interface ArgumentDestination : Destination {
 
 interface MainDestination : Destination {
     val icon: Int
-}
-
-interface MenuDestination {
-    val menuItems: List<ComposeMenuItem>
 }
 
 object Dashboard : MainDestination {
@@ -45,10 +36,17 @@ object Statistics : MainDestination {
     override val route = "statistics"
 }
 
-object PersonalProfile : MainDestination {
+object PersonalProfile : MainDestination, ArgumentDestination {
     override val icon = R.drawable.ic_account
     override val label = R.string.title_user
-    override val route = "personal-profile"
+    override val route = "personal-profile/?username={username}"
+    override val arguments = listOf(
+        navArgument("username") {
+            type = NavType.StringType
+            nullable = true
+            defaultValue = null
+        }
+    )
 }
 
 object SearchConnection : ArgumentDestination {
@@ -64,14 +62,31 @@ object SearchConnection : ArgumentDestination {
     )
 }
 
-object SelectDestination : Destination {
+object SelectDestination : ArgumentDestination {
     override val label = R.string.title_select_destination
-    override val route = "select-destination"
+    override val route = "select-destination/?editMode={editMode}"
+    override val arguments = listOf(
+        navArgument("editMode") {
+            type = NavType.BoolType
+            defaultValue = false
+        }
+    )
 }
 
-object CheckIn : Destination {
+object CheckIn : ArgumentDestination {
     override val label = R.string.check_in
-    override val route = "check-in"
+    override val route = "check-in/?editMode={editMode}"
+    override val arguments = listOf(
+        navArgument("editMode") {
+            type = NavType.BoolType
+            defaultValue = false
+        }
+    )
+}
+
+object CheckInResult: Destination {
+    override val label = R.string.check_in
+    override val route = "check-in-result"
 }
 
 object StatusDetails : ArgumentDestination {
@@ -97,6 +112,7 @@ val SCREENS = listOf(
     SearchConnection,
     SelectDestination,
     CheckIn,
+    CheckInResult,
     StatusDetails,
     Settings
 )

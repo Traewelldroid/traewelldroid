@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
@@ -12,11 +11,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBar
@@ -24,7 +23,6 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -34,17 +32,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.jcloquell.androidsecurestorage.SecureStorage
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.TraewellingApi
@@ -53,17 +46,18 @@ import de.hbch.traewelling.navigation.ComposeMenuItem
 import de.hbch.traewelling.navigation.Dashboard
 import de.hbch.traewelling.navigation.SCREENS
 import de.hbch.traewelling.navigation.TraewelldroidNavHost
+import de.hbch.traewelling.shared.CheckInViewModel
 import de.hbch.traewelling.shared.EventViewModel
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.shared.SharedValues
 import de.hbch.traewelling.theme.MainTheme
-import de.hbch.traewelling.ui.dashboard.Dashboard
 import de.hbch.traewelling.util.publishStationShortcuts
 
 class NewMainActivity : ComponentActivity()
 {
     private val loggedInUserViewModel: LoggedInUserViewModel by viewModels()
     private val eventViewModel: EventViewModel by viewModels()
+    private val checkInViewModel: CheckInViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,7 +75,8 @@ class NewMainActivity : ComponentActivity()
         setContent {
             TraewelldroidApp(
                 loggedInUserViewModel = loggedInUserViewModel,
-                eventViewModel = eventViewModel
+                eventViewModel = eventViewModel,
+                checkInViewModel = checkInViewModel
             )
         }
     }
@@ -91,7 +86,8 @@ class NewMainActivity : ComponentActivity()
 @Composable
 fun TraewelldroidApp(
     loggedInUserViewModel: LoggedInUserViewModel,
-    eventViewModel: EventViewModel
+    eventViewModel: EventViewModel,
+    checkInViewModel: CheckInViewModel
 ) {
     MainTheme {
         val navController = rememberNavController()
@@ -101,11 +97,17 @@ fun TraewelldroidApp(
 
         val appBarState = rememberTopAppBarState()
         val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(appBarState)
+
         val menuItems = remember { mutableStateListOf<ComposeMenuItem>() }
         val menuItemsChanged: (List<ComposeMenuItem>) -> Unit = {
             menuItems.clear()
             menuItems.addAll(it)
         }
+
+        var fabVisible by remember { mutableStateOf(false) }
+        var fabIcon by remember { mutableStateOf<Int?>(null) }
+        var fabLabel by remember { mutableStateOf<Int?>(null) }
+        var fabListener by remember { mutableStateOf({ }) }
 
         Scaffold(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -175,12 +177,12 @@ fun TraewelldroidApp(
                                 }
                             }
                         }
-                    }
+                    },
                 )
             },
             bottomBar = {
                 AnimatedVisibility(
-                    visible = BOTTOM_NAVIGATION.contains(currentScreen),
+                    visible = navController.previousBackStackEntry == null,
                     enter = slideInVertically(initialOffsetY = { it }),
                     exit = slideOutVertically(targetOffsetY = { it })
                 ) {
@@ -214,14 +216,47 @@ fun TraewelldroidApp(
                         }
                     }
                 }
+            },
+            floatingActionButton = {
+                if (fabVisible) {
+                    val icon = fabIcon
+                    val label = fabLabel
+                    if (icon != null && label != null) {
+                        ExtendedFloatingActionButton(onClick = fabListener) {
+                            Icon(
+                                painter = painterResource(id = icon),
+                                contentDescription = null
+                            )
+                            Text(
+                                modifier = Modifier.padding(start = 4.dp),
+                                text = stringResource(id = label)
+                            )
+                        }
+                    }
+                }
             }
         ) { innerPadding ->
             TraewelldroidNavHost(
                 navController = navController,
                 loggedInUserViewModel = loggedInUserViewModel,
                 eventViewModel = eventViewModel,
-                modifier = Modifier.padding(innerPadding),
-                onMenuChange = menuItemsChanged
+                checkInViewModel = checkInViewModel,
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .padding(horizontal = 16.dp),
+                onMenuChange = menuItemsChanged,
+                onFloatingActionButtonChange = { icon, label, listener ->
+                    fabIcon = icon
+                    fabLabel = label
+                    fabListener = listener
+                    fabVisible = true
+                },
+                onResetFloatingActionButton = {
+                    fabVisible = false
+                    fabIcon = null
+                    fabLabel = null
+                    fabListener = { }
+                }
             )
         }
     }

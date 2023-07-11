@@ -41,11 +41,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.fragment.findNavController
 import de.hbch.traewelling.R
 import de.hbch.traewelling.adapters.getLastDestination
 import de.hbch.traewelling.api.models.trip.HafasTrip
 import de.hbch.traewelling.api.models.trip.ProductType
+import de.hbch.traewelling.shared.CheckInViewModel
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.MainTheme
@@ -65,8 +65,10 @@ import java.util.GregorianCalendar
 @Composable
 fun SearchConnection(
     loggedInUserViewModel: LoggedInUserViewModel,
+    checkInViewModel: CheckInViewModel,
     station: String,
-    currentSearchDate: Date
+    currentSearchDate: Date,
+    onTripSelected: () -> Unit = { }
 ) {
     val viewModel: SearchConnectionViewModel = viewModel()
     val searchStationCardViewModel: SearchStationCardViewModel = viewModel()
@@ -95,12 +97,10 @@ fun SearchConnection(
         modifier = Modifier
             .animateContentSize()
             .verticalScroll(scrollState)
-            .fillMaxWidth()
-            .padding(horizontal = 8.dp),
+            .fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         CardSearchStation(
-            modifier = Modifier.padding(8.dp),
             searchAction = { station ->
                 stationName = station
             },
@@ -109,12 +109,12 @@ fun SearchConnection(
             recentStationsData = loggedInUserViewModel.lastVisitedStations
         )
         ElevatedCard(
-            modifier = Modifier.padding(8.dp).fillMaxWidth()
+            modifier = Modifier.fillMaxWidth()
         ) {
             Column {
                 Text(
                     modifier = Modifier
-                        .fillMaxWidth().padding(horizontal = 8.dp, vertical = 12.dp),
+                        .padding(8.dp).fillMaxWidth(),
                     text = stringResource(id = R.string.departures_at, stationName),
                     style = AppTypography.headlineSmall
                 )
@@ -140,18 +140,13 @@ fun SearchConnection(
                             }
                         },
                         onTripSelection = { trip ->
-                            /*TODO checkInViewModel.reset()
+                            checkInViewModel.reset()
                             checkInViewModel.lineName = trip.line?.name ?: ""
                             checkInViewModel.tripId = trip.tripId
                             checkInViewModel.startStationId = trip.station?.id ?: -1
                             checkInViewModel.departureTime = trip.plannedDeparture
 
-                            val action =
-                                SearchConnectionFragmentDirections.actionSearchConnectionFragmentToSelectDestinationFragment(
-                                    trip.tripId,
-                                    trip.finalDestination
-                                )
-                            findNavController().navigate(action)*/
+                            onTripSelected()
                         },
                         onTimeSelection = {
                             searchDate = it
@@ -272,8 +267,7 @@ fun SearchConnection(
         // Time selection and home
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             ButtonWithIconAndText(

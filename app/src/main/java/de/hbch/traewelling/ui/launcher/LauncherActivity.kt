@@ -8,7 +8,6 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.jcloquell.androidsecurestorage.SecureStorage
 import de.hbch.traewelling.shared.SharedValues
 import de.hbch.traewelling.ui.login.LoginActivity
-import de.hbch.traewelling.ui.main.MainActivity
 import de.hbch.traewelling.ui.main.NewMainActivity
 
 class LauncherActivity : AppCompatActivity() {

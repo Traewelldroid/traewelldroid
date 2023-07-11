@@ -21,14 +21,13 @@ import de.hbch.traewelling.R
 import de.hbch.traewelling.shared.SharedValues
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.info.InfoActivity
-import de.hbch.traewelling.ui.main.MainActivity
+import de.hbch.traewelling.ui.main.NewMainActivity
 import net.openid.appauth.AppAuthConfiguration
 import net.openid.appauth.AuthorizationRequest
 import net.openid.appauth.AuthorizationResponse
 import net.openid.appauth.AuthorizationService
 import net.openid.appauth.AuthorizationServiceConfiguration
 import net.openid.appauth.ResponseTypeValues
-import net.openid.appauth.browser.AnyBrowserMatcher
 import net.openid.appauth.browser.BrowserDenyList
 import net.openid.appauth.browser.VersionedBrowserMatcher
 import java.security.MessageDigest
@@ -149,7 +148,7 @@ class LoginActivity : ComponentActivity() {
                 if (response?.accessToken != null) {
                     val secureStorage = SecureStorage(this)
                     secureStorage.storeObject(SharedValues.SS_JWT, response.accessToken!!)
-                    startActivity(Intent(this, MainActivity::class.java))
+                    startActivity(Intent(this, NewMainActivity::class.java))
                     finish()
                 }
             }

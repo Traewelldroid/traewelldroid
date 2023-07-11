@@ -1,5 +1,6 @@
 package de.hbch.traewelling.shared
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import de.hbch.traewelling.api.TraewellingApi
@@ -7,9 +8,12 @@ import de.hbch.traewelling.api.models.Data
 import de.hbch.traewelling.api.models.event.Event
 import de.hbch.traewelling.api.models.status.CheckInRequest
 import de.hbch.traewelling.api.models.status.CheckInResponse
+import de.hbch.traewelling.api.models.status.Status
 import de.hbch.traewelling.api.models.status.StatusBusiness
 import de.hbch.traewelling.api.models.status.StatusVisibility
+import de.hbch.traewelling.api.models.status.UpdateStatusRequest
 import de.hbch.traewelling.api.models.trip.ProductType
+import de.hbch.traewelling.ui.checkInResult.CheckInResult
 import io.sentry.Sentry
 import retrofit2.Call
 import retrofit2.Callback
@@ -31,6 +35,10 @@ class CheckInViewModel : ViewModel() {
     val event = MutableLiveData<Event?>()
     var category: ProductType = ProductType.ALL
     var destination: String = ""
+    var checkInResult: CheckInResult? = null
+    var checkInResponse: CheckInResponse? = null
+    var forceCheckIn: Boolean = false
+    var editStatusId: Int = 0
 
     init {
         reset()
@@ -50,11 +58,21 @@ class CheckInViewModel : ViewModel() {
         statusVisibility.postValue(StatusVisibility.PUBLIC)
         statusBusiness.postValue(StatusBusiness.PRIVATE)
         event.postValue(null)
+        checkInResult = null
+        checkInResponse = null
+        forceCheckIn = false
+        editStatusId = 0
+    }
+
+    fun forceCheckIn(
+        onCheckedIn: () -> Unit = { }
+    ) {
+        forceCheckIn = true
+        checkIn(onCheckedIn)
     }
 
     fun checkIn(
-        successCallback: (CheckInResponse?) -> Unit,
-        failureCallback: (Int) -> Unit
+        onCheckedIn: () -> Unit = { }
     ) {
         val checkInRequest = CheckInRequest(
             message.value ?: "",
@@ -68,7 +86,8 @@ class CheckInViewModel : ViewModel() {
             startStationId,
             destinationStationId,
             departureTime ?: Date(),
-             arrivalTime ?: Date()
+             arrivalTime ?: Date(),
+            forceCheckIn
         )
         TraewellingApi.checkInService.checkIn(checkInRequest)
             .enqueue(object: Callback<Data<CheckInResponse>> {
@@ -77,16 +96,47 @@ class CheckInViewModel : ViewModel() {
                     response: Response<Data<CheckInResponse>>
                 ) {
                     if (response.isSuccessful) {
-                        successCallback(response.body()?.data)
+                        checkInResult = CheckInResult.SUCCESSFUL
+                        checkInResponse = response.body()?.data
                     } else {
-                        failureCallback(response.code())
+                        checkInResult = when (response.code()) {
+                            409 -> CheckInResult.CONFLICTED
+                            else -> CheckInResult.ERROR
+                        }
                         Sentry.captureMessage(response.errorBody()?.charStream()?.readText()!!)
                     }
+                    onCheckedIn()
                 }
                 override fun onFailure(call: Call<Data<CheckInResponse>>, t: Throwable) {
-                    failureCallback(-1)
                     Sentry.captureException(t)
+                    checkInResult = CheckInResult.ERROR
+                    onCheckedIn()
                 }
             })
+    }
+
+    fun updateCheckIn(successfulCallback: (Status) -> Unit) {
+        TraewellingApi.checkInService.updateCheckIn(
+            editStatusId,
+            UpdateStatusRequest(
+                message.value,
+                statusBusiness.value ?: error("Invalid data"),
+                statusVisibility.value ?: error("Invalid data"),
+                destinationStationId,
+                arrivalTime
+            )
+        ).enqueue(object : Callback<Data<Status>> {
+            override fun onResponse(call: Call<Data<Status>>, response: Response<Data<Status>>) {
+                val body = response.body()
+                if (body != null) {
+                    successfulCallback(body.data)
+                    reset()
+                }
+            }
+
+            override fun onFailure(call: Call<Data<Status>>, t: Throwable) {
+                Log.e("CheckInViewModel", t.stackTraceToString())
+            }
+        })
     }
 }

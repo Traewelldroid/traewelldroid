@@ -36,7 +36,9 @@ import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Statistics() {
+fun Statistics(
+    modifier: Modifier = Modifier
+) {
     val statisticsViewModel: StatisticsViewModel = viewModel()
     val statistics by statisticsViewModel.statistics.observeAsState()
     val selectedDateRange by statisticsViewModel.dateRange.observeAsState()
@@ -122,7 +124,9 @@ fun Statistics() {
         }
     }
 
-    Column {
+    Column(
+        modifier = modifier
+    ) {
         OutlinedButtonWithIconAndText(
             modifier = Modifier.fillMaxWidth(),
             text = getDateRangeString(range = selectedDateRange),

@@ -1,6 +1,5 @@
 package de.hbch.traewelling.api.models.status
 
-import android.content.res.Resources
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.Gson
@@ -14,6 +13,7 @@ data class Status(
     @SerializedName("body") val body: String?,
     @SerializedName("type") val type: String,
     @SerializedName("createdAt") val createdAt: Date,
+    @SerializedName("profilePicture") val profilePicture: String?,
     @SerializedName("user") val userId: Int,
     @SerializedName("username") val username: String,
     @SerializedName("preventIndex") val preventIndex: Boolean,
@@ -74,29 +74,29 @@ data class Status(
     }
 }
 
-enum class StatusVisibility(val visibility: Int) {
+enum class StatusVisibility() {
     @SerializedName("0")
-    PUBLIC(0) {
+    PUBLIC() {
         override fun getIcon() = R.drawable.ic_public
         override fun getTitle() = R.string.visibility_public
     },
     @SerializedName("1")
-    UNLISTED(1) {
+    UNLISTED() {
         override fun getIcon() = R.drawable.ic_lock_open
         override fun getTitle() = R.string.visibility_unlisted
     },
     @SerializedName("2")
-    FOLLOWERS(2) {
+    FOLLOWERS() {
         override fun getIcon() = R.drawable.ic_people
         override fun getTitle() = R.string.visibility_followers
     },
     @SerializedName("3")
-    PRIVATE(3) {
+    PRIVATE() {
         override fun getIcon() = R.drawable.ic_lock
         override fun getTitle() = R.string.visibility_private
     },
     @SerializedName("4")
-    ONLY_AUTHENTICATED(4) {
+    ONLY_AUTHENTICATED() {
         override fun getIcon() = R.drawable.ic_authorized
         override fun getTitle() = R.string.visibility_only_authenticated
     };
@@ -122,15 +122,6 @@ enum class StatusBusiness(val business: Int) {
         override fun getTitle() = R.string.business_commute
     };
 
-    abstract fun getIcon(): Int;
-    abstract fun getTitle(): Int;
-
-    companion object {
-        fun toString(resources: Resources, business: StatusBusiness)
-            = resources.getString(when(business) {
-                StatusBusiness.PRIVATE -> R.string.business_private
-                StatusBusiness.COMMUTE -> R.string.business_commute
-                StatusBusiness.BUSINESS -> R.string.business
-            })
-    }
+    abstract fun getIcon(): Int
+    abstract fun getTitle(): Int
 }

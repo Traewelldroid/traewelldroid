@@ -15,7 +15,8 @@ data class CheckInRequest(
     @SerializedName("start") val startStationId: Int,
     @SerializedName("destination") val destinationStationId: Int,
     @SerializedName("departure") val departureTime: Date,
-    @SerializedName("arrival") val arrivalTime: Date
+    @SerializedName("arrival") val arrivalTime: Date,
+    @SerializedName("force") val force: Boolean = false
 )
 
 data class CheckInResponse(

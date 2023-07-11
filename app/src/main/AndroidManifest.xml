@@ -27,10 +27,6 @@
         <meta-data
             android:name="io.sentry.dsn"
             android:value="${SENTRY_DSN}" />
-
-        <activity
-            android:name=".ui.main.MainActivity"
-            android:exported="true" />
         <activity android:name=".ui.main.NewMainActivity" android:exported="true" />
         <activity
             android:name=".ui.login.LoginActivity"
@@ -93,12 +89,10 @@
                 <data android:pathPrefix="/@" />
                 <data android:scheme="http" />
                 <data android:scheme="https" />
-                <data
-                    android:host="app.traewelldroid.de"
-                    android:scheme="https" />
-                <data
-                    android:host="app.traewelldroid.de"
-                    android:scheme="traewelldroid" />
+                <data android:scheme="https"/>
+                <data android:host="app.traewelldroid.de"/>
+                <data android:scheme="traewelldroid"/>
+                <data android:host="app.traewelldroid.de"/>
                 <data android:pathPrefix="/auth/login" />
             </intent-filter>
         </activity>
