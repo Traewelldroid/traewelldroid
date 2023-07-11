@@ -62,7 +62,7 @@ object PersonalProfile : MainDestination, ArgumentDestination, DeepLinkedDestina
     )
 }
 
-object SearchConnection : ArgumentDestination {
+object SearchConnection : ArgumentDestination, DeepLinkedDestination {
     override val label = R.string.title_search_connection
     override val route = "search-connection/{station}/{date}"
     override val arguments = listOf(
@@ -71,6 +71,11 @@ object SearchConnection : ArgumentDestination {
         },
         navArgument("date") {
             type = NavType.LongType
+        }
+    )
+    override val deepLinks = listOf(
+        navDeepLink {
+            uriPattern = "$TRWL_BASE_URI/trains/stationboard?station={station}"
         }
     )
 }

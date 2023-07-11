@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import de.hbch.traewelling.R
 import de.hbch.traewelling.adapters.getLastDestination
+import de.hbch.traewelling.api.models.station.Station
 import de.hbch.traewelling.api.models.trip.HafasTrip
 import de.hbch.traewelling.api.models.trip.ProductType
 import de.hbch.traewelling.shared.CheckInViewModel
@@ -68,7 +69,8 @@ fun SearchConnection(
     checkInViewModel: CheckInViewModel,
     station: String,
     currentSearchDate: Date,
-    onTripSelected: () -> Unit = { }
+    onTripSelected: () -> Unit = { },
+    onHomelandSelected: (Station) -> Unit = { }
 ) {
     val viewModel: SearchConnectionViewModel = viewModel()
     val searchStationCardViewModel: SearchStationCardViewModel = viewModel()
@@ -152,7 +154,14 @@ fun SearchConnection(
                             searchDate = it
                         },
                         onHomelandStationSelection = {
-                            //TODO setHomelandStation(context, stationName)
+                            viewModel.setUserHomelandStation(
+                                station,
+                                { s ->
+                                    loggedInUserViewModel.setHomelandStation(s)
+                                    onHomelandSelected(s)
+                                },
+                                {}
+                            )
                         }
                     )
                 }

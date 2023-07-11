@@ -1,12 +1,14 @@
 package de.hbch.traewelling.navigation
 
 import android.app.Activity
+import android.app.PendingIntent
 import android.content.Intent
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -30,6 +32,7 @@ import de.hbch.traewelling.ui.settings.Settings
 import de.hbch.traewelling.ui.statistics.Statistics
 import de.hbch.traewelling.ui.statusDetail.StatusDetail
 import de.hbch.traewelling.ui.user.Profile
+import de.hbch.traewelling.util.toShortCut
 import java.util.Calendar
 import java.util.Date
 import java.util.GregorianCalendar
@@ -239,7 +242,10 @@ fun TraewelldroidNavHost(
                 }
             )
         }
-        composable(SearchConnection.route) {
+        composable(
+            SearchConnection.route,
+            deepLinks = SearchConnection.deepLinks
+        ) {
             // if specific date is passed, take it. if not, search from now -5min
             var searchDate = it.arguments?.getString("date")?.toLongOrNull()
             if (searchDate == null) {
@@ -258,6 +264,23 @@ fun TraewelldroidNavHost(
                     navController.navigate(
                         "select-destination/?editMode=false"
                     )
+                },
+                onHomelandSelected = { station ->
+                    if (ShortcutManagerCompat.isRequestPinShortcutSupported(context)) {
+                        val shortcut = station.toShortCut(context, home = true)
+                        val pinnedShortcutCallbackIntent =
+                            ShortcutManagerCompat.createShortcutResultIntent(context, shortcut)
+
+                        val successCallback = PendingIntent.getBroadcast(
+                            context, /* request code */ 0,
+                            pinnedShortcutCallbackIntent, PendingIntent.FLAG_IMMUTABLE
+                        )
+
+                        ShortcutManagerCompat.requestPinShortcut(
+                            context, shortcut,
+                            successCallback.intentSender
+                        )
+                    }
                 }
             )
             onMenuChange(listOf())

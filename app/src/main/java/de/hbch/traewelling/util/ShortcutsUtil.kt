@@ -25,7 +25,7 @@ fun Station.toShortCut(context: Context, home: Boolean = false): ShortcutInfoCom
         .build()
 }
 
-fun publishStationShortcuts(context: Context, stations: List<Station>, home: Boolean = false) {
+fun publishStationShortcuts(context: Context, stations: List<Station>) {
     val shortcuts = stations.map {
         it.toShortCut(context)
     }
