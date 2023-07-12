@@ -53,7 +53,7 @@ fun TraewelldroidNavHost(
 
     val navToSearchConnections: (String, Date?) -> Unit = { station, date ->
         navController.navigate(
-            "search-connection/$station/${date?.time}"
+            "search-connection/?station=$station&date=${date?.time}"
         )
     }
     val navToStatusDetails: (Int) -> Unit = { statusId ->
