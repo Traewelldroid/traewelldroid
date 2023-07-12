@@ -64,7 +64,7 @@ object PersonalProfile : MainDestination, ArgumentDestination, DeepLinkedDestina
 
 object SearchConnection : ArgumentDestination, DeepLinkedDestination {
     override val label = R.string.title_search_connection
-    override val route = "search-connection/{station}/{date}"
+    override val route = "search-connection/?station={station}&date={date}"
     override val arguments = listOf(
         navArgument("station") {
             type = NavType.StringType
