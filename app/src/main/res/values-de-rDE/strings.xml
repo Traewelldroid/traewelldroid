@@ -148,6 +148,15 @@
     <string name="finish">Fertig</string>
     <string name="force_check_in">Check-In erzwingen</string>
     <string name="share_text">Ich bin gerade in %1$s nach %2$s!</string>
+    <string name="mark_as_read">Als gelesen markieren</string>
+    <string name="mark_all_as_read">Alle als gelesen markieren</string>
     <string name="user_likes_status">\@%1$s gefällt dein Check-In!</string>
-    <string name="ride_with">Deine Fahrt mit %1$s von %2$s nach %3$s</string>
+    <string name="event_suggestion_processed">Dein Event-Vorschlag wurde bearbeitet!</string>
+    <string name="event_suggestion_accepted">Dein vorgeschlagenes Event \"%1$s\" wurde akzeptiert.</string>
+    <string name="event_suggestion_rejected">Dein vorgeschlagenes Event \"%1$s\" wurde abgelehnt.</string>
+    <string name="user_followed">\@%1$s folgt dir jetzt!</string>
+    <string name="user_also_on_connection">\@%1$s ist auch in deiner Verbindung!</string>
+    <string name="travelling_with_from_to">Fahrt mit %1$s von %2$s nach %3$s</string>
+    <string name="follow_request_approved">\@%1$s hat deine Folgeanfrage bestätigt!</string>
+    <string name="follow_request_issued">\a%1$s möchte dir folgen!</string>
 </resources>

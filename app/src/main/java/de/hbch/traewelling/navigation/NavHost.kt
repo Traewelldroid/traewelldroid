@@ -27,6 +27,7 @@ import de.hbch.traewelling.ui.info.InfoActivity
 import de.hbch.traewelling.ui.login.LoginActivity
 import de.hbch.traewelling.ui.main.MainActivity
 import de.hbch.traewelling.ui.notifications.Notifications
+import de.hbch.traewelling.ui.notifications.NotificationsViewModel
 import de.hbch.traewelling.ui.searchConnection.SearchConnection
 import de.hbch.traewelling.ui.selectDestination.SelectDestination
 import de.hbch.traewelling.ui.settings.Settings
@@ -44,10 +45,12 @@ fun TraewelldroidNavHost(
     loggedInUserViewModel: LoggedInUserViewModel,
     eventViewModel: EventViewModel,
     checkInViewModel: CheckInViewModel,
+    notificationsViewModel: NotificationsViewModel,
     modifier: Modifier = Modifier,
     onFloatingActionButtonChange: (Int, Int, () -> Unit) -> Unit = { _, _, _ -> },
     onResetFloatingActionButton: () -> Unit = { },
-    onMenuChange: (List<ComposeMenuItem>) -> Unit = { }
+    onMenuChange: (List<ComposeMenuItem>) -> Unit = { },
+    onNotificationCountChange: () -> Unit = { }
 ) {
     val context = LocalContext.current
     val secureStorage = SecureStorage(context)
@@ -111,7 +114,29 @@ fun TraewelldroidNavHost(
             onMenuChange(listOf())
         }
         composable(Notifications.route) {
-            Notifications()
+            Notifications(
+                notificationsViewModel = notificationsViewModel,
+                navHostController = navController,
+                unreadNotificationsChanged = onNotificationCountChange
+            )
+            onMenuChange(listOf(
+                ComposeMenuItem(
+                    R.string.mark_all_as_read,
+                    R.drawable.ic_mark_all_as_read
+                ) {
+                    notificationsViewModel.markAllAsRead {
+                        navController.popBackStack()
+                        navController.navigate(Notifications.route) {
+                            navController.graph.startDestinationRoute?.let { screenRoute ->
+                                popUpTo(screenRoute) {
+                                    inclusive = true
+                                }
+                            }
+                            launchSingleTop = true
+                        }
+                    }
+                }
+            ))
         }
         composable(Statistics.route) {
             Statistics(

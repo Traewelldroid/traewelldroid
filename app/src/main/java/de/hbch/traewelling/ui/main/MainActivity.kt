@@ -35,7 +35,6 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
@@ -167,11 +166,14 @@ fun TraewelldroidApp(
         var fabListener by remember { mutableStateOf({ }) }
         var unreadNotificationCount by remember { mutableStateOf(0) }
         val notificationsViewModel: NotificationsViewModel = viewModel()
-
-        navController.addOnDestinationChangedListener { _, _, _ ->
+        val onNotificationCountChanged: () -> Unit = {
             notificationsViewModel.getUnreadNotificationCount {
                 unreadNotificationCount = it
             }
+        }
+
+        navController.addOnDestinationChangedListener { _, _, _ ->
+            onNotificationCountChanged()
         }
 
         Scaffold(
@@ -320,6 +322,7 @@ fun TraewelldroidApp(
                 loggedInUserViewModel = loggedInUserViewModel,
                 eventViewModel = eventViewModel,
                 checkInViewModel = checkInViewModel,
+                notificationsViewModel = notificationsViewModel,
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight()
@@ -337,7 +340,8 @@ fun TraewelldroidApp(
                     fabIcon = null
                     fabLabel = null
                     fabListener = { }
-                }
+                },
+                onNotificationCountChange = onNotificationCountChanged
             )
         }
     }

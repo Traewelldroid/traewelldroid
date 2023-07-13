@@ -3,6 +3,7 @@ package de.hbch.traewelling.ui.notifications
 import androidx.lifecycle.ViewModel
 import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.api.models.Data
+import de.hbch.traewelling.api.models.notifications.Notification
 import de.hbch.traewelling.api.models.notifications.NotificationPage
 import io.sentry.Sentry
 import retrofit2.Call
@@ -49,6 +50,69 @@ class NotificationsViewModel : ViewModel() {
                     }
                 }
                 override fun onFailure(call: Call<NotificationPage>, t: Throwable) {
+                    Sentry.captureException(t)
+                }
+            })
+    }
+
+    fun markAsRead(id: String, successfulCallback: (Notification) -> Unit) {
+        TraewellingApi
+            .notificationService
+            .markAsRead(id)
+            .enqueue(object: Callback<Data<Notification>> {
+                override fun onResponse(
+                    call: Call<Data<Notification>>,
+                    response: Response<Data<Notification>>
+                ) {
+                    if (response.isSuccessful) {
+                        val notification = response.body()
+                        if (notification != null) {
+                            successfulCallback(notification.data)
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<Data<Notification>>, t: Throwable) {
+                    Sentry.captureException(t)
+                }
+            })
+    }
+
+    fun markAsUnread(id: String, successfulCallback: (Notification) -> Unit) {
+        TraewellingApi
+            .notificationService
+            .markAsUnread(id)
+            .enqueue(object: Callback<Data<Notification>> {
+                override fun onResponse(
+                    call: Call<Data<Notification>>,
+                    response: Response<Data<Notification>>
+                ) {
+                    if (response.isSuccessful) {
+                        val notification = response.body()
+                        if (notification != null) {
+                            successfulCallback(notification.data)
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<Data<Notification>>, t: Throwable) {
+                    Sentry.captureException(t)
+                }
+            })
+    }
+
+    fun markAllAsRead(successfulCallback: () -> Unit) {
+        TraewellingApi
+            .notificationService
+            .markAllAsRead()
+            .enqueue(object: Callback<Unit> {
+                override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
+                    if (response.isSuccessful) {
+                        successfulCallback()
+                    }
+                }
+
+                override fun onFailure(call: Call<Unit>, t: Throwable) {
                     Sentry.captureException(t)
                 }
             })
