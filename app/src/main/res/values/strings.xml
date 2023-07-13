@@ -151,4 +151,15 @@
     <string name="finish">Finish</string>
     <string name="force_check_in">Force check-in</string>
     <string name="share_text">I\'m currently travelling with %1$s towards %2$s!</string>
+    <string name="mark_as_read">Mark as read</string>
+    <string name="mark_all_as_read">Mark all as read</string>
+    <string name="user_likes_status">\@%1$s likes your check-in!</string>
+    <string name="event_suggestion_processed">Your event suggestion was processed!</string>
+    <string name="event_suggestion_accepted">Your suggested event \"%1$s\" was accepted.</string>
+    <string name="event_suggestion_rejected">Your suggested event \"%1$s\" was rejected.</string>
+    <string name="user_followed">\@%1$s is now following you!</string>
+    <string name="user_also_on_connection">\@%1$s joined your connection!</string>
+    <string name="travelling_with_from_to">Ride with %1$s from %2$s to %3$s</string>
+    <string name="follow_request_approved">\@%1$s approved your follow request!</string>
+    <string name="follow_request_issued">\a%1$s would like to follow you!</string>
 </resources>

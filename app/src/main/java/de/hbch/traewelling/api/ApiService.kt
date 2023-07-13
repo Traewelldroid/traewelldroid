@@ -7,6 +7,8 @@ import de.hbch.traewelling.api.models.Data
 import de.hbch.traewelling.api.models.auth.BearerToken
 import de.hbch.traewelling.api.models.auth.LoginCredentials
 import de.hbch.traewelling.api.models.event.Event
+import de.hbch.traewelling.api.models.notifications.Notification
+import de.hbch.traewelling.api.models.notifications.NotificationPage
 import de.hbch.traewelling.api.models.polyline.FeatureCollection
 import de.hbch.traewelling.api.models.station.Station
 import de.hbch.traewelling.api.models.station.StationData
@@ -31,7 +33,10 @@ private val client = OkHttpClient.Builder().readTimeout(60, TimeUnit.SECONDS)
     .addInterceptor(ErrorInterceptor())
     .build()
 
-private val gson = GsonBuilder().setExclusionStrategies(ExcludeAnnotationExclusionStrategy()).setDateFormat("yyyy-MM-dd'T'HH:mm:ssX").create()
+private val gson = GsonBuilder()
+    .setExclusionStrategies(ExcludeAnnotationExclusionStrategy())
+    .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
+    .create()
 
 private val retrofit =
     Retrofit.Builder()
@@ -154,8 +159,26 @@ interface TravelService {
 }
 
 interface NotificationService {
-    @GET("notifications/count")
+    @GET("notifications/unread/count")
     fun getUnreadNotificationsCount(): Call<Data<Int>>
+
+    @GET("notifications")
+    fun getNotifications(
+        @Query("page") page: Int
+    ): Call<NotificationPage>
+
+    @PUT("notifications/read/{id}")
+    fun markAsRead(
+        @Path("id") id: String
+    ): Call<Data<Notification>>
+
+    @PUT("notifications/unread/{id}")
+    fun markAsUnread(
+        @Path("id") id: String
+    ): Call<Data<Notification>>
+
+    @PUT("notifications/read/all")
+    fun markAllAsRead(): Call<Unit>
 }
 
 interface UserService {

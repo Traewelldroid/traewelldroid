@@ -15,7 +15,7 @@
     <string name="display_travel_time_hours_minutes">%1$d Std. %2$d Min.</string>
     <string name="display_travel_time_days_hours_minutes">%1$d T. %2$d Std. %3$d Min.</string>
     <string name="display_average_speed">%1$.2f km/h</string>
-    <string name="where_are_you">Wo bist Du?</string>
+    <string name="where_are_you">Wo bist du?</string>
     <string name="search">Suche</string>
     <string name="next_station">Nächste Station: %1$s</string>
     <string name="from_station">ab %1$s</string>
@@ -34,9 +34,9 @@
     <string name="error_logout">Abmeldung nicht erfolgreich!</string>
     <string name="error_missing_location_permission">Um diese Funktion zu nutzen, musst du die Standortberechtigung in deinen Geräteeinstellungen aktivieren.</string>
     <string name="username_or_email">Username oder E-Mail-Adresse</string>
-    <string name="check_in_successful">Du bist eingecheckt!</string>
+    <string name="check_in_successful">du bist eingecheckt!</string>
     <string name="check_in_failure">Beim Einchecken ist ein Fehler aufgetreten</string>
-    <string name="check_in_conflict">Du bist bereits in einer anderen Verbindung eingecheckt!</string>
+    <string name="check_in_conflict">du bist bereits in einer anderen Verbindung eingecheckt!</string>
     <string name="title_select_date">Wähle das Abfahrtsdatum</string>
     <string name="title_select_time">Wähle die Abfahrtszeit</string>
     <string name="title_select_visibility">Wähle die gewünschte Sichtbarkeit des Status</string>
@@ -51,7 +51,7 @@
     <string name="business">Geschäftsreise</string>
     <string name="business_commute">Arbeitsweg</string>
     <string name="set_homeland">Heimatstation festlegen</string>
-    <string name="set_homeland_success">Du hast nun %1$s als Heimatstation festgelegt.</string>
+    <string name="set_homeland_success">du hast nun %1$s als Heimatstation festgelegt.</string>
     <string name="delete_status">Bist du dir sicher, dass du diesen Check-In löschen möchtest?</string>
     <string name="delete">Löschen</string>
     <string name="status_delete_success">Dein Check-In wurde erfolgreich gelöscht.</string>
@@ -76,7 +76,7 @@
     <string name="operators">Betreiber</string>
     <string name="travel_time">Reisezeit</string>
     <string name="check_in_count">Anzahl Check-Ins</string>
-    <string name="title_notifications">Benachrichtigungen</string>
+    <string name="title_notifications">Mitteilung</string>
     <string name="notifications_not_implemented_text">
         Diese Funktion ist aktuell nicht implementiert. Bitte nutze die Träwelling-Webseite,
         um deine Benachrichtigungen anzusehen oder zu löschen.
@@ -87,7 +87,7 @@
         Dies kann jederzeit in den Systemeinstellungen geändert werden.
     </string>
     <string name="request_url_login_verification">
-        Damit Du Dich mit Träwelling einloggen kannst, musst Du Träwelldroid so konfigurieren, dass Links automatisch geöffnet werden können.
+        Damit du Dich mit Träwelling einloggen kannst, musst du Träwelldroid so konfigurieren, dass Links automatisch geöffnet werden können.
         Bitte tu dies in den Einstellung.
     </string>
     <string name="yes">Ja</string>
@@ -104,27 +104,27 @@
     <string name="renew_login">Anmeldung erneuern</string>
     <string name="renew_login_success">Erneuerung erfolgreich!</string>
     <string name="renew_login_failed">Die Erneuerung der Anmeldung ist fehlgeschlagen. Bitte melde dich manuell ab und wieder an, um deine Anmeldung zu erneuern.</string>
-    <string name="default_hashtag_text">Du kannst hier einen Standardhashtag festlegen, der automatisch zu deinen Check-Ins hinzugefügt wird.</string>
+    <string name="default_hashtag_text">du kannst hier einen Standardhashtag festlegen, der automatisch zu deinen Check-Ins hinzugefügt wird.</string>
     <string name="store_hashtag">Hashtag speichern</string>
     <string name="emoji">Emoji-Paket</string>
-    <string name="emoji_text">Du kannst das Emoji-Paket für diese App ändern</string>
+    <string name="emoji_text">du kannst das Emoji-Paket für diese App ändern</string>
     <string name="information">Informationen</string>
     <string name="open_source_licenses">Open Source-Lizenzen</string>
     <string name="view_on_github">Projekt auf GitHub anzeigen</string>
     <string name="legal">Impressum und Datenschutzerklärung</string>
     <string name="title_edit">Bearbeiten</string>
     <string name="point_reason_good_enough">
-        Weil Du ein klein wenig zu spät eingecheckt hast, hast Du nicht alle Punkte erhalten.
+        Weil du ein klein wenig zu spät eingecheckt hast, hast du nicht alle Punkte erhalten.
         Versuche nächstes Mal, kurz vor der Abfahrt oder während der Reise einzuchecken, um alle
         Punkte zu erhalten.
     </string>
     <string name="point_reason_not_sufficient">
-        Weil Du zu früh oder zu spät eingecheckt hast, hast Du nicht alle Punkte erhalten.
+        Weil du zu früh oder zu spät eingecheckt hast, hast du nicht alle Punkte erhalten.
         Versuche nächstes Mal, kurz vor der Abfahrt oder während der Reise einzuchecken, um alle
         Punkte zu erhalten.
     </string>
     <string name="point_reason_forced">
-        Weil Du diesen Check-In erzwungen hast, hast du nur 0 Punkte erhalten.
+        Weil du diesen Check-In erzwungen hast, hast du nur 0 Punkte erhalten.
     </string>
     <string name="title_share">Teilen</string>
     <string name="or">oder</string>
@@ -138,7 +138,7 @@
     <string name="mute">Stummschalten</string>
     <string name="unmute">Stummschaltung aufheben</string>
     <string name="welcome">Willkommen!</string>
-    <string name="account_notice">Um Träwelldroid zu nutzen, benötigst Du einen Account bei Träwelling. Wenn Du bereits ein Nutzerkonto besitzt, kannst Du Dich einfach mit dem Button unten einloggen. Ansonsten kannst Du Dir dort ein Konto erstellen.</string>
+    <string name="account_notice">Um Träwelldroid zu nutzen, benötigst du einen Account bei Träwelling. Wenn du bereits ein Nutzerkonto besitzt, kannst du Dich einfach mit dem Button unten einloggen. Ansonsten kannst du Dir dort ein Konto erstellen.</string>
     <string name="status_invisible">Dieser Status ist für Dich nicht sichtbar.</string>
     <string name="send_toot">Diesen Check-In auf Mastodon teilen</string>
     <string name="chain_toot">Mastodon-Post an den letzten Post anhängen</string>
@@ -148,4 +148,15 @@
     <string name="finish">Fertig</string>
     <string name="force_check_in">Check-In erzwingen</string>
     <string name="share_text">Ich bin gerade in %1$s nach %2$s!</string>
+    <string name="mark_as_read">Als gelesen markieren</string>
+    <string name="mark_all_as_read">Alle als gelesen markieren</string>
+    <string name="user_likes_status">\@%1$s gefällt dein Check-In!</string>
+    <string name="event_suggestion_processed">Dein Event-Vorschlag wurde bearbeitet!</string>
+    <string name="event_suggestion_accepted">Dein vorgeschlagenes Event \"%1$s\" wurde akzeptiert.</string>
+    <string name="event_suggestion_rejected">Dein vorgeschlagenes Event \"%1$s\" wurde abgelehnt.</string>
+    <string name="user_followed">\@%1$s folgt dir jetzt!</string>
+    <string name="user_also_on_connection">\@%1$s ist auch in deiner Verbindung!</string>
+    <string name="travelling_with_from_to">Fahrt mit %1$s von %2$s nach %3$s</string>
+    <string name="follow_request_approved">\@%1$s hat deine Folgeanfrage bestätigt!</string>
+    <string name="follow_request_issued">\a%1$s möchte dir folgen!</string>
 </resources>
