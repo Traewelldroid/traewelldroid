@@ -68,6 +68,8 @@ import de.hbch.traewelling.util.publishStationShortcuts
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.time.Duration
+import java.time.LocalDateTime
 
 class MainActivity : ComponentActivity()
 {
@@ -171,9 +173,15 @@ fun TraewelldroidApp(
                 unreadNotificationCount = it
             }
         }
+        var lastNotificationRequest by remember { mutableStateOf<LocalDateTime>(LocalDateTime.MIN) }
 
         navController.addOnDestinationChangedListener { _, _, _ ->
-            onNotificationCountChanged()
+            val lastRequest = lastNotificationRequest
+            val duration = Duration.between(lastRequest, LocalDateTime.now())
+            if (duration.toMinutes() > 0) {
+                onNotificationCountChanged()
+                lastNotificationRequest = LocalDateTime.now()
+            }
         }
 
         Scaffold(
