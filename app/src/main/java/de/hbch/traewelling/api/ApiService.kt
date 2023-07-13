@@ -7,6 +7,7 @@ import de.hbch.traewelling.api.models.Data
 import de.hbch.traewelling.api.models.auth.BearerToken
 import de.hbch.traewelling.api.models.auth.LoginCredentials
 import de.hbch.traewelling.api.models.event.Event
+import de.hbch.traewelling.api.models.notifications.NotificationPage
 import de.hbch.traewelling.api.models.polyline.FeatureCollection
 import de.hbch.traewelling.api.models.station.Station
 import de.hbch.traewelling.api.models.station.StationData
@@ -154,8 +155,12 @@ interface TravelService {
 }
 
 interface NotificationService {
-    @GET("notifications/count")
+    @GET("notifications/unread/count")
     fun getUnreadNotificationsCount(): Call<Data<Int>>
+    @GET("notifications")
+    fun getNotifications(
+        @Query("page") page: Int
+    ): Call<NotificationPage>
 }
 
 interface UserService {

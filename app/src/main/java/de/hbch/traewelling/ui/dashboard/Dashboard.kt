@@ -12,6 +12,7 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -28,6 +29,7 @@ import de.hbch.traewelling.ui.include.cardSearchStation.CardSearchStation
 import de.hbch.traewelling.ui.include.cardSearchStation.SearchStationCardViewModel
 import de.hbch.traewelling.ui.include.status.CheckInCard
 import de.hbch.traewelling.ui.include.status.CheckInCardViewModel
+import de.hbch.traewelling.ui.notifications.NotificationsViewModel
 import java.util.Date
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -43,6 +45,7 @@ fun Dashboard(
     val dashboardViewModel: DashboardFragmentViewModel = viewModel()
     val searchStationCardViewModel: SearchStationCardViewModel = viewModel()
     val checkInCardViewModel : CheckInCardViewModel = viewModel()
+    val notificationsViewModel: NotificationsViewModel = viewModel()
     val refreshing by dashboardViewModel.isRefreshing.observeAsState(false)
     val checkIns = remember { dashboardViewModel.checkIns }
     var currentPage by remember { mutableStateOf(1) }

@@ -38,6 +38,12 @@ object EnRoute : MainDestination {
     override val route = "en-route"
 }
 
+object Notifications : MainDestination {
+    override val icon = R.drawable.ic_notification
+    override val label = R.string.title_notifications
+    override val route = "notifications"
+}
+
 object Statistics : MainDestination {
     override val icon = R.drawable.ic_statistics
     override val label = R.string.title_statistics
@@ -130,6 +136,7 @@ object Settings : Destination {
 val SCREENS = listOf(
     Dashboard,
     EnRoute,
+    Notifications,
     Statistics,
     PersonalProfile,
     SearchConnection,
@@ -143,6 +150,7 @@ val SCREENS = listOf(
 val BOTTOM_NAVIGATION = listOf(
     Dashboard,
     EnRoute,
+    Notifications,
     Statistics,
     PersonalProfile
 )
@@ -150,5 +158,6 @@ val BOTTOM_NAVIGATION = listOf(
 data class ComposeMenuItem(
     val label: Int,
     val icon: Int,
-    val onClick: () -> Unit
+    val badge: String? = null,
+    val onClick: () -> Unit = { }
 )

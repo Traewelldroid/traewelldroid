@@ -151,4 +151,6 @@
     <string name="finish">Finish</string>
     <string name="force_check_in">Force check-in</string>
     <string name="share_text">I\'m currently travelling with %1$s towards %2$s!</string>
+    <string name="user_likes_status">\@%1$s likes your check-in!</string>
+    <string name="ride_with">Your ride with %1$s from %2$s to %3$s</string>
 </resources>

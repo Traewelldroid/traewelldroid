@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -33,12 +35,15 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -50,6 +55,7 @@ import de.hbch.traewelling.events.UnauthorizedEvent
 import de.hbch.traewelling.navigation.BOTTOM_NAVIGATION
 import de.hbch.traewelling.navigation.ComposeMenuItem
 import de.hbch.traewelling.navigation.Dashboard
+import de.hbch.traewelling.navigation.Notifications
 import de.hbch.traewelling.navigation.SCREENS
 import de.hbch.traewelling.navigation.TraewelldroidNavHost
 import de.hbch.traewelling.shared.CheckInViewModel
@@ -58,6 +64,7 @@ import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.shared.SharedValues
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.login.LoginActivity
+import de.hbch.traewelling.ui.notifications.NotificationsViewModel
 import de.hbch.traewelling.util.publishStationShortcuts
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -158,6 +165,14 @@ fun TraewelldroidApp(
         var fabIcon by remember { mutableStateOf<Int?>(null) }
         var fabLabel by remember { mutableStateOf<Int?>(null) }
         var fabListener by remember { mutableStateOf({ }) }
+        var unreadNotificationCount by remember { mutableStateOf(0) }
+        val notificationsViewModel: NotificationsViewModel = viewModel()
+
+        navController.addOnDestinationChangedListener { _, _, _ ->
+            notificationsViewModel.getUnreadNotificationCount {
+                unreadNotificationCount = it
+            }
+        }
 
         Scaffold(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -240,14 +255,28 @@ fun TraewelldroidApp(
                         BOTTOM_NAVIGATION.forEach { destination ->
                             NavigationBarItem(
                                 icon = {
-                                    Icon(
-                                        painter = painterResource(id = destination.icon),
-                                        contentDescription = null
-                                    )
+                                    BadgedBox(
+                                        badge = {
+                                            if (destination == Notifications && unreadNotificationCount > 0) {
+                                                Badge {
+                                                    Text(
+                                                        text = unreadNotificationCount.toString()
+                                                    )
+                                                }
+                                            }
+                                        }
+                                    ) {
+                                        Icon(
+                                            painter = painterResource(id = destination.icon),
+                                            contentDescription = null
+                                        )
+                                    }
                                 },
                                 label = {
                                     Text(
-                                        text = stringResource(id = destination.label)
+                                        text = stringResource(id = destination.label),
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
                                     )
                                 },
                                 selected = currentScreen == destination,
