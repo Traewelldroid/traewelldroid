@@ -4,12 +4,14 @@ import androidx.annotation.StringRes
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -19,6 +21,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -51,6 +54,7 @@ import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.LocalColorScheme
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
+import de.hbch.traewelling.ui.composables.OpenRailwayMapLayer
 import kotlinx.coroutines.launch
 import java.lang.Exception
 import java.text.DateFormat
@@ -74,6 +78,7 @@ fun Settings(
             traewellingLogoutAction = traewellingLogoutAction
         )
         HashtagSettings()
+        MapViewSettings()
         EmojiSettings(
             emojiPackItemAdapter = emojiPackItemAdapter
         )
@@ -225,6 +230,72 @@ private fun HashtagSettings(
                     painter = painterResource(id = R.drawable.ic_check_in),
                     contentDescription = stringResource(id = R.string.store_hashtag)
                 )
+            }
+        }
+    }
+}
+
+@Composable
+private fun MapViewSettings(
+    modifier: Modifier = Modifier
+) {
+    var secureStorage: SecureStorage? = null
+    var selectedOrmLayer by remember { mutableStateOf(OpenRailwayMapLayer.STANDARD) }
+
+    if (!LocalView.current.isInEditMode) {
+        secureStorage = SecureStorage(LocalContext.current)
+        val storedOrmLayer = secureStorage.getObject(SharedValues.SS_ORM_LAYER, OpenRailwayMapLayer::class.java)
+        storedOrmLayer?.let {
+            selectedOrmLayer = it
+        }
+    }
+
+    SettingsCard(
+        modifier = modifier,
+        title = R.string.map_view,
+        description = R.string.configure_map,
+        expandable = true
+    ) {
+        Column(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .selectableGroup()
+            ) {
+                Text(
+                    modifier = Modifier.padding(bottom = 8.dp),
+                    text = stringResource(id = R.string.openrailwaymap)
+                )
+                OpenRailwayMapLayer.values().forEach { layer ->
+                    val layerSelected : () -> Unit = {
+                        selectedOrmLayer = layer
+                        secureStorage?.storeObject(SharedValues.SS_ORM_LAYER, selectedOrmLayer)
+                    }
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable(onClick = layerSelected),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = selectedOrmLayer == layer,
+                            onClick = layerSelected
+                        )
+                        Column {
+                            Text(
+                                text = stringResource(id = layer.title),
+                                style = AppTypography.labelLarge,
+                                fontWeight = FontWeight.ExtraBold
+                            )
+                            Text(
+                                text = stringResource(id = layer.description),
+                                style = AppTypography.labelSmall
+                            )
+                        }
+                    }
+                }
             }
         }
     }
