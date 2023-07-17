@@ -337,11 +337,12 @@ fun TraewelldroidNavHost(
                     checkInViewModel.message.value ?: ""
                 } else {
                     val hashtag = secureStorage.getObject(SharedValues.SS_HASHTAG, String::class.java)
-                    if (hashtag == null)
+                    if (hashtag == null || hashtag == "")
                         ""
                     else
                         "\n#$hashtag"
                 }
+            checkInViewModel.statusVisibility.postValue(loggedInUserViewModel.defaultStatusVisibility)
             CheckIn(
                 checkInViewModel = checkInViewModel,
                 eventViewModel = eventViewModel,
