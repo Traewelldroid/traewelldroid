@@ -80,19 +80,24 @@ fun SearchConnection(
     val times by viewModel.pageTimes.observeAsState()
     var searchDate by remember { mutableStateOf(currentSearchDate) }
     var loading by remember { mutableStateOf(false) }
+    var searchConnections by remember { mutableStateOf(true) }
 
-    LaunchedEffect(stationName, searchDate) {
-        loading = true
-        viewModel.searchConnections(
-            stationName,
-            searchDate,
-            {
-                loading = false
-                trips.clear()
-                trips.addAll(it.data)
-            },
-            { }
-        )
+    LaunchedEffect(searchConnections) {
+        if (searchConnections) {
+            loading = true
+            viewModel.searchConnections(
+                stationName,
+                searchDate,
+                {
+                    loading = false
+                    searchConnections = false
+                    trips.clear()
+                    trips.addAll(it.data)
+                    stationName = it.meta.station.name
+                },
+                { }
+            )
+        }
     }
 
     Column(
@@ -105,6 +110,7 @@ fun SearchConnection(
         CardSearchStation(
             searchAction = { station ->
                 stationName = station
+                searchConnections = true
             },
             searchStationCardViewModel = searchStationCardViewModel,
             homelandStationData = loggedInUserViewModel.home,
@@ -133,12 +139,14 @@ fun SearchConnection(
                             val time = times?.previous
                             time?.let {
                                 searchDate = it
+                                searchConnections = true
                             }
                         },
                         onNextTime = {
                             val time = times?.next
                             time?.let {
                                 searchDate = it
+                                searchConnections = true
                             }
                         },
                         onTripSelection = { trip ->
@@ -152,6 +160,7 @@ fun SearchConnection(
                         },
                         onTimeSelection = {
                             searchDate = it
+                            searchConnections = true
                         },
                         onHomelandStationSelection = {
                             viewModel.setUserHomelandStation(
