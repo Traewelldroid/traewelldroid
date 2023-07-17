@@ -35,8 +35,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.dtos.Status
 import de.hbch.traewelling.shared.LoggedInUserViewModel
-import de.hbch.traewelling.theme.LocalColorScheme
 import de.hbch.traewelling.theme.MainTheme
+import de.hbch.traewelling.theme.PolylineColor
 import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
 import de.hbch.traewelling.ui.composables.OpenRailwayMapView
 import de.hbch.traewelling.ui.composables.getPolylinesFromFeatureCollection
@@ -154,7 +154,7 @@ private fun StatusDetailMap(
     statusId: Int,
     statusDetailViewModel: StatusDetailViewModel
 ) {
-    val color = LocalColorScheme.current.primary.toArgb()
+    val color = PolylineColor.toArgb()
     var polylines: List<Polyline> = listOf()
     ElevatedCard(
         modifier = modifier
