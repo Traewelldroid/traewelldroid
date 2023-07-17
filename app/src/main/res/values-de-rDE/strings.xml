@@ -34,9 +34,9 @@
     <string name="error_logout">Abmeldung nicht erfolgreich!</string>
     <string name="error_missing_location_permission">Um diese Funktion zu nutzen, musst du die Standortberechtigung in deinen Geräteeinstellungen aktivieren.</string>
     <string name="username_or_email">Username oder E-Mail-Adresse</string>
-    <string name="check_in_successful">du bist eingecheckt!</string>
+    <string name="check_in_successful">Du bist eingecheckt!</string>
     <string name="check_in_failure">Beim Einchecken ist ein Fehler aufgetreten</string>
-    <string name="check_in_conflict">du bist bereits in einer anderen Verbindung eingecheckt!</string>
+    <string name="check_in_conflict">Du bist bereits in einer anderen Verbindung eingecheckt!</string>
     <string name="title_select_date">Wähle das Abfahrtsdatum</string>
     <string name="title_select_time">Wähle die Abfahrtszeit</string>
     <string name="title_select_visibility">Wähle die gewünschte Sichtbarkeit des Status</string>
@@ -51,7 +51,7 @@
     <string name="business">Geschäftsreise</string>
     <string name="business_commute">Arbeitsweg</string>
     <string name="set_homeland">Heimatstation festlegen</string>
-    <string name="set_homeland_success">du hast nun %1$s als Heimatstation festgelegt.</string>
+    <string name="set_homeland_success">Du hast nun %1$s als Heimatstation festgelegt.</string>
     <string name="delete_status">Bist du dir sicher, dass du diesen Check-In löschen möchtest?</string>
     <string name="delete">Löschen</string>
     <string name="status_delete_success">Dein Check-In wurde erfolgreich gelöscht.</string>
@@ -104,10 +104,10 @@
     <string name="renew_login">Anmeldung erneuern</string>
     <string name="renew_login_success">Erneuerung erfolgreich!</string>
     <string name="renew_login_failed">Die Erneuerung der Anmeldung ist fehlgeschlagen. Bitte melde dich manuell ab und wieder an, um deine Anmeldung zu erneuern.</string>
-    <string name="default_hashtag_text">du kannst hier einen Standardhashtag festlegen, der automatisch zu deinen Check-Ins hinzugefügt wird.</string>
+    <string name="default_hashtag_text">Du kannst hier einen Standardhashtag festlegen, der automatisch zu deinen Check-Ins hinzugefügt wird.</string>
     <string name="store_hashtag">Hashtag speichern</string>
     <string name="emoji">Emoji-Paket</string>
-    <string name="emoji_text">du kannst das Emoji-Paket für diese App ändern</string>
+    <string name="emoji_text">Du kannst das Emoji-Paket für diese App ändern</string>
     <string name="information">Informationen</string>
     <string name="open_source_licenses">Open Source-Lizenzen</string>
     <string name="view_on_github">Projekt auf GitHub anzeigen</string>
@@ -159,4 +159,12 @@
     <string name="travelling_with_from_to">Fahrt mit %1$s von %2$s nach %3$s</string>
     <string name="follow_request_approved">\@%1$s hat deine Folgeanfrage bestätigt!</string>
     <string name="follow_request_issued">\a%1$s möchte dir folgen!</string>
+    <string name="map_view">Kartenansicht</string>
+    <string name="configure_map">Hier kannst du die Kartenansicht konfigurieren.</string>
+    <string name="standard_layer">Standard</string>
+    <string name="standard_description">Darstellung von Infrastruktur, Gleisen, Bahnhöfen, …</string>
+    <string name="signal_layer">Signale</string>
+    <string name="signal_description">Darstellung von Signalsystemen, Signalen, …</string>
+    <string name="maxspeed_layer">Höchstgeschwindigkeit</string>
+    <string name="maxspeed_description">Darstellung der Höchstgeschwindigkeit eines Gleises und Geschwindigkeitssignalen.</string>
 </resources>

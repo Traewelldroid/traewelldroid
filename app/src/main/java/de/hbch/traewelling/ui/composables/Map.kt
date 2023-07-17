@@ -9,8 +9,11 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import com.jcloquell.androidsecurestorage.SecureStorage
 import de.hbch.traewelling.BuildConfig
+import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.polyline.FeatureCollection
+import de.hbch.traewelling.shared.SharedValues
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.MapTileProviderBasic
 import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase
@@ -39,15 +42,18 @@ private val MAPNIK: OnlineTileSourceBase = XYTileSource(
     )
 )
 
-private val OPENRAILWAYMAP = XYTileSource(
-    "OpenRailwayMap",
-    0,
-    19,
-    256,
-    ".png",
-    arrayOf("https://tiles.openrailwaymap.org/standard/"),
-    "© OpenStreetMap contributors, Style: CC-BY-SA 2.0, OpenRailwayMap"
-)
+@Composable
+private fun getTileSource(layer: OpenRailwayMapLayer): XYTileSource {
+    return XYTileSource(
+        "OpenRailwayMap",
+        0,
+        19,
+        256,
+        ".png",
+        arrayOf("https://tiles.openrailwaymap.org/${layer.key}/"),
+        "© OpenStreetMap contributors, Style: CC-BY-SA 2.0, OpenRailwayMap"
+    )
+}
 
 @Composable
 fun rememberMapViewWithLifecycle(): MapView {
@@ -109,6 +115,11 @@ fun OpenRailwayMapView(
     onLoad: (map: MapView) -> Unit = { }
 ) {
     val context = LocalContext.current
+    val secureStorage = SecureStorage(context)
+    val selectedOrmLayer =
+        secureStorage.getObject(SharedValues.SS_ORM_LAYER, OpenRailwayMapLayer::class.java)
+            ?: OpenRailwayMapLayer.STANDARD
+    val tileSource = getTileSource(layer = selectedOrmLayer)
 
     MapView(
         modifier = modifier,
@@ -118,7 +129,7 @@ fun OpenRailwayMapView(
             mapView.setMultiTouchControls(true)
 
             val tileProvider = MapTileProviderBasic(context)
-            tileProvider.tileSource = OPENRAILWAYMAP
+            tileProvider.tileSource = tileSource
             val tilesOverlay = TilesOverlay(tileProvider, context).apply {
 
             }
@@ -154,4 +165,26 @@ fun getPolylinesFromFeatureCollection(featureCollection: FeatureCollection, colo
     }
 
     return polylines
+}
+
+enum class OpenRailwayMapLayer {
+    STANDARD {
+        override val key = "standard"
+        override val title = R.string.standard_layer
+        override val description = R.string.standard_description
+    },
+    SIGNALS {
+        override val key = "signals"
+        override val title = R.string.signal_layer
+        override val description = R.string.signal_description
+    },
+    MAXSPEED {
+        override val key = "maxspeed"
+        override val title = R.string.maxspeed_layer
+        override val description = R.string.maxspeed_description
+    };
+
+    abstract val key: String
+    abstract val title: Int
+    abstract val description: Int
 }

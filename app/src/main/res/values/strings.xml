@@ -162,4 +162,13 @@
     <string name="travelling_with_from_to">Ride with %1$s from %2$s to %3$s</string>
     <string name="follow_request_approved">\@%1$s approved your follow request!</string>
     <string name="follow_request_issued">\a%1$s would like to follow you!</string>
+    <string name="map_view">Map view</string>
+    <string name="configure_map">Here you can configure the map view.</string>
+    <string name="openrailwaymap" translatable="false">OpenRailwayMap</string>
+    <string name="standard_layer">Standard</string>
+    <string name="standard_description">Visualizes infrastructure like tracks, stations, …</string>
+    <string name="signal_layer">Signals</string>
+    <string name="signal_description">Visualizes signalling systems, signals, …</string>
+    <string name="maxspeed_layer">Maximum speed</string>
+    <string name="maxspeed_description">Visualizes maximum speed of a track and speed signals.</string>
 </resources>
