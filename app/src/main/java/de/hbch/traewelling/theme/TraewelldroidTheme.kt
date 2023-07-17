@@ -45,12 +45,17 @@ fun MainTheme(
     content: @Composable () -> Unit
 ) {
     val view = LocalView.current
+    val context = LocalContext.current
     val systemUiController = rememberSystemUiController()
     val darkTheme = isSystemInDarkTheme()
 
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        // Set polyline color to default primary light color
+        PolylineColor = dynamicLightColorScheme(context).primary
+    }
+
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
         darkTheme -> DarkColorScheme
