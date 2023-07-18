@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
     <string name="abort">Abbrechen</string>
     <string name="input_username">Benutzername</string>
     <string name="input_password">Passwort</string>
