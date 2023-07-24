@@ -159,6 +159,7 @@
     <string name="travelling_with_from_to">Fahrt mit %1$s von %2$s nach %3$s</string>
     <string name="follow_request_approved">\@%1$s hat deine Folgeanfrage bestätigt!</string>
     <string name="follow_request_issued">\a%1$s möchte dir folgen!</string>
+    <string name="status_not_shared_on_mastodon">Dein Check-In wurde aufgrund von Fehler %1$d nicht auf Mastodon geteilt.</string>
     <string name="map_view">Kartenansicht</string>
     <string name="configure_map">Hier kannst du die Kartenansicht konfigurieren.</string>
     <string name="standard_layer">Standard</string>
