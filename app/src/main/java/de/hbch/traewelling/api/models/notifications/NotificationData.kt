@@ -58,3 +58,8 @@ data class UserJoinedConnectionData(
 data class FollowRequestData(
     val user: NotificationUser
 )
+
+data class MastodonNotSharedData(
+    val status: NotificationStatus,
+    val httpResponseCode: Int
+)

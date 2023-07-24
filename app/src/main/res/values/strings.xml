@@ -162,6 +162,7 @@
     <string name="travelling_with_from_to">Ride with %1$s from %2$s to %3$s</string>
     <string name="follow_request_approved">\@%1$s approved your follow request!</string>
     <string name="follow_request_issued">\a%1$s would like to follow you!</string>
+    <string name="status_not_shared_on_mastodon">Your check-in wasn\'t shared to Mastodon due to error %1$d.</string>
     <string name="map_view">Map view</string>
     <string name="configure_map">Here you can configure the map view.</string>
     <string name="openrailwaymap" translatable="false">OpenRailwayMap</string>

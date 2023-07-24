@@ -196,6 +196,35 @@ enum class NotificationType {
             val targetType = object: TypeToken<UserJoinedConnectionData>() {}.type
             return gson.fromJson<Any>(gson.toJson(data), targetType) as? UserJoinedConnectionData
         }
+    },
+    MastodonNotShared {
+        override val icon = R.drawable.ic_error
+        @Composable
+        override fun getHeadline(notification: Notification): String  {
+            val obj = getData(notification)
+            var headline = ""
+            if (obj != null) {
+                headline = stringResource(id = R.string.status_not_shared_on_mastodon, obj.status.id)
+            }
+            return headline
+        }
+        override fun getOnClick(notification: Notification): (NavHostController) -> Unit {
+            val data = getData(notification)
+            var onClick: (NavHostController) -> Unit = { }
+            if (data != null) {
+                onClick = {
+                    it.navigate("status-details/${data.status.id}")
+                }
+            }
+            return onClick
+        }
+
+        private fun getData(notification: Notification): MastodonNotSharedData? {
+            val gson = Gson()
+            val data = notification.data
+            val targetType = object: TypeToken<UserFollowedData>() {}.type
+            return gson.fromJson<Any>(gson.toJson(data), targetType) as? MastodonNotSharedData
+        }
     };
 
     abstract val icon: Int
