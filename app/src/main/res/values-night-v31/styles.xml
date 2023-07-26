@@ -2,6 +2,9 @@
 <resources>
     <style name="Theme.Traewelling.Starting" parent="Theme.SplashScreen">
         <item name="android:windowSplashScreenBackground">@android:color/system_accent1_600</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/logo_anim</item>
+        <item name="android:windowSplashScreenAnimationDuration">500</item>
+        <item name="android:windowSplashScreenBrandingImage">@drawable/traewelldroid</item>
         <item name="postSplashScreenTheme">@style/Theme.Traewelling</item>
     </style>
     <style name="Theme.Traewelling.StatisticTexts">
