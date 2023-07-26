@@ -197,7 +197,7 @@ enum class NotificationType {
             return gson.fromJson<Any>(gson.toJson(data), targetType) as? UserJoinedConnectionData
         }
     },
-    MastodonNotShared {
+    MastodonNotSent {
         override val icon = R.drawable.ic_error
         @Composable
         override fun getHeadline(notification: Notification): String  {
@@ -219,11 +219,11 @@ enum class NotificationType {
             return onClick
         }
 
-        private fun getData(notification: Notification): MastodonNotSharedData? {
+        private fun getData(notification: Notification): MastodonNotSentData? {
             val gson = Gson()
             val data = notification.data
             val targetType = object: TypeToken<UserFollowedData>() {}.type
-            return gson.fromJson<Any>(gson.toJson(data), targetType) as? MastodonNotSharedData
+            return gson.fromJson<Any>(gson.toJson(data), targetType) as? MastodonNotSentData
         }
     };
 
