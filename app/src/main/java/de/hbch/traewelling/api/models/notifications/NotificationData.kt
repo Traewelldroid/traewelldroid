@@ -59,7 +59,7 @@ data class FollowRequestData(
     val user: NotificationUser
 )
 
-data class MastodonNotSharedData(
+data class MastodonNotSentData(
     val status: NotificationStatus,
     val httpResponseCode: Int
 )
