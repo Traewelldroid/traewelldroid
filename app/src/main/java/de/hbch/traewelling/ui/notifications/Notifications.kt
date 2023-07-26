@@ -113,6 +113,7 @@ private fun Notification(
     var isRead by remember { mutableStateOf(notification.readAt != null) }
     val markAsReadCallback: (Notification) -> Unit = {
         isRead = it.readAt != null
+        notification.readAt = it.readAt
         unreadNotificationsChanged()
     }
     val onRead: () -> Unit = {
@@ -122,20 +123,24 @@ private fun Notification(
             notificationsViewModel.markAsRead(notification.id, markAsReadCallback)
         }
     }
+    val onNotificationClick = {
+        onRead()
+        onClick()
+    }
 
     if (isRead) {
         ReadNotification(
             notification = notification,
             modifier = modifier,
             onRead = onRead,
-            onClick = onClick
+            onClick = onNotificationClick
         )
     } else {
         UnreadNotification(
             notification = notification,
             modifier = modifier,
             onRead = onRead,
-            onClick = onClick
+            onClick = onNotificationClick
         )
     }
 }
