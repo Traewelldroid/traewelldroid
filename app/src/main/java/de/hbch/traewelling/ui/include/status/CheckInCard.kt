@@ -145,7 +145,7 @@ fun CheckInCard(
                         },
                         stationName = status.origin,
                         timePlanned = status.departurePlanned,
-                        timeReal = status.departureReal,
+                        timeReal = status.departureOverwritten ?: status.departureReal,
                         stationSelected = stationSelected
                     )
 
@@ -160,7 +160,7 @@ fun CheckInCard(
                             },
                         stationName = status.destination,
                         timePlanned = status.arrivalPlanned,
-                        timeReal = status.arrivalReal,
+                        timeReal = status.arrivalOverwritten ?: status.arrivalReal,
                         verticalAlignment = Alignment.Bottom,
                         stationSelected = stationSelected
                     )
@@ -581,8 +581,10 @@ private fun CheckInCardPreview() {
             123,
             Date(),
             Date(),
+            Date(),
             "Ende Hp",
             123,
+            Date(),
             Date(),
             Date(),
             ProductType.TRAM,
