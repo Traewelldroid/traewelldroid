@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Badge
@@ -61,6 +62,7 @@ import de.hbch.traewelling.shared.CheckInViewModel
 import de.hbch.traewelling.shared.EventViewModel
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.shared.SharedValues
+import de.hbch.traewelling.theme.LocalColorScheme
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.login.LoginActivity
 import de.hbch.traewelling.ui.notifications.NotificationsViewModel
@@ -190,9 +192,18 @@ fun TraewelldroidApp(
             topBar = {
                 CenterAlignedTopAppBar(
                     title = {
-                        Text(
-                            text = stringResource(id = currentScreen.label)
-                        )
+                        if (currentScreen == Dashboard) {
+                            Icon(
+                                modifier = Modifier.size(64.dp),
+                                painter = painterResource(id = R.drawable.ic_logo),
+                                contentDescription = null,
+                                tint = LocalColorScheme.current.primary
+                            )
+                        } else {
+                            Text(
+                                text = stringResource(id = currentScreen.label)
+                            )
+                        }
                     },
                     scrollBehavior = scrollBehavior,
                     navigationIcon = {
