@@ -65,14 +65,14 @@ class CheckInViewModel : ViewModel() {
     }
 
     fun forceCheckIn(
-        onCheckedIn: () -> Unit = { }
+        onCheckedIn: (Boolean) -> Unit = { }
     ) {
         forceCheckIn = true
         checkIn(onCheckedIn)
     }
 
     fun checkIn(
-        onCheckedIn: () -> Unit = { }
+        onCheckedIn: (Boolean) -> Unit = { }
     ) {
         val checkInRequest = CheckInRequest(
             message.value ?: "",
@@ -105,12 +105,12 @@ class CheckInViewModel : ViewModel() {
                         }
                         Sentry.captureMessage(response.errorBody()?.charStream()?.readText()!!)
                     }
-                    onCheckedIn()
+                    onCheckedIn(checkInResult == CheckInResult.SUCCESSFUL)
                 }
                 override fun onFailure(call: Call<Data<CheckInResponse>>, t: Throwable) {
                     Sentry.captureException(t)
                     checkInResult = CheckInResult.ERROR
-                    onCheckedIn()
+                    onCheckedIn(false)
                 }
             })
     }

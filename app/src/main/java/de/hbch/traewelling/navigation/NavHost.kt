@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.pm.ShortcutManagerCompat
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -34,6 +35,7 @@ import de.hbch.traewelling.ui.settings.Settings
 import de.hbch.traewelling.ui.statistics.Statistics
 import de.hbch.traewelling.ui.statusDetail.StatusDetail
 import de.hbch.traewelling.ui.user.Profile
+import de.hbch.traewelling.util.popBackStackAndNavigate
 import de.hbch.traewelling.util.toShortCut
 import java.util.Calendar
 import java.util.Date
@@ -351,19 +353,26 @@ fun TraewelldroidNavHost(
                 checkInAction = {
                     if (editMode) {
                         checkInViewModel.updateCheckIn { status ->
-                            navController.popBackStack()
-                            navController.navigate("status-details/${status.id}") {
-                                navController.graph.startDestinationRoute?.let { screenRoute ->
-                                    popUpTo(screenRoute)
+                            navController.navigate(
+                                "status-details/${status.id}"
+                            ) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    inclusive = false
                                 }
                                 launchSingleTop = true
                             }
                         }
                     } else {
-                        checkInViewModel.checkIn {
+                        checkInViewModel.checkIn { succeeded ->
                             navController.navigate(
                                 CheckInResult.route
                             ) {
+                                if (succeeded) {
+                                    popUpTo(navController.graph.findStartDestination().id) {
+                                        inclusive = false
+                                    }
+                                }
+
                                 launchSingleTop = true
                             }
                         }
@@ -388,11 +397,7 @@ fun TraewelldroidNavHost(
                 onFloatingActionButtonChange = { icon, label ->
                     onFloatingActionButtonChange(icon, label) {
                         checkInViewModel.reset()
-                        navController.navigate(Dashboard.route) {
-                            popUpTo(Dashboard.route) {
-                                inclusive = true
-                            }
-                        }
+                        navController.popBackStackAndNavigate(Dashboard.route)
                     }
                 },
                 onCheckInForced = {
