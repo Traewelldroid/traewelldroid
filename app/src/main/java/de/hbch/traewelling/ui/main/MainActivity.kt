@@ -64,6 +64,7 @@ import de.hbch.traewelling.shared.SharedValues
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.login.LoginActivity
 import de.hbch.traewelling.ui.notifications.NotificationsViewModel
+import de.hbch.traewelling.util.popBackStackAndNavigate
 import de.hbch.traewelling.util.publishStationShortcuts
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -291,15 +292,7 @@ fun TraewelldroidApp(
                                 },
                                 selected = currentScreen == destination,
                                 onClick = {
-                                    navController.popBackStack()
-                                    navController.navigate(destination.route) {
-                                        navController.graph.startDestinationRoute?.let { screenRoute ->
-                                            popUpTo(screenRoute) {
-                                                inclusive = true
-                                            }
-                                        }
-                                        launchSingleTop = true
-                                    }
+                                    navController.popBackStackAndNavigate(destination.route)
                                 }
                             )
                         }
