@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
     <string name="abort">Abbrächä</string>
     <string name="input_username">Benutzernamä</string>
     <string name="input_password">Passwort</string>
@@ -35,7 +35,7 @@
     <string name="error_missing_location_permission">Zum diä Funktion z\'nutzä, muesch d\'Standortberächtigung i dinä Gräätischtelligä aktivierä.</string>
     <string name="username_or_email">Benutzernamä oder E-Mail-Adrässä</string>
     <string name="check_in_successful">Du bisch iitscheggt!</string>
-    <string name="check_in_failure">Bim Iitscheggä isch än Fehler passiert</string>
+    <string name="check_in_failure">Bim Iitscheggä isch än Fehler passiert.</string>
     <string name="check_in_conflict">Du bisch scho in\'erä anderä Verbindig iitscheggt!</string>
     <string name="title_select_date">Wähl s\'Abfahrtsdatum</string>
     <string name="title_select_time">Wähl d\'Abfahrtszeit</string>
@@ -138,7 +138,7 @@
     <string name="mute">Stummschaltä</string>
     <string name="unmute">Stummschaltig ufhebä</string>
     <string name="welcome">Willkommä!</string>
-    <string name="account_notice">Zum Träwelldroid nutze z\'chöne, bruchsch än Account bi Träwelling. Wänn scho äs Benutzerkonto häsch, chasch di eifach mit dem Button undä amäldä. Suscht chasch\'dr det äs Konto erschtellä.</string>
+    <string name="account_notice">Dämit Träwelldroid chasch nutze, bruchsch äs Benutzerkonto bi Träwelling. Wänn scho eis häsch, chasch di eifach mit dem Button undä amäldä. Suscht chasch\'dr det äs Konto erschtellä.</string>
     <string name="status_invisible">de Schtatus isch für Dich nöd sichtbar.</string>
     <string name="send_toot">Das Check-In uf Mastodon teilä</string>
     <string name="chain_toot">Dä Mastodon-Post a letschti Post ahänkä</string>
@@ -148,4 +148,24 @@
     <string name="finish">Fertig</string>
     <string name="force_check_in">Check-In erzwingä</string>
     <string name="share_text">Ich bi grad im %1$s nach %2$s!</string>
+    <string name="status_not_shared_on_mastodon">Dis Check-In isch ufgrund vom Fehler %1$d nöd uf Mastodon teilt worde.</string>
+    <string name="travelling_with_from_to">Fahrt mit %1$s vo %2$s nach %3$s</string>
+    <string name="mark_as_read">Als gläsä markierä</string>
+    <string name="mark_all_as_read">Alles als gläsä markierä</string>
+    <string name="user_likes_status">\@%1$s hät dis Check-in glikt!</string>
+    <string name="event_suggestion_processed">Din Eventvorschlag isch bearbeitet worde!</string>
+    <string name="event_suggestion_accepted">Din Eventvorschlag %1$s isch agno worde.</string>
+    <string name="event_suggestion_rejected">Din Eventvorschlag %1$s isch abglehnt worde.</string>
+    <string name="user_followed">\@%1$s folgt dir jetzt!</string>
+    <string name="user_also_on_connection">\@%1$s isch au i dinere Verbindig!</string>
+    <string name="follow_request_issued">%1$s möcht dir folgä!</string>
+    <string name="follow_request_approved">\@%1$s hät dini Folgeanfrag beschtätigt!</string>
+    <string name="standard_description">Darschtellig vo Infraschtruktur wie Gleis, Bahnhöf, …</string>
+    <string name="signal_layer">Signal</string>
+    <string name="maxspeed_description">Darstellung vo dä Höchschtgschwindigkeit vo me Gleis und vo Gschwindigkeitssignal.</string>
+    <string name="signal_description">Darschtellig vo Signalsyschtem, Signal, …</string>
+    <string name="maxspeed_layer">Höchschtgschwindigkeit</string>
+    <string name="map_view">Kartäasicht</string>
+    <string name="configure_map">Da chasch d Kartäasicht konfiguriere.</string>
+    <string name="standard_layer">Standard</string>
 </resources>
