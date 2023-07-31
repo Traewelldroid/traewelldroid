@@ -44,6 +44,7 @@ import java.text.DateFormat
 import java.text.DateFormat.getDateInstance
 import java.text.DateFormat.getDateTimeInstance
 import java.text.DateFormat.getTimeInstance
+import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.concurrent.TimeUnit
@@ -284,7 +285,14 @@ fun getLocalDateTimeString(date: Date): String {
 
 @Composable
 fun getLocalDateString(date: Date): String {
-    return getDateInstance(DateFormat.SHORT).format(date)
+    return getDateInstance(DateFormat.SHORT, Locale.getDefault()).format(date)
+}
+
+@Composable
+fun getLongLocalDateString(date: Date): String {
+    val weekday = SimpleDateFormat("EEEE", Locale.getDefault()).format(date)
+    val formattedDate = getDateInstance(DateFormat.LONG, Locale.getDefault()).format(date)
+    return "$weekday, $formattedDate"
 }
 
 @Composable

@@ -117,7 +117,8 @@ fun StatusDetail(
                     status = status,
                     loggedInUserViewModel = loggedInUserViewModel,
                     onDeleted = statusDeleted,
-                    handleEditClicked = statusEdit
+                    handleEditClicked = statusEdit,
+                    displayLongDate = true
                 )
                 if (status?.productType?.isTrain == true) {
                     ButtonWithIconAndText(
