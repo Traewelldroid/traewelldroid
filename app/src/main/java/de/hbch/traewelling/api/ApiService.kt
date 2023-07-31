@@ -51,9 +51,6 @@ interface AuthService {
         @Body credentials: LoginCredentials
     ): Call<Data<BearerToken>>
 
-    @POST("auth/refresh")
-    fun refreshToken(): Call<Data<BearerToken>>
-
     @POST("auth/logout")
     fun logout(): Call<Unit>
 
@@ -149,7 +146,8 @@ interface TravelService {
     @GET("trains/station/{station}/departures")
     fun getDeparturesAtStation(
         @Path("station", encoded = false) station: String,
-        @Query("when") time: Date
+        @Query("when") time: Date,
+        @Query("travelType") filter: String
     ): Call<HafasTripPage>
 
     @GET("trains/station/autocomplete/{station}")

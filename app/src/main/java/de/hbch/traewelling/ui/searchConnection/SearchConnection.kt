@@ -1,6 +1,5 @@
 package de.hbch.traewelling.ui.searchConnection
 
-import android.util.Log
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -36,6 +35,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -81,13 +81,15 @@ fun SearchConnection(
     var searchDate by remember { mutableStateOf(currentSearchDate) }
     var loading by remember { mutableStateOf(false) }
     var searchConnections by remember { mutableStateOf(true) }
+    var selectedFilter by remember { mutableStateOf<FilterType?>(null) }
 
-    LaunchedEffect(searchConnections) {
+    LaunchedEffect(searchConnections, selectedFilter) {
         if (searchConnections) {
             loading = true
             viewModel.searchConnections(
                 stationName,
                 searchDate,
+                selectedFilter,
                 {
                     loading = false
                     searchConnections = false
@@ -122,7 +124,8 @@ fun SearchConnection(
             Column {
                 Text(
                     modifier = Modifier
-                        .padding(8.dp).fillMaxWidth(),
+                        .padding(8.dp)
+                        .fillMaxWidth(),
                     text = stringResource(id = R.string.departures_at, stationName),
                     style = AppTypography.headlineSmall
                 )
@@ -171,6 +174,11 @@ fun SearchConnection(
                                 },
                                 {}
                             )
+                        },
+                        appliedFilter = selectedFilter,
+                        onFilter = {
+                            selectedFilter = it
+                            searchConnections = true
                         }
                     )
                 }
@@ -188,16 +196,21 @@ fun SearchConnection(
     trips: List<HafasTrip>? = null,
     onPreviousTime: () -> Unit = { },
     onNextTime: () -> Unit = { },
+    appliedFilter: FilterType? = null,
+    onFilter: (FilterType?) -> Unit = { },
     onTripSelection: (HafasTrip) -> Unit = { },
     onHomelandStationSelection: () -> Unit = { },
     onTimeSelection: (Date) -> Unit = { }
 ) {
-    var selectedFilter by remember { mutableStateOf<FilterType?>(null) }
-    val filteredTrips = remember { mutableStateListOf<HafasTrip>() }
     var datePickerVisible by remember { mutableStateOf(false) }
     val datePickerState = rememberDatePickerState(initialSelectedDateMillis = searchTime.time)
     var timePickerVisible by remember { mutableStateOf(false) }
-    val timePickerState = rememberTimePickerState()
+    val calendar = GregorianCalendar()
+    calendar.time = searchTime
+    val timePickerState = rememberTimePickerState(
+        initialHour = calendar.get(Calendar.HOUR_OF_DAY),
+        initialMinute = calendar.get(Calendar.MINUTE)
+    )
 
     if (datePickerVisible) {
         Dialog(
@@ -210,7 +223,9 @@ fun SearchConnection(
             ) {
                 DatePicker(state = datePickerState)
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp),
                     horizontalArrangement = Arrangement.End
                 ) {
                     OutlinedButtonWithIconAndText(
@@ -236,7 +251,9 @@ fun SearchConnection(
             ) {
                 TimePicker(state = timePickerState)
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp),
                     horizontalArrangement = Arrangement.End
                 ) {
                     OutlinedButtonWithIconAndText(
@@ -245,35 +262,17 @@ fun SearchConnection(
                             timePickerVisible = false
 
                             val selectedDate = datePickerState.selectedDateMillis
-                            val calendar = GregorianCalendar()
+                            val cal = GregorianCalendar()
                             if (selectedDate != null) {
-                                calendar.timeInMillis = selectedDate
-                                calendar.set(Calendar.HOUR_OF_DAY, timePickerState.hour)
-                                calendar.set(Calendar.MINUTE, timePickerState.minute)
+                                cal.timeInMillis = selectedDate
+                                cal.set(Calendar.HOUR_OF_DAY, timePickerState.hour)
+                                cal.set(Calendar.MINUTE, timePickerState.minute)
 
-                                onTimeSelection(calendar.time)
+                                onTimeSelection(cal.time)
                             }
                         }
                     )
                 }
-            }
-        }
-    }
-
-    // Filter list on list or filter change
-    LaunchedEffect(selectedFilter) {
-        Log.d("Compose", "Data arrived, filtering")
-        val filter = selectedFilter
-        filteredTrips.clear()
-        if (trips != null) {
-            if (filter == null) {
-                filteredTrips.addAll(trips)
-            } else {
-                filteredTrips.addAll(
-                    trips.filter {
-                        filter.matchesProduct(it.line?.product)
-                    }
-                )
             }
         }
     }
@@ -311,10 +310,12 @@ fun SearchConnection(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 8.dp),
-            chips = getFilterableProductTypes(trips),
-            preSelection = null,
+            chips = FilterType.values().associateWith {
+                 stringResource(id = it.stringId)
+            },
+            preSelection = appliedFilter,
             selectionRequired = false,
-            onSelectionChanged = { selectedFilter = it }
+            onSelectionChanged = onFilter
         )
         Divider(
             modifier = Modifier.fillMaxWidth()
@@ -333,7 +334,7 @@ fun SearchConnection(
         )
 
         // Connections
-        filteredTrips.forEach { trip ->
+        trips?.forEach { trip ->
             ConnectionListItem(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -355,6 +356,19 @@ fun SearchConnection(
                     else
                         null
             )
+
+            Divider(
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+
+        if (trips.isNullOrEmpty()) {
+            Text(
+                text = stringResource(id = R.string.no_departures),
+                modifier = Modifier.padding(vertical = 8.dp).fillMaxWidth(),
+                textAlign = TextAlign.Center
+            )
+
             Divider(
                 modifier = Modifier.fillMaxWidth()
             )
@@ -485,74 +499,38 @@ private fun PreviousNextButtons(
     }
 }
 
-@Composable
-private fun getFilterableProductTypes(connections: List<HafasTrip>? = null): Map<FilterType, String> {
-    val types = connections
-        ?.mapNotNull {
-            FilterType.values().find { filterType -> filterType.matchesProduct(it.line?.product) }
-        }
-        ?.distinct() ?: FilterType.values().toList()
-
-    val typeMap = mutableMapOf<FilterType, String>()
-    typeMap.putAll(
-        types.map {
-            Pair(it, stringResource(id = it.getStringId()))
-        }
-    )
-
-    return typeMap
-}
-
-private enum class FilterType {
+enum class FilterType {
     EXPRESS {
-        override val productMatches = listOf(
-            ProductType.NATIONAL,
-            ProductType.NATIONAL_EXPRESS
-        )
-        override fun getStringId() = R.string.product_type_express
+        override val stringId = R.string.product_type_express
+        override val filterQuery = "express"
     },
     REGIONAL {
-        override val productMatches = listOf(
-            ProductType.REGIONAL,
-            ProductType.REGIONAL_EXPRESS
-        )
-        override fun getStringId() = R.string.product_type_regional
+        override val stringId = R.string.product_type_regional
+        override val filterQuery = "regional"
     },
     SUBURBAN {
-        override val productMatches = listOf(
-            ProductType.SUBURBAN
-        )
-        override fun getStringId() = R.string.product_type_suburban
+        override val stringId = R.string.product_type_suburban
+        override val filterQuery = "suburban"
     },
     SUBWAY {
-        override val productMatches = listOf(
-            ProductType.SUBWAY
-        )
-        override fun getStringId() = R.string.product_type_subway
+        override val stringId = R.string.product_type_subway
+        override val filterQuery = "subway"
     },
     TRAM {
-        override val productMatches = listOf(
-            ProductType.TRAM
-        )
-        override fun getStringId() = R.string.product_type_tram
+        override val stringId = R.string.product_type_tram
+        override val filterQuery = "tram"
     },
     BUS {
-        override val productMatches = listOf(
-            ProductType.BUS
-        )
-        override fun getStringId() = R.string.product_type_bus
+        override val stringId = R.string.product_type_bus
+        override val filterQuery = "bus"
     },
     FERRY {
-        override val productMatches = listOf(
-            ProductType.FERRY
-        )
-        override fun getStringId() = R.string.product_type_ferry
+        override val stringId = R.string.product_type_ferry
+        override val filterQuery = "ferry"
     };
 
-    abstract val productMatches: List<ProductType>
-    abstract fun getStringId(): Int
-
-    fun matchesProduct(productType: ProductType?): Boolean = productMatches.contains(productType)
+    abstract val stringId: Int
+    abstract val filterQuery: String
 }
 
 @Preview
