@@ -7,8 +7,6 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
@@ -116,12 +114,8 @@ fun CardSearchStation(
                     keyboardActions = KeyboardActions(
                         onSearch = {
                             autocompleteVisible = false
-                            // TODO remove delay after compose migration
-                            val handler = Handler(Looper.getMainLooper())
-                            handler.postDelayed({
-                                shortcutsVisible = false
-                                searchAction(text)
-                            }, 500)
+                            shortcutsVisible = false
+                            searchAction(text)
                         }
                     ),
                     trailingIcon = {
@@ -161,11 +155,7 @@ fun CardSearchStation(
                                 onClick = {
                                     autocompleteVisible = false
                                     shortcutsVisible = false
-                                    // TODO remove delay after compose migration
-                                    val handler = Handler(Looper.getMainLooper())
-                                    handler.postDelayed({
-                                        searchAction(option)
-                                    }, 500)
+                                    searchAction(option)
                                 }
                             )
                         }

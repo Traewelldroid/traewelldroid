@@ -22,12 +22,16 @@ class SearchConnectionViewModel: ViewModel() {
     fun searchConnections(
         stationName: String,
         departureTime: Date,
+        filterType: FilterType?,
         successCallback: (HafasTripPage) -> Unit,
         failureCallback: () -> Unit
     ) {
-        var requestStationName = stationName.replace('/', ' ')
-        TraewellingApi.travelService.getDeparturesAtStation(requestStationName, departureTime)
-            .enqueue(object: Callback<HafasTripPage> {
+        val requestStationName = stationName.replace('/', ' ')
+        TraewellingApi.travelService.getDeparturesAtStation(
+            requestStationName,
+            departureTime,
+            filterType?.filterQuery ?: ""
+        ).enqueue(object: Callback<HafasTripPage> {
                 override fun onResponse(
                     call: Call<HafasTripPage>,
                     response: Response<HafasTripPage>
