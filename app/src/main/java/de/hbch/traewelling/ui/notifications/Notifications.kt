@@ -124,7 +124,9 @@ private fun Notification(
         }
     }
     val onNotificationClick = {
-        onRead()
+        if (!isRead) {
+            notificationsViewModel.markAsRead(notification.id, markAsReadCallback)
+        }
         onClick()
     }
 
