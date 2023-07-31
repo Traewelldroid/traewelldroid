@@ -67,6 +67,7 @@ fun CheckInCard(
     checkInCardViewModel: CheckInCardViewModel,
     status: Status?,
     loggedInUserViewModel: LoggedInUserViewModel? = null,
+    displayLongDate: Boolean = false,
     stationSelected: (String, Date?) -> Unit = { _, _ -> },
     userSelected: (String) -> Unit = { },
     statusSelected: (Int) -> Unit = { },
@@ -205,6 +206,7 @@ fun CheckInCard(
                     visibility = status.visibility,
                     isOwnStatus =
                     (loggedInUserViewModel?.loggedInUser?.value?.id ?: -1) == status.userId,
+                    displayLongDate = displayLongDate,
                     eventName = status.eventName,
                     checkInCardViewModel = checkInCardViewModel,
                     userSelected = userSelected,
@@ -404,9 +406,10 @@ private fun CheckInCardFooter(
     visibility: StatusVisibility,
     liked: Boolean?,
     likeCount: Int?,
-    isOwnStatus: Boolean = false,
     eventName: String?,
     checkInCardViewModel: CheckInCardViewModel,
+    isOwnStatus: Boolean = false,
+    displayLongDate: Boolean = false,
     userSelected: (String) -> Unit = { },
     handleEditClicked: () -> Unit = { },
     handleDeleteClicked: () -> Unit = { }
@@ -442,7 +445,10 @@ private fun CheckInCardFooter(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    AnimatedContent(targetState = likedState) {
+                    AnimatedContent(
+                        targetState = likedState,
+                        label = "FavoriteAnimation"
+                    ) {
                         val icon = if (it) R.drawable.ic_faved else R.drawable.ic_not_faved
                         Icon(
                             painterResource(id = icon),
@@ -467,6 +473,11 @@ private fun CheckInCardFooter(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.End
             ) {
+                val dateString =
+                    if (displayLongDate)
+                        getLocalDateTimeString(date = createdAt)
+                    else
+                        getLocalTimeString(date = createdAt)
                 Text(
                     modifier = Modifier
                         .clickable { userSelected(username) }
@@ -474,9 +485,7 @@ private fun CheckInCardFooter(
                     text = stringResource(
                         id = R.string.check_in_user_time,
                         username,
-                        getLocalDateTimeString(
-                            date = createdAt
-                        )
+                        dateString
                     ),
                     textAlign = TextAlign.End,
                     style = AppTypography.labelLarge
@@ -530,7 +539,10 @@ private fun CheckInCardFooter(
                                     contentDescription = null
                                 )
                             },
-                            onClick = handleDeleteClicked
+                            onClick = {
+                                menuExpanded = false
+                                handleDeleteClicked()
+                            }
                         )
                     }
                 }

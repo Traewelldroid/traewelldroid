@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
@@ -24,9 +23,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import de.hbch.traewelling.api.dtos.Status
 import de.hbch.traewelling.shared.LoggedInUserViewModel
-import de.hbch.traewelling.ui.composables.onBottomReached
-import de.hbch.traewelling.ui.include.status.CheckInCard
 import de.hbch.traewelling.ui.include.status.CheckInCardViewModel
+import de.hbch.traewelling.util.OnBottomReached
+import de.hbch.traewelling.util.checkInList
+import java.time.ZoneId
 import java.util.Date
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -54,7 +54,7 @@ fun Profile(
     val listState = rememberLazyListState()
     var initialized by remember { mutableStateOf(false) }
 
-    listState.onBottomReached {
+    listState.OnBottomReached {
         if (userStatusViewModel.checkIns.size > 0) {
             userStatusViewModel.loadStatusesForUser(page = ++currentPage)
         }
@@ -84,22 +84,15 @@ fun Profile(
                     loggedInUserViewModel = loggedInUserViewModel
                 )
             }
-            items(
-                items = userStatusViewModel.checkIns
-            ) { status ->
-                CheckInCard(
-                    checkInCardViewModel = checkInCardViewModel,
-                    status = status.toStatusDto(),
-                    loggedInUserViewModel = loggedInUserViewModel,
-                    stationSelected = stationSelectedAction,
-                    statusSelected = statusSelectedAction,
-                    handleEditClicked = statusEditAction,
-                    onDeleted = { statusValue ->
-                        userStatusViewModel.checkIns.removeIf { it.id == statusValue.statusId }
-                        statusDeletedAction()
-                    }
-                )
-            }
+            checkInList(
+                userStatusViewModel.checkIns,
+                checkInCardViewModel,
+                loggedInUserViewModel,
+                stationSelectedAction,
+                statusSelectedAction,
+                statusEditAction,
+                statusDeletedAction
+            )
         }
         PullRefreshIndicator(
             modifier = Modifier.align(Alignment.TopCenter),
@@ -107,4 +100,11 @@ fun Profile(
             state = pullRefreshState
         )
     }
+}
+
+@Composable
+fun isSameDay(date1: Date, date2: Date): Boolean {
+    val localDate1 = date1.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+    val localDate2 = date2.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+    return localDate1.isEqual(localDate2)
 }
