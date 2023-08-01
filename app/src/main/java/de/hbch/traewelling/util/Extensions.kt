@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -16,7 +16,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import de.hbch.traewelling.api.models.status.Status
 import de.hbch.traewelling.shared.LoggedInUserViewModel
-import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.ui.include.status.CheckInCard
 import de.hbch.traewelling.ui.include.status.CheckInCardViewModel
 import de.hbch.traewelling.ui.selectDestination.getLongLocalDateString
@@ -59,8 +58,7 @@ fun LazyListScope.checkInList(
         ) {
             Text(
                 text = getLongLocalDateString(status.journey.origin.departurePlanned),
-                modifier = Modifier.padding(bottom = 16.dp),
-                style = AppTypography.titleMedium
+                modifier = Modifier.padding(bottom = 16.dp)
             )
         }
         CheckInCard(
