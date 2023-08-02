@@ -49,6 +49,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.jcloquell.androidsecurestorage.SecureStorage
 import de.c1710.filemojicompat_ui.views.picker.EmojiPackItemAdapter
+import de.hbch.traewelling.BuildConfig
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.events.UnauthorizedEvent
@@ -68,6 +69,9 @@ import de.hbch.traewelling.ui.login.LoginActivity
 import de.hbch.traewelling.ui.notifications.NotificationsViewModel
 import de.hbch.traewelling.util.popBackStackAndNavigate
 import de.hbch.traewelling.util.publishStationShortcuts
+import io.getunleash.UnleashClient
+import io.getunleash.UnleashConfig
+import io.getunleash.polling.PollingModes
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -82,6 +86,7 @@ class MainActivity : ComponentActivity()
     private var newIntentReceived: ((Intent?) -> Unit)? = null
     private lateinit var secureStorage: SecureStorage
     lateinit var emojiPackItemAdapter: EmojiPackItemAdapter
+    private var unleashClient: UnleashClient? = null
 
     override fun onStart() {
         super.onStart()
@@ -119,6 +124,8 @@ class MainActivity : ComponentActivity()
         }
         eventViewModel.activeEvents()
 
+        initUnleash()
+
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
@@ -132,7 +139,8 @@ class MainActivity : ComponentActivity()
                 navController = navController,
                 loggedInUserViewModel = loggedInUserViewModel,
                 eventViewModel = eventViewModel,
-                checkInViewModel = checkInViewModel
+                checkInViewModel = checkInViewModel,
+                unleashClient = unleashClient
             )
         }
     }
@@ -140,6 +148,19 @@ class MainActivity : ComponentActivity()
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         newIntentReceived?.invoke(intent)
+    }
+
+    private fun initUnleash() {
+        val url = BuildConfig.UNLEASH_URL
+        val key = BuildConfig.UNLEASH_KEY
+        if (url.isNotBlank() && key.isNotBlank()) {
+            val config = UnleashConfig.newBuilder()
+                .proxyUrl(url)
+                .clientKey(key)
+                .pollingMode(PollingModes.fetchOnce())
+                .build()
+            unleashClient = UnleashClient(config)
+        }
     }
 }
 
@@ -149,7 +170,8 @@ fun TraewelldroidApp(
     navController: NavHostController,
     loggedInUserViewModel: LoggedInUserViewModel,
     eventViewModel: EventViewModel,
-    checkInViewModel: CheckInViewModel
+    checkInViewModel: CheckInViewModel,
+    unleashClient: UnleashClient?
 ) {
     MainTheme {
         val currentBackStack by navController.currentBackStackEntryAsState()
