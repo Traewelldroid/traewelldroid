@@ -4,7 +4,7 @@ plugins {
     id 'kotlin-kapt'
     id 'androidx.navigation.safeargs.kotlin'
     id 'com.google.android.gms.oss-licenses-plugin'
-    id "io.sentry.android.gradle" version "3.1.5"
+    id "io.sentry.android.gradle" version "3.11.1"
 }
 
 def properties = new Properties()
@@ -79,8 +79,8 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            minifyEnabled true
         }
         debug {
         }
@@ -143,9 +143,6 @@ dependencies {
 
     // Retrofit
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
-
-    // Sentry
-    implementation 'io.sentry:sentry-android:6.4.1'
 
     // Coil for image loading
     implementation "io.coil-kt:coil-compose:2.3.0"
