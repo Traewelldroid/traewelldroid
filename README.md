@@ -22,14 +22,22 @@ contents into a `key.properties` file. With those properties the main keys and U
 can be set.
 
 | Property name        | Usage                                       | Mandatory |
-| -------------------- | ------------------------------------------- | --------- |
+|----------------------|---------------------------------------------|-----------|
 | `SENTRY_DSN`         | The DSN used for error logging with Sentry. | No        |
-| `OAUTH_CLIENT_ID`    | The OAuth client id                         | No        |
-| `OAUTH_REDIRECT_URL` | The OAuth redirect URL                      | No        |
+| `OAUTH_CLIENT_ID`    | The OAuth client id                         | Yes       |
+| `OAUTH_REDIRECT_URL` | The OAuth redirect URL                      | Yes       |
 | `REPO_URL`           | The URL to the repository                   | No        |
 | `PRIVACY_URL`        | URL to the privacy statement and imprint.   | Yes       |
+| `UNLEASH_URL`        | API URL to reach the Unleash API            | No        |
+| `UNLEASH_KEY`        | API Key for Unleash API                     | No        |
 
 After that, open Android Studio and the project should setup itself automatically.
+
+### Unleash
+
+Träwelldroid uses feature toggles with [Unleash](https://getunleash.io) so that features already can
+be implemented although they aren't rolled out on depending APIs yet. The official Träwelldroid
+build uses a self-hosted Unleash variant hosted in Germany.
 
 ## Contributions
 
