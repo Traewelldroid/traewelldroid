@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Badge
@@ -32,11 +33,13 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -47,6 +50,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 import com.jcloquell.androidsecurestorage.SecureStorage
 import de.c1710.filemojicompat_ui.views.picker.EmojiPackItemAdapter
 import de.hbch.traewelling.BuildConfig
@@ -57,10 +61,12 @@ import de.hbch.traewelling.navigation.BOTTOM_NAVIGATION
 import de.hbch.traewelling.navigation.ComposeMenuItem
 import de.hbch.traewelling.navigation.Dashboard
 import de.hbch.traewelling.navigation.Notifications
+import de.hbch.traewelling.navigation.PersonalProfile
 import de.hbch.traewelling.navigation.SCREENS
 import de.hbch.traewelling.navigation.TraewelldroidNavHost
 import de.hbch.traewelling.shared.CheckInViewModel
 import de.hbch.traewelling.shared.EventViewModel
+import de.hbch.traewelling.shared.FeatureFlags
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.shared.SharedValues
 import de.hbch.traewelling.theme.LocalColorScheme
@@ -86,7 +92,6 @@ class MainActivity : ComponentActivity()
     private var newIntentReceived: ((Intent?) -> Unit)? = null
     private lateinit var secureStorage: SecureStorage
     lateinit var emojiPackItemAdapter: EmojiPackItemAdapter
-    private var unleashClient: UnleashClient? = null
 
     override fun onStart() {
         super.onStart()
@@ -139,8 +144,7 @@ class MainActivity : ComponentActivity()
                 navController = navController,
                 loggedInUserViewModel = loggedInUserViewModel,
                 eventViewModel = eventViewModel,
-                checkInViewModel = checkInViewModel,
-                unleashClient = unleashClient
+                checkInViewModel = checkInViewModel
             )
         }
     }
@@ -159,7 +163,7 @@ class MainActivity : ComponentActivity()
                 .clientKey(key)
                 .pollingMode(PollingModes.fetchOnce())
                 .build()
-            unleashClient = UnleashClient(config)
+            FeatureFlags.getInstance().init(UnleashClient(config))
         }
     }
 }
@@ -170,13 +174,13 @@ fun TraewelldroidApp(
     navController: NavHostController,
     loggedInUserViewModel: LoggedInUserViewModel,
     eventViewModel: EventViewModel,
-    checkInViewModel: CheckInViewModel,
-    unleashClient: UnleashClient?
+    checkInViewModel: CheckInViewModel
 ) {
     MainTheme {
         val currentBackStack by navController.currentBackStackEntryAsState()
         val currentDestination = currentBackStack?.destination
         val currentScreen = SCREENS.find { it.route == currentDestination?.route } ?: Dashboard
+        val loggedInUser by loggedInUserViewModel.loggedInUser.observeAsState()
 
         val appBarState = rememberTopAppBarState()
         val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(appBarState)
@@ -310,10 +314,26 @@ fun TraewelldroidApp(
                                             }
                                         }
                                     ) {
-                                        Icon(
-                                            painter = painterResource(id = destination.icon),
-                                            contentDescription = null
-                                        )
+                                        val user = loggedInUser
+                                        if (
+                                            destination == PersonalProfile &&
+                                            user != null &&
+                                            FeatureFlags.getInstance().profilePicInNavBar
+                                        ) {
+                                            AsyncImage(
+                                                model = user.avatarUrl,
+                                                contentDescription = user.name,
+                                                modifier = Modifier
+                                                    .size(24.dp)
+                                                    .clip(CircleShape),
+                                                placeholder = painterResource(id = destination.icon)
+                                            )
+                                        } else {
+                                            Icon(
+                                                painter = painterResource(id = destination.icon),
+                                                contentDescription = null
+                                            )
+                                        }
                                     }
                                 },
                                 label = {
