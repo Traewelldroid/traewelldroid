@@ -48,13 +48,10 @@ android {
         applicationId packageName
         minSdk 26
         targetSdk 33
-        versionCode 105
-        versionName "1.21.0"
+        versionCode 106
+        versionName "1.21.1"
 
-        manifestPlaceholders = [
-                SENTRY_DSN: sentryDsn,
-                appAuthRedirectScheme: "app.traewelldroid.de"
-        ]
+        manifestPlaceholders["appAuthRedirectScheme"] = "app.traewelldroid.de"
 
         testInstrumentationRunner
     }
@@ -71,6 +68,7 @@ android {
             buildConfigField "String", "PRIVACY_URL", "\"${privacyUrl}\""
             buildConfigField "String", "UNLEASH_URL", "\"${unleashUrl}\""
             buildConfigField "String", "UNLEASH_KEY", "\"${unleashKey}\""
+            manifestPlaceholders["SENTRY_DSN"] = sentryDsn
         }
         debug {
             loadProperties("dev.properties")
@@ -80,6 +78,7 @@ android {
             buildConfigField "String", "PRIVACY_URL", "\"${privacyUrl}\""
             buildConfigField "String", "UNLEASH_URL", "\"${unleashUrl}\""
             buildConfigField "String", "UNLEASH_KEY", "\"${unleashKey}\""
+            manifestPlaceholders["SENTRY_DSN"] = sentryDsn
         }
     }
     buildFeatures {
