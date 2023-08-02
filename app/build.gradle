@@ -7,47 +7,36 @@ plugins {
     id "io.sentry.android.gradle" version "3.11.1"
 }
 
-def properties = new Properties()
-def localKeyProperties = rootProject.file('key.properties')
-if (localKeyProperties.exists()) {
-    localKeyProperties.withReader('UTF-8') {
-        properties.load(it)
+def sentryDsn = ""
+def oauthClientId = ""
+def oauthRedirectUrl = ""
+def repoUrl = ""
+def privacyUrl = ""
+def unleashUrl = ""
+def unleashKey = ""
+
+ext.loadProperties = { String file ->
+    def props = new Properties()
+    def _file = rootProject.file(file)
+    if (_file.exists()) {
+        _file.withReader('UTF-8') {
+            props.load(it)
+        }
     }
-}
-def sentryDsn = properties.getProperty('SENTRY_DSN')
-if (sentryDsn == null) {
-    sentryDsn = ""
-    project.logger.error('Sentry DSN was not set!')
-}
-def oauthClientId = properties.getProperty('OAUTH_CLIENT_ID')
-if (oauthClientId == null) {
-    oauthClientId = ""
-    project.logger.error('OAuth client id was not set!')
-    throw new GradleException("OAuth client id was not set! Please set the URL in the key.properties!")
-}
-def oauthRedirectUrl = properties.getProperty('OAUTH_REDIRECT_URL')
-if (oauthRedirectUrl == null) {
-    oauthRedirectUrl = ""
-    project.logger.error("OAuth Redirect URL was not set!")
-    throw new GradleException("OAuth redirect URL was not set! Please set the URL in the key.properties!")
-}
-def repoUrl = properties.getProperty('REPO_URL')
-if (repoUrl == null) {
-    repoUrl = ""
-    project.logger.error("Repo url not set")
-}
-def privacyUrl = properties.getProperty('PRIVACY_URL')
-if (privacyUrl == null) {
-    project.logger.error("Privacy url not set")
-    throw new GradleException("Privacy URL was not set! Please set the URL in the key.properties!")
-}
-def unleashUrl = properties.getProperty('UNLEASH_URL')
-if (privacyUrl == null) {
-    project.logger.error("Unleash url not set")
-}
-def unleashKey = properties.getProperty('UNLEASH_KEY')
-if (privacyUrl == null) {
-    project.logger.error("Unleash key not set")
+
+    sentryDsn = props.getProperty('SENTRY_DSN', "")
+    repoUrl = props.getProperty('REPO_URL', "")
+    unleashUrl = props.getProperty('UNLEASH_URL', "")
+    unleashKey = props.getProperty('UNLEASH_KEY', "")
+
+    // Mandatory
+    privacyUrl = props.getProperty('PRIVACY_URL')
+    oauthClientId = props.getProperty('OAUTH_CLIENT_ID')
+    oauthRedirectUrl = props.getProperty('OAUTH_REDIRECT_URL')
+
+    if (privacyUrl == null || oauthClientId == null || oauthRedirectUrl == null) {
+        throw new GradleException("Mandatory property missing!")
+    }
 }
 
 android {
@@ -68,21 +57,29 @@ android {
         ]
 
         testInstrumentationRunner
-
-        buildConfigField "String", "OAUTH_REDIRECT_URL", "\"${oauthRedirectUrl}\""
-        buildConfigField "String", "OAUTH_CLIENT_ID", "\"${oauthClientId}\""
-        buildConfigField "String", "REPO_URL", "\"${repoUrl}\""
-        buildConfigField "String", "PRIVACY_URL", "\"${privacyUrl}\""
-        buildConfigField "String", "UNLEASH_URL", "\"${unleashUrl}\""
-        buildConfigField "String", "UNLEASH_KEY", "\"${unleashKey}\""
     }
 
     buildTypes {
         release {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             minifyEnabled false
+
+            loadProperties("key.properties")
+            buildConfigField "String", "OAUTH_REDIRECT_URL", "\"${oauthRedirectUrl}\""
+            buildConfigField "String", "OAUTH_CLIENT_ID", "\"${oauthClientId}\""
+            buildConfigField "String", "REPO_URL", "\"${repoUrl}\""
+            buildConfigField "String", "PRIVACY_URL", "\"${privacyUrl}\""
+            buildConfigField "String", "UNLEASH_URL", "\"${unleashUrl}\""
+            buildConfigField "String", "UNLEASH_KEY", "\"${unleashKey}\""
         }
         debug {
+            loadProperties("dev.properties")
+            buildConfigField "String", "OAUTH_REDIRECT_URL", "\"${oauthRedirectUrl}\""
+            buildConfigField "String", "OAUTH_CLIENT_ID", "\"${oauthClientId}\""
+            buildConfigField "String", "REPO_URL", "\"${repoUrl}\""
+            buildConfigField "String", "PRIVACY_URL", "\"${privacyUrl}\""
+            buildConfigField "String", "UNLEASH_URL", "\"${unleashUrl}\""
+            buildConfigField "String", "UNLEASH_KEY", "\"${unleashKey}\""
         }
     }
     buildFeatures {

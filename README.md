@@ -18,8 +18,8 @@ At the moment the app is available on Google Play. You can download the app ther
 ## Setup
 
 First of all you should copy the `key.properties.example` file in the root directory and copy the
-contents into a `key.properties` file. With those properties the main keys and URLs of the application
-can be set.
+contents into a `key.properties` (for release) or a `dev.properties` (for debug) file. With those 
+properties the main keys and URLs of the application can be set.
 
 | Property name        | Usage                                       | Mandatory |
 |----------------------|---------------------------------------------|-----------|
