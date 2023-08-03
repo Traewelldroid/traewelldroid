@@ -96,6 +96,7 @@ class MainActivity : ComponentActivity()
     override fun onStart() {
         super.onStart()
         EventBus.getDefault().register(this)
+        initUnleash()
     }
 
     override fun onStop() {
@@ -129,8 +130,6 @@ class MainActivity : ComponentActivity()
         }
         eventViewModel.activeEvents()
 
-        initUnleash()
-
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
@@ -157,13 +156,18 @@ class MainActivity : ComponentActivity()
     private fun initUnleash() {
         val url = BuildConfig.UNLEASH_URL
         val key = BuildConfig.UNLEASH_KEY
+        val flags = FeatureFlags.getInstance()
         if (url.isNotBlank() && key.isNotBlank()) {
             val config = UnleashConfig.newBuilder()
                 .proxyUrl(url)
                 .clientKey(key)
-                .pollingMode(PollingModes.fetchOnce())
+                .pollingMode(PollingModes.autoPoll(5 * 60) {
+                    flags.flagsUpdated()
+                })
+                .httpClientConnectionTimeout(1000)
+                .httpClientReadTimeout(1000)
                 .build()
-            FeatureFlags.getInstance().init(UnleashClient(config))
+            flags.init(UnleashClient(config))
         }
     }
 }
@@ -315,10 +319,11 @@ fun TraewelldroidApp(
                                         }
                                     ) {
                                         val user = loggedInUser
+                                        val profilePicInNavBarFlag by FeatureFlags.getInstance().profilePicInNavBar.observeAsState(false)
                                         if (
                                             destination == PersonalProfile &&
                                             user != null &&
-                                            FeatureFlags.getInstance().profilePicInNavBar
+                                            profilePicInNavBarFlag
                                         ) {
                                             AsyncImage(
                                                 model = user.avatarUrl,
