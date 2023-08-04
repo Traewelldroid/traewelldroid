@@ -45,7 +45,6 @@ class SearchConnectionViewModel: ViewModel() {
                         }
                     }
                     failureCallback()
-                    Sentry.captureMessage(response.errorBody()?.string() ?: "")
                 }
                 override fun onFailure(call: Call<HafasTripPage>, t: Throwable) {
                     failureCallback()
@@ -73,7 +72,6 @@ class SearchConnectionViewModel: ViewModel() {
                         }
                     }
                     failureCallback()
-                    Sentry.captureMessage(response.errorBody()?.string() ?: "")
                 }
 
                 override fun onFailure(call: Call<Data<Station>>, t: Throwable) {

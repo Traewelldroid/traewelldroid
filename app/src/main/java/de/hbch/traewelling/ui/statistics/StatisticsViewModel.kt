@@ -63,7 +63,6 @@ class StatisticsViewModel : ViewModel() {
                     if (response.code() == 403) {
                         EventBus.getDefault().post(UnauthorizedEvent())
                     }
-                    Sentry.captureMessage(response.errorBody()?.string() ?: "")
                 }
 
                 override fun onFailure(call: Call<Data<PersonalStatistics>>, t: Throwable) {
@@ -89,7 +88,6 @@ class StatisticsViewModel : ViewModel() {
                         }
                     }
                     onError()
-                    Sentry.captureMessage(response.errorBody()?.string() ?: "")
                 }
 
                 override fun onFailure(call: Call<Data<DailyStatistics>>, t: Throwable) {

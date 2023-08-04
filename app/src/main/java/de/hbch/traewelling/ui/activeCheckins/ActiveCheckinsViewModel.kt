@@ -1,8 +1,6 @@
 package de.hbch.traewelling.ui.activeCheckins
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import de.hbch.traewelling.api.TraewellingApi
@@ -36,7 +34,6 @@ class ActiveCheckinsViewModel : ViewModel() {
                             return
                         }
                     }
-                    Sentry.captureMessage(response.errorBody()?.string() ?: "")
                 }
                 override fun onFailure(call: Call<StatusPage>, t: Throwable) {
                     isRefreshing.postValue(false)

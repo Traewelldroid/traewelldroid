@@ -16,6 +16,7 @@ class AuthInterceptor : Interceptor {
                     "User-Agent",
                     "${BuildConfig.APPLICATION_ID}/${BuildConfig.VERSION_NAME}"
                 )
+                .addHeader("Accept", "application/json")
                 .build()
 
         return chain.proceed(newRequest)

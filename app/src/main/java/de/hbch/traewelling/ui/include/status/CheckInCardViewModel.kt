@@ -1,6 +1,5 @@
 package de.hbch.traewelling.ui.include.status
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import de.hbch.traewelling.api.TraewellingApi
 import io.sentry.Sentry
@@ -17,7 +16,6 @@ class CheckInCardViewModel : ViewModel() {
                         successCallback()
                         return
                     }
-                    Sentry.captureMessage(response.errorBody()?.string() ?: "")
                 }
                 override fun onFailure(call: Call<Unit>, t: Throwable) {
                     Sentry.captureException(t)
@@ -33,7 +31,6 @@ class CheckInCardViewModel : ViewModel() {
                         successCallback()
                         return
                     }
-                    Sentry.captureMessage(response.errorBody()?.string() ?: "")
                 }
                 override fun onFailure(call: Call<Unit>, t: Throwable) {
                     Sentry.captureException(t)
@@ -54,7 +51,6 @@ class CheckInCardViewModel : ViewModel() {
                         return
                     }
                     failureCallback()
-                    Sentry.captureMessage(response.errorBody()?.string() ?: "")
                 }
 
                 override fun onFailure(call: Call<Any>, t: Throwable) {

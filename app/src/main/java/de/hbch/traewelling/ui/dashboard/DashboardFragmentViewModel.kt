@@ -1,8 +1,6 @@
 package de.hbch.traewelling.ui.dashboard
 
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import de.hbch.traewelling.api.TraewellingApi
@@ -39,7 +37,6 @@ class DashboardFragmentViewModel : ViewModel() {
                         }
                         return
                     }
-                    Sentry.captureMessage(response.errorBody()?.string() ?: "")
                 }
                 override fun onFailure(call: Call<StatusPage>, t: Throwable) {
                     isRefreshing.postValue(false)

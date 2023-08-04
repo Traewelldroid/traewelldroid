@@ -1,6 +1,5 @@
 package de.hbch.traewelling.shared
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import de.hbch.traewelling.api.TraewellingApi
@@ -29,7 +28,6 @@ class EventViewModel : ViewModel() {
                         activeEvents.postValue(data)
                         return
                     }
-                    Sentry.captureMessage(response.errorBody()?.string() ?: "getActiveEvents Error")
                 }
 
                 override fun onFailure(call: Call<Data<List<Event>>>, t: Throwable) {

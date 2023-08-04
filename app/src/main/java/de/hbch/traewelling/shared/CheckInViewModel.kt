@@ -103,7 +103,6 @@ class CheckInViewModel : ViewModel() {
                             409 -> CheckInResult.CONFLICTED
                             else -> CheckInResult.ERROR
                         }
-                        Sentry.captureMessage(response.errorBody()?.charStream()?.readText()!!)
                     }
                     onCheckedIn(checkInResult == CheckInResult.SUCCESSFUL)
                 }
