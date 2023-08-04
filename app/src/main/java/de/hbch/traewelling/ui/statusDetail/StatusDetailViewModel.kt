@@ -33,7 +33,6 @@ class StatusDetailViewModel: ViewModel() {
                         }
                     }
                     failureCallback()
-                    Sentry.captureMessage(response.errorBody()?.string() ?: "")
                 }
                 override fun onFailure(call: Call<Data<Status>>, t: Throwable) {
                     failureCallback()
@@ -65,7 +64,6 @@ class StatusDetailViewModel: ViewModel() {
                             }
                         }
                         failureCallback()
-                        Sentry.captureMessage(response.errorBody()?.string() ?: "")
                     }
                     override fun onFailure(call: Call<Data<FeatureCollection>>, t: Throwable) {
                         failureCallback()

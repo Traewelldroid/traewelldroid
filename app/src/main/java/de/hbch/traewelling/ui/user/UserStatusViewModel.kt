@@ -1,7 +1,6 @@
 package de.hbch.traewelling.ui.user
 
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import de.hbch.traewelling.api.TraewellingApi
@@ -38,7 +37,6 @@ class UserStatusViewModel : ViewModel() {
                             }
                             return
                         }
-                        Sentry.captureMessage(response.errorBody()?.string() ?: "")
                     }
 
                     override fun onFailure(call: Call<Data<User>>, t: Throwable) {
@@ -67,7 +65,6 @@ class UserStatusViewModel : ViewModel() {
                             checkIns.addAll(statusPage.data)
                             return
                         }
-                        Sentry.captureMessage(response.errorBody()?.string() ?: "")
                     }
                 }
 
@@ -117,7 +114,6 @@ class UserStatusViewModel : ViewModel() {
                         })
                         return
                     }
-                    Sentry.captureMessage(response.errorBody()?.string() ?: "")
                 }
 
                 override fun onFailure(call: Call<Data<Unit>>, t: Throwable) {
@@ -134,7 +130,6 @@ class UserStatusViewModel : ViewModel() {
                         user.postValue(user.value?.copy(following = false))
                         return
                     }
-                    Sentry.captureMessage(response.errorBody()?.string() ?: "")
                 }
 
                 override fun onFailure(call: Call<Data<Unit>>, t: Throwable) {
@@ -151,7 +146,6 @@ class UserStatusViewModel : ViewModel() {
                         user.postValue(user.value?.copy(muted = true))
                         return
                     }
-                    Sentry.captureMessage(response.errorBody()?.string() ?: "")
                 }
 
                 override fun onFailure(call: Call<Data<Unit>>, t: Throwable) {
@@ -168,7 +162,6 @@ class UserStatusViewModel : ViewModel() {
                         user.postValue(user.value?.copy(muted = false))
                         return
                     }
-                    Sentry.captureMessage(response.errorBody()?.string() ?: "")
                 }
 
                 override fun onFailure(call: Call<Data<Unit>>, t: Throwable) {

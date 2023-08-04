@@ -3,6 +3,7 @@ package de.hbch.traewelling.api
 import com.google.gson.GsonBuilder
 import de.hbch.traewelling.api.interceptors.AuthInterceptor
 import de.hbch.traewelling.api.interceptors.ErrorInterceptor
+import de.hbch.traewelling.api.interceptors.LogInterceptor
 import de.hbch.traewelling.api.models.Data
 import de.hbch.traewelling.api.models.auth.BearerToken
 import de.hbch.traewelling.api.models.auth.LoginCredentials
@@ -30,6 +31,7 @@ private const val BASE_URL =
     "https://traewelling.de/api/v1/"
 
 private val client = OkHttpClient.Builder().readTimeout(60, TimeUnit.SECONDS)
+    .addInterceptor(LogInterceptor())
     .addInterceptor(AuthInterceptor())
     .addInterceptor(ErrorInterceptor())
     .build()

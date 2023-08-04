@@ -1,6 +1,5 @@
 package de.hbch.traewelling.ui.include.cardSearchStation
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.api.models.Data
@@ -28,7 +27,6 @@ class SearchStationCardViewModel: ViewModel() {
                         return
                     }
                     failureCallback()
-                    Sentry.captureMessage(response.errorBody()?.string() ?: "")
                 }
                 override fun onFailure(call: Call<Data<List<Station>>>, t: Throwable) {
                     failureCallback()
@@ -54,7 +52,6 @@ class SearchStationCardViewModel: ViewModel() {
                         }
                     }
                     failureCallback()
-                    Sentry.captureMessage(response.errorBody()?.string() ?: "")
                 }
 
                 override fun onFailure(call: Call<StationData>, t: Throwable) {

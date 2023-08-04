@@ -70,7 +70,6 @@ class LoggedInUserViewModel : ViewModel() {
                         successCallback()
                     else {
                         failureCallback()
-                        Sentry.captureMessage(response.errorBody()?.string() ?: "")
                     }
                 }
 

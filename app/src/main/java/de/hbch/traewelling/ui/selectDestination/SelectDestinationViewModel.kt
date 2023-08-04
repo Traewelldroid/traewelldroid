@@ -33,7 +33,6 @@ class SelectDestinationViewModel : ViewModel() {
                         }
                     }
                     failureCallback()
-                    Sentry.captureMessage(response.errorBody()?.string() ?: "")
                 }
                 override fun onFailure(call: Call<Data<HafasTrainTrip>>, t: Throwable) {
                     Sentry.captureException(t)
