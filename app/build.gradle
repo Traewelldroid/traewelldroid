@@ -48,8 +48,8 @@ android {
         applicationId packageName
         minSdk 26
         targetSdk 33
-        versionCode 107
-        versionName "1.21.2"
+        versionCode 108
+        versionName "1.22.0"
 
         manifestPlaceholders["appAuthRedirectScheme"] = "app.traewelldroid.de"
 
