@@ -208,7 +208,7 @@ fun TraewelldroidApp(
         }
         var lastNotificationRequest by remember { mutableStateOf<LocalDateTime>(LocalDateTime.MIN) }
 
-        navController.addOnDestinationChangedListener { _, _, _ ->
+        navController.addOnDestinationChangedListener { _, destination, args ->
             val lastRequest = lastNotificationRequest
             val duration = Duration.between(lastRequest, LocalDateTime.now())
             if (duration.toMinutes() > 0) {
@@ -351,6 +351,7 @@ fun TraewelldroidApp(
                                 selected = currentScreen == destination,
                                 onClick = {
                                     navController.popBackStackAndNavigate(destination.route)
+                                    appBarState.contentOffset = 0f
                                 }
                             )
                         }
