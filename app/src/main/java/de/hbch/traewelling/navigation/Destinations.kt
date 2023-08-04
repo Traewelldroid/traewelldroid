@@ -68,6 +68,21 @@ object PersonalProfile : MainDestination, ArgumentDestination, DeepLinkedDestina
     )
 }
 
+object DailyStatistics: ArgumentDestination, DeepLinkedDestination {
+    override val route = "daily-statistics/{date}"
+    override val label = R.string.daily_overview
+    override val arguments = listOf(
+        navArgument("date") {
+            type = NavType.StringType
+        }
+    )
+    override val deepLinks = listOf(
+        navDeepLink {
+            uriPattern = "$TRWL_BASE_URI/stats/daily/{date}"
+        }
+    )
+}
+
 object SearchConnection : ArgumentDestination, DeepLinkedDestination {
     override val label = R.string.title_search_connection
     override val route = "search-connection/?station={station}&date={date}"
@@ -139,6 +154,7 @@ val SCREENS = listOf(
     Notifications,
     Statistics,
     PersonalProfile,
+    DailyStatistics,
     SearchConnection,
     SelectDestination,
     CheckIn,

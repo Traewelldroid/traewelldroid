@@ -12,6 +12,7 @@ import de.hbch.traewelling.api.models.notifications.NotificationPage
 import de.hbch.traewelling.api.models.polyline.FeatureCollection
 import de.hbch.traewelling.api.models.station.Station
 import de.hbch.traewelling.api.models.station.StationData
+import de.hbch.traewelling.api.models.statistics.DailyStatistics
 import de.hbch.traewelling.api.models.statistics.PersonalStatistics
 import de.hbch.traewelling.api.models.status.*
 import de.hbch.traewelling.api.models.trip.HafasTrainTrip
@@ -72,6 +73,16 @@ interface StatisticsService {
         @Query("from") from: Date,
         @Query("until") until: Date
     ): Call<Data<PersonalStatistics>>
+
+    @GET("statistics/daily")
+    fun getDailyStatistics(
+        @Query("date") date: String
+    ) : Call<Data<DailyStatistics>>
+
+    @GET("statistics/daily/polylines")
+    fun getDailyPolylines(
+        @Query("date") date: String
+    ) : Call<Data<FeatureCollection>>
 }
 
 interface CheckInService {

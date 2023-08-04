@@ -37,12 +37,17 @@ fun Profile(
     stationSelectedAction: (String, Date?) -> Unit = { _, _ -> },
     statusSelectedAction: (Int) -> Unit = { },
     statusDeletedAction: () -> Unit = { },
-    statusEditAction: (Status) -> Unit = { }
+    statusEditAction: (Status) -> Unit = { },
+    dailyStatisticsSelectedAction: (Date) -> Unit = { }
 ) {
     val user = username ?: loggedInUserViewModel.loggedInUser.value?.username
     var currentPage by remember { mutableStateOf(1) }
     val userStatusViewModel: UserStatusViewModel = viewModel()
     val checkInCardViewModel: CheckInCardViewModel = viewModel()
+
+    val userState by userStatusViewModel.user.observeAsState()
+    val loggedInUserState by loggedInUserViewModel.loggedInUser.observeAsState()
+
     val refreshing by userStatusViewModel.isRefreshing.observeAsState(false)
     val pullRefreshState = rememberPullRefreshState(
         refreshing = refreshing,
@@ -91,7 +96,9 @@ fun Profile(
                 stationSelectedAction,
                 statusSelectedAction,
                 statusEditAction,
-                statusDeletedAction
+                statusDeletedAction,
+                showDailyStatisticsLink = userState?.id == loggedInUserState?.id,
+                dailyStatisticsSelectedAction = dailyStatisticsSelectedAction
             )
         }
         PullRefreshIndicator(

@@ -1,21 +1,34 @@
 package de.hbch.traewelling.util
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.status.Status
+import de.hbch.traewelling.shared.FeatureFlags
 import de.hbch.traewelling.shared.LoggedInUserViewModel
+import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.ui.include.status.CheckInCard
 import de.hbch.traewelling.ui.include.status.CheckInCardViewModel
 import de.hbch.traewelling.ui.selectDestination.getLongLocalDateString
@@ -43,11 +56,16 @@ fun LazyListScope.checkInList(
     statusSelectedAction: (Int) -> Unit = { },
     statusEditAction: (de.hbch.traewelling.api.dtos.Status) -> Unit = { },
     statusDeletedAction: () -> Unit = { },
-    userSelectedAction: (String) -> Unit = { }
+    userSelectedAction: (String) -> Unit = { },
+    showDailyStatisticsLink: Boolean = false,
+    dailyStatisticsSelectedAction: (Date) -> Unit = { }
 ) {
+    val featureFlags = FeatureFlags.getInstance()
+
     itemsIndexed(
         items = checkIns
     ) { index, status ->
+        val dailyStatisticsFlagEnabled by featureFlags.dailyStatistics.observeAsState(false)
         val previousStatus = checkIns.getOrNull(index - 1)
         if (
             previousStatus == null ||
@@ -56,10 +74,31 @@ fun LazyListScope.checkInList(
                 status.journey.origin.departurePlanned
             )
         ) {
-            Text(
-                text = getLongLocalDateString(status.journey.origin.departurePlanned),
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = getLongLocalDateString(status.journey.origin.departurePlanned),
+                    modifier = Modifier
+                        .weight(1f),
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    style = AppTypography.titleLarge
+                )
+                if (dailyStatisticsFlagEnabled && showDailyStatisticsLink) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_score),
+                        contentDescription = null,
+                        modifier = Modifier.clickable(onClick = {
+                            dailyStatisticsSelectedAction(status.journey.origin.departurePlanned)
+                        })
+                    )
+                }
+            }
         }
         CheckInCard(
             checkInCardViewModel = checkInCardViewModel,

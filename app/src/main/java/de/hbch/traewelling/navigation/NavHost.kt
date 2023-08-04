@@ -32,14 +32,17 @@ import de.hbch.traewelling.ui.notifications.NotificationsViewModel
 import de.hbch.traewelling.ui.searchConnection.SearchConnection
 import de.hbch.traewelling.ui.selectDestination.SelectDestination
 import de.hbch.traewelling.ui.settings.Settings
+import de.hbch.traewelling.ui.statistics.DailyStatistics
 import de.hbch.traewelling.ui.statistics.Statistics
 import de.hbch.traewelling.ui.statusDetail.StatusDetail
 import de.hbch.traewelling.ui.user.Profile
 import de.hbch.traewelling.util.popBackStackAndNavigate
 import de.hbch.traewelling.util.toShortCut
+import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.GregorianCalendar
+import java.util.Locale
 
 @Composable
 fun TraewelldroidNavHost(
@@ -159,7 +162,12 @@ fun TraewelldroidNavHost(
                 loggedInUserViewModel = loggedInUserViewModel,
                 stationSelectedAction = navToSearchConnections,
                 statusSelectedAction = navToStatusDetails,
-                statusEditAction = navToEditCheckIn
+                statusEditAction = navToEditCheckIn,
+                dailyStatisticsSelectedAction = { date ->
+                    val formatted =
+                        SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(date)
+                    navController.navigate("daily-statistics/$formatted")
+                }
             )
 
             val menuItems = mutableListOf<ComposeMenuItem>()
@@ -184,6 +192,23 @@ fun TraewelldroidNavHost(
                 )
             }
             onMenuChange(menuItems)
+            onResetFloatingActionButton()
+        }
+        composable(
+            DailyStatistics.route,
+            deepLinks = DailyStatistics.deepLinks
+        ) {
+            var date = it.arguments?.getString("date") ?: ""
+            if (date.isBlank()) {
+                date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+            }
+            DailyStatistics(
+                date = date,
+                loggedInUserViewModel = loggedInUserViewModel,
+                statusSelectedAction = navToStatusDetails,
+                statusEditAction = navToEditCheckIn
+            )
+            onMenuChange(listOf())
             onResetFloatingActionButton()
         }
         composable(Settings.route) {

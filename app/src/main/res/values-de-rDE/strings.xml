@@ -168,4 +168,9 @@
     <string name="signal_description">Darstellung von Signalsystemen, Signalen, …</string>
     <string name="maxspeed_layer">Höchstgeschwindigkeit</string>
     <string name="maxspeed_description">Darstellung der Höchstgeschwindigkeit eines Gleises und Geschwindigkeitssignalen.</string>
+    <string name="daily_overview">Tägliche Übersicht</string>
+    <plurals name="journeys">
+        <item quantity="one">%d Fahrt</item>
+        <item quantity="other">%d Fahrten</item>
+    </plurals>
 </resources>

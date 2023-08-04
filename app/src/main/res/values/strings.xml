@@ -172,4 +172,9 @@
     <string name="signal_description">Visualizes signalling systems, signals, …</string>
     <string name="maxspeed_layer">Maximum speed</string>
     <string name="maxspeed_description">Visualizes maximum speed of a track and speed signals.</string>
+    <string name="daily_overview">Daily overview</string>
+    <plurals name="journeys">
+        <item quantity="one">1 journey</item>
+        <item quantity="other">%d journeys</item>
+    </plurals>
 </resources>
