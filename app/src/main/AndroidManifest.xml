@@ -30,6 +30,7 @@
             android:value="${SENTRY_DSN}" />
 
         <activity android:name=".ui.main.MainActivity" android:exported="true">
+            <!-- traewelling.de  -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -43,6 +44,7 @@
                 <data android:pathPrefix="/status" />
                 <data android:pathPrefix="/trains/stationboard" />
                 <data android:pathPrefix="/@" />
+                <data android:pathPrefix="/stats/daily/" />
                 <data android:pathPrefix="/auth/login" />
             </intent-filter>
         </activity>

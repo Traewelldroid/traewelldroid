@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.api.models.Data
+import de.hbch.traewelling.api.models.statistics.DailyStatistics
 import de.hbch.traewelling.api.models.statistics.PersonalStatistics
 import de.hbch.traewelling.events.UnauthorizedEvent
 import io.sentry.Sentry
@@ -66,6 +67,33 @@ class StatisticsViewModel : ViewModel() {
                 }
 
                 override fun onFailure(call: Call<Data<PersonalStatistics>>, t: Throwable) {
+                    Sentry.captureException(t)
+                }
+            })
+    }
+
+    fun getDailyStatistics(date: String, onSuccess: (DailyStatistics) -> Unit, onError: () -> Unit) {
+        TraewellingApi
+            .statisticsService
+            .getDailyStatistics(date)
+            .enqueue(object: Callback<Data<DailyStatistics>> {
+                override fun onResponse(
+                    call: Call<Data<DailyStatistics>>,
+                    response: Response<Data<DailyStatistics>>
+                ) {
+                    if (response.isSuccessful) {
+                        val data = response.body()?.data
+                        if (data != null) {
+                            onSuccess(data)
+                            return
+                        }
+                    }
+                    onError()
+                    Sentry.captureMessage(response.errorBody()?.string() ?: "")
+                }
+
+                override fun onFailure(call: Call<Data<DailyStatistics>>, t: Throwable) {
+                    onError()
                     Sentry.captureException(t)
                 }
             })
