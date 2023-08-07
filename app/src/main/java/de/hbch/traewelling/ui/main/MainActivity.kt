@@ -319,11 +319,9 @@ fun TraewelldroidApp(
                                         }
                                     ) {
                                         val user = loggedInUser
-                                        val profilePicInNavBarFlag by FeatureFlags.getInstance().profilePicInNavBar.observeAsState(false)
                                         if (
                                             destination == PersonalProfile &&
-                                            user != null &&
-                                            profilePicInNavBarFlag
+                                            user != null
                                         ) {
                                             AsyncImage(
                                                 model = user.avatarUrl,

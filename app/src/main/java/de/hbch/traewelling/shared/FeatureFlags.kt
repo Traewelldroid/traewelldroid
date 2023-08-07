@@ -20,12 +20,10 @@ class FeatureFlags private constructor() {
 
     fun flagsUpdated() {
         unleashClient?.let {
-            profilePicInNavBar.postValue(it.isEnabled("ProfilePicInNavBar", false))
             dailyStatistics.postValue(it.isEnabled("DailyStatistics", false))
         }
     }
 
     // Add feature flags as LiveData so they can be state-subscribed in Compose
-    val profilePicInNavBar = MutableLiveData(false)
     val dailyStatistics = MutableLiveData(false)
 }
