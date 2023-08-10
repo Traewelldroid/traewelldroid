@@ -76,15 +76,10 @@ interface StatisticsService {
         @Query("until") until: Date
     ): Call<Data<PersonalStatistics>>
 
-    @GET("statistics/daily")
+    @GET("statistics/daily/{date}?withPolylines")
     fun getDailyStatistics(
-        @Query("date") date: String
+        @Path("date") date: String
     ) : Call<Data<DailyStatistics>>
-
-    @GET("statistics/daily/polylines")
-    fun getDailyPolylines(
-        @Query("date") date: String
-    ) : Call<Data<FeatureCollection>>
 }
 
 interface CheckInService {

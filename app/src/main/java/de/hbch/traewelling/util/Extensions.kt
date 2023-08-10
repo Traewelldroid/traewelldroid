@@ -2,8 +2,10 @@ package de.hbch.traewelling.util
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
@@ -13,8 +15,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -58,20 +58,23 @@ fun LazyListScope.checkInList(
     statusDeletedAction: () -> Unit = { },
     userSelectedAction: (String) -> Unit = { },
     showDailyStatisticsLink: Boolean = false,
-    dailyStatisticsSelectedAction: (Date) -> Unit = { }
+    dailyStatisticsSelectedAction: (Date) -> Unit = { },
+    showDate: Boolean = true
 ) {
-    val featureFlags = FeatureFlags.getInstance()
+    @Suppress("UNUSED_VARIABLE") val featureFlags = FeatureFlags.getInstance()
 
     itemsIndexed(
         items = checkIns
     ) { index, status ->
-        val dailyStatisticsFlagEnabled by featureFlags.dailyStatistics.observeAsState(false)
         val previousStatus = checkIns.getOrNull(index - 1)
         if (
-            previousStatus == null ||
-            !isSameDay(
-                previousStatus.journey.origin.departurePlanned,
-                status.journey.origin.departurePlanned
+            showDate &&
+            (
+                previousStatus == null ||
+                !isSameDay(
+                    previousStatus.journey.origin.departurePlanned,
+                    status.journey.origin.departurePlanned
+                )
             )
         ) {
             Row(
@@ -89,7 +92,7 @@ fun LazyListScope.checkInList(
                     overflow = TextOverflow.Ellipsis,
                     style = AppTypography.titleLarge
                 )
-                if (dailyStatisticsFlagEnabled && showDailyStatisticsLink) {
+                if (showDailyStatisticsLink) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_score),
                         contentDescription = null,
@@ -113,6 +116,9 @@ fun LazyListScope.checkInList(
             },
             userSelected = userSelectedAction
         )
+        if (checkIns.size == (index + 1)) {
+            Box(Modifier.height(16.dp))
+        }
     }
 }
 
