@@ -173,4 +173,7 @@
         <item quantity="one">%d Fahrt</item>
         <item quantity="other">%d Fahrten</item>
     </plurals>
+    <string name="manual_departure">Überschriebene Abfahrtszeit</string>
+    <string name="manual_arrival">Überschriebene Ankunftszeit</string>
+    <string name="planned">Plan: %1$s</string>
 </resources>

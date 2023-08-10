@@ -26,7 +26,9 @@ class CheckInViewModel : ViewModel() {
     var startStationId: Int = 0
     var destinationStationId: Int = 0
     var departureTime: ZonedDateTime? = null
+    var manualDepartureTime: ZonedDateTime? = null
     var arrivalTime: ZonedDateTime? = null
+    var manualArrivalTime: ZonedDateTime? = null
     val message = MutableLiveData<String>()
     val toot = MutableLiveData(false)
     val chainToot = MutableLiveData(false)
@@ -45,6 +47,8 @@ class CheckInViewModel : ViewModel() {
     }
 
     fun reset() {
+        manualArrivalTime = null
+        manualDepartureTime = null
         destinationStationId = 0
         arrivalTime = null
         tripId = ""
@@ -123,7 +127,9 @@ class CheckInViewModel : ViewModel() {
                 statusBusiness.value ?: error("Invalid data"),
                 statusVisibility.value ?: error("Invalid data"),
                 destinationStationId,
-                arrivalTime
+                arrivalTime,
+                manualDepartureTime,
+                manualArrivalTime
             )
         ).enqueue(object : Callback<Data<Status>> {
             override fun onResponse(call: Call<Data<Status>>, response: Response<Data<Status>>) {

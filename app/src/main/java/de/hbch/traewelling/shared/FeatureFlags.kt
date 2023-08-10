@@ -1,5 +1,6 @@
 package de.hbch.traewelling.shared
 
+import androidx.lifecycle.MutableLiveData
 import io.getunleash.UnleashClient
 
 class FeatureFlags private constructor() {
@@ -19,8 +20,10 @@ class FeatureFlags private constructor() {
 
     fun flagsUpdated() {
         unleashClient?.let {
+            allowManualTimeDeletion.postValue(it.isEnabled("AllowManualTimeDeletion", false))
         }
     }
 
     // Add feature flags as LiveData so they can be state-subscribed in Compose
+    val allowManualTimeDeletion = MutableLiveData(false)
 }

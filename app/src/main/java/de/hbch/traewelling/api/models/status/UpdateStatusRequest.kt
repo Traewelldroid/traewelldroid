@@ -7,5 +7,7 @@ data class UpdateStatusRequest(
     val business: StatusBusiness,
     val visibility: StatusVisibility,
     val destinationId: Int? = null,
-    val destinationArrivalPlanned: ZonedDateTime? = null
+    val destinationArrivalPlanned: ZonedDateTime? = null,
+    val manualDeparture: ZonedDateTime? = null,
+    val manualArrival: ZonedDateTime? = null
 )

@@ -87,7 +87,10 @@ fun TraewelldroidNavHost(
         checkInViewModel.statusBusiness.postValue(it.business)
         checkInViewModel.destination = it.destination
         checkInViewModel.destinationStationId = it.destinationId
+        checkInViewModel.departureTime = it.departurePlanned
+        checkInViewModel.manualDepartureTime = it.departureManual
         checkInViewModel.arrivalTime = it.arrivalPlanned
+        checkInViewModel.manualArrivalTime = it.arrivalManual
         checkInViewModel.startStationId = it.originId
         checkInViewModel.tripId = it.hafasTripId
         checkInViewModel.editStatusId = it.statusId

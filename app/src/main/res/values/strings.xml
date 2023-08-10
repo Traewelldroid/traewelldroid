@@ -177,4 +177,7 @@
         <item quantity="one">1 journey</item>
         <item quantity="other">%d journeys</item>
     </plurals>
+    <string name="manual_departure">Overwritten departure time</string>
+    <string name="manual_arrival">Overwritten arrival time</string>
+    <string name="planned">Planned: %1$s</string>
 </resources>
