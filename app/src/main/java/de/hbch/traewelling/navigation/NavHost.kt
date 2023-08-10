@@ -88,6 +88,7 @@ fun TraewelldroidNavHost(
         checkInViewModel.tripId = it.hafasTripId
         checkInViewModel.editStatusId = it.statusId
         checkInViewModel.departureTime = it.departurePlanned
+        checkInViewModel.category = it.productType
 
         navController.navigate(
             "check-in/?editMode=true"
