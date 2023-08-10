@@ -62,6 +62,7 @@ class CheckInViewModel : ViewModel() {
         checkInResponse = null
         forceCheckIn = false
         editStatusId = 0
+        category = ProductType.ALL
     }
 
     fun forceCheckIn(
