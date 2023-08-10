@@ -15,8 +15,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -63,12 +61,11 @@ fun LazyListScope.checkInList(
     dailyStatisticsSelectedAction: (Date) -> Unit = { },
     showDate: Boolean = true
 ) {
-    val featureFlags = FeatureFlags.getInstance()
+    @Suppress("UNUSED_VARIABLE") val featureFlags = FeatureFlags.getInstance()
 
     itemsIndexed(
         items = checkIns
     ) { index, status ->
-        val dailyStatisticsFlagEnabled by featureFlags.dailyStatistics.observeAsState(false)
         val previousStatus = checkIns.getOrNull(index - 1)
         if (
             showDate &&
@@ -95,7 +92,7 @@ fun LazyListScope.checkInList(
                     overflow = TextOverflow.Ellipsis,
                     style = AppTypography.titleLarge
                 )
-                if (dailyStatisticsFlagEnabled && showDailyStatisticsLink) {
+                if (showDailyStatisticsLink) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_score),
                         contentDescription = null,
