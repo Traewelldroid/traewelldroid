@@ -28,6 +28,7 @@ import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.statistics.DailyStatistics
 import de.hbch.traewelling.api.models.status.Status
 import de.hbch.traewelling.shared.LoggedInUserViewModel
+import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.composables.DataLoading
 import de.hbch.traewelling.ui.include.status.CheckInCardViewModel
@@ -92,13 +93,14 @@ private fun DailyStatisticsView(
     val checkIns = remember { mutableStateListOf<Status>() }
     checkIns.addAll(statistics.statuses)
     LazyColumn(
-        modifier = modifier
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         item {
             FlowRow(
                 maxItemsInEachRow = 2,
                 horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             ) {
                 Fact(
                     icon = R.drawable.ic_train,
@@ -129,7 +131,8 @@ private fun DailyStatisticsView(
             checkInCardViewModel,
             loggedInUserViewModel,
             statusSelectedAction = statusSelectedAction,
-            statusEditAction = statusEditAction
+            statusEditAction = statusEditAction,
+            showDate = false
         )
     }
 }
@@ -141,7 +144,8 @@ private fun Fact(
     iconEnd: Boolean = false
 ) {
     Row(
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.padding(vertical = 4.dp)
     ) {
         if (!iconEnd) {
             Icon(
@@ -151,7 +155,8 @@ private fun Fact(
             )
         }
         Text(
-            text = text
+            text = text,
+            style = AppTypography.titleLarge
         )
         if (iconEnd) {
             Icon(
@@ -168,7 +173,6 @@ private fun Fact(
 private fun DailyStatisticsPreview() {
     val statistics = de.hbch.traewelling.api.models.statistics.DailyStatistics(
         listOf(),
-        2,
         4711,
         815,
         42

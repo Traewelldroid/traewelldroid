@@ -2,8 +2,10 @@ package de.hbch.traewelling.util
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
@@ -58,7 +60,8 @@ fun LazyListScope.checkInList(
     statusDeletedAction: () -> Unit = { },
     userSelectedAction: (String) -> Unit = { },
     showDailyStatisticsLink: Boolean = false,
-    dailyStatisticsSelectedAction: (Date) -> Unit = { }
+    dailyStatisticsSelectedAction: (Date) -> Unit = { },
+    showDate: Boolean = true
 ) {
     val featureFlags = FeatureFlags.getInstance()
 
@@ -68,10 +71,13 @@ fun LazyListScope.checkInList(
         val dailyStatisticsFlagEnabled by featureFlags.dailyStatistics.observeAsState(false)
         val previousStatus = checkIns.getOrNull(index - 1)
         if (
-            previousStatus == null ||
-            !isSameDay(
-                previousStatus.journey.origin.departurePlanned,
-                status.journey.origin.departurePlanned
+            showDate &&
+            (
+                previousStatus == null ||
+                !isSameDay(
+                    previousStatus.journey.origin.departurePlanned,
+                    status.journey.origin.departurePlanned
+                )
             )
         ) {
             Row(
@@ -113,6 +119,9 @@ fun LazyListScope.checkInList(
             },
             userSelected = userSelectedAction
         )
+        if (checkIns.size == (index + 1)) {
+            Box(Modifier.height(16.dp))
+        }
     }
 }
 
