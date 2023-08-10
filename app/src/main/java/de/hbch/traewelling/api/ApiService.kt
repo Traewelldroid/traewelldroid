@@ -41,6 +41,7 @@ private val client = OkHttpClient.Builder().readTimeout(60, TimeUnit.SECONDS)
 private val gson = GsonBuilder()
     .setExclusionStrategies(ExcludeAnnotationExclusionStrategy())
     .registerTypeAdapter(ZonedDateTime::class.java, ZonedDateTimeGsonConverter())
+    .serializeNulls()
     .create()
 
 private val retrofit =

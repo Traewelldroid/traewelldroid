@@ -9,6 +9,7 @@ import com.google.gson.JsonSerializer
 import retrofit2.Converter
 import retrofit2.Retrofit
 import java.lang.reflect.Type
+import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
@@ -17,7 +18,7 @@ class ZonedDateTimeGsonConverter : JsonSerializer<ZonedDateTime>, JsonDeserializ
         return JsonPrimitive(FORMATTER.format(src))
     }
     override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): ZonedDateTime? {
-        return ZonedDateTime.parse(json!!.asString)
+        return ZonedDateTime.parse(json!!.asString).withZoneSameInstant(ZoneId.systemDefault())
     }
     companion object {
         private val FORMATTER = DateTimeFormatter.ISO_INSTANT

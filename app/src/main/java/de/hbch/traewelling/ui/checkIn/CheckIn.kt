@@ -44,6 +44,7 @@ import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.LocalColorScheme
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
+import de.hbch.traewelling.ui.composables.DateTimeSelection
 import de.hbch.traewelling.ui.composables.Dialog
 import de.hbch.traewelling.ui.composables.OutlinedButtonWithIconAndText
 import de.hbch.traewelling.ui.composables.SwitchWithIconAndText
@@ -223,6 +224,31 @@ fun CheckIn(
                     modifier = Modifier.fillMaxWidth(),
                     checkInViewModel = checkInViewModel
                 )
+            }
+
+            // Manual time overwrites
+            if (isEditMode) {
+                val currentDateTime = ZonedDateTime.now()
+                val plannedDeparture = checkInViewModel.departureTime
+                if (plannedDeparture != null && currentDateTime.isAfter(plannedDeparture)) {
+                    DateTimeSelection(
+                        initDate = checkInViewModel.manualDepartureTime,
+                        plannedDate = checkInViewModel.departureTime,
+                        label = R.string.manual_departure,
+                        modifier = Modifier.fillMaxWidth(),
+                        dateSelected = { checkInViewModel.manualDepartureTime = it }
+                    )
+                }
+                val plannedArrival = checkInViewModel.arrivalTime
+                if (plannedArrival != null && currentDateTime.isAfter(plannedArrival)) {
+                    DateTimeSelection(
+                        initDate = checkInViewModel.manualArrivalTime,
+                        plannedDate = checkInViewModel.arrivalTime,
+                        label = R.string.manual_arrival,
+                        modifier = Modifier.fillMaxWidth(),
+                        dateSelected = { checkInViewModel.manualArrivalTime = it }
+                    )
+                }
             }
 
             Row(
