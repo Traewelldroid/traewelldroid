@@ -53,12 +53,12 @@ import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.LocalColorScheme
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.theme.StarYellow
-import de.hbch.traewelling.ui.selectDestination.getLocalDateTimeString
-import de.hbch.traewelling.ui.selectDestination.getLocalTimeString
 import de.hbch.traewelling.ui.user.getDurationString
-import java.util.Date
+import de.hbch.traewelling.util.getLocalDateTimeString
+import de.hbch.traewelling.util.getLocalTimeString
+import java.time.Duration
+import java.time.ZonedDateTime
 import java.util.Locale
-import java.util.concurrent.TimeUnit
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -68,7 +68,7 @@ fun CheckInCard(
     status: Status?,
     loggedInUserViewModel: LoggedInUserViewModel? = null,
     displayLongDate: Boolean = false,
-    stationSelected: (String, Date?) -> Unit = { _, _ -> },
+    stationSelected: (String, ZonedDateTime?) -> Unit = { _, _ -> },
     userSelected: (String) -> Unit = { },
     statusSelected: (Int) -> Unit = { },
     handleEditClicked: (Status) -> Unit = { },
@@ -226,10 +226,10 @@ fun CheckInCard(
 
 @Composable
 private fun calculateProgress(
-    from: Date,
-    to: Date
+    from: ZonedDateTime,
+    to: ZonedDateTime
 ): Float {
-    val currentDate = Date()
+    val currentDate = ZonedDateTime.now()
     // Default cases
     if (currentDate > to) {
         return 1f
@@ -237,8 +237,12 @@ private fun calculateProgress(
         return 0f
     }
 
-    val fullTimeSpanMillis = to.time - from.time
-    val elapsedTimeSpanMillis = currentDate.time - from.time
+    val fromZoned = from.toInstant().toEpochMilli()
+    val toZoned = to.toInstant().toEpochMilli()
+    val currentZoned = currentDate.toInstant().toEpochMilli()
+
+    val fullTimeSpanMillis = toZoned - fromZoned
+    val elapsedTimeSpanMillis = currentZoned - fromZoned
 
     return elapsedTimeSpanMillis.toFloat() / fullTimeSpanMillis.toFloat()
 }
@@ -247,10 +251,10 @@ private fun calculateProgress(
 private fun StationRow(
     modifier: Modifier = Modifier,
     stationName: String,
-    timePlanned: Date,
-    timeReal: Date?,
+    timePlanned: ZonedDateTime,
+    timeReal: ZonedDateTime?,
     verticalAlignment: Alignment.Vertical = Alignment.Top,
-    stationSelected: (String, Date?) -> Unit = { _, _ -> }
+    stationSelected: (String, ZonedDateTime?) -> Unit = { _, _ -> }
 ) {
     val primaryColor = LocalColorScheme.current.primary
 
@@ -275,10 +279,7 @@ private fun StationRow(
         Column(
             horizontalAlignment = Alignment.End
         ) {
-            val difference = TimeUnit.MILLISECONDS.toMinutes(
-                (timeReal?.time ?: timePlanned.time) - timePlanned.time
-            )
-            val hasDelay = difference > 0
+            val hasDelay = !Duration.between(timePlanned, timeReal ?: timePlanned).isZero
             val displayedDate =
                 if (hasDelay && timeReal != null)
                     timeReal
@@ -402,7 +403,7 @@ private fun CheckInCardFooter(
     modifier: Modifier = Modifier,
     statusId: Int,
     username: String,
-    createdAt: Date,
+    createdAt: ZonedDateTime,
     visibility: StatusVisibility,
     liked: Boolean?,
     likeCount: Int?,
@@ -591,14 +592,14 @@ private fun CheckInCardPreview() {
             0,
             "Start Hbf",
             123,
-            Date(),
-            Date(),
-            Date(),
+            ZonedDateTime.now(),
+            ZonedDateTime.now(),
+            ZonedDateTime.now(),
             "Ende Hp",
             123,
-            Date(),
-            Date(),
-            Date(),
+            ZonedDateTime.now(),
+            ZonedDateTime.now(),
+            ZonedDateTime.now(),
             ProductType.TRAM,
             "lalal",
             "STB U1",
@@ -611,7 +612,7 @@ private fun CheckInCardPreview() {
             10,
             0,
             "username",
-            Date(),
+            ZonedDateTime.now(),
             StatusVisibility.PRIVATE,
             "Tolle Veranstaltung!"
         )

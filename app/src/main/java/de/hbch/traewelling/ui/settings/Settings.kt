@@ -55,11 +55,12 @@ import de.hbch.traewelling.theme.LocalColorScheme
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
 import de.hbch.traewelling.ui.composables.OpenRailwayMapLayer
+import de.hbch.traewelling.util.getLocalDateTimeString
 import kotlinx.coroutines.launch
 import java.lang.Exception
-import java.text.DateFormat
-import java.util.Date
-import java.util.Locale
+import java.time.Instant
+import java.time.ZonedDateTime
+import java.time.ZoneId
 
 @Composable
 fun Settings(
@@ -151,16 +152,18 @@ private fun TraewellingProviderSettings(
 
 @Composable
 private fun getJwtExpiration(jwt: String): String {
-    var expiresAt = Date()
+    var expiresAt = ZonedDateTime.now()
     if (jwt != "") {
         try {
-            expiresAt = JWT(jwt).expiresAt ?: Date()
+            expiresAt = ZonedDateTime
+                .ofInstant(
+                    JWT(jwt).expiresAt?.toInstant() ?: Instant.now(),
+                    ZoneId.systemDefault()
+                )
         } catch (_: Exception) {
         }
     }
-    val df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.getDefault())
-
-    return df.format(expiresAt)
+    return getLocalDateTimeString(expiresAt)
 }
 
 @Composable

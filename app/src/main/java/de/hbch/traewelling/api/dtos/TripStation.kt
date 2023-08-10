@@ -1,14 +1,15 @@
 package de.hbch.traewelling.api.dtos
 
-import java.util.Date
+import java.time.ZonedDateTime
+
 
 data class TripStation(
     val id: Int,
     val name: String,
     val rilIdentifier: String?,
-    val departurePlanned: Date,
-    val departureReal: Date?,
-    val arrivalPlanned: Date,
-    val arrivalReal: Date?,
+    val departurePlanned: ZonedDateTime,
+    val departureReal: ZonedDateTime?,
+    val arrivalPlanned: ZonedDateTime,
+    val arrivalReal: ZonedDateTime?,
     val isCancelled: Boolean
 )

@@ -1,14 +1,13 @@
 package de.hbch.traewelling.api.models.trip
 
 import com.google.gson.annotations.SerializedName
-import de.hbch.traewelling.adapters.getLastDestination
 import de.hbch.traewelling.api.models.station.Station
-import java.util.*
+import java.time.ZonedDateTime
 
 data class HafasTrip(
     @SerializedName("tripId") val tripId: String,
-    @SerializedName("when") val departure: Date?,
-    @SerializedName("plannedWhen") val plannedDeparture: Date?,
+    @SerializedName("when") val departure: ZonedDateTime?,
+    @SerializedName("plannedWhen") val plannedDeparture: ZonedDateTime?,
     @SerializedName("delay") val delay: Int?,
     @SerializedName("platform") val platform: String?,
     @SerializedName("plannedPlatform") val plannedPlatform: String?,
@@ -17,9 +16,7 @@ data class HafasTrip(
     @SerializedName("station") val station: Station?,
     @SerializedName("cancelled") val isCancelled: Boolean,
     @SerializedName("destination") val destination: HafasStation?
-) {
-    val finalDestination get() = getLastDestination(this)
-}
+)
 
 data class HafasStation(
     @SerializedName("id") val id: String,

@@ -9,5 +9,4 @@ data class Trip(
     val origin: String,
     var destination: String,
     var stopovers: List<TripStation>
-) {
-}
+)

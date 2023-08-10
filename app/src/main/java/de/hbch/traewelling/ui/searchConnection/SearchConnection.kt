@@ -42,7 +42,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import de.hbch.traewelling.R
-import de.hbch.traewelling.adapters.getLastDestination
 import de.hbch.traewelling.api.models.station.Station
 import de.hbch.traewelling.api.models.trip.HafasTrip
 import de.hbch.traewelling.api.models.trip.ProductType
@@ -57,18 +56,19 @@ import de.hbch.traewelling.ui.composables.FilterChipGroup
 import de.hbch.traewelling.ui.composables.OutlinedButtonWithIconAndText
 import de.hbch.traewelling.ui.include.cardSearchStation.CardSearchStation
 import de.hbch.traewelling.ui.include.cardSearchStation.SearchStationCardViewModel
-import de.hbch.traewelling.ui.selectDestination.getDelayColor
-import de.hbch.traewelling.ui.selectDestination.getLocalTimeString
-import java.util.Calendar
-import java.util.Date
-import java.util.GregorianCalendar
+import de.hbch.traewelling.util.getDelayColor
+import de.hbch.traewelling.util.getLastDestination
+import de.hbch.traewelling.util.getLocalTimeString
+import java.time.Instant
+import java.time.ZonedDateTime
+import java.time.ZoneId
 
 @Composable
 fun SearchConnection(
     loggedInUserViewModel: LoggedInUserViewModel,
     checkInViewModel: CheckInViewModel,
     station: String,
-    currentSearchDate: Date,
+    currentSearchDate: ZonedDateTime,
     onTripSelected: () -> Unit = { },
     onHomelandSelected: (Station) -> Unit = { }
 ) {
@@ -193,7 +193,7 @@ fun SearchConnection(
 fun SearchConnection(
     modifier: Modifier = Modifier,
     stationId: Int? = null,
-    searchTime: Date = Date(),
+    searchTime: ZonedDateTime = ZonedDateTime.now(),
     trips: List<HafasTrip>? = null,
     onPreviousTime: () -> Unit = { },
     onNextTime: () -> Unit = { },
@@ -201,16 +201,16 @@ fun SearchConnection(
     onFilter: (FilterType?) -> Unit = { },
     onTripSelection: (HafasTrip) -> Unit = { },
     onHomelandStationSelection: () -> Unit = { },
-    onTimeSelection: (Date) -> Unit = { }
+    onTimeSelection: (ZonedDateTime) -> Unit = { }
 ) {
     var datePickerVisible by remember { mutableStateOf(false) }
-    val datePickerState = rememberDatePickerState(initialSelectedDateMillis = searchTime.time)
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = searchTime.toInstant().toEpochMilli()
+    )
     var timePickerVisible by remember { mutableStateOf(false) }
-    val calendar = GregorianCalendar()
-    calendar.time = searchTime
     val timePickerState = rememberTimePickerState(
-        initialHour = calendar.get(Calendar.HOUR_OF_DAY),
-        initialMinute = calendar.get(Calendar.MINUTE)
+        initialHour = searchTime.hour,
+        initialMinute = searchTime.minute
     )
 
     if (datePickerVisible) {
@@ -263,13 +263,15 @@ fun SearchConnection(
                             timePickerVisible = false
 
                             val selectedDate = datePickerState.selectedDateMillis
-                            val cal = GregorianCalendar()
                             if (selectedDate != null) {
-                                cal.timeInMillis = selectedDate
-                                cal.set(Calendar.HOUR_OF_DAY, timePickerState.hour)
-                                cal.set(Calendar.MINUTE, timePickerState.minute)
+                                var dateTime = Instant
+                                    .ofEpochMilli(selectedDate)
+                                    .atZone(ZoneId.systemDefault())
 
-                                onTimeSelection(cal.time)
+                                dateTime = dateTime.withHour(timePickerState.hour)
+                                dateTime = dateTime.withMinute(timePickerState.minute)
+
+                                onTimeSelection(dateTime)
                             }
                         }
                     )
@@ -347,7 +349,7 @@ fun SearchConnection(
                     .padding(8.dp),
                 productType = trip.line?.product ?: ProductType.BUS,
                 line = trip.line?.name ?: "",
-                departurePlanned = trip.plannedDeparture ?: Date(),
+                departurePlanned = trip.plannedDeparture ?: ZonedDateTime.now(),
                 departureReal = trip.departure ?: trip.plannedDeparture,
                 isCancelled = trip.isCancelled,
                 destination = getLastDestination(trip),
@@ -391,8 +393,8 @@ fun SearchConnection(
 fun ConnectionListItem(
     productType: ProductType,
     line: String,
-    departurePlanned: Date,
-    departureReal: Date?,
+    departurePlanned: ZonedDateTime,
+    departureReal: ZonedDateTime?,
     isCancelled: Boolean,
     destination: String,
     departureStation: String?,
@@ -552,8 +554,8 @@ fun ConnectionListItemPreview() {
             ConnectionListItem(
                 productType = ProductType.BUS,
                 line = "RE 75",
-                departurePlanned = Date(),
-                departureReal = Date(),
+                departurePlanned = ZonedDateTime.now(),
+                departureReal = ZonedDateTime.now(),
                 isCancelled = false,
                 destination = "Memmingen",
                 departureStation = null
@@ -561,8 +563,8 @@ fun ConnectionListItemPreview() {
             ConnectionListItem(
                 productType = ProductType.TRAM,
                 line = "STB U3",
-                departurePlanned = Date(),
-                departureReal = Date(),
+                departurePlanned = ZonedDateTime.now(),
+                departureReal = ZonedDateTime.now(),
                 isCancelled = true,
                 destination = "S-Vaihingen über Dachswald, Panoramabahn etc pp",
                 departureStation = "Hauptbahnhof, Arnulf-Klett-Platz, einmal über den Fernwanderweg, rechts abbiegen, Treppe runter, dritter Bahnsteig rechts"

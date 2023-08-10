@@ -23,7 +23,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
@@ -40,14 +39,8 @@ import de.hbch.traewelling.shared.CheckInViewModel
 import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.LocalColorScheme
 import de.hbch.traewelling.ui.composables.DataLoading
-import java.text.DateFormat
-import java.text.DateFormat.getDateInstance
-import java.text.DateFormat.getDateTimeInstance
-import java.text.DateFormat.getTimeInstance
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
-import java.util.concurrent.TimeUnit
+import de.hbch.traewelling.util.getDelayColor
+import de.hbch.traewelling.util.getLocalTimeString
 
 @Composable
 fun SelectDestination(
@@ -69,7 +62,7 @@ fun SelectDestination(
                         tripData.stopovers.indexOf(
                             tripData.stopovers.find {
                                 it.id == checkInViewModel.startStationId
-                                        && it.departurePlanned == checkInViewModel.departureTime
+                                    && it.departurePlanned.isEqual(checkInViewModel.departureTime)
                             }
                         ) + 1, tripData.stopovers.lastIndex + 1)
 
@@ -137,7 +130,7 @@ fun FromToTextRow(
             )
         }
         Text(
-            modifier = Modifier.padding(start = 4.dp),
+            modifier = Modifier.padding(start = 8.dp),
             text = stringResource(
                 R.string.line_destination,
                 lineName,
@@ -271,40 +264,4 @@ private fun TravelStopListItem(
             }
         }
     }
-}
-
-@Composable
-fun getLocalTimeString(date: Date): String {
-    return getTimeInstance(DateFormat.SHORT).format(date)
-}
-
-@Composable
-fun getLocalDateTimeString(date: Date): String {
-    return getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.getDefault()).format(date)
-}
-
-@Composable
-fun getLocalDateString(date: Date): String {
-    return getDateInstance(DateFormat.SHORT, Locale.getDefault()).format(date)
-}
-
-@Composable
-fun getLongLocalDateString(date: Date): String {
-    val weekday = SimpleDateFormat("EEEE", Locale.getDefault()).format(date)
-    val formattedDate = getDateInstance(DateFormat.LONG, Locale.getDefault()).format(date)
-    return "$weekday, $formattedDate"
-}
-
-@Composable
-fun getDelayColor(planned: Date, real: Date?): Color {
-    val differenceMillis = (real ?: Date()).time - planned.time
-    val difference = TimeUnit.MILLISECONDS.toMinutes(differenceMillis)
-
-    val color = when {
-        difference <= 0 -> R.color.train_on_time
-        difference in 0..5 -> R.color.warning
-        else -> R.color.train_delayed
-    }
-
-    return colorResource(id = color)
 }

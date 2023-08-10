@@ -27,13 +27,13 @@ import de.hbch.traewelling.ui.include.cardSearchStation.SearchStationCardViewMod
 import de.hbch.traewelling.ui.include.status.CheckInCardViewModel
 import de.hbch.traewelling.util.OnBottomReached
 import de.hbch.traewelling.util.checkInList
-import java.util.Date
+import java.time.ZonedDateTime
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun Dashboard(
     loggedInUserViewModel: LoggedInUserViewModel,
-    searchConnectionsAction: (String, Date?) -> Unit = { _, _ -> },
+    searchConnectionsAction: (String, ZonedDateTime?) -> Unit = { _, _ -> },
     userSelectedAction: (String) -> Unit = { },
     statusSelectedAction: (Int) -> Unit = { },
     statusDeletedAction: () -> Unit = { },

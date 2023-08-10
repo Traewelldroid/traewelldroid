@@ -38,11 +38,9 @@ import de.hbch.traewelling.ui.statusDetail.StatusDetail
 import de.hbch.traewelling.ui.user.Profile
 import de.hbch.traewelling.util.popBackStackAndNavigate
 import de.hbch.traewelling.util.toShortCut
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Date
-import java.util.GregorianCalendar
-import java.util.Locale
+import java.time.LocalDate
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun TraewelldroidNavHost(
@@ -60,9 +58,15 @@ fun TraewelldroidNavHost(
     val context = LocalContext.current
     val secureStorage = SecureStorage(context)
 
-    val navToSearchConnections: (String, Date?) -> Unit = { station, date ->
+    val navToSearchConnections: (String, ZonedDateTime?) -> Unit = { station, date ->
+        val formattedDate =
+            if (date == null)
+                ""
+            else 
+                DateTimeFormatter.ISO_DATE_TIME.format(date)
+
         navController.navigate(
-            "search-connection/?station=$station&date=${date?.time}"
+            "search-connection/?station=$station&date=$formattedDate"
         )
     }
     val navToStatusDetails: (Int) -> Unit = { statusId ->
@@ -165,8 +169,7 @@ fun TraewelldroidNavHost(
                 statusSelectedAction = navToStatusDetails,
                 statusEditAction = navToEditCheckIn,
                 dailyStatisticsSelectedAction = { date ->
-                    val formatted =
-                        SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(date)
+                    val formatted = DateTimeFormatter.ISO_DATE.format(date)
                     navController.navigate("daily-statistics/$formatted")
                 }
             )
@@ -199,12 +202,13 @@ fun TraewelldroidNavHost(
             DailyStatistics.route,
             deepLinks = DailyStatistics.deepLinks
         ) {
-            var date = it.arguments?.getString("date") ?: ""
-            if (date.isBlank()) {
-                date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+            val date = it.arguments?.getString("date")
+            var localDate = LocalDate.now()
+            if (date != null) {
+                localDate = LocalDate.from(DateTimeFormatter.ISO_DATE.parse(date))
             }
             DailyStatistics(
-                date = date,
+                date = localDate,
                 loggedInUserViewModel = loggedInUserViewModel,
                 statusSelectedAction = navToStatusDetails,
                 statusEditAction = navToEditCheckIn
@@ -305,18 +309,16 @@ fun TraewelldroidNavHost(
             deepLinks = SearchConnection.deepLinks
         ) {
             // if specific date is passed, take it. if not, search from now -5min
-            var searchDate = it.arguments?.getString("date")?.toLongOrNull()
-            if (searchDate == null) {
-                val calendar = GregorianCalendar()
-                calendar.time = Date()
-                calendar.add(Calendar.MINUTE, -5)
-                searchDate = calendar.time.time
+            var zonedDateTime = ZonedDateTime.now()
+            val searchDate = it.arguments?.getString("date")
+            if (!searchDate.isNullOrBlank()) {
+                zonedDateTime = ZonedDateTime.from(DateTimeFormatter.ISO_DATE_TIME.parse(searchDate))
             }
 
             SearchConnection(
                 loggedInUserViewModel = loggedInUserViewModel,
                 station = it.arguments?.getString("station") ?: "",
-                currentSearchDate = Date(searchDate),
+                currentSearchDate = zonedDateTime,
                 checkInViewModel = checkInViewModel,
                 onTripSelected = {
                     navController.navigate(

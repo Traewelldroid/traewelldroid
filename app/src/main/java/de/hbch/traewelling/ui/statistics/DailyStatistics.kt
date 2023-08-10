@@ -37,14 +37,14 @@ import de.hbch.traewelling.ui.include.status.CheckInCardViewModel
 import de.hbch.traewelling.ui.include.status.getFormattedDistance
 import de.hbch.traewelling.ui.user.getDurationString
 import de.hbch.traewelling.util.checkInList
+import de.hbch.traewelling.util.getLongLocalDateString
 import java.time.LocalDate
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
-import java.util.Locale
 
 @Composable
 fun DailyStatistics(
-    date: String,
+    date: LocalDate,
     loggedInUserViewModel: LoggedInUserViewModel,
     statusSelectedAction: (Int) -> Unit,
     statusEditAction: (de.hbch.traewelling.api.dtos.Status) -> Unit,
@@ -55,7 +55,7 @@ fun DailyStatistics(
     var isLoading by remember { mutableStateOf(false) }
     var statistics by remember { mutableStateOf<DailyStatistics?>(null) }
 
-    var localDate by remember { mutableStateOf(LocalDate.parse(date)) }
+    var localDate by remember { mutableStateOf(date) }
 
     LaunchedEffect(localDate) {
         if (statsRequested) {
@@ -125,10 +125,7 @@ private fun DailyStatisticsView(
         item {
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = DateTimeFormatter
-                    .ofLocalizedDate(FormatStyle.FULL)
-                    .withLocale(Locale.getDefault())
-                    .format(date),
+                text = getLongLocalDateString(date.atStartOfDay(ZoneId.systemDefault())),
                 style = AppTypography.titleMedium,
                 textAlign = TextAlign.Center
             )
@@ -228,7 +225,7 @@ private fun Fact(
 @Preview
 @Composable
 private fun DailyStatisticsPreview() {
-    val statistics = de.hbch.traewelling.api.models.statistics.DailyStatistics(
+    val statistics = DailyStatistics(
         listOf(),
         4711,
         815,

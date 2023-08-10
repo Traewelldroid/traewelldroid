@@ -36,4 +36,3 @@ fun publishStationShortcuts(context: Context, stations: List<Station>) {
         // nothing to do then
     }
 }
-

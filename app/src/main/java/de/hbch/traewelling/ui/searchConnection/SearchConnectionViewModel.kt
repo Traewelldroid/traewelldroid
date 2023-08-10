@@ -12,7 +12,7 @@ import io.sentry.Sentry
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.*
+import java.time.ZonedDateTime
 
 class SearchConnectionViewModel: ViewModel() {
 
@@ -21,7 +21,7 @@ class SearchConnectionViewModel: ViewModel() {
 
     fun searchConnections(
         stationName: String,
-        departureTime: Date,
+        departureTime: ZonedDateTime,
         filterType: FilterType?,
         successCallback: (HafasTripPage) -> Unit,
         failureCallback: () -> Unit

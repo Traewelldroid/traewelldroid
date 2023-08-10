@@ -43,7 +43,6 @@ import de.hbch.traewelling.ui.composables.getPolylinesFromFeatureCollection
 import de.hbch.traewelling.ui.include.status.CheckInCard
 import de.hbch.traewelling.ui.include.status.CheckInCardViewModel
 import org.osmdroid.views.overlay.Polyline
-import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -133,8 +132,7 @@ fun StatusDetail(
                                     .build()
 
                                 val trainNo = dStatus.line.split(' ')[0].plus(" ${dStatus.journeyNumber}")
-                                val isoDate = dStatus.departurePlanned.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime().format(
-                                    DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+                                val isoDate = DateTimeFormatter.ISO_INSTANT.format(dStatus.departurePlanned)
 
                                 intent.launchUrl(
                                     context,

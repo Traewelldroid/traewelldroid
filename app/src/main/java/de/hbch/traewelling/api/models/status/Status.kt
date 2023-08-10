@@ -6,13 +6,13 @@ import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.event.Event
-import java.util.*
+import java.time.ZonedDateTime
 
 data class Status(
     @SerializedName("id") val id: Int,
     @SerializedName("body") val body: String?,
     @SerializedName("type") val type: String,
-    @SerializedName("createdAt") val createdAt: Date,
+    @SerializedName("createdAt") val createdAt: ZonedDateTime,
     @SerializedName("profilePicture") val profilePicture: String?,
     @SerializedName("user") val userId: Int,
     @SerializedName("username") val username: String,

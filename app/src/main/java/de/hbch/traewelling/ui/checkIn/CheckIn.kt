@@ -48,9 +48,10 @@ import de.hbch.traewelling.ui.composables.Dialog
 import de.hbch.traewelling.ui.composables.OutlinedButtonWithIconAndText
 import de.hbch.traewelling.ui.composables.SwitchWithIconAndText
 import de.hbch.traewelling.ui.selectDestination.FromToTextRow
-import java.text.DateFormat
-import java.util.Date
-import java.util.Locale
+import de.hbch.traewelling.util.getLocalDateString
+import java.time.Instant
+import java.time.ZonedDateTime
+import java.time.ZoneId
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -335,7 +336,6 @@ private fun SelectEventDialog(
     activeEvents: List<Event?>,
     eventSelectedAction: (Event?) -> Unit = { }
 ) {
-    val dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault())
     val events = mutableListOf<Event?>(null)
     events.addAll(activeEvents)
     Column(
@@ -398,8 +398,8 @@ private fun SelectEventDialog(
                         } else {
                             stringResource(
                                 id = R.string.date_range,
-                                dateFormat.format(event.begin),
-                                dateFormat.format(event.end)
+                                getLocalDateString(event.begin),
+                                getLocalDateString(event.end)
                             )
                         },
                         style = AppTypography.titleSmall
@@ -473,39 +473,39 @@ private fun CheckInPreview() {
         id = 0,
         name = "Bregenz",
         rilIdentifier = null,
-        departurePlanned = Date(1685365200L * 1000),
-        departureReal = Date(1685365200L * 1000),
-        arrivalPlanned = Date(1685365200L * 1000),
-        arrivalReal = Date(1685365200L * 1000),
+        departurePlanned = Instant.ofEpochMilli(1685365200L * 1000).atZone(ZoneId.systemDefault()),
+        departureReal = Instant.ofEpochMilli(1685365200L * 1000).atZone(ZoneId.systemDefault()),
+        arrivalPlanned = Instant.ofEpochMilli(1685365200L * 1000).atZone(ZoneId.systemDefault()),
+        arrivalReal = Instant.ofEpochMilli(1685365200L * 1000).atZone(ZoneId.systemDefault()),
         isCancelled = false
     )
     val station2 = TripStation(
         id = 1,
         name = "Lindau-Reutin",
         rilIdentifier = "MLIR",
-        departurePlanned = Date(1685365680L * 1000),
-        departureReal = Date(1685365800L * 1000),
-        arrivalPlanned = Date(1685365680L * 1000),
-        arrivalReal = Date(1685365800L * 1000),
+        departurePlanned = Instant.ofEpochMilli(1685365680L * 1000).atZone(ZoneId.systemDefault()),
+        departureReal = Instant.ofEpochMilli(1685365800L * 1000).atZone(ZoneId.systemDefault()),
+        arrivalPlanned = Instant.ofEpochMilli(1685365680L * 1000).atZone(ZoneId.systemDefault()),
+        arrivalReal = Instant.ofEpochMilli(1685365800L * 1000).atZone(ZoneId.systemDefault()),
         isCancelled = false
     )
     val station3 = TripStation(
         id = 1,
         name = "Memmingen",
         rilIdentifier = "MM",
-        departurePlanned = Date(1685368680L * 1000),
-        departureReal = Date(1685369280L * 1000),
-        arrivalPlanned = Date(1685368680L * 1000),
-        arrivalReal = Date(1685369280L * 1000),
+        departurePlanned = Instant.ofEpochMilli(1685368680L * 1000).atZone(ZoneId.systemDefault()),
+        departureReal = Instant.ofEpochMilli(1685369280L * 1000).atZone(ZoneId.systemDefault()),
+        arrivalPlanned = Instant.ofEpochMilli(1685368680L * 1000).atZone(ZoneId.systemDefault()),
+        arrivalReal = Instant.ofEpochMilli(1685369280L * 1000).atZone(ZoneId.systemDefault()),
         isCancelled = false
     )
     val station4 = TripStation(
         id = 1,
         name = "München Hbf Gl.27-36 langlanglanglang",
         rilIdentifier = "MH N",
-        departurePlanned= Date(1685372640L * 1000),
+        departurePlanned= Instant.ofEpochMilli(1685372640L * 1000).atZone(ZoneId.systemDefault()),
         departureReal = null,
-        arrivalPlanned = Date(1685372640L * 1000),
+        arrivalPlanned = Instant.ofEpochMilli(1685372640L * 1000).atZone(ZoneId.systemDefault()),
         arrivalReal = null,
         isCancelled = true
     )
@@ -539,8 +539,8 @@ private fun CheckInPreview() {
             "#toll",
             "Host",
             "url",
-            Date(),
-            Date(),
+            ZonedDateTime.now(),
+            ZonedDateTime.now(),
             null
         )
     )

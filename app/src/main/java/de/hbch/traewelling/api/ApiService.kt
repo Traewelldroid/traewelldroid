@@ -1,12 +1,12 @@
 package de.hbch.traewelling.api
 
 import com.google.gson.GsonBuilder
+import de.hbch.traewelling.adapters.ZonedDateTimeGsonConverter
+import de.hbch.traewelling.adapters.ZonedDateTimeRetrofitConverterFactory
 import de.hbch.traewelling.api.interceptors.AuthInterceptor
 import de.hbch.traewelling.api.interceptors.ErrorInterceptor
 import de.hbch.traewelling.api.interceptors.LogInterceptor
 import de.hbch.traewelling.api.models.Data
-import de.hbch.traewelling.api.models.auth.BearerToken
-import de.hbch.traewelling.api.models.auth.LoginCredentials
 import de.hbch.traewelling.api.models.event.Event
 import de.hbch.traewelling.api.models.notifications.Notification
 import de.hbch.traewelling.api.models.notifications.NotificationPage
@@ -24,6 +24,8 @@ import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
+import java.time.LocalDate
+import java.time.ZonedDateTime
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -38,22 +40,18 @@ private val client = OkHttpClient.Builder().readTimeout(60, TimeUnit.SECONDS)
 
 private val gson = GsonBuilder()
     .setExclusionStrategies(ExcludeAnnotationExclusionStrategy())
-    .setDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
+    .registerTypeAdapter(ZonedDateTime::class.java, ZonedDateTimeGsonConverter())
     .create()
 
 private val retrofit =
     Retrofit.Builder()
+        .addConverterFactory(ZonedDateTimeRetrofitConverterFactory.create())
         .addConverterFactory(GsonConverterFactory.create(gson))
         .baseUrl(BASE_URL)
         .client(client)
         .build()
 
 interface AuthService {
-    @POST("auth/login")
-    fun login(
-        @Body credentials: LoginCredentials
-    ): Call<Data<BearerToken>>
-
     @POST("auth/logout")
     fun logout(): Call<Unit>
 
@@ -72,8 +70,8 @@ interface AuthService {
 interface StatisticsService {
     @GET("statistics")
     fun getPersonalStatistics(
-        @Query("from") from: Date,
-        @Query("until") until: Date
+        @Query("from") from: LocalDate,
+        @Query("until") until: LocalDate
     ): Call<Data<PersonalStatistics>>
 
     @GET("statistics/daily/{date}?withPolylines")
@@ -154,7 +152,7 @@ interface TravelService {
     @GET("trains/station/{station}/departures")
     fun getDeparturesAtStation(
         @Path("station", encoded = false) station: String,
-        @Query("when") time: Date,
+        @Query("when") time: ZonedDateTime,
         @Query("travelType") filter: String
     ): Call<HafasTripPage>
 

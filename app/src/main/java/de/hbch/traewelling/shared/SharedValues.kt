@@ -2,7 +2,6 @@ package de.hbch.traewelling.shared
 
 object SharedValues {
     val SS_JWT: String = "JWT"
-    val SS_VERIFY_DOMAINS = "VERIFY_DOMAINS"
     val SS_HASHTAG = "HASHTAG"
     val SS_ORM_LAYER = "ORM_LAYER"
 

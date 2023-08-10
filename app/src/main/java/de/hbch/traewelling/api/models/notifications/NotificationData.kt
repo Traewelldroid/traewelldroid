@@ -2,7 +2,7 @@ package de.hbch.traewelling.api.models.notifications
 
 import com.google.gson.annotations.SerializedName
 import de.hbch.traewelling.api.models.meta.PaginationData
-import java.util.Date
+import java.time.ZonedDateTime
 
 data class NotificationPage(
     val data: List<Notification>,
@@ -12,8 +12,8 @@ data class NotificationPage(
 data class Notification(
     val id: String,
     val type: NotificationType,
-    var readAt: Date?,
-    val createdAt: Date,
+    var readAt: ZonedDateTime?,
+    val createdAt: ZonedDateTime,
     val data: Any
 )
 

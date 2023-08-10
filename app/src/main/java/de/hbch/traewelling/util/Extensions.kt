@@ -31,9 +31,8 @@ import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.ui.include.status.CheckInCard
 import de.hbch.traewelling.ui.include.status.CheckInCardViewModel
-import de.hbch.traewelling.ui.selectDestination.getLongLocalDateString
-import de.hbch.traewelling.ui.user.isSameDay
-import java.util.Date
+import java.time.LocalDate
+import java.time.ZonedDateTime
 
 fun NavHostController.popBackStackAndNavigate(
     route: String,
@@ -52,13 +51,13 @@ fun LazyListScope.checkInList(
     checkIns: SnapshotStateList<Status>,
     checkInCardViewModel: CheckInCardViewModel,
     loggedInUserViewModel: LoggedInUserViewModel,
-    stationSelectedAction: (String, Date?) -> Unit = { _, _ -> },
+    stationSelectedAction: (String, ZonedDateTime?) -> Unit = { _, _ -> },
     statusSelectedAction: (Int) -> Unit = { },
     statusEditAction: (de.hbch.traewelling.api.dtos.Status) -> Unit = { },
     statusDeletedAction: () -> Unit = { },
     userSelectedAction: (String) -> Unit = { },
     showDailyStatisticsLink: Boolean = false,
-    dailyStatisticsSelectedAction: (Date) -> Unit = { },
+    dailyStatisticsSelectedAction: (LocalDate) -> Unit = { },
     showDate: Boolean = true
 ) {
     @Suppress("UNUSED_VARIABLE") val featureFlags = FeatureFlags.getInstance()
@@ -72,8 +71,8 @@ fun LazyListScope.checkInList(
             (
                 previousStatus == null ||
                 !isSameDay(
-                    previousStatus.journey.origin.departurePlanned,
-                    status.journey.origin.departurePlanned
+                    previousStatus.journey.origin.departurePlanned.toLocalDate(),
+                    status.journey.origin.departurePlanned.toLocalDate()
                 )
             )
         ) {
@@ -97,7 +96,7 @@ fun LazyListScope.checkInList(
                         painter = painterResource(id = R.drawable.ic_score),
                         contentDescription = null,
                         modifier = Modifier.clickable(onClick = {
-                            dailyStatisticsSelectedAction(status.journey.origin.departurePlanned)
+                            dailyStatisticsSelectedAction(status.journey.origin.departurePlanned.toLocalDate())
                         })
                     )
                 }

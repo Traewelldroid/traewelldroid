@@ -1,10 +1,10 @@
 package de.hbch.traewelling.api.models.meta
 
 import com.google.gson.annotations.SerializedName
-import java.util.*
+import java.time.ZonedDateTime
 
 data class Times(
-    @SerializedName("now") val now: Date?,
-    @SerializedName("prev") val previous: Date?,
-    @SerializedName("next") val next: Date?
+    @SerializedName("now") val now: ZonedDateTime?,
+    @SerializedName("prev") val previous: ZonedDateTime?,
+    @SerializedName("next") val next: ZonedDateTime?
 )
