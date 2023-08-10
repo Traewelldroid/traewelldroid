@@ -19,6 +19,6 @@ data class Journey(
     @SerializedName("speed") val averageSpeed: Double,
     @SerializedName("origin") val origin: HafasTrainTripStation,
     @SerializedName("destination") val destination: HafasTrainTripStation,
-    @SerializedName("overriddenDeparture") val departureOverwritten: Date?,
-    @SerializedName("overriddenArrival") val arrivalOverwritten: Date?
+    @SerializedName("manualDeparture") val departureManual: Date?,
+    @SerializedName("manualArrival") val arrivalManual: Date?
 )
