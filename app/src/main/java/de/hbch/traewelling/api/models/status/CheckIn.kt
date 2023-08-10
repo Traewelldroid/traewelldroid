@@ -1,7 +1,7 @@
 package de.hbch.traewelling.api.models.status
 
 import com.google.gson.annotations.SerializedName
-import java.util.*
+import java.time.ZonedDateTime
 
 data class CheckInRequest(
     @SerializedName("body") val body: String,
@@ -14,8 +14,8 @@ data class CheckInRequest(
     @SerializedName("lineName") val lineName: String,
     @SerializedName("start") val startStationId: Int,
     @SerializedName("destination") val destinationStationId: Int,
-    @SerializedName("departure") val departureTime: Date,
-    @SerializedName("arrival") val arrivalTime: Date,
+    @SerializedName("departure") val departureTime: ZonedDateTime,
+    @SerializedName("arrival") val arrivalTime: ZonedDateTime,
     @SerializedName("force") val force: Boolean = false
 )
 

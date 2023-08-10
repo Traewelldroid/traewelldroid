@@ -30,9 +30,12 @@ import de.hbch.traewelling.ui.composables.ColumnChart
 import de.hbch.traewelling.ui.composables.Dialog
 import de.hbch.traewelling.ui.composables.FilterChipGroup
 import de.hbch.traewelling.ui.composables.OutlinedButtonWithIconAndText
-import de.hbch.traewelling.ui.selectDestination.getLocalDateString
 import de.hbch.traewelling.ui.user.getDurationString
-import java.util.Date
+import de.hbch.traewelling.util.getDateRangeString
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.ZoneId
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,8 +63,8 @@ fun Statistics(
         if (range != null) {
             statisticsViewModel.getPersonalStatisticsForSelectedTimeRange()
             dateRangePickerState.setSelection(
-                range.first.time,
-                range.second.time
+                range.first.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli(),
+                LocalDateTime.of(range.second, LocalTime.MAX).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
             )
         }
     }
@@ -107,8 +110,14 @@ fun Statistics(
                         onClick = {
                             statisticsViewModel.dateRange.postValue(
                                 Pair(
-                                    Date(dateRangePickerState.selectedStartDateMillis!!),
-                                    Date(dateRangePickerState.selectedEndDateMillis!!)
+                                    Instant
+                                        .ofEpochMilli(dateRangePickerState.selectedStartDateMillis!!)
+                                        .atZone(ZoneId.systemDefault())
+                                        .toLocalDate(),
+                                    Instant
+                                        .ofEpochMilli((dateRangePickerState.selectedEndDateMillis!!))
+                                        .atZone(ZoneId.systemDefault())
+                                        .toLocalDate()
                                 )
                             )
                             dateRangePickerVisible = false
@@ -171,17 +180,6 @@ fun Statistics(
             input = chartInput.value
         )
     }
-}
-
-@Composable
-fun getDateRangeString(range: Pair<Date, Date>?): String {
-    if (range == null)
-        return ""
-    return stringResource(
-        id = R.string.date_range,
-        getLocalDateString(date = range.first),
-        getLocalDateString(date = range.second)
-    )
 }
 
 enum class StatisticsUnit {

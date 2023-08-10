@@ -2,7 +2,7 @@ package de.hbch.traewelling.api.models.event
 
 import com.google.gson.annotations.SerializedName
 import de.hbch.traewelling.api.models.station.Station
-import java.util.*
+import java.time.ZonedDateTime
 
 data class Event(
     @SerializedName("id") val id: Int,
@@ -11,9 +11,7 @@ data class Event(
     @SerializedName("hashtag") val hashtag: String,
     @SerializedName("host") val host: String,
     @SerializedName("url") val url: String,
-    @SerializedName("begin") val begin: Date,
-    @SerializedName("end") val end: Date,
+    @SerializedName("begin") val begin: ZonedDateTime,
+    @SerializedName("end") val end: ZonedDateTime,
     @SerializedName("station") val station: Station?
-) {
-    val dateRange: Pair<Date, Date> get() = Pair(begin, end)
-}
+)

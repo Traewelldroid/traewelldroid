@@ -1,14 +1,12 @@
 package de.hbch.traewelling.api.models.statistics
 
 import android.content.Context
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
 import com.google.gson.annotations.SerializedName
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.Exclude
 import de.hbch.traewelling.api.models.status.StatusBusiness
 import de.hbch.traewelling.api.models.trip.ProductType
-import java.util.*
+import java.time.ZonedDateTime
 
 data class PersonalStatistics(
     @SerializedName("categories") val categories: List<CategoryStatistics>,
@@ -47,8 +45,9 @@ data class PurposeStatistics(
     override fun getLabel(context: Context) = context.getString(businessType.getTitle())
 }
 
+@Suppress("unused")
 data class TimeStatistics(
-    @SerializedName("date") val date: Date,
+    @SerializedName("date") val date: ZonedDateTime,
     @SerializedName("count") val checkInCount: Int,
     @SerializedName("duration") val duration: Int
 )

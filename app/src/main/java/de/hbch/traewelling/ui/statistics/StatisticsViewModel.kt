@@ -12,30 +12,22 @@ import org.greenrobot.eventbus.EventBus
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.*
+import java.time.LocalDate
 
 class StatisticsViewModel : ViewModel() {
 
-    val dateRange = MutableLiveData<Pair<Date, Date>>()
+    val dateRange = MutableLiveData<Pair<LocalDate, LocalDate>>()
     val statistics = MutableLiveData<PersonalStatistics?>()
 
     init {
         dateRange.postValue(initDateRange())
     }
 
-    private fun initDateRange(): Pair<Date, Date> {
-        val startCalendar = GregorianCalendar()
-        startCalendar.time = Date()
-        startCalendar.set(Calendar.DATE, 1)
-        startCalendar.set(Calendar.HOUR_OF_DAY, 0)
-        startCalendar.set(Calendar.MINUTE, 0)
+    private fun initDateRange(): Pair<LocalDate, LocalDate> {
+        val startDate = LocalDate.now().withDayOfMonth(1)
+        val endDate = LocalDate.now()
 
-        val endCalendar = GregorianCalendar()
-        endCalendar.time = Date()
-        endCalendar.set(Calendar.HOUR_OF_DAY, 23)
-        endCalendar.set(Calendar.MINUTE, 59)
-
-        return Pair(startCalendar.time, endCalendar.time)
+        return Pair(startDate, endDate)
     }
 
     fun getPersonalStatisticsForSelectedTimeRange() {

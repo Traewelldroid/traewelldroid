@@ -37,8 +37,8 @@ import androidx.navigation.NavHostController
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.notifications.Notification
 import de.hbch.traewelling.theme.AppTypography
-import de.hbch.traewelling.ui.selectDestination.getLocalDateTimeString
 import de.hbch.traewelling.util.OnBottomReached
+import de.hbch.traewelling.util.getLocalDateTimeString
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable

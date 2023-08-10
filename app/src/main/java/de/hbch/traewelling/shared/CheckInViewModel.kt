@@ -18,15 +18,15 @@ import io.sentry.Sentry
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.*
+import java.time.ZonedDateTime
 
 class CheckInViewModel : ViewModel() {
     var lineName: String = ""
     var tripId: String = ""
     var startStationId: Int = 0
     var destinationStationId: Int = 0
-    var departureTime: Date? = null
-    var arrivalTime: Date? = null
+    var departureTime: ZonedDateTime? = null
+    var arrivalTime: ZonedDateTime? = null
     val message = MutableLiveData<String>()
     val toot = MutableLiveData(false)
     val chainToot = MutableLiveData(false)
@@ -86,8 +86,8 @@ class CheckInViewModel : ViewModel() {
             lineName,
             startStationId,
             destinationStationId,
-            departureTime ?: Date(),
-             arrivalTime ?: Date(),
+            departureTime ?: ZonedDateTime.now(),
+             arrivalTime ?: ZonedDateTime.now(),
             forceCheckIn
         )
         TraewellingApi.checkInService.checkIn(checkInRequest)

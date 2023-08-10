@@ -3,20 +3,20 @@ package de.hbch.traewelling.api.dtos
 import de.hbch.traewelling.api.models.status.StatusBusiness
 import de.hbch.traewelling.api.models.status.StatusVisibility
 import de.hbch.traewelling.api.models.trip.ProductType
-import java.util.Date
+import java.time.ZonedDateTime
 
 data class Status(
     val statusId: Int,
     val origin: String,
     val originId: Int,
-    val departurePlanned: Date,
-    val departureReal: Date?,
-    val departureManual: Date?,
+    val departurePlanned: ZonedDateTime,
+    val departureReal: ZonedDateTime?,
+    val departureManual: ZonedDateTime?,
     val destination: String,
     val destinationId: Int,
-    val arrivalPlanned: Date,
-    val arrivalReal: Date?,
-    val arrivalManual: Date?,
+    val arrivalPlanned: ZonedDateTime,
+    val arrivalReal: ZonedDateTime?,
+    val arrivalManual: ZonedDateTime?,
     val productType: ProductType,
     val hafasTripId: String,
     val line: String,
@@ -29,7 +29,7 @@ data class Status(
     val likeCount: Int?,
     val userId: Int,
     val username: String,
-    val createdAt: Date,
+    val createdAt: ZonedDateTime,
     val visibility: StatusVisibility,
     val eventName: String?
 )

@@ -26,19 +26,19 @@ import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.ui.include.status.CheckInCardViewModel
 import de.hbch.traewelling.util.OnBottomReached
 import de.hbch.traewelling.util.checkInList
-import java.time.ZoneId
-import java.util.Date
+import java.time.LocalDate
+import java.time.ZonedDateTime
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun Profile(
     username: String?,
     loggedInUserViewModel: LoggedInUserViewModel,
-    stationSelectedAction: (String, Date?) -> Unit = { _, _ -> },
+    stationSelectedAction: (String, ZonedDateTime?) -> Unit = { _, _ -> },
     statusSelectedAction: (Int) -> Unit = { },
     statusDeletedAction: () -> Unit = { },
     statusEditAction: (Status) -> Unit = { },
-    dailyStatisticsSelectedAction: (Date) -> Unit = { }
+    dailyStatisticsSelectedAction: (LocalDate) -> Unit = { }
 ) {
     val user = username ?: loggedInUserViewModel.loggedInUser.value?.username
     var currentPage by remember { mutableStateOf(1) }
@@ -107,11 +107,4 @@ fun Profile(
             state = pullRefreshState
         )
     }
-}
-
-@Composable
-fun isSameDay(date1: Date, date2: Date): Boolean {
-    val localDate1 = date1.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
-    val localDate2 = date2.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
-    return localDate1.isEqual(localDate2)
 }
