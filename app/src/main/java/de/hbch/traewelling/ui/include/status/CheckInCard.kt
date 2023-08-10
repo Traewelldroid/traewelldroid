@@ -146,7 +146,7 @@ fun CheckInCard(
                         },
                         stationName = status.origin,
                         timePlanned = status.departurePlanned,
-                        timeReal = status.departureOverwritten ?: status.departureReal,
+                        timeReal = status.departureManual ?: status.departureReal,
                         stationSelected = stationSelected
                     )
 
@@ -161,7 +161,7 @@ fun CheckInCard(
                             },
                         stationName = status.destination,
                         timePlanned = status.arrivalPlanned,
-                        timeReal = status.arrivalOverwritten ?: status.arrivalReal,
+                        timeReal = status.arrivalManual ?: status.arrivalReal,
                         verticalAlignment = Alignment.Bottom,
                         stationSelected = stationSelected
                     )
