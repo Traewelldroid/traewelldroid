@@ -264,13 +264,16 @@ fun CheckIn(
                 } else {
                     Box {}
                 }
+                var isCheckingIn by remember { mutableStateOf(false) }
                 ButtonWithIconAndText(
                     stringId = if (isEditMode) R.string.save else R.string.check_in,
                     drawableId = R.drawable.ic_check_in,
                     onClick = {
                         checkInViewModel.message.postValue(statusText)
                         checkInAction()
-                    }
+                        isCheckingIn = true
+                    },
+                    isLoading = isCheckingIn
                 )
             }
         }
