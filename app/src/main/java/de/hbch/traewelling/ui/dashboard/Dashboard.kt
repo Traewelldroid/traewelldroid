@@ -57,6 +57,9 @@ fun Dashboard(
     checkInListState.OnBottomReached {
         if (dashboardViewModel.checkIns.size > 0) {
             dashboardViewModel.loadCheckIns(++currentPage)
+        } else {
+            loggedInUserViewModel.getLoggedInUser()
+            loggedInUserViewModel.getLastVisitedStations {  }
         }
     }
 
