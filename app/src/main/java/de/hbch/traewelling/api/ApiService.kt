@@ -95,6 +95,11 @@ interface CheckInService {
         @Path("id") id: Int
     ): Call<Data<Status>>
 
+    @GET("status/{id}/likes")
+    fun getLikesForStatusById(
+        @Path("id") id: Int
+    ): Call<Data<List<User>>>
+
     @GET("polyline/{ids}")
     fun getPolylinesForStatuses(
         @Path("ids") statusIds: String

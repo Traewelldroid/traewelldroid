@@ -1,11 +1,11 @@
 package de.hbch.traewelling.ui.statusDetail
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.api.models.Data
 import de.hbch.traewelling.api.models.polyline.FeatureCollection
 import de.hbch.traewelling.api.models.status.Status
+import de.hbch.traewelling.api.models.user.User
 import io.sentry.Sentry
 import retrofit2.Call
 import retrofit2.Callback
@@ -46,7 +46,6 @@ class StatusDetailViewModel: ViewModel() {
         successfulCallback: (FeatureCollection) -> Unit,
         failureCallback: () -> Unit
     ) {
-        Log.d("MapEvents", "Loading polyline!")
         TraewellingApi
             .checkInService
             .getPolylinesForStatuses(listOf(statusId).joinToString(","))
@@ -66,6 +65,38 @@ class StatusDetailViewModel: ViewModel() {
                         failureCallback()
                     }
                     override fun onFailure(call: Call<Data<FeatureCollection>>, t: Throwable) {
+                        failureCallback()
+                        Sentry.captureException(t)
+                    }
+                }
+            )
+    }
+
+    fun getLikesForStatus(
+        statusId: Int,
+        successfulCallback: (List<User>) -> Unit,
+        failureCallback: () -> Unit
+    ) {
+        TraewellingApi
+            .checkInService
+            .getLikesForStatusById(statusId)
+            .enqueue(
+                object: Callback<Data<List<User>>> {
+                    override fun onResponse(
+                        call: Call<Data<List<User>>>,
+                        response: Response<Data<List<User>>>
+                    ) {
+                        if (response.isSuccessful) {
+                            val data = response.body()?.data
+                            if (data != null) {
+                                successfulCallback(data)
+                                return
+                            }
+                        }
+                        failureCallback()
+                    }
+
+                    override fun onFailure(call: Call<Data<List<User>>>, t: Throwable) {
                         failureCallback()
                         Sentry.captureException(t)
                     }

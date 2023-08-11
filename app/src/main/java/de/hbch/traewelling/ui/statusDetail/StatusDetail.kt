@@ -6,38 +6,54 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.IconToggleButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.dtos.Status
+import de.hbch.traewelling.api.models.user.User
 import de.hbch.traewelling.shared.LoggedInUserViewModel
+import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.theme.PolylineColor
 import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
+import de.hbch.traewelling.ui.composables.DataLoading
 import de.hbch.traewelling.ui.composables.OpenRailwayMapView
 import de.hbch.traewelling.ui.composables.getPolylinesFromFeatureCollection
 import de.hbch.traewelling.ui.include.status.CheckInCard
@@ -93,7 +109,7 @@ fun StatusDetail(
                 },
                 colors = IconButtonDefaults.filledIconToggleButtonColors()
             ) {
-                AnimatedContent(mapExpanded) {
+                AnimatedContent(mapExpanded, label = "MapExpansionIcon") {
                     val iconSource =
                         if (it) R.drawable.ic_fullscreen_exit else R.drawable.ic_fullscreen
                     Icon(
@@ -119,6 +135,16 @@ fun StatusDetail(
                     handleEditClicked = statusEdit,
                     displayLongDate = true
                 )
+                status?.likeCount?.let {
+                    if (it > 0) {
+                        StatusLikes(
+                            statusId = statusId,
+                            likes = it,
+                            statusDetailViewModel = statusDetailViewModel,
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                    }
+                }
                 if (status?.productType?.isTrain == true) {
                     ButtonWithIconAndText(
                         modifier = Modifier.fillMaxWidth(),
@@ -174,6 +200,131 @@ private fun StatusDetailMap(
                     }, { })
                 }
             }
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
+@Composable
+private fun StatusLikes(
+    statusId: Int,
+    likes: Int,
+    statusDetailViewModel: StatusDetailViewModel,
+    modifier: Modifier = Modifier
+) {
+    var cardExpanded by remember { mutableStateOf(false) }
+    var isLoading by remember { mutableStateOf(false) }
+    val expandAction: () -> Unit = { cardExpanded = !cardExpanded }
+    val likeUsers = remember { mutableStateListOf<User>() }
+
+    LaunchedEffect(cardExpanded) {
+        if (cardExpanded && likeUsers.size == 0) {
+            statusDetailViewModel.getLikesForStatus(
+                statusId,
+                {
+                    likeUsers.clear()
+                    likeUsers.addAll(it)
+                    isLoading = false
+                },
+                {
+                    isLoading = false
+                }
+            )
+        }
+    }
+
+    ElevatedCard(
+        onClick = expandAction,
+        modifier = modifier
+    ) {
+        var contentModifier = Modifier.padding(horizontal = 16.dp)
+        if (cardExpanded) {
+            contentModifier = contentModifier.padding(bottom = 8.dp)
+        }
+        Column(
+            modifier = contentModifier,
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "$likes gefällt das",
+                    style = AppTypography.bodyLarge
+                )
+                IconButton(onClick = expandAction) {
+                    val icon =
+                        if (cardExpanded)
+                            R.drawable.ic_expand_less
+                        else
+                            R.drawable.ic_expand_more
+                    AnimatedContent(cardExpanded, label = "CardExpansionIcon") {
+                        Icon(
+                            painter = painterResource(id = icon),
+                            contentDescription = null
+                        )
+                    }
+                }
+            }
+            AnimatedVisibility (cardExpanded) {
+                if (isLoading) {
+                    DataLoading()
+                } else {
+                    if (likeUsers.size > 0) {
+                        Column(
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            likeUsers.forEach {
+                                Liker(
+                                    user = it,
+                                    modifier = Modifier.fillMaxWidth(),
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun Liker(
+    user: User,
+    modifier: Modifier = Modifier,
+    userSelected: (String) -> Unit = { }
+) {
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .clickable { userSelected(user.username) }
+            .padding(horizontal = 8.dp, vertical = 4.dp)
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.weight(1f)
+        ) {
+            AsyncImage(
+                model = user.avatarUrl,
+                contentDescription = user.username,
+                modifier = Modifier
+                    .width(24.dp)
+                    .height(24.dp)
+                    .clip(CircleShape),
+                placeholder = painterResource(id = R.drawable.ic_new_user),
+            )
+            Text(
+                text = "@${user.username}",
+                fontWeight = FontWeight.ExtraBold
+            )
+        }
+        Icon(
+            painter = painterResource(id = R.drawable.ic_select),
+            contentDescription = null
         )
     }
 }
