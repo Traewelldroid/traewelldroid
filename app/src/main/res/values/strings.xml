@@ -180,4 +180,5 @@
     <string name="manual_departure">Overwritten departure time</string>
     <string name="manual_arrival">Overwritten arrival time</string>
     <string name="planned">Planned: %1$s</string>
+    <string name="likes">%1$d like that</string>
 </resources>

@@ -304,7 +304,8 @@ fun TraewelldroidNavHost(
                 statusEdit = navToEditCheckIn,
                 statusDeleted = {
                     navController.popBackStack()
-                }
+                },
+                likerSelected = navToUserProfile
             )
         }
         composable(

@@ -69,7 +69,8 @@ fun StatusDetail(
     statusLoaded: (Status) -> Unit = { },
     statusDeleted: (Status) -> Unit = { },
     statusEdit: (Status) -> Unit = { },
-    loggedInUserViewModel: LoggedInUserViewModel? = null
+    loggedInUserViewModel: LoggedInUserViewModel? = null,
+    likerSelected: (String) -> Unit = { }
 ) {
     val statusDetailViewModel: StatusDetailViewModel = viewModel()
     val checkInCardViewModel: CheckInCardViewModel = viewModel()
@@ -142,6 +143,7 @@ fun StatusDetail(
                             likes = it,
                             statusDetailViewModel = statusDetailViewModel,
                             modifier = Modifier.fillMaxWidth(),
+                            userSelected = likerSelected
                         )
                     }
                 }
@@ -210,7 +212,8 @@ private fun StatusLikes(
     statusId: Int,
     likes: Int,
     statusDetailViewModel: StatusDetailViewModel,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    userSelected: (String) -> Unit = { }
 ) {
     var cardExpanded by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(false) }
@@ -251,7 +254,7 @@ private fun StatusLikes(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "$likes gefällt das",
+                    text = stringResource(id = R.string.likes, likes),
                     style = AppTypography.bodyLarge
                 )
                 IconButton(onClick = expandAction) {
@@ -280,6 +283,7 @@ private fun StatusLikes(
                                 Liker(
                                     user = it,
                                     modifier = Modifier.fillMaxWidth(),
+                                    userSelected = userSelected
                                 )
                             }
                         }
