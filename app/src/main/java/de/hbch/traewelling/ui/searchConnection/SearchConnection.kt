@@ -154,7 +154,7 @@ fun SearchConnection(
                         },
                         onTripSelection = { trip ->
                             checkInViewModel.reset()
-                            checkInViewModel.lineName = trip.line?.name ?: ""
+                            checkInViewModel.lineName = trip.line?.name ?: trip.line?.travelId ?: ""
                             checkInViewModel.tripId = trip.tripId
                             checkInViewModel.startStationId = trip.station?.id ?: -1
                             checkInViewModel.departureTime = trip.plannedDeparture
@@ -348,7 +348,7 @@ fun SearchConnection(
                     }
                     .padding(8.dp),
                 productType = trip.line?.product ?: ProductType.BUS,
-                line = trip.line?.name ?: "",
+                line = trip.line?.name ?: trip.line?.travelId ?: "",
                 departurePlanned = trip.plannedDeparture ?: ZonedDateTime.now(),
                 departureReal = trip.departure ?: trip.plannedDeparture,
                 isCancelled = trip.isCancelled,
