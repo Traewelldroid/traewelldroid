@@ -312,7 +312,7 @@ fun TraewelldroidNavHost(
             deepLinks = SearchConnection.deepLinks
         ) {
             // if specific date is passed, take it. if not, search from now -5min
-            var zonedDateTime = ZonedDateTime.now()
+            var zonedDateTime = ZonedDateTime.now().minusMinutes(5)
             val searchDate = it.arguments?.getString("date")
             if (!searchDate.isNullOrBlank()) {
                 zonedDateTime = ZonedDateTime.from(DateTimeFormatter.ISO_DATE_TIME.parse(searchDate))
