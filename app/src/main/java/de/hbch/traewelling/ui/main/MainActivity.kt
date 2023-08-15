@@ -9,7 +9,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -383,7 +382,6 @@ fun TraewelldroidApp(
                 notificationsViewModel = notificationsViewModel,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight()
                     .padding(innerPadding)
                     .padding(horizontal = 16.dp),
                 onMenuChange = menuItemsChanged,

@@ -359,38 +359,39 @@ fun StatusDetailsRow(
     modifier: Modifier = Modifier
 ) {
     FlowRow(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
+        modifier = modifier
     ) {
+        val alignmentModifier = Modifier.align(Alignment.CenterVertically)
         Image(
+            modifier = alignmentModifier,
             painter = painterResource(id = productType.getIcon()),
             contentDescription = null
         )
         Text(
-            modifier = Modifier.padding(start = 4.dp),
+            modifier = alignmentModifier.padding(start = 4.dp),
             text = line,
             style = AppTypography.bodyLarge,
             fontWeight = FontWeight.ExtraBold
         )
         if (journeyNumber != null && !line.contains(journeyNumber.toString())) {
             Text(
-                modifier = Modifier.padding(start = 4.dp),
+                modifier = alignmentModifier.padding(start = 4.dp),
                 text = "($journeyNumber)",
                 style = AppTypography.bodySmall
             )
         }
         Text(
-            modifier = Modifier.padding(start = 12.dp),
+            modifier = alignmentModifier.padding(start = 12.dp),
             text = getFormattedDistance(kilometers),
             style = AppTypography.bodySmall
         )
         Text(
-            modifier = Modifier.padding(start = 8.dp),
+            modifier = alignmentModifier.padding(start = 8.dp),
             text = getDurationString(duration = duration),
             style = AppTypography.bodySmall
         )
         Icon(
-            modifier = Modifier.padding(start = 8.dp),
+            modifier = alignmentModifier.padding(start = 8.dp),
             painter = painterResource(id = statusBusiness.getIcon()),
             contentDescription = null
         )
@@ -471,16 +472,16 @@ private fun CheckInCardFooter(
         ) {
             FlowRow(
                 modifier = Modifier.weight(1f),
-                verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.End
             ) {
+                val alignmentModifier = Modifier.align(Alignment.CenterVertically)
                 val dateString =
                     if (displayLongDate)
                         getLocalDateTimeString(date = createdAt)
                     else
                         getLocalTimeString(date = createdAt)
                 Text(
-                    modifier = Modifier
+                    modifier = alignmentModifier
                         .clickable { userSelected(username) }
                         .padding(2.dp),
                     text = stringResource(
@@ -492,7 +493,7 @@ private fun CheckInCardFooter(
                     style = AppTypography.labelLarge
                 )
                 Icon(
-                    modifier = Modifier.padding(horizontal = 8.dp),
+                    modifier = alignmentModifier.padding(horizontal = 8.dp),
                     painter = painterResource(id = visibility.getIcon()),
                     contentDescription = null
                 )
