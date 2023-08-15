@@ -40,14 +40,14 @@ ext.loadProperties = { String file ->
 }
 
 android {
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         def packageName = "de.hbch.traewelling"
 
         applicationId packageName
         minSdk 26
-        targetSdk 33
+        targetSdk 34
         versionCode 110
         versionName "1.24.0"
 
@@ -98,7 +98,7 @@ android {
 
 dependencies {
     // Jetpack Compose
-    def composeVersion = "1.4.3"
+    def composeVersion = "1.5.0"
     implementation "androidx.compose.runtime:runtime:$composeVersion"
     implementation "androidx.compose.ui:ui:$composeVersion"
     implementation "androidx.compose.foundation:foundation:$composeVersion"
@@ -120,7 +120,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation "androidx.browser:browser:1.5.0"
+    implementation "androidx.browser:browser:1.6.0"
     implementation 'androidx.core:core-splashscreen:1.0.1'
     implementation 'com.auth0.android:jwtdecode:2.0.1'
     implementation "net.openid:appauth:0.11.1"
@@ -134,7 +134,7 @@ dependencies {
     implementation 'com.jcloquell:androidsecurestorage:0.1.3'
 
     // Navigation Component
-    def nav_version_ktx = "2.6.0"
+    def nav_version_ktx = "2.7.0"
     implementation "androidx.navigation:navigation-compose:$nav_version_ktx"
 
     // Retrofit
