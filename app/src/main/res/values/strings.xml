@@ -151,6 +151,7 @@
     <string name="finish">Finish</string>
     <string name="force_check_in">Force check-in</string>
     <string name="share_text">I\'m currently travelling with %1$s towards %2$s!</string>
+    <string name="share_text_with_body" translatable="false">%1$s (\@ %2$s ➡️ %3$s)</string>
     <string name="mark_as_read">Mark as read</string>
     <string name="mark_all_as_read">Mark all as read</string>
     <string name="user_likes_status">\@%1$s likes your check-in!</string>

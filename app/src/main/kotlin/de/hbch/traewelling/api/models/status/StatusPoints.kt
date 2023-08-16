@@ -15,7 +15,8 @@ data class StatusPointCalculation(
     @SerializedName("reason") val reason: PointReason
 )
 
-enum class PointReason() {
+@Suppress("unused")
+enum class PointReason {
     @SerializedName("0")
     IN_TIME {
         override fun getExplanation() = null

@@ -37,6 +37,7 @@ import de.hbch.traewelling.ui.statistics.Statistics
 import de.hbch.traewelling.ui.statusDetail.StatusDetail
 import de.hbch.traewelling.ui.user.Profile
 import de.hbch.traewelling.util.popBackStackAndNavigate
+import de.hbch.traewelling.util.shareStatus
 import de.hbch.traewelling.util.toShortCut
 import java.time.LocalDate
 import java.time.ZonedDateTime
@@ -256,24 +257,7 @@ fun TraewelldroidNavHost(
                                     R.string.title_share,
                                     R.drawable.ic_share
                                 ) {
-                                    var shareText = context.getString(
-                                        R.string.share_text,
-                                        status.line,
-                                        status.destination
-                                    )
-                                    shareText =
-                                        shareText.plus("\n\nhttps://traewelling.de/status/${status.statusId}")
-                                    val sendIntent: Intent = Intent().apply {
-                                        action = Intent.ACTION_SEND
-                                        putExtra(Intent.EXTRA_TEXT, shareText)
-                                        type = "text/plain"
-                                    }
-
-                                    val shareIntent = Intent.createChooser(
-                                        sendIntent,
-                                        context.getString(R.string.title_share)
-                                    )
-                                    context.startActivity(shareIntent)
+                                    context.shareStatus(status)
                                 }
                             )
                         } else {
