@@ -1,9 +1,9 @@
 package de.hbch.traewelling.ui.searchConnection
 
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -104,9 +104,8 @@ fun SearchConnection(
 
     Column(
         modifier = Modifier
-            .animateContentSize()
-            .verticalScroll(scrollState)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .verticalScroll(scrollState),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         CardSearchStation(
@@ -118,9 +117,7 @@ fun SearchConnection(
             homelandStationData = loggedInUserViewModel.home,
             recentStationsData = loggedInUserViewModel.lastVisitedStations
         )
-        ElevatedCard(
-            modifier = Modifier.fillMaxWidth()
-        ) {
+        ElevatedCard {
             Column {
                 Text(
                     modifier = Modifier
@@ -185,6 +182,7 @@ fun SearchConnection(
                 }
             }
         }
+        Box { }
     }
 }
 
@@ -284,9 +282,10 @@ fun SearchConnection(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
+        val itemModifier = Modifier.padding(horizontal = 8.dp)
         // Time selection and home
         Row(
-            modifier = Modifier
+            modifier = itemModifier
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -310,9 +309,8 @@ fun SearchConnection(
 
         // Filter chips
         FilterChipGroup(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 8.dp),
+            modifier = itemModifier
+                .fillMaxWidth(),
             chips = FilterType.values().associateWith {
                  stringResource(id = it.stringId)
             },
@@ -326,8 +324,7 @@ fun SearchConnection(
 
         // Previous/Next top
         PreviousNextButtons(
-            modifier = Modifier
-                .padding(horizontal = 8.dp)
+            modifier = itemModifier
                 .fillMaxWidth(),
             nextSelected = onNextTime,
             previousSelected = onPreviousTime
@@ -339,14 +336,14 @@ fun SearchConnection(
         // Connections
         trips?.forEach { trip ->
             ConnectionListItem(
-                modifier = Modifier
+                modifier = itemModifier
                     .fillMaxWidth()
                     .clickable {
                         if (!trip.isCancelled) {
                             onTripSelection(trip)
                         }
                     }
-                    .padding(8.dp),
+                    .padding(vertical = 8.dp),
                 productType = trip.line?.product ?: ProductType.BUS,
                 line = trip.line?.name ?: trip.line?.travelId ?: "",
                 departurePlanned = trip.plannedDeparture ?: ZonedDateTime.now(),
@@ -368,7 +365,7 @@ fun SearchConnection(
         if (trips.isNullOrEmpty()) {
             Text(
                 text = stringResource(id = R.string.no_departures),
-                modifier = Modifier.padding(vertical = 8.dp).fillMaxWidth(),
+                modifier = itemModifier.fillMaxWidth(),
                 textAlign = TextAlign.Center
             )
 
@@ -379,9 +376,7 @@ fun SearchConnection(
 
         // Previous/Next bottom
         PreviousNextButtons(
-            modifier = Modifier
-                .padding(horizontal = 8.dp)
-                .padding(bottom = 8.dp)
+            modifier = itemModifier
                 .fillMaxWidth(),
             nextSelected = onNextTime,
             previousSelected = onPreviousTime
