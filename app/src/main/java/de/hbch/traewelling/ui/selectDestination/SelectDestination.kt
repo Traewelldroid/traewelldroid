@@ -2,6 +2,7 @@ package de.hbch.traewelling.ui.selectDestination
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -74,41 +75,45 @@ fun SelectDestination(
         }
     }
 
-    val scrollstate = rememberScrollState()
-    ElevatedCard(
-        modifier = modifier.fillMaxWidth().verticalScroll(scrollstate)
+    val scrollState = rememberScrollState()
+    Column(
+        modifier = modifier.fillMaxWidth().verticalScroll(scrollState),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            if (trip == null) {
-                DataLoading()
-            } else {
-                FromToTextRow(
-                    category = trip!!.category,
-                    lineName = trip!!.lineName,
-                    destination = trip!!.destination
-                )
-                Column(
-                    modifier = Modifier.padding(top = 16.dp)
-                ) {
-                    trip!!.stopovers.forEachIndexed { index, tripStation ->
-                        TravelStopListItem(
-                            modifier = Modifier.clickable(onClick = {
-                                if (!tripStation.isCancelled) {
-                                    checkInViewModel.arrivalTime = tripStation.arrivalPlanned
-                                    checkInViewModel.destination = tripStation.name
-                                    checkInViewModel.destinationStationId = tripStation.id
-                                    onStationSelected(tripStation)
-                                }
-                            }),
-                            station = tripStation,
-                            isLastStop = index == trip!!.stopovers.size - 1
-                        )
+        ElevatedCard {
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                if (trip == null) {
+                    DataLoading()
+                } else {
+                    FromToTextRow(
+                        category = trip!!.category,
+                        lineName = trip!!.lineName,
+                        destination = trip!!.destination
+                    )
+                    Column(
+                        modifier = Modifier.padding(top = 16.dp)
+                    ) {
+                        trip!!.stopovers.forEachIndexed { index, tripStation ->
+                            TravelStopListItem(
+                                modifier = Modifier.clickable(onClick = {
+                                    if (!tripStation.isCancelled) {
+                                        checkInViewModel.arrivalTime = tripStation.arrivalPlanned
+                                        checkInViewModel.destination = tripStation.name
+                                        checkInViewModel.destinationStationId = tripStation.id
+                                        onStationSelected(tripStation)
+                                    }
+                                }),
+                                station = tripStation,
+                                isLastStop = index == trip!!.stopovers.size - 1
+                            )
+                        }
                     }
                 }
             }
         }
+        Box { }
     }
 }
 

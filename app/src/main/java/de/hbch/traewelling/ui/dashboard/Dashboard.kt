@@ -2,7 +2,6 @@ package de.hbch.traewelling.ui.dashboard
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -66,13 +65,11 @@ fun Dashboard(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight()
             .pullRefresh(pullRefreshState)
     ) {
         LazyColumn(
             modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(),
+                .fillMaxWidth(),
             userScrollEnabled = true,
             verticalArrangement = Arrangement.spacedBy(16.dp),
             state = checkInListState
