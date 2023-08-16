@@ -24,6 +24,7 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -32,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -55,6 +57,7 @@ import de.hbch.traewelling.theme.StarYellow
 import de.hbch.traewelling.ui.user.getDurationString
 import de.hbch.traewelling.util.getLocalDateTimeString
 import de.hbch.traewelling.util.getLocalTimeString
+import de.hbch.traewelling.util.shareStatus
 import java.time.Duration
 import java.time.ZonedDateTime
 import java.util.Locale
@@ -197,16 +200,10 @@ fun CheckInCard(
                 )
                 CheckInCardFooter(
                     modifier = Modifier.fillMaxWidth(),
-                    statusId = status.statusId,
-                    username = status.username,
-                    createdAt = status.createdAt,
-                    liked = status.liked,
-                    likeCount = status.likeCount,
-                    visibility = status.visibility,
+                    status = status,
                     isOwnStatus =
                     (loggedInUserViewModel?.loggedInUser?.value?.id ?: -1) == status.userId,
                     displayLongDate = displayLongDate,
-                    eventName = status.eventName,
                     checkInCardViewModel = checkInCardViewModel,
                     userSelected = userSelected,
                     handleEditClicked = {
@@ -401,13 +398,7 @@ fun StatusDetailsRow(
 @Composable
 private fun CheckInCardFooter(
     modifier: Modifier = Modifier,
-    statusId: Int,
-    username: String,
-    createdAt: ZonedDateTime,
-    visibility: StatusVisibility,
-    liked: Boolean?,
-    likeCount: Int?,
-    eventName: String?,
+    status: Status,
     checkInCardViewModel: CheckInCardViewModel,
     isOwnStatus: Boolean = false,
     displayLongDate: Boolean = false,
@@ -415,8 +406,8 @@ private fun CheckInCardFooter(
     handleEditClicked: () -> Unit = { },
     handleDeleteClicked: () -> Unit = { }
 ) {
-    var likedState by remember { mutableStateOf(liked ?: false) }
-    var likeCountState by remember { mutableStateOf(likeCount ?: 0) }
+    var likedState by remember { mutableStateOf(status.liked ?: false) }
+    var likeCountState by remember { mutableIntStateOf(status.likeCount ?: 0) }
 
     Row(
         modifier = modifier,
@@ -426,17 +417,17 @@ private fun CheckInCardFooter(
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            if (liked != null && likeCount != null) {
+            if (status.liked != null && status.likeCount != null) {
                 Row(
                     modifier = Modifier
                         .clickable {
                             if (likedState) {
-                                checkInCardViewModel.deleteFavorite(statusId) {
+                                checkInCardViewModel.deleteFavorite(status.statusId) {
                                     likedState = false
                                     likeCountState--
                                 }
                             } else {
-                                checkInCardViewModel.createFavorite(statusId) {
+                                checkInCardViewModel.createFavorite(status.statusId) {
                                     likedState = true
                                     likeCountState++
                                 }
@@ -476,16 +467,16 @@ private fun CheckInCardFooter(
                 val alignmentModifier = Modifier.align(Alignment.CenterVertically)
                 val dateString =
                     if (displayLongDate)
-                        getLocalDateTimeString(date = createdAt)
+                        getLocalDateTimeString(date = status.createdAt)
                     else
-                        getLocalTimeString(date = createdAt)
+                        getLocalTimeString(date = status.createdAt)
                 Text(
                     modifier = alignmentModifier
-                        .clickable { userSelected(username) }
+                        .clickable { userSelected(status.username) }
                         .padding(2.dp),
                     text = stringResource(
                         id = R.string.check_in_user_time,
-                        username,
+                        status.username,
                         dateString
                     ),
                     textAlign = TextAlign.End,
@@ -493,12 +484,13 @@ private fun CheckInCardFooter(
                 )
                 Icon(
                     modifier = alignmentModifier.padding(horizontal = 8.dp),
-                    painter = painterResource(id = visibility.getIcon()),
+                    painter = painterResource(id = status.visibility.getIcon()),
                     contentDescription = null
                 )
             }
             if (isOwnStatus) {
                 var menuExpanded by remember { mutableStateOf(false) }
+                val context = LocalContext.current
                 Box {
                     Icon(
                         modifier = Modifier
@@ -514,6 +506,23 @@ private fun CheckInCardFooter(
                         expanded = menuExpanded,
                         onDismissRequest = { menuExpanded = false }
                     ) {
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    text = stringResource(id = R.string.title_share)
+                                )
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_share),
+                                    contentDescription = null
+                                )
+                            },
+                            onClick = {
+                                menuExpanded = false
+                                context.shareStatus(status)
+                            }
+                        )
                         DropdownMenuItem(
                             text = {
                                 Text(
@@ -552,7 +561,7 @@ private fun CheckInCardFooter(
     }
 
     // Event
-    if (!eventName.isNullOrEmpty()) {
+    if (!status.eventName.isNullOrEmpty()) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
@@ -563,7 +572,7 @@ private fun CheckInCardFooter(
                 contentDescription = null
             )
             Text(
-                text = eventName,
+                text = status.eventName,
                 style = AppTypography.labelMedium
             )
         }
