@@ -1,5 +1,8 @@
 package de.hbch.traewelling.util
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -141,4 +144,35 @@ fun LazyListState.OnBottomReached(
                 if (it) loadMore()
             }
     }
+}
+
+fun Context.shareStatus(
+    status: de.hbch.traewelling.api.dtos.Status
+) {
+    var shareText =
+        if (status.message.isBlank())
+            getString(R.string.share_text, status.line, status.destination)
+        else
+            getString(R.string.share_text_with_body, status.message, status.line, status.destination)
+
+    val shareUri = Uri.Builder()
+        .scheme("https")
+        .authority("traewelling.de")
+        .appendPath("status")
+        .appendPath(status.statusId.toString())
+        .build()
+
+    shareText = shareText.plus("\n\n$shareUri")
+
+    val sendIntent: Intent = Intent().apply {
+        action = Intent.ACTION_SEND
+        putExtra(Intent.EXTRA_TEXT, shareText)
+        type = "text/plain"
+    }
+
+    val shareIntent = Intent.createChooser(
+        sendIntent,
+        getString(R.string.title_share)
+    )
+    startActivity(shareIntent)
 }
