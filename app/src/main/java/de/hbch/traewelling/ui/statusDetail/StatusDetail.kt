@@ -4,7 +4,6 @@ import android.net.Uri
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -61,7 +60,6 @@ import de.hbch.traewelling.ui.include.status.CheckInCardViewModel
 import org.osmdroid.views.overlay.Polyline
 import java.time.format.DateTimeFormatter
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun StatusDetail(
     statusId: Int,
@@ -147,29 +145,35 @@ fun StatusDetail(
                         )
                     }
                 }
-                if (status?.productType?.isTrain == true) {
-                    ButtonWithIconAndText(
-                        modifier = Modifier.fillMaxWidth(),
-                        text = stringResource(id = R.string.open_with_bahnexpert),
-                        drawableId = R.drawable.ic_train,
-                        onClick = {
-                            val dStatus = status
-                            if (dStatus != null) {
-                                val intent = CustomTabsIntent.Builder()
-                                    .setShowTitle(false)
-                                    .build()
+                ButtonWithIconAndText(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = stringResource(id = R.string.open_with_bahnexpert),
+                    drawableId = R.drawable.ic_train,
+                    onClick = {
+                        val dStatus = status
+                        if (dStatus != null) {
+                            val intent = CustomTabsIntent.Builder()
+                                .setShowTitle(false)
+                                .build()
 
-                                val trainNo = dStatus.line.split(' ')[0].plus(" ${dStatus.journeyNumber}")
-                                val isoDate = DateTimeFormatter.ISO_INSTANT.format(dStatus.departurePlanned)
+                            val isoDate = DateTimeFormatter.ISO_INSTANT.format(dStatus.departurePlanned)
 
-                                intent.launchUrl(
-                                    context,
-                                    Uri.parse("https://bahn.expert/details/$trainNo/$isoDate")
-                                )
-                            }
+                            val uri = Uri.Builder()
+                                .scheme("https")
+                                .authority("bahn.expert")
+                                .appendPath("details")
+                                .appendPath(dStatus.journeyNumber?.toString())
+                                .appendPath(isoDate)
+                                .appendQueryParameter("station", dStatus.originEvaId.toString())
+                                .build()
+
+                            intent.launchUrl(
+                                context,
+                                uri
+                            )
                         }
-                    )
-                }
+                    }
+                )
             }
         }
     }
@@ -206,7 +210,7 @@ private fun StatusDetailMap(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun StatusLikes(
     statusId: Int,
@@ -258,12 +262,12 @@ private fun StatusLikes(
                     style = AppTypography.bodyLarge
                 )
                 IconButton(onClick = expandAction) {
-                    val icon =
-                        if (cardExpanded)
-                            R.drawable.ic_expand_less
-                        else
-                            R.drawable.ic_expand_more
                     AnimatedContent(cardExpanded, label = "CardExpansionIcon") {
+                        val icon =
+                            if (it)
+                                R.drawable.ic_expand_less
+                            else
+                                R.drawable.ic_expand_more
                         Icon(
                             painter = painterResource(id = icon),
                             contentDescription = null

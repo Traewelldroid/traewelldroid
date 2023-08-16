@@ -1,48 +1,36 @@
 package de.hbch.traewelling.api.models.status
 
-import android.os.Parcel
-import android.os.Parcelable
-import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.event.Event
 import java.time.ZonedDateTime
 
 data class Status(
-    @SerializedName("id") val id: Int,
-    @SerializedName("body") val body: String?,
-    @SerializedName("type") val type: String,
-    @SerializedName("createdAt") val createdAt: ZonedDateTime,
-    @SerializedName("profilePicture") val profilePicture: String?,
+    val id: Int,
+    val body: String?,
+    val createdAt: ZonedDateTime,
+    val profilePicture: String?,
     @SerializedName("user") val userId: Int,
-    @SerializedName("username") val username: String,
-    @SerializedName("preventIndex") val preventIndex: Boolean,
-    @SerializedName("visibility") val visibility: StatusVisibility,
-    @SerializedName("business") val business: StatusBusiness,
-    @SerializedName("likes") var likes: Int?,
-    @SerializedName("liked") var liked: Boolean?,
+    val username: String,
+    val visibility: StatusVisibility,
+    val business: StatusBusiness,
+    var likes: Int?,
+    var liked: Boolean?,
     @SerializedName("train") val journey: Journey,
-    @SerializedName("event") val event: Event?,
-    @SerializedName("socialText") val socialText: String?
-) : Parcelable {
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(gson.toJson(this))
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
+    val event: Event?
+) {
     fun toStatusDto(): de.hbch.traewelling.api.dtos.Status {
         return de.hbch.traewelling.api.dtos.Status(
             id,
             journey.origin.name,
             journey.origin.id,
+            journey.origin.evaIdentifier,
             journey.origin.departurePlanned,
             journey.origin.departureReal,
             journey.departureManual,
             journey.destination.name,
             journey.destination.id,
+            journey.destination.evaIdentifier,
             journey.destination.arrivalPlanned,
             journey.destination.arrivalReal,
             journey.arrivalManual,
@@ -62,17 +50,6 @@ data class Status(
             visibility,
             event?.name
         )
-    }
-
-    companion object CREATOR : Parcelable.Creator<Status> {
-        private val gson = Gson()
-        override fun createFromParcel(parcel: Parcel): Status {
-            return gson.fromJson(parcel.readString(), Status::class.java)
-        }
-
-        override fun newArray(size: Int): Array<Status?> {
-            return arrayOfNulls(size)
-        }
     }
 }
 

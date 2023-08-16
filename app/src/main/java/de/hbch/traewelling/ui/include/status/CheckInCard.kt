@@ -4,7 +4,6 @@ import android.icu.text.MeasureFormat
 import android.icu.util.Measure
 import android.icu.util.MeasureUnit
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -398,7 +397,7 @@ fun StatusDetailsRow(
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class, ExperimentalAnimationApi::class)
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun CheckInCardFooter(
     modifier: Modifier = Modifier,
@@ -593,11 +592,13 @@ private fun CheckInCardPreview() {
             0,
             "Start Hbf",
             123,
+            42,
             ZonedDateTime.now(),
             ZonedDateTime.now(),
             ZonedDateTime.now(),
             "Ende Hp",
             123,
+            43,
             ZonedDateTime.now(),
             ZonedDateTime.now(),
             ZonedDateTime.now(),
