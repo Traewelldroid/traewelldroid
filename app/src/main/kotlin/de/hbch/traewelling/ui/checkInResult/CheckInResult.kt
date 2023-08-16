@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -30,8 +31,10 @@ import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.status.Status
 import de.hbch.traewelling.shared.CheckInViewModel
 import de.hbch.traewelling.theme.StarYellow
+import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
 import de.hbch.traewelling.ui.composables.OutlinedButtonWithIconAndText
 import de.hbch.traewelling.ui.include.status.StatusDetailsRow
+import de.hbch.traewelling.util.shareStatus
 
 @Composable
 fun CheckInResultView(
@@ -95,6 +98,7 @@ private fun SuccessfulCheckInResult(
     checkInViewModel: CheckInViewModel,
     onStatusSelected: (Int) -> Unit = { }
 ) {
+    val context = LocalContext.current
     val checkInResponse = checkInViewModel.checkInResponse
     if (checkInResponse != null) {
         val journey = checkInResponse.status.journey
@@ -124,6 +128,13 @@ private fun SuccessfulCheckInResult(
                     textAlign = TextAlign.Center
                 )
             }
+            ButtonWithIconAndText(
+                stringId = R.string.title_share,
+                drawableId = R.drawable.ic_share,
+                onClick = {
+                    context.shareStatus(checkInResponse.status.toStatusDto())
+                }
+            )
             if (checkInResponse.coTravellers.isNotEmpty()) {
                 Column(
                     modifier = Modifier
