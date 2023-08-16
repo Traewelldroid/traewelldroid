@@ -10,7 +10,6 @@ import android.os.Bundle
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -56,7 +55,7 @@ import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
 import de.hbch.traewelling.ui.composables.OutlinedButtonWithIconAndText
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CardSearchStation(
     modifier: Modifier = Modifier,
@@ -121,7 +120,7 @@ fun CardSearchStation(
                     trailingIcon = {
                         if (!recentStations.isNullOrEmpty() || homelandStation != null) {
                             IconButton(onClick = { shortcutsVisible = !shortcutsVisible }) {
-                                AnimatedContent(shortcutsVisible) {
+                                AnimatedContent(shortcutsVisible, label = "SearchStationIconAnim") {
                                     val icon =
                                         if (it)
                                             R.drawable.ic_expand_less
