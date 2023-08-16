@@ -140,6 +140,7 @@ fun TraewelldroidNavHost(
                     R.drawable.ic_mark_all_as_read
                 ) {
                     notificationsViewModel.markAllAsRead {
+                        onNotificationCountChange()
                         navController.popBackStack()
                         navController.navigate(Notifications.route) {
                             navController.graph.startDestinationRoute?.let { screenRoute ->
