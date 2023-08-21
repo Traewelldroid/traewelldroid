@@ -182,4 +182,12 @@
     <string name="manual_arrival">Overwritten arrival time</string>
     <string name="planned">Planned: %1$s</string>
     <string name="likes">%1$d like that</string>
+    <string name="tag_travel_class_title">Travel class</string>
+    <string name="tag_travel_class_example">First, economy, business, …</string>
+    <string name="tag_ticket_title">Ticket</string>
+    <string name="tag_ticket_example">Flexible, …</string>
+    <string name="tag_coach_title">Coach</string>
+    <string name="tag_coach_example">7</string>
+    <string name="tag_seat_title">Seat</string>
+    <string name="tag_seat_example">142</string>
 </resources>

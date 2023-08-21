@@ -177,4 +177,12 @@
     <string name="manual_arrival">Überschriebene Ankunftszeit</string>
     <string name="planned">Plan: %1$s</string>
     <string name="likes">%1$d gefällt das</string>
+    <string name="tag_travel_class_title">Reiseklasse</string>
+    <string name="tag_travel_class_example">1, 2, Business, …</string>
+    <string name="tag_ticket_title">Fahrschein</string>
+    <string name="tag_ticket_example">Flexpreis, Super Sparpreis, BahnCard 100 …</string>
+    <string name="tag_coach_title">Wagen</string>
+    <string name="tag_coach_example">7</string>
+    <string name="tag_seat_title">Platz</string>
+    <string name="tag_seat_example">142</string>
 </resources>
