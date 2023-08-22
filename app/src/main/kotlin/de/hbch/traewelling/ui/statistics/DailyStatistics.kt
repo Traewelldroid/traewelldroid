@@ -1,22 +1,30 @@
 package de.hbch.traewelling.ui.statistics
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,6 +32,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -31,19 +40,25 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import de.hbch.traewelling.R
+import de.hbch.traewelling.api.models.polyline.FeatureCollection
 import de.hbch.traewelling.api.models.statistics.DailyStatistics
 import de.hbch.traewelling.api.models.status.Status
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.MainTheme
+import de.hbch.traewelling.theme.PolylineColor
 import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
 import de.hbch.traewelling.ui.composables.DataLoading
+import de.hbch.traewelling.ui.composables.OpenRailwayMapView
 import de.hbch.traewelling.ui.composables.OutlinedButtonWithIconAndText
+import de.hbch.traewelling.ui.composables.getBoundingBoxFromPolyLines
+import de.hbch.traewelling.ui.composables.getPolyLinesFromFeatureCollection
+import de.hbch.traewelling.ui.include.status.CheckInCard
 import de.hbch.traewelling.ui.include.status.CheckInCardViewModel
 import de.hbch.traewelling.ui.include.status.getFormattedDistance
 import de.hbch.traewelling.ui.user.getDurationString
-import de.hbch.traewelling.util.checkInList
 import de.hbch.traewelling.util.getLongLocalDateString
+import org.osmdroid.views.MapView
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -121,6 +136,7 @@ private fun DailyStatisticsView(
     val checkIns = remember { mutableStateListOf<Status>().also {
         it.addAll(statistics.statuses)
     } }
+    var selectedTab by rememberSaveable { mutableIntStateOf(0) }
 
     var datePickerVisible by remember { mutableStateOf(false) }
     val datePickerState = rememberDatePickerState()
@@ -152,45 +168,67 @@ private fun DailyStatisticsView(
         }
     }
 
-    LazyColumn(
-        modifier = modifier,
+    var columnModifier = modifier
+    if (selectedTab == 0)
+        columnModifier = columnModifier.verticalScroll(rememberScrollState())
+
+    Column(
+        modifier = columnModifier,
         verticalArrangement = Arrangement.spacedBy(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        item {
-            ButtonWithIconAndText(
-                text = getLongLocalDateString(date.atStartOfDay(ZoneId.systemDefault())),
-                drawableId = R.drawable.ic_calendar_checked,
+        ButtonWithIconAndText(
+            text = getLongLocalDateString(date.atStartOfDay(ZoneId.systemDefault())),
+            drawableId = R.drawable.ic_calendar_checked,
+            onClick = {
+                datePickerVisible = true
+            }
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            OutlinedButtonWithIconAndText(
+                text = stringResource(id = R.string.previous),
+                drawableId = R.drawable.ic_previous,
                 onClick = {
-                    datePickerVisible = true
+                    dateSelectedAction(date.minusDays(1))
                 }
             )
-        }
-        item {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
+            if (date != LocalDate.now()) {
                 OutlinedButtonWithIconAndText(
-                    text = stringResource(id = R.string.previous),
-                    drawableId = R.drawable.ic_previous,
+                    text = stringResource(id = R.string.next),
+                    drawableId = R.drawable.ic_next,
+                    drawableOnStart = false,
                     onClick = {
-                        dateSelectedAction(date.minusDays(1))
+                        dateSelectedAction(date.plusDays(1))
                     }
                 )
-                if (date != LocalDate.now()) {
-                    OutlinedButtonWithIconAndText(
-                        text = stringResource(id = R.string.next),
-                        drawableId = R.drawable.ic_next,
-                        drawableOnStart = false,
-                        onClick = {
-                            dateSelectedAction(date.plusDays(1))
-                        }
-                    )
-                }
             }
         }
-        item {
+
+        TabRow(selectedTabIndex = selectedTab) {
+            Tab(
+                selected = selectedTab == 0,
+                onClick = { selectedTab = 0 },
+                text = {
+                    Text(
+                        text = stringResource(id = R.string.check_ins)
+                    )
+                }
+            )
+            Tab(
+                selected = selectedTab == 1,
+                onClick = { selectedTab = 1 },
+                text = {
+                    Text(
+                        text = stringResource(id = R.string.map_view)
+                    )
+                },
+                enabled = (statistics.featureCollection.features?.size?.compareTo(0) ?: -1) > 0
+            )
+        }
+        if (selectedTab == 0) {
             FlowRow(
                 maxItemsInEachRow = 2,
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -219,15 +257,44 @@ private fun DailyStatisticsView(
                     iconEnd = true
                 )
             }
+            checkIns.forEach { checkIn ->
+                CheckInCard(
+                    checkInCardViewModel = checkInCardViewModel,
+                    status = checkIn.toStatusDto(),
+                    loggedInUserViewModel = loggedInUserViewModel,
+                    statusSelected = statusSelectedAction,
+                    handleEditClicked = statusEditAction
+                )
+            }
+        } else {
+            ElevatedCard(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+            ) {
+                var map: MapView? = remember { null }
+
+                val polyLines = getPolyLinesFromFeatureCollection(
+                    statistics.featureCollection,
+                    PolylineColor.toArgb()
+                )
+                val bounds = getBoundingBoxFromPolyLines(polyLines)
+
+                LaunchedEffect(true) {
+                    map?.overlayManager?.overlays()?.addAll(polyLines)
+                    map?.zoomToBoundingBox(bounds.increaseByScale(1.1f), false)
+                }
+                OpenRailwayMapView(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(),
+                    onInit = {
+                        map = it
+                    }
+                )
+            }
         }
-        checkInList(
-            checkIns,
-            checkInCardViewModel,
-            loggedInUserViewModel,
-            statusSelectedAction = statusSelectedAction,
-            statusEditAction = statusEditAction,
-            showDate = false
-        )
+        Box { }
     }
 }
 
@@ -269,7 +336,8 @@ private fun DailyStatisticsPreview() {
         listOf(),
         4711,
         815,
-        42
+        42,
+        FeatureCollection(null, null)
     )
     val loggedInUserViewModel = LoggedInUserViewModel()
     MainTheme {
