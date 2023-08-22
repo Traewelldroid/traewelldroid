@@ -54,9 +54,11 @@ import de.hbch.traewelling.theme.PolylineColor
 import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
 import de.hbch.traewelling.ui.composables.DataLoading
 import de.hbch.traewelling.ui.composables.OpenRailwayMapView
-import de.hbch.traewelling.ui.composables.getPolylinesFromFeatureCollection
+import de.hbch.traewelling.ui.composables.getBoundingBoxFromPolyLines
+import de.hbch.traewelling.ui.composables.getPolyLinesFromFeatureCollection
 import de.hbch.traewelling.ui.include.status.CheckInCard
 import de.hbch.traewelling.ui.include.status.CheckInCardViewModel
+import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Polyline
 import java.time.format.DateTimeFormatter
 
@@ -76,12 +78,14 @@ fun StatusDetail(
     var status by remember { mutableStateOf<Status?>(null) }
     val context = LocalContext.current
 
-    LaunchedEffect(status == null) {
-        statusDetailViewModel.getStatusById(statusId, {
-            val statusDto = it.toStatusDto()
-            status = statusDto
-            statusLoaded(statusDto)
-        }, { })
+    LaunchedEffect(status) {
+        if (status == null) {
+            statusDetailViewModel.getStatusById(statusId, {
+                val statusDto = it.toStatusDto()
+                status = statusDto
+                statusLoaded(statusDto)
+            }, { })
+        }
     }
 
     Column(
@@ -186,27 +190,50 @@ private fun StatusDetailMap(
     statusDetailViewModel: StatusDetailViewModel
 ) {
     val color = PolylineColor.toArgb()
-    var polylines: List<Polyline> = listOf()
-    ElevatedCard(
-        modifier = modifier
-            .fillMaxWidth(),
-    ) {
-        OpenRailwayMapView(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(),
-            onLoad = {
-                if (polylines.isEmpty()) {
-                    statusDetailViewModel.getPolylineForStatus(statusId, { collection ->
-                        polylines = getPolylinesFromFeatureCollection(collection, color)
-                        if (polylines.isNotEmpty()) {
-                            it.overlays.addAll(polylines)
-                            it.zoomToBoundingBox(polylines[0].bounds.increaseByScale(1.1f), false)
-                        }
-                    }, { })
-                }
+    val polyLines = remember { mutableStateListOf<Polyline>() }
+    var requested by remember { mutableStateOf(false) }
+    var mapView: MapView? = remember { null }
+
+    LaunchedEffect(requested) {
+        if (!requested && polyLines.isEmpty()) {
+            requested = true
+            statusDetailViewModel.getPolylineForStatus(
+                statusId = statusId,
+                successfulCallback = {
+                    polyLines.addAll(getPolyLinesFromFeatureCollection(it, color))
+                },
+                failureCallback = {}
+            )
+        }
+    }
+
+    LaunchedEffect(polyLines.size) {
+        val map = mapView
+        if (polyLines.isNotEmpty() && map != null) {
+            map.overlayManager.overlays().removeIf {
+                it is Polyline
             }
-        )
+            map.overlayManager.overlays().addAll(polyLines)
+
+            val bounds = getBoundingBoxFromPolyLines(polyLines)
+            map.zoomToBoundingBox(bounds.increaseByScale(1.1f), false)
+        }
+    }
+
+    if (polyLines.isNotEmpty()) {
+        ElevatedCard(
+            modifier = modifier
+                .fillMaxWidth(),
+        ) {
+            OpenRailwayMapView(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(),
+                onLoad = {
+                    mapView = it
+                }
+            )
+        }
     }
 }
 
