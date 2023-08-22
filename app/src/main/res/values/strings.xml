@@ -190,4 +190,5 @@
     <string name="tag_coach_example">7</string>
     <string name="tag_seat_title">Seat</string>
     <string name="tag_seat_example">142</string>
+    <string name="check_ins">Check ins</string>
 </resources>
