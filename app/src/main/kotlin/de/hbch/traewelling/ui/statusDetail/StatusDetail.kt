@@ -46,6 +46,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.dtos.Status
+import de.hbch.traewelling.api.models.status.StatusVisibility
 import de.hbch.traewelling.api.models.user.User
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.theme.AppTypography
@@ -54,6 +55,7 @@ import de.hbch.traewelling.theme.PolylineColor
 import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
 import de.hbch.traewelling.ui.composables.DataLoading
 import de.hbch.traewelling.ui.composables.OpenRailwayMapView
+import de.hbch.traewelling.ui.tag.StatusTags
 import de.hbch.traewelling.ui.composables.getBoundingBoxFromPolyLines
 import de.hbch.traewelling.ui.composables.getPolyLinesFromFeatureCollection
 import de.hbch.traewelling.ui.include.status.CheckInCard
@@ -137,6 +139,12 @@ fun StatusDetail(
                     onDeleted = statusDeleted,
                     handleEditClicked = statusEdit,
                     displayLongDate = true
+                )
+                StatusTags(
+                    statusId = statusId,
+                    modifier = Modifier.fillMaxWidth(),
+                    isOwnStatus = (loggedInUserViewModel?.loggedInUser?.value?.id ?: -1) == status?.userId,
+                    defaultVisibility = loggedInUserViewModel?.defaultStatusVisibility ?: StatusVisibility.PUBLIC
                 )
                 status?.likeCount?.let {
                     if (it > 0) {
