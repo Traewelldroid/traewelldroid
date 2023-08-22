@@ -127,7 +127,7 @@ dependencies {
     implementation 'org.greenrobot:eventbus:3.3.1'
 
     // OSM integration
-    implementation 'org.osmdroid:osmdroid-android:6.1.10'
+    implementation 'org.osmdroid:osmdroid-android:6.1.16'
 
     // Secure Storage
     implementation 'com.google.code.gson:gson:2.10.1'

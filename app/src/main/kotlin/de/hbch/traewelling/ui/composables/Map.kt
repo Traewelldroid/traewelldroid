@@ -19,19 +19,20 @@ import org.osmdroid.tileprovider.MapTileProviderBasic
 import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase
 import org.osmdroid.tileprovider.tilesource.TileSourcePolicy
 import org.osmdroid.tileprovider.tilesource.XYTileSource
+import org.osmdroid.util.BoundingBox
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.CopyrightOverlay
 import org.osmdroid.views.overlay.Polyline
 import org.osmdroid.views.overlay.TilesOverlay
 
-private val MAPNIK: OnlineTileSourceBase = XYTileSource(
+private val _mapnik: OnlineTileSourceBase = XYTileSource(
     "Mapnik",
     0,
     19,
     256,
     ".png",
-    arrayOf("https://a.tile.openstreetmap.org/","https://b.tile.openstreetmap.org/","https://c.tile.openstreetmap.org/"),
+    arrayOf("https://tile.openstreetmap.org/"),
     "© OpenStreetMap contributors, Style: CC-BY-SA 2.0, OpenRailwayMap",
     TileSourcePolicy(
         2,
@@ -42,7 +43,6 @@ private val MAPNIK: OnlineTileSourceBase = XYTileSource(
     )
 )
 
-@Composable
 private fun getTileSource(layer: OpenRailwayMapLayer): XYTileSource {
     return XYTileSource(
         "OpenRailwayMap",
@@ -64,7 +64,6 @@ fun rememberMapViewWithLifecycle(): MapView {
         }
     }
 
-    // Makes MapView follow the lifecycle of this composable
     val lifecycleObserver = rememberMapLifecycleObserver(mapView)
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     DisposableEffect(lifecycle) {
@@ -83,8 +82,7 @@ fun rememberMapLifecycleObserver(mapView: MapView): LifecycleEventObserver =
         LifecycleEventObserver { _, event ->
             when (event) {
                 Lifecycle.Event.ON_RESUME -> mapView.onResume()
-                else -> {
-                }
+                else -> { }
             }
         }
     }
@@ -112,27 +110,28 @@ fun MapView(
 @Composable
 fun OpenRailwayMapView(
     modifier: Modifier = Modifier,
-    onLoad: (map: MapView) -> Unit = { }
+    onInit: (MapView) -> Unit = { },
+    onLoad: (MapView) -> Unit = { }
 ) {
     val context = LocalContext.current
-    val secureStorage = SecureStorage(context)
-    val selectedOrmLayer =
-        secureStorage.getObject(SharedValues.SS_ORM_LAYER, OpenRailwayMapLayer::class.java)
-            ?: OpenRailwayMapLayer.STANDARD
-    val tileSource = getTileSource(layer = selectedOrmLayer)
 
     MapView(
         modifier = modifier,
-        onLoad = onLoad,
+        onLoad = {
+            onLoad(it)
+        },
         onInit = { mapView ->
-            mapView.setTileSource(MAPNIK)
+            val secureStorage = SecureStorage(context)
+            val selectedOrmLayer =
+                secureStorage.getObject(SharedValues.SS_ORM_LAYER, OpenRailwayMapLayer::class.java)
+                    ?: OpenRailwayMapLayer.STANDARD
+            val tileSource = getTileSource(layer = selectedOrmLayer)
+            mapView.setTileSource(_mapnik)
             mapView.setMultiTouchControls(true)
 
             val tileProvider = MapTileProviderBasic(context)
             tileProvider.tileSource = tileSource
-            val tilesOverlay = TilesOverlay(tileProvider, context).apply {
-
-            }
+            val tilesOverlay = TilesOverlay(tileProvider, context)
             mapView.overlays.add(tilesOverlay)
 
             val copyrightOverlay = CopyrightOverlay(context).apply {
@@ -141,13 +140,13 @@ fun OpenRailwayMapView(
             }
             mapView.overlays.add(copyrightOverlay)
 
-            onLoad(mapView)
+            onInit(mapView)
         }
     )
 }
 
-fun getPolylinesFromFeatureCollection(featureCollection: FeatureCollection, color: Int): List<Polyline> {
-    val polylines: MutableList<Polyline> = mutableListOf()
+fun getPolyLinesFromFeatureCollection(featureCollection: FeatureCollection, color: Int): List<Polyline> {
+    val polyLines: MutableList<Polyline> = mutableListOf()
 
     featureCollection.features?.forEach { feature ->
         val polyline = Polyline()
@@ -159,12 +158,16 @@ fun getPolylinesFromFeatureCollection(featureCollection: FeatureCollection, colo
                 )
             )
         }
-        polylines.add(polyline)
+        polyLines.add(polyline)
 
         polyline.outlinePaint.color = color
     }
 
-    return polylines
+    return polyLines
+}
+
+fun getBoundingBoxFromPolyLines(polyLines: List<Polyline>): BoundingBox {
+    return BoundingBox.fromGeoPointsSafe(polyLines.map { it.actualPoints }.flatten())
 }
 
 enum class OpenRailwayMapLayer {
