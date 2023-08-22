@@ -177,5 +177,22 @@
     <string name="manual_arrival">Überschriebene Ankunftszeit</string>
     <string name="planned">Plan: %1$s</string>
     <string name="likes">%1$d gefällt das</string>
+    <string name="tag_travel_class_title">Reiseklasse</string>
+    <string name="tag_travel_class_example">z.B. 1. Klasse, 2. Klasse, Business, …</string>
+    <string name="tag_ticket_title">Fahrschein</string>
+    <string name="tag_ticket_example">z.B. D-Ticket, BahnCard 100 …</string>
+    <string name="tag_coach_title">Wagen</string>
+    <string name="tag_coach_example">z.B. 7</string>
+    <string name="tag_seat_title">Platz</string>
+    <string name="tag_seat_example">z.B. 142</string>
+    <string name="tag_locomotive_class_title">Fahrzeug</string>
+    <string name="tag_locomotive_class_example">z.B. BR 412, Tz 304 🌈, …</string>
+    <string name="tag_wagon_class_title">Wagengattung</string>
+    <string name="tag_wagon_class_example">z.B. Avmz, Bimmdzf, …</string>
+    <string name="tag_unknown">Unbekannt</string>
+    <string name="add_tag">Tag hinzufügen</string>
+    <string name="edit_tag">Tag bearbeiten</string>
+    <string name="select_tag_type">Tagart auswählen</string>
+    <string name="all_tags_already_added">Es wurden bereits alle verfügbaren Tags hinzugefügt. Du kannst einen Tag bearbeiten, indem du ihn in der Übersicht auswählst.</string>
     <string name="check_ins">Check-Ins</string>
 </resources>

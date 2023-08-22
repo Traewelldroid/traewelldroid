@@ -100,6 +100,30 @@ interface CheckInService {
         @Path("id") id: Int
     ): Call<Data<List<User>>>
 
+    @GET("status/{id}/tags")
+    fun getTagsForStatusById(
+        @Path("id") id: Int
+    ): Call<Data<List<Tag>>>
+
+    @POST("status/{id}/tags")
+    fun createTagForStatus(
+        @Path("id") id: Int,
+        @Body tag: Tag
+    ): Call<Data<Tag>>
+
+    @PUT("status/{id}/tags/{key}")
+    fun updateTagForStatus(
+        @Path("id") id: Int,
+        @Path("key") key: String,
+        @Body tag: Tag
+    ): Call<Data<Tag>>
+
+    @DELETE("status/{id}/tags/{key}")
+    fun deleteTagForStatus(
+        @Path("id") id: Int,
+        @Path("key") key: String
+    ): Call<Any>
+
     @GET("polyline/{ids}")
     fun getPolylinesForStatuses(
         @Path("ids") statusIds: String

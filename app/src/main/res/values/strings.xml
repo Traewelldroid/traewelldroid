@@ -182,5 +182,22 @@
     <string name="manual_arrival">Overwritten arrival time</string>
     <string name="planned">Planned: %1$s</string>
     <string name="likes">%1$d like that</string>
+    <string name="tag_travel_class_title">Travel class</string>
+    <string name="tag_travel_class_example">i.e. First, economy, business, …</string>
+    <string name="tag_ticket_title">Ticket</string>
+    <string name="tag_ticket_example">i.e. Flexible, …</string>
+    <string name="tag_coach_title">Coach</string>
+    <string name="tag_coach_example">i.e. 7</string>
+    <string name="tag_seat_title">Seat</string>
+    <string name="tag_seat_example">i.e. 142</string>
+    <string name="tag_locomotive_class_title">Vehicle class</string>
+    <string name="tag_locomotive_class_example">i.e. BR 412, Tz 304 🌈, …</string>
+    <string name="tag_wagon_class_title">Wagon class</string>
+    <string name="tag_wagon_class_example">i.e. Avmz, Bimmdzf, …</string>
+    <string name="tag_unknown">Unknown</string>
+    <string name="add_tag">Add tag</string>
+    <string name="edit_tag">Edit tag</string>
+    <string name="select_tag_type">Select tag type</string>
+    <string name="all_tags_already_added">All tags have already been added. You can edit a tag by selecting it from the overview.</string>
     <string name="check_ins">Check ins</string>
 </resources>

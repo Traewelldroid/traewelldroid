@@ -410,6 +410,7 @@ fun TraewelldroidNavHost(
         composable(CheckInResult.route) {
             CheckInResultView(
                 checkInViewModel = checkInViewModel,
+                loggedInUserViewModel = loggedInUserViewModel,
                 onStatusSelected = navToStatusDetails,
                 onFloatingActionButtonChange = { icon, label ->
                     onFloatingActionButtonChange(icon, label) {

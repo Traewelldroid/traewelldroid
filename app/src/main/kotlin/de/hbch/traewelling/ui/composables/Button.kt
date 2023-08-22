@@ -86,13 +86,14 @@ fun ButtonWithIconAndText(
     @DrawableRes drawableId: Int? = null,
     colors: ButtonColors = ButtonDefaults.buttonColors(),
     onClick: () -> Unit = { },
-    isLoading: Boolean = false
+    isLoading: Boolean = false,
+    isEnabled: Boolean = true
 ) {
     Button(
         onClick = onClick,
         modifier = modifier,
         colors = colors,
-        enabled = !isLoading
+        enabled = isEnabled && !isLoading
     ) {
         RowWithIconAndText(
             text = text,
@@ -110,7 +111,8 @@ fun ButtonWithIconAndText(
     @DrawableRes drawableId: Int? = null,
     colors: ButtonColors = ButtonDefaults.buttonColors(),
     onClick: () -> Unit = { },
-    isLoading: Boolean = false
+    isLoading: Boolean = false,
+    isEnabled: Boolean = true
 ) {
     ButtonWithIconAndText(
         modifier = modifier,
@@ -118,7 +120,8 @@ fun ButtonWithIconAndText(
         drawableId = drawableId,
         colors = colors,
         onClick = onClick,
-        isLoading = isLoading
+        isLoading = isLoading,
+        isEnabled = isEnabled
     )
 }
 

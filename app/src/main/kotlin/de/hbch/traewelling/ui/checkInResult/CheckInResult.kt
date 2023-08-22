@@ -30,15 +30,18 @@ import coil.compose.AsyncImage
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.status.Status
 import de.hbch.traewelling.shared.CheckInViewModel
+import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.theme.StarYellow
 import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
 import de.hbch.traewelling.ui.composables.OutlinedButtonWithIconAndText
 import de.hbch.traewelling.ui.include.status.StatusDetailsRow
+import de.hbch.traewelling.ui.tag.StatusTags
 import de.hbch.traewelling.util.shareStatus
 
 @Composable
 fun CheckInResultView(
     checkInViewModel: CheckInViewModel,
+    loggedInUserViewModel: LoggedInUserViewModel,
     modifier: Modifier = Modifier,
     onStatusSelected: (Int) -> Unit = { },
     onCheckInForced: () -> Unit = { },
@@ -72,7 +75,8 @@ fun CheckInResultView(
                     onFloatingActionButtonChange(R.drawable.ic_check_in, R.string.finish)
                     SuccessfulCheckInResult(
                         checkInViewModel = checkInViewModel,
-                        onStatusSelected = onStatusSelected
+                        onStatusSelected = onStatusSelected,
+                        loggedInUserViewModel = loggedInUserViewModel
                     )
                 }
                 // Show button with enforcing check-in
@@ -96,6 +100,7 @@ fun CheckInResultView(
 @Composable
 private fun SuccessfulCheckInResult(
     checkInViewModel: CheckInViewModel,
+    loggedInUserViewModel: LoggedInUserViewModel,
     onStatusSelected: (Int) -> Unit = { }
 ) {
     val context = LocalContext.current
@@ -118,6 +123,11 @@ private fun SuccessfulCheckInResult(
             Text(
                 text = stringResource(id = R.string.display_points, checkInResponse.points.points),
                 fontWeight = FontWeight.ExtraBold
+            )
+            StatusTags(
+                statusId = checkInResponse.status.id,
+                isOwnStatus = true,
+                defaultVisibility = loggedInUserViewModel.defaultStatusVisibility
             )
             val pointReasonText = checkInResponse.points.calculation.reason.getExplanation()
             if (pointReasonText != null) {
