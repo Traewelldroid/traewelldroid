@@ -3,8 +3,8 @@ plugins {
     id "kotlin-android"
     id "kotlin-kapt"
     id "androidx.navigation.safeargs.kotlin"
-    id "com.google.android.gms.oss-licenses-plugin"
     id "io.sentry.android.gradle" version "3.11.1"
+    id "com.mikepenz.aboutlibraries.plugin"
 }
 
 def sentryDsn = ""
@@ -40,16 +40,18 @@ ext.loadProperties = { String file ->
 }
 
 android {
+    def packageName = "de.hbch.traewelling"
+    def name = "1.25.0"
+    def code = 115
+
     compileSdk 34
 
     defaultConfig {
-        def packageName = "de.hbch.traewelling"
-
         applicationId packageName
         minSdk 26
         targetSdk 34
-        versionCode 114
-        versionName "1.25.0"
+        versionCode code
+        versionName name
 
         manifestPlaceholders["appAuthRedirectScheme"] = "app.traewelldroid.de"
 
@@ -86,6 +88,9 @@ android {
         viewBinding = true
         compose = true
     }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.1"
+    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -94,6 +99,17 @@ android {
         jvmTarget = "1.8"
     }
     namespace "de.hbch.traewelling"
+    flavorDimensions = [ "libs" ]
+    productFlavors {
+        play {
+            dimension "libs"
+            versionNameSuffix "-play"
+        }
+        foss {
+            dimension "libs"
+            versionNameSuffix "-foss"
+        }
+    }
 }
 
 dependencies {
@@ -122,7 +138,7 @@ dependencies {
     implementation "androidx.legacy:legacy-support-v4:1.0.0"
     implementation "androidx.browser:browser:1.6.0"
     implementation "androidx.core:core-splashscreen:1.0.1"
-    implementation "com.auth0.android:jwtdecode:2.0.1"
+    implementation "com.auth0.android:jwtdecode:2.0.2"
     implementation "net.openid:appauth:0.11.1"
     implementation "org.greenrobot:eventbus:3.3.1"
 
@@ -138,20 +154,27 @@ dependencies {
     implementation "androidx.navigation:navigation-compose:$nav_version_ktx"
 
     // Retrofit
-    implementation "com.squareup.retrofit2:converter-gson:2.4.0"
+    implementation "com.squareup.retrofit2:converter-gson:2.9.0"
 
     // Coil for image loading
-    implementation "io.coil-kt:coil-compose:2.3.0"
+    implementation "io.coil-kt:coil-compose:2.4.0"
 
     // Emoji pack support
     implementation "de.c1710:filemojicompat-autoinit:3.2.5"
 
     // OSS licenses
-    implementation "com.google.android.gms:play-services-oss-licenses:17.0.1"
+    implementation "com.mikepenz:aboutlibraries-compose:10.8.3"
 
     // Shortcuts
     implementation "androidx.core:core-google-shortcuts:1.1.0"
 
     // Feature flags
     implementation "io.getunleash:unleash-android-proxy-sdk:0.5.5"
+}
+
+
+if (getGradle().getStartParameter().getTaskNames().stream().anyMatch {f -> f.contains("Play") }) {
+    println("Play services will be applied!")
+} else {
+    println("Play services were not applied!")
 }
