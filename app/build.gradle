@@ -3,8 +3,8 @@ plugins {
     id "kotlin-android"
     id "kotlin-kapt"
     id "androidx.navigation.safeargs.kotlin"
-    id "com.google.android.gms.oss-licenses-plugin"
     id "io.sentry.android.gradle" version "3.11.1"
+    id "com.mikepenz.aboutlibraries.plugin"
 }
 
 def sentryDsn = ""
@@ -163,11 +163,18 @@ dependencies {
     implementation "de.c1710:filemojicompat-autoinit:3.2.5"
 
     // OSS licenses
-    implementation "com.google.android.gms:play-services-oss-licenses:17.0.1"
+    implementation "com.mikepenz:aboutlibraries-compose:10.8.3"
 
     // Shortcuts
     implementation "androidx.core:core-google-shortcuts:1.1.0"
 
     // Feature flags
     implementation "io.getunleash:unleash-android-proxy-sdk:0.5.5"
+}
+
+
+if (getGradle().getStartParameter().getTaskNames().stream().anyMatch {f -> f.contains("Play") }) {
+    println("Play services will be applied!")
+} else {
+    println("Play services were not applied!")
 }
