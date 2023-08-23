@@ -16,6 +16,7 @@ import de.hbch.traewelling.api.models.station.StationData
 import de.hbch.traewelling.api.models.statistics.DailyStatistics
 import de.hbch.traewelling.api.models.statistics.PersonalStatistics
 import de.hbch.traewelling.api.models.status.*
+import de.hbch.traewelling.api.models.status.Tag
 import de.hbch.traewelling.api.models.trip.HafasTrainTrip
 import de.hbch.traewelling.api.models.trip.HafasTripPage
 import de.hbch.traewelling.api.models.user.User

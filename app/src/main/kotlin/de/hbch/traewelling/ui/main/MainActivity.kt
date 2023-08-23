@@ -33,6 +33,7 @@ import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -198,7 +199,7 @@ fun TraewelldroidApp(
         var fabIcon by remember { mutableStateOf<Int?>(null) }
         var fabLabel by remember { mutableStateOf<Int?>(null) }
         var fabListener by remember { mutableStateOf({ }) }
-        var unreadNotificationCount by remember { mutableStateOf(0) }
+        var unreadNotificationCount by remember { mutableIntStateOf(0) }
         val notificationsViewModel: NotificationsViewModel = viewModel()
         val onNotificationCountChanged: () -> Unit = {
             notificationsViewModel.getUnreadNotificationCount {
@@ -207,7 +208,7 @@ fun TraewelldroidApp(
         }
         var lastNotificationRequest by remember { mutableStateOf<LocalDateTime>(LocalDateTime.MIN) }
 
-        navController.addOnDestinationChangedListener { _, destination, args ->
+        navController.addOnDestinationChangedListener { _, _, _ ->
             val lastRequest = lastNotificationRequest
             val duration = Duration.between(lastRequest, LocalDateTime.now())
             if (duration.toMinutes() > 0) {

@@ -22,3 +22,4 @@ local.properties
 /key.properties
 /sentry.properties
 /dev.properties
+/**/release/*
