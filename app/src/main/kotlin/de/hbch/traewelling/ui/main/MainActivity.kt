@@ -31,6 +31,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
@@ -41,6 +42,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -123,11 +125,6 @@ class MainActivity : ComponentActivity()
         secureStorage = SecureStorage(this)
         emojiPackItemAdapter = EmojiPackItemAdapter.get(this)
         TraewellingApi.jwt = secureStorage.getObject(SharedValues.SS_JWT, String::class.java)!!
-
-        loggedInUserViewModel.getLoggedInUser()
-        loggedInUserViewModel.getLastVisitedStations {
-            publishStationShortcuts(this, it)
-        }
         eventViewModel.activeEvents()
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -181,10 +178,17 @@ fun TraewelldroidApp(
     checkInViewModel: CheckInViewModel
 ) {
     MainTheme {
+        val context = LocalContext.current
         val currentBackStack by navController.currentBackStackEntryAsState()
         val currentDestination = currentBackStack?.destination
         val currentScreen = SCREENS.find { it.route == currentDestination?.route } ?: Dashboard
         val loggedInUser by loggedInUserViewModel.loggedInUser.observeAsState()
+        val lastVisitedStations by loggedInUserViewModel.lastVisitedStations.observeAsState()
+        val homelandStation by loggedInUserViewModel.home.observeAsState()
+
+        LaunchedEffect(lastVisitedStations, homelandStation) {
+            context.publishStationShortcuts(homelandStation, lastVisitedStations)
+        }
 
         val appBarState = rememberTopAppBarState()
         val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(appBarState)

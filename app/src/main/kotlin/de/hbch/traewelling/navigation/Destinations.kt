@@ -7,7 +7,8 @@ import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import de.hbch.traewelling.R
 
-val TRWL_BASE_URI = "https://traewelling.de"
+const val TRWL_BASE_URI = "https://traewelling.de"
+const val TRAEWELLDROID_BASE_URI = "traewelldroid://app.traewelldroid.de"
 
 interface Destination {
     val label: Int
@@ -64,6 +65,9 @@ object PersonalProfile : MainDestination, ArgumentDestination, DeepLinkedDestina
     override val deepLinks = listOf(
         navDeepLink {
             uriPattern = "$TRWL_BASE_URI/@{username}"
+        },
+        navDeepLink {
+            uriPattern = "$TRAEWELLDROID_BASE_URI/@{username}"
         }
     )
 }
@@ -79,6 +83,9 @@ object DailyStatistics: ArgumentDestination, DeepLinkedDestination {
     override val deepLinks = listOf(
         navDeepLink {
             uriPattern = "$TRWL_BASE_URI/stats/daily/{date}"
+        },
+        navDeepLink {
+            uriPattern = "$TRAEWELLDROID_BASE_URI/stats/daily/{date}"
         }
     )
 }
@@ -97,6 +104,9 @@ object SearchConnection : ArgumentDestination, DeepLinkedDestination {
     override val deepLinks = listOf(
         navDeepLink {
             uriPattern = "$TRWL_BASE_URI/trains/stationboard?station={station}"
+        },
+        navDeepLink {
+            uriPattern = "$TRAEWELLDROID_BASE_URI/trains/stationboard?station={station}"
         }
     )
 }
@@ -139,6 +149,9 @@ object StatusDetails : ArgumentDestination, DeepLinkedDestination {
     override val deepLinks = listOf(
         navDeepLink {
             uriPattern = "$TRWL_BASE_URI/status/{statusId}"
+        },
+        navDeepLink {
+            uriPattern = "$TRAEWELLDROID_BASE_URI/status/{statusId}"
         }
     )
 }
