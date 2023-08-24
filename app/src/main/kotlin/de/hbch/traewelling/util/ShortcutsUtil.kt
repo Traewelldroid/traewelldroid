@@ -2,37 +2,66 @@ package de.hbch.traewelling.util
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ShortcutInfo
+import android.content.pm.ShortcutManager
+import android.graphics.drawable.Icon
 import android.net.Uri
-import androidx.core.content.pm.ShortcutInfoCompat
-import androidx.core.content.pm.ShortcutManagerCompat
-import androidx.core.graphics.drawable.IconCompat
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.station.Station
+import java.lang.Exception
 
-private const val HOME = "home"
+const val HOME = "0"
 
-fun Station.toShortCut(context: Context, home: Boolean = false): ShortcutInfoCompat {
-    val icon = if (home) R.drawable.ic_home else R.drawable.ic_history
-    return ShortcutInfoCompat.Builder(context, if (home) HOME else ibnr)
-        .setShortLabel(name)
-        .setIcon(IconCompat.createWithResource(context, icon))
+
+fun Station.toShortcut(context: Context, shortcutId: String, home: Boolean = false): ShortcutInfo {
+    val icon = if (home) R.mipmap.ic_shortcut_home else R.mipmap.ic_shortcut_history
+    val shortcutLabel = if (home) "$name (${context.getString(R.string.home)})" else name
+    return ShortcutInfo.Builder(context, shortcutId)
+        .setShortLabel(shortcutLabel)
+        .setIcon(Icon.createWithResource(context, icon))
         .setIntent(
             Intent(
                 Intent.ACTION_VIEW,
-                Uri.parse("https://traewelling.de/trains/stationboard?station=${ibnr}")
+                Uri.Builder()
+                    .scheme("traewelldroid")
+                    .authority("app.traewelldroid.de")
+                    .appendPath("trains")
+                    .appendPath("stationboard")
+                    .appendQueryParameter("station", ibnr)
+                    .build()
             )
         )
         .build()
 }
 
-fun publishStationShortcuts(context: Context, stations: List<Station>) {
-    val shortcuts = stations.map {
-        it.toShortCut(context)
-    }
+fun Context.publishStationShortcuts(
+    homelandStation: Station?,
+    recentStations: List<Station>?
+): Boolean {
+    if (homelandStation != null && recentStations != null) {
+        val shortcutManager: ShortcutManager? = getSystemService(ShortcutManager::class.java)
+        if (shortcutManager != null) {
+            // Remove stale shortcuts
+            val shortcutsToBeRemoved = shortcutManager
+                .dynamicShortcuts
+                .map { it.id }
+                .filter { it.length > 1 }
+            shortcutManager.removeDynamicShortcuts(shortcutsToBeRemoved)
 
-    try {
-        ShortcutManagerCompat.addDynamicShortcuts(context, shortcuts)
-    } catch (ex: IllegalArgumentException) {
-        // nothing to do then
+            val shortcuts = mutableListOf<ShortcutInfo>()
+            shortcuts.add(homelandStation.toShortcut(this, HOME, true))
+            shortcuts.addAll(
+                recentStations
+                    .take(3)
+                    .mapIndexed { index, station ->
+                        station.toShortcut(this, index.toString(), false)
+                    }
+            )
+            try {
+                return shortcutManager.addDynamicShortcuts(shortcuts)
+            } catch (_: Exception) {
+            }
+        }
     }
+    return false
 }

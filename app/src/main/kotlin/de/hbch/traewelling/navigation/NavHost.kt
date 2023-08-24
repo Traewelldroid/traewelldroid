@@ -3,12 +3,12 @@ package de.hbch.traewelling.navigation
 import android.app.Activity
 import android.app.PendingIntent
 import android.content.Intent
+import android.content.pm.ShortcutManager
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -36,9 +36,10 @@ import de.hbch.traewelling.ui.statistics.DailyStatistics
 import de.hbch.traewelling.ui.statistics.Statistics
 import de.hbch.traewelling.ui.statusDetail.StatusDetail
 import de.hbch.traewelling.ui.user.Profile
+import de.hbch.traewelling.util.HOME
 import de.hbch.traewelling.util.popBackStackAndNavigate
 import de.hbch.traewelling.util.shareStatus
-import de.hbch.traewelling.util.toShortCut
+import de.hbch.traewelling.util.toShortcut
 import java.time.LocalDate
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -315,20 +316,18 @@ fun TraewelldroidNavHost(
                     )
                 },
                 onHomelandSelected = { station ->
-                    if (ShortcutManagerCompat.isRequestPinShortcutSupported(context)) {
-                        val shortcut = station.toShortCut(context, home = true)
-                        val pinnedShortcutCallbackIntent =
-                            ShortcutManagerCompat.createShortcutResultIntent(context, shortcut)
-
+                    val shortcutManager: ShortcutManager?
+                        = context.getSystemService(ShortcutManager::class.java)
+                    if (shortcutManager != null) {
+                        val shortcut = station.toShortcut(context, HOME, true)
+                        val intent = shortcutManager.createShortcutResultIntent(shortcut)
                         val successCallback = PendingIntent.getBroadcast(
-                            context, /* request code */ 0,
-                            pinnedShortcutCallbackIntent, PendingIntent.FLAG_IMMUTABLE
+                            context,
+                            0,
+                            intent,
+                            PendingIntent.FLAG_IMMUTABLE
                         )
-
-                        ShortcutManagerCompat.requestPinShortcut(
-                            context, shortcut,
-                            successCallback.intentSender
-                        )
+                        shortcutManager.requestPinShortcut(shortcut, successCallback.intentSender)
                     }
                 }
             )
