@@ -6,6 +6,11 @@ This is a community app for the open source project
 [![Übersetzungsstatus](https://translate.codeberg.org/widgets/traewelldroid/-/svg-badge.svg)](https://translate.codeberg.org/engage/traewelldroid/)
 [![Gitmoji](https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg)](https://gitmoji.dev)
 
+## Find us on
+- [traewelldroid.de](https://traewelldroid.de)
+- <a href="https://zug.network/@traewelldroid" rel="nofollow me">Mastodon</a>
+- [Twitter](https://twitter.com/@traewelldroid)
+
 ## How it is developed
 
 The app is using the official AndroidX framework by Google. Crashes of the app are detected and
