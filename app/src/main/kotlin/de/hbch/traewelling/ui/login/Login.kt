@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -23,6 +24,7 @@ import de.hbch.traewelling.R
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.theme.Traewelldroid
 import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
+import de.hbch.traewelling.ui.composables.EnableNotificationsSwitch
 import de.hbch.traewelling.ui.composables.OutlinedButtonWithIconAndText
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -59,11 +61,22 @@ fun LoginScreen(
                 color = Color.White,
                 modifier = horizontalPadding.padding(top = 32.dp)
             )
+            Card(
+                modifier = horizontalPadding.padding(top = 32.dp)
+            ) {
+                Box(
+                    modifier = Modifier.padding(8.dp).fillMaxWidth()
+                ) {
+                    EnableNotificationsSwitch(
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            }
             ButtonWithIconAndText(
                 stringId = R.string.login_oauth,
                 drawableId = R.drawable.ic_popup,
                 onClick = loginAction,
-                modifier = horizontalPadding.padding(top = 32.dp),
+                modifier = horizontalPadding.padding(top = 16.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xFFC72730),
                     contentColor = Color.White

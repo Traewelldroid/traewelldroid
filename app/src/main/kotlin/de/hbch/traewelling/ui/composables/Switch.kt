@@ -1,5 +1,7 @@
 package de.hbch.traewelling.ui.composables
 
+import android.Manifest
+import android.os.Build
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
@@ -9,6 +11,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -19,6 +23,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.PermissionStatus
+import com.google.accompanist.permissions.rememberPermissionState
 import de.hbch.traewelling.R
 import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.MainTheme
@@ -58,6 +65,45 @@ fun SwitchWithIconAndText(
             }
         )
     }
+}
+
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+fun EnableNotificationsSwitch(
+    modifier: Modifier = Modifier
+) {
+    var enableNotifications by remember { mutableStateOf(false) }
+    var onCheckedChange: (Boolean) -> Unit = { enableNotifications = it }
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        val notificationPermissionState =
+            rememberPermissionState(Manifest.permission.POST_NOTIFICATIONS)
+        var pressedSwitch by remember { mutableStateOf(false) }
+        val permissionGranted by remember { derivedStateOf { notificationPermissionState.status == PermissionStatus.Granted } }
+
+        LaunchedEffect(permissionGranted) {
+            if (permissionGranted && pressedSwitch) {
+                enableNotifications = true
+            }
+        }
+
+        onCheckedChange = {
+            pressedSwitch = true
+            if (!permissionGranted) {
+                notificationPermissionState.launchPermissionRequest()
+            } else {
+                enableNotifications = it
+            }
+        }
+    }
+
+    SwitchWithIconAndText(
+        modifier = modifier,
+        checked = enableNotifications,
+        onCheckedChange = onCheckedChange,
+        drawableId = R.drawable.ic_notification,
+        stringId = R.string.enable_push_notifications
+    )
 }
 
 @Preview(showBackground = true)

@@ -201,4 +201,5 @@
     <string name="select_tag_type">Select tag type</string>
     <string name="all_tags_already_added">All tags have already been added. You can edit a tag by selecting it from the overview.</string>
     <string name="check_ins">Check ins</string>
+    <string name="enable_push_notifications">Enable push notifications</string>
 </resources>

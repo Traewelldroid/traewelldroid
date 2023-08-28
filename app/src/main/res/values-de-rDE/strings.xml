@@ -196,4 +196,5 @@
     <string name="select_tag_type">Tagart auswählen</string>
     <string name="all_tags_already_added">Es wurden bereits alle verfügbaren Tags hinzugefügt. Du kannst einen Tag bearbeiten, indem du ihn in der Übersicht auswählst.</string>
     <string name="check_ins">Check-Ins</string>
+    <string name="enable_push_notifications">Push-Benachrichtigungen aktivieren</string>
 </resources>
