@@ -1,11 +1,13 @@
 package de.hbch.traewelling.shared
 
 object SharedValues {
-    const val SS_JWT: String = "JWT"
+    const val SS_JWT = "JWT"
+    const val SS_REFRESH_TOKEN = "REFRESH_TOKEN"
     const val SS_HASHTAG = "HASHTAG"
     const val SS_ORM_LAYER = "ORM_LAYER"
     const val SS_UP_ENDPOINT = "UP_ENDPOINT"
     const val SS_WEBHOOK_USER_ID = "WEBHOOK_USER_ID"
+    const val SS_TRWL_WEBHOOK_ID = "TRWL_WEBHOOK_ID"
     const val SS_NOTIFICATIONS_ENABLED = "NOTIFICATIONS_ENABLED"
 
 
@@ -33,6 +35,6 @@ object SharedValues {
         "write-settings-calendar"
     )
 
-    val URL_AUTHORIZATION = "https://traewelling.de/oauth/authorize"
-    val URL_TOKEN_EXCHANGE = "https://traewelling.de/oauth/token"
+    const val URL_AUTHORIZATION = "https://traewelling.de/oauth/authorize"
+    const val URL_TOKEN_EXCHANGE = "https://traewelling.de/oauth/token"
 }

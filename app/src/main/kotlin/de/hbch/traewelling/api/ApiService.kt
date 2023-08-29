@@ -79,6 +79,11 @@ interface AuthService {
 
     @GET("trains/station/history")
     fun getLastVisitedStations(): Call<Data<List<Station>>>
+
+    @DELETE("webhook/{id}")
+    fun deleteWebhook(
+        @Path("id") id: Int
+    ): Call<Unit>
 }
 
 interface StatisticsService {

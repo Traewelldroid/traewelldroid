@@ -89,22 +89,34 @@ class LoggedInUserViewModel : ViewModel() {
 
     fun logoutWithRestart(context: Context) {
         val secureStorage = SecureStorage(context)
+        val webhookUserId = secureStorage.getObject(SharedValues.SS_WEBHOOK_USER_ID, String::class.java)
+        val webhookId = secureStorage.getObject(SharedValues.SS_TRWL_WEBHOOK_ID, Int::class.java)
 
-        val id = secureStorage.getObject(SharedValues.SS_WEBHOOK_USER_ID, String::class.java)
-        deleteWebhookUser(id ?: "") {
-            logout(
-                {
-                    secureStorage.removeObject(SharedValues.SS_UP_ENDPOINT)
-                    secureStorage.removeObject(SharedValues.SS_WEBHOOK_USER_ID)
-                    secureStorage.removeObject(SharedValues.SS_JWT)
-                    secureStorage.removeObject(SharedValues.SS_NOTIFICATIONS_ENABLED)
-                    UnifiedPush.unregisterApp(context)
-                    context.startActivity(Intent(context, LoginActivity::class.java))
-                    (context as? Activity)?.finish()
-                },
-                { }
-            )
+        deleteWebhookUser(webhookUserId ?: "") {
+            deleteWebhook(webhookId ?: -1) {
+                logout(
+                    {
+                        resetApplication(context)
+                    },
+                    {
+                        resetApplication(context)
+                    }
+                )
+            }
         }
+    }
+
+    fun resetApplication(context: Context) {
+        val secureStorage = SecureStorage(context)
+        secureStorage.removeObject(SharedValues.SS_UP_ENDPOINT)
+        secureStorage.removeObject(SharedValues.SS_WEBHOOK_USER_ID)
+        secureStorage.removeObject(SharedValues.SS_JWT)
+        secureStorage.removeObject(SharedValues.SS_NOTIFICATIONS_ENABLED)
+        secureStorage.removeObject(SharedValues.SS_REFRESH_TOKEN)
+        secureStorage.removeObject(SharedValues.SS_TRWL_WEBHOOK_ID)
+        UnifiedPush.unregisterApp(context)
+        context.startActivity(Intent(context, LoginActivity::class.java))
+        (context as? Activity)?.finish()
     }
 
     private fun deleteWebhookUser(
@@ -118,7 +130,22 @@ class LoggedInUserViewModel : ViewModel() {
                 }
 
                 override fun onFailure(call: Call<Unit>, t: Throwable) {
-                    Sentry.captureException(t)
+                    callback()
+                }
+            })
+    }
+
+    private fun deleteWebhook(
+        id: Int,
+        callback: () -> Unit
+    ) {
+        TraewellingApi.authService.deleteWebhook(id)
+            .enqueue(object: Callback<Unit> {
+                override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
+                    callback()
+                }
+
+                override fun onFailure(call: Call<Unit>, t: Throwable) {
                     callback()
                 }
             })

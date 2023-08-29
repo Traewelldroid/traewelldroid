@@ -17,10 +17,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.MutableLiveData
-import com.google.gson.GsonBuilder
 import com.jcloquell.androidsecurestorage.SecureStorage
 import de.hbch.traewelling.BuildConfig
 import de.hbch.traewelling.R
+import de.hbch.traewelling.api.getGson
 import de.hbch.traewelling.api.models.webhook.WebhookCreateResponse
 import de.hbch.traewelling.api.models.webhook.WebhookUserCreateRequest
 import de.hbch.traewelling.shared.SharedValues
@@ -176,9 +176,10 @@ class LoginActivity : ComponentActivity() {
             authorizationService.performTokenRequest(tokenExchangeRequest) { response, _ ->
                 if (response?.accessToken != null) {
                     secureStorage.storeObject(SharedValues.SS_JWT, response.accessToken!!)
+                    secureStorage.storeObject(SharedValues.SS_REFRESH_TOKEN, response.refreshToken ?: "")
                     secureStorage.storeObject(SharedValues.SS_NOTIFICATIONS_ENABLED, notificationsEnabled)
                     if (notificationsEnabled) {
-                        val webhookResponse = GsonBuilder().create().fromJson(
+                        val webhookResponse = getGson().fromJson(
                             response.additionalParameters["webhook"],
                             WebhookCreateResponse::class.java
                         )
@@ -210,6 +211,7 @@ class LoginActivity : ComponentActivity() {
                 webhookUser,
                 { id ->
                     secureStorage.storeObject(SharedValues.SS_WEBHOOK_USER_ID, id)
+                    secureStorage.storeObject(SharedValues.SS_TRWL_WEBHOOK_ID, webhookUser.webhookId)
                     redirectToMainActivity()
                 },
                 {

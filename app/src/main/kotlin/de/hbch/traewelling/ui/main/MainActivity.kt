@@ -73,7 +73,6 @@ import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.shared.SharedValues
 import de.hbch.traewelling.theme.LocalColorScheme
 import de.hbch.traewelling.theme.MainTheme
-import de.hbch.traewelling.ui.login.LoginActivity
 import de.hbch.traewelling.ui.notifications.NotificationsViewModel
 import de.hbch.traewelling.util.popBackStackAndNavigate
 import de.hbch.traewelling.util.publishStationShortcuts
@@ -109,15 +108,7 @@ class MainActivity : ComponentActivity()
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUnauthorizedEvent(@Suppress("UNUSED_PARAMETER") unauthorizedEvent: UnauthorizedEvent) {
-        startActivity(
-            Intent(
-                this,
-                LoginActivity::class.java
-            )
-        )
-        secureStorage.removeObject(SharedValues.SS_JWT)
-        TraewellingApi.jwt = ""
-        finish()
+        loggedInUserViewModel.resetApplication(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
