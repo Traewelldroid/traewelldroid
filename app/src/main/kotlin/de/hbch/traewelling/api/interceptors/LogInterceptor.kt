@@ -12,7 +12,6 @@ class LogInterceptor : Interceptor {
         val response = chain.proceed(request)
 
         val ignoredCodes = listOf(401, 409)
-
         val path = request.url.encodedPath
 
         if (!response.isSuccessful && !ignoredCodes.contains(response.code)) {
@@ -28,7 +27,6 @@ class LogInterceptor : Interceptor {
                 scope.setExtra("requestBody", requestBody)
             }
         }
-
         return response
     }
 }

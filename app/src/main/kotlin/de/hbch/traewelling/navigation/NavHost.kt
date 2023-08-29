@@ -40,6 +40,7 @@ import de.hbch.traewelling.util.HOME
 import de.hbch.traewelling.util.popBackStackAndNavigate
 import de.hbch.traewelling.util.shareStatus
 import de.hbch.traewelling.util.toShortcut
+import org.unifiedpush.android.connector.UnifiedPush.unregisterApp
 import java.time.LocalDate
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -227,11 +228,17 @@ fun TraewelldroidNavHost(
                 loggedInUserViewModel = loggedInUserViewModel,
                 emojiPackItemAdapter = (context as? MainActivity)?.emojiPackItemAdapter,
                 traewellingLogoutAction = {
-                    loggedInUserViewModel.logout( {
-                        secureStorage.removeObject(SharedValues.SS_JWT)
-                        context.startActivity(Intent(context, LoginActivity::class.java))
-                        (context as? Activity)?.finish()
-                    }, {})
+                    val id = secureStorage.getObject(SharedValues.SS_WEBHOOK_USER_ID, String::class.java)
+                    loggedInUserViewModel.deleteWebhookUser(id ?: "") {
+                        loggedInUserViewModel.logout({
+                            secureStorage.removeObject(SharedValues.SS_UP_ENDPOINT)
+                            secureStorage.removeObject(SharedValues.SS_WEBHOOK_USER_ID)
+                            secureStorage.removeObject(SharedValues.SS_JWT)
+                            unregisterApp(context)
+                            context.startActivity(Intent(context, LoginActivity::class.java))
+                            (context as? Activity)?.finish()
+                        }, {})
+                    }
                 }
             )
             onMenuChange(listOf())

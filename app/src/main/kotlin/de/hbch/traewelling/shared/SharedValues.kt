@@ -1,14 +1,11 @@
 package de.hbch.traewelling.shared
 
 object SharedValues {
-    val SS_JWT: String = "JWT"
-    val SS_HASHTAG = "HASHTAG"
-    val SS_ORM_LAYER = "ORM_LAYER"
-
-    val EXTRA_STATUS_ID = "STATUS_ID"
-    val EXTRA_USER_NAME = "USER_NAME"
-    val EXTRA_STATION_ID = "EXTRA_STATION_ID"
-    val EXTRA_TRAVEL_TYPE = "EXTRA_TRAVEL_TYPE"
+    const val SS_JWT: String = "JWT"
+    const val SS_HASHTAG = "HASHTAG"
+    const val SS_ORM_LAYER = "ORM_LAYER"
+    const val SS_UP_ENDPOINT = "UP_ENDPOINT"
+    const val SS_WEBHOOK_USER_ID = "WEBHOOK_USER_ID"
 
     val AUTH_SCOPES = listOf(
         "read-statuses",

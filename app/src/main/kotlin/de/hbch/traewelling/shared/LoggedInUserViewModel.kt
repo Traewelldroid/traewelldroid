@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import de.hbch.traewelling.api.TraewellingApi
+import de.hbch.traewelling.api.WebhookRelayApi
 import de.hbch.traewelling.api.models.Data
 import de.hbch.traewelling.api.models.station.Station
 import de.hbch.traewelling.api.models.status.StatusVisibility
@@ -76,6 +77,23 @@ class LoggedInUserViewModel : ViewModel() {
                 override fun onFailure(call: Call<Unit>, t: Throwable) {
                     failureCallback()
                     Sentry.captureException(t)
+                }
+            })
+    }
+
+    fun deleteWebhookUser(
+        id: String,
+        callback: () -> Unit
+    ) {
+        WebhookRelayApi.service.deleteWebhookUser(id)
+            .enqueue(object: Callback<Unit> {
+                override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
+                    callback()
+                }
+
+                override fun onFailure(call: Call<Unit>, t: Throwable) {
+                    Sentry.captureException(t)
+                    callback()
                 }
             })
     }

@@ -1,22 +1,23 @@
 package de.hbch.traewelling.api.models.notifications
 
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.navigation.NavHostController
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import de.hbch.traewelling.R
+import de.hbch.traewelling.util.TraewelldroidUriBuilder
 
 @Suppress("unused")
 enum class NotificationType {
     EventSuggestionProcessed {
         override val icon = R.drawable.ic_calendar
-        @Composable
-        override fun getHeadline(notification: Notification): String  {
-            return stringResource(id = R.string.event_suggestion_processed)
+        override val channel = NotificationChannelType.EventSuggestion
+        override fun getHeadline(context: Context, notification: Notification): String  {
+            return context.getString(R.string.event_suggestion_processed)
         }
-        @Composable
-        override fun getBody(notification: Notification): String {
+        override fun getBody(context: Context, notification: Notification): String {
             val gson = Gson()
             val data = notification.data
             val targetType = object: TypeToken<EventSuggestionProcessedData>() {}.type
@@ -29,19 +30,19 @@ enum class NotificationType {
                     else
                         R.string.event_suggestion_rejected
 
-                body = stringResource(id = stringRes, obj.suggestedName)
+                body = context.getString(stringRes, obj.suggestedName)
             }
             return body
         }
     },
     FollowRequestIssued {
         override val icon = R.drawable.ic_add_person
-        @Composable
-        override fun getHeadline(notification: Notification): String  {
+        override val channel = NotificationChannelType.Follows
+        override fun getHeadline(context: Context, notification: Notification): String  {
             val obj = getData(notification)
             var headline = ""
             if (obj != null) {
-                headline = stringResource(id = R.string.follow_request_issued, obj.user.username)
+                headline = context.getString(R.string.follow_request_issued, obj.user.username)
             }
             return headline
         }
@@ -54,6 +55,22 @@ enum class NotificationType {
                 }
             }
             return onClick
+        }
+        override fun getIntent(context: Context, notification: Notification): Intent? {
+            val data = getData(notification)
+            var intent: Intent? = null
+            if (data != null) {
+                intent = Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.Builder()
+                        .scheme("https")
+                        .authority("traewelling.de")
+                        .appendPath("settings")
+                        .appendPath("follower")
+                        .build()
+                )
+            }
+            return intent
         }
 
         private fun getData(notification: Notification): FollowRequestData? {
@@ -65,12 +82,15 @@ enum class NotificationType {
     },
     FollowRequestApproved {
         override val icon = R.drawable.ic_add_person
-        @Composable
-        override fun getHeadline(notification: Notification): String  {
+        override val channel = NotificationChannelType.Follows
+        override fun getHeadline(context: Context, notification: Notification): String  {
             val obj = getData(notification)
             var headline = ""
             if (obj != null) {
-                headline = stringResource(id = R.string.follow_request_approved, obj.user.username)
+                headline = context.getString(
+                    R.string.follow_request_approved,
+                    obj.user.username
+                )
             }
             return headline
         }
@@ -84,6 +104,19 @@ enum class NotificationType {
             }
             return onClick
         }
+        override fun getIntent(context: Context, notification: Notification): Intent? {
+            val data = getData(notification)
+            var intent: Intent? = null
+            if (data != null) {
+                intent = Intent(
+                    Intent.ACTION_VIEW,
+                    TraewelldroidUriBuilder()
+                        .appendPath("@${data.user.username}")
+                        .build()
+                )
+            }
+            return intent
+        }
 
         private fun getData(notification: Notification): FollowRequestData? {
             val gson = Gson()
@@ -94,21 +127,28 @@ enum class NotificationType {
     },
     StatusLiked {
         override val icon = R.drawable.ic_faved
-        @Composable
-        override fun getHeadline(notification: Notification): String  {
+        override val channel = NotificationChannelType.Likes
+        override fun getHeadline(context: Context, notification: Notification): String  {
             val obj = getData(notification)
             var headline = ""
             if (obj != null) {
-                headline = stringResource(id = R.string.user_likes_status, obj.liker.username)
+                headline = context.getString(
+                    R.string.user_likes_status,
+                    obj.liker.username
+                )
             }
             return headline
         }
-        @Composable
-        override fun getBody(notification: Notification): String  {
+        override fun getBody(context: Context, notification: Notification): String  {
             val obj = getData(notification)
             var body = ""
             if (obj != null) {
-                body = stringResource(id = R.string.travelling_with_from_to, obj.trip.lineName, obj.trip.origin.name, obj.trip.destination.name)
+                body = context.getString(
+                    R.string.travelling_with_from_to,
+                    obj.trip.lineName,
+                    obj.trip.origin.name,
+                    obj.trip.destination.name
+                )
             }
             return body
         }
@@ -122,6 +162,20 @@ enum class NotificationType {
             }
             return onClick
         }
+        override fun getIntent(context: Context, notification: Notification): Intent? {
+            val data = getData(notification)
+            var intent: Intent? = null
+            if (data != null) {
+                intent = Intent(
+                    Intent.ACTION_VIEW,
+                    TraewelldroidUriBuilder()
+                        .appendPath("status")
+                        .appendPath(data.status.id.toString())
+                        .build()
+                )
+            }
+            return intent
+        }
 
         private fun getData(notification: Notification): StatusLikedNotificationData? {
             val gson = Gson()
@@ -132,12 +186,12 @@ enum class NotificationType {
     },
     UserFollowed {
         override val icon = R.drawable.ic_add_person
-        @Composable
-        override fun getHeadline(notification: Notification): String  {
+        override val channel = NotificationChannelType.Follows
+        override fun getHeadline(context: Context, notification: Notification): String  {
             val obj = getData(notification)
             var headline = ""
             if (obj != null) {
-                headline = stringResource(id = R.string.user_followed, obj.follower.username)
+                headline = context.getString(R.string.user_followed, obj.follower.username)
             }
             return headline
         }
@@ -151,6 +205,19 @@ enum class NotificationType {
             }
             return onClick
         }
+        override fun getIntent(context: Context, notification: Notification): Intent? {
+            val data = getData(notification)
+            var intent: Intent? = null
+            if (data != null) {
+                intent = Intent(
+                    Intent.ACTION_VIEW,
+                    TraewelldroidUriBuilder()
+                        .appendPath("@${data.follower.username}")
+                        .build()
+                )
+            }
+            return intent
+        }
 
         private fun getData(notification: Notification): UserFollowedData? {
             val gson = Gson()
@@ -161,21 +228,25 @@ enum class NotificationType {
     },
     UserJoinedConnection {
         override val icon = R.drawable.ic_also_check_in
-        @Composable
-        override fun getHeadline(notification: Notification): String  {
+        override val channel = NotificationChannelType.JoinedUsers
+        override fun getHeadline(context: Context, notification: Notification): String  {
             val obj = getData(notification)
             var headline = ""
             if (obj != null) {
-                headline = stringResource(id = R.string.user_also_on_connection, obj.user.username)
+                headline = context.getString(R.string.user_also_on_connection, obj.user.username)
             }
             return headline
         }
-        @Composable
-        override fun getBody(notification: Notification): String  {
+        override fun getBody(context: Context, notification: Notification): String  {
             var body = ""
             val obj = getData(notification)
             if (obj != null) {
-                body = stringResource(id = R.string.travelling_with_from_to, obj.checkin.lineName, obj.checkin.origin, obj.checkin.destination)
+                body = context.getString(
+                    R.string.travelling_with_from_to,
+                    obj.checkin.lineName,
+                    obj.checkin.origin,
+                    obj.checkin.destination
+                )
             }
             return body
         }
@@ -189,6 +260,20 @@ enum class NotificationType {
             }
             return onClick
         }
+        override fun getIntent(context: Context, notification: Notification): Intent? {
+            val data = getData(notification)
+            var intent: Intent? = null
+            if (data != null) {
+                intent = Intent(
+                    Intent.ACTION_VIEW,
+                    TraewelldroidUriBuilder()
+                        .appendPath("status")
+                        .appendPath(data.status.id.toString())
+                        .build()
+                )
+            }
+            return intent
+        }
 
         private fun getData(notification: Notification): UserJoinedConnectionData? {
             val gson = Gson()
@@ -199,12 +284,13 @@ enum class NotificationType {
     },
     MastodonNotSent {
         override val icon = R.drawable.ic_error
-        @Composable
-        override fun getHeadline(notification: Notification): String  {
+        override val channel = NotificationChannelType.MastodonError
+        override val category = android.app.Notification.CATEGORY_ERROR
+        override fun getHeadline(context: Context, notification: Notification): String  {
             val obj = getData(notification)
             var headline = ""
             if (obj != null) {
-                headline = stringResource(id = R.string.status_not_shared_on_mastodon, obj.status.id)
+                headline = context.getString(R.string.status_not_shared_on_mastodon, obj.status.id)
             }
             return headline
         }
@@ -218,6 +304,20 @@ enum class NotificationType {
             }
             return onClick
         }
+        override fun getIntent(context: Context, notification: Notification): Intent? {
+            val data = getData(notification)
+            var intent: Intent? = null
+            if (data != null) {
+                intent = Intent(
+                    Intent.ACTION_VIEW,
+                    TraewelldroidUriBuilder()
+                        .appendPath("status")
+                        .appendPath(data.status.id.toString())
+                        .build()
+                )
+            }
+            return intent
+        }
 
         private fun getData(notification: Notification): MastodonNotSentData? {
             val gson = Gson()
@@ -228,9 +328,10 @@ enum class NotificationType {
     };
 
     abstract val icon: Int
-    @Composable
-    abstract fun getHeadline(notification: Notification): String
-    @Composable
-    open fun getBody(notification: Notification): String? = null
+    abstract val channel: NotificationChannelType
+    open val category: String = android.app.Notification.CATEGORY_SOCIAL
+    abstract fun getHeadline(context: Context, notification: Notification): String
+    open fun getBody(context: Context, notification: Notification): String? = null
     open fun getOnClick(notification: Notification): (NavHostController) -> Unit = { }
+    open fun getIntent(context: Context, notification: Notification): Intent? = null
 }

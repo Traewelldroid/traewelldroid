@@ -163,7 +163,7 @@
     <string name="user_also_on_connection">\@%1$s joined your connection!</string>
     <string name="travelling_with_from_to">Ride with %1$s from %2$s to %3$s</string>
     <string name="follow_request_approved">\@%1$s approved your follow request!</string>
-    <string name="follow_request_issued">\a%1$s would like to follow you!</string>
+    <string name="follow_request_issued">\@%1$s would like to follow you!</string>
     <string name="status_not_shared_on_mastodon">Your check-in wasn\'t shared to Mastodon due to error %1$d.</string>
     <string name="map_view">Map view</string>
     <string name="configure_map">Here you can configure the map view.</string>
@@ -202,4 +202,16 @@
     <string name="all_tags_already_added">All tags have already been added. You can edit a tag by selecting it from the overview.</string>
     <string name="check_ins">Check ins</string>
     <string name="enable_push_notifications">Enable push notifications</string>
+    <string name="channel_mastodon_errors">Mastodon errors</string>
+    <string name="channel_description_mastodon_errors">Errors when sharing check-ins to Mastodon</string>
+    <string name="channel_joined_users">Co-travellers</string>
+    <string name="channel_description_joined_users">Users joining your checked-in travel connections</string>
+    <string name="channel_follows">Follows</string>
+    <string name="channel_description_follows">Follows, follow requests, …</string>
+    <string name="channel_event_suggestions">Event suggestions</string>
+    <string name="channel_description_event_suggestions">Processed event suggestions</string>
+    <string name="channel_likes">Likes</string>
+    <string name="channel_description_likes">Users liking your check-ins</string>
+    <string name="select_up_distributor">Select Unified Push distributor</string>
+    <string name="no_up_distributor_found">No Unified Push distributor was found. Please install one of your choice and restart the app.</string>
 </resources>

@@ -159,7 +159,7 @@
     <string name="user_also_on_connection">\@%1$s ist auch in deiner Verbindung!</string>
     <string name="travelling_with_from_to">Fahrt mit %1$s von %2$s nach %3$s</string>
     <string name="follow_request_approved">\@%1$s hat deine Folgeanfrage bestätigt!</string>
-    <string name="follow_request_issued">\a%1$s möchte dir folgen!</string>
+    <string name="follow_request_issued">\@%1$s möchte dir folgen!</string>
     <string name="status_not_shared_on_mastodon">Dein Check-In wurde aufgrund von Fehler %1$d nicht auf Mastodon geteilt.</string>
     <string name="map_view">Kartenansicht</string>
     <string name="configure_map">Hier kannst du die Kartenansicht konfigurieren.</string>
@@ -197,4 +197,16 @@
     <string name="all_tags_already_added">Es wurden bereits alle verfügbaren Tags hinzugefügt. Du kannst einen Tag bearbeiten, indem du ihn in der Übersicht auswählst.</string>
     <string name="check_ins">Check-Ins</string>
     <string name="enable_push_notifications">Push-Benachrichtigungen aktivieren</string>
+    <string name="channel_mastodon_errors">Mastodon-Fehler</string>
+    <string name="channel_description_mastodon_errors">Auftretende Fehler beim Teilen zu Mastodon</string>
+    <string name="channel_joined_users">Mitreisende</string>
+    <string name="channel_description_joined_users">Nutzer:innen, die sich auch in deinen eingecheckten Verbindungen befinden</string>
+    <string name="channel_follows">Folgen</string>
+    <string name="channel_description_follows">Folgeanfragen, Nutzer:innen, die dir folgen, …</string>
+    <string name="channel_event_suggestions">Eventvorschläge</string>
+    <string name="channel_description_event_suggestions">Bearbeitete Eventvorschläge</string>
+    <string name="channel_likes">Gefällt mir-Angaben</string>
+    <string name="channel_description_likes">Nutzer:innen, denen deine Check-Ins gefallen</string>
+    <string name="select_up_distributor">Unified Push-Distributor wählen</string>
+    <string name="no_up_distributor_found">Es wurde kein Unified Push Distributor gefunden. Bitte installiere einen deiner Wahl und starte die App neu.</string>
 </resources>

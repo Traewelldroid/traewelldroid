@@ -14,10 +14,15 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.MutableLiveData
+import com.google.gson.GsonBuilder
 import com.jcloquell.androidsecurestorage.SecureStorage
 import de.hbch.traewelling.BuildConfig
 import de.hbch.traewelling.R
+import de.hbch.traewelling.api.models.webhook.WebhookCreateResponse
+import de.hbch.traewelling.api.models.webhook.WebhookUserCreateRequest
 import de.hbch.traewelling.shared.SharedValues
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.info.InfoActivity
@@ -35,27 +40,37 @@ import java.security.SecureRandom
 
 class LoginActivity : ComponentActivity() {
 
+    private lateinit var secureStorage: SecureStorage
+    private lateinit var authorizationServiceConfig: AuthorizationServiceConfiguration
     private lateinit var authorizationLauncher: ActivityResultLauncher<Intent>
     private lateinit var authorizationService : AuthorizationService
     private lateinit var authIntent: Intent
+    private var notificationsEnabled: Boolean = false
+    private val isLoading = MutableLiveData(false)
+    private val loginViewModel: LoginViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        initAuth()
+        secureStorage = SecureStorage(this)
+        initAuthInitial()
 
         setContent {
             MainTheme {
                 LoginScreen(
-                    loginAction = { initiateOAuthPKCELogin() },
-                    informationAction = { showInfoActivity() }
+                    loginAction = {
+                        notificationsEnabled = it
+                        initiateOAuthPKCELogin()
+                    },
+                    informationAction = { showInfoActivity() },
+                    loadingData = isLoading
                 )
             }
         }
     }
 
-    private fun initAuth() {
-        val authServiceConfig = AuthorizationServiceConfiguration(
+    private fun initAuthInitial() {
+        authorizationServiceConfig = AuthorizationServiceConfiguration(
             Uri.parse(SharedValues.URL_AUTHORIZATION),
             Uri.parse(SharedValues.URL_TOKEN_EXCHANGE)
         )
@@ -73,6 +88,19 @@ class LoginActivity : ComponentActivity() {
             application,
             appAuthConfiguration
         )
+
+        authorizationLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()){
+                result ->
+            run {
+                if (result.resultCode == Activity.RESULT_OK) {
+                    handleAuthorizationResponse(result.data!!)
+                }
+            }
+        }
+    }
+
+    private fun initAuthRequest() {
         val secureRandom = SecureRandom()
         val bytes = ByteArray(64)
         secureRandom.nextBytes(bytes)
@@ -85,7 +113,7 @@ class LoginActivity : ComponentActivity() {
         val codeChallenge = Base64.encodeToString(hash, encoding)
 
         val builder = AuthorizationRequest.Builder(
-            authServiceConfig,
+            authorizationServiceConfig,
             BuildConfig.OAUTH_CLIENT_ID,
             ResponseTypeValues.CODE,
             Uri.parse(BuildConfig.OAUTH_REDIRECT_URL)
@@ -98,22 +126,22 @@ class LoginActivity : ComponentActivity() {
             )
             .setScopes(SharedValues.AUTH_SCOPES)
             .setPrompt("consent")
+        if (notificationsEnabled) {
+            builder.setAdditionalParameters(
+                mapOf(
+                    Pair("trwl_webhook_url", "${BuildConfig.WEBHOOK_URL}/webhook"),
+                    Pair("trwl_webhook_events", "notification")
+                )
+            )
+        }
 
         val request = builder.build()
         authIntent = authorizationService.getAuthorizationRequestIntent(request)
-
-        authorizationLauncher = registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()){
-                result ->
-                    run {
-                        if (result.resultCode == Activity.RESULT_OK) {
-                            handleAuthorizationResponse(result.data!!)
-                        }
-                    }
-        }
     }
+
     private fun initiateOAuthPKCELogin() {
         if (appCanHandleLinks()) {
+            initAuthRequest()
             authorizationLauncher.launch(authIntent)
         } else {
             val alertDialog = AlertDialog.Builder(this).create()
@@ -140,18 +168,53 @@ class LoginActivity : ComponentActivity() {
     }
 
     private fun handleAuthorizationResponse(intent: Intent) {
+        isLoading.postValue(true)
         val authorizationResponse: AuthorizationResponse? = AuthorizationResponse.fromIntent(intent)
 
         if (authorizationResponse != null) {
             val tokenExchangeRequest = authorizationResponse.createTokenExchangeRequest()
             authorizationService.performTokenRequest(tokenExchangeRequest) { response, _ ->
                 if (response?.accessToken != null) {
-                    val secureStorage = SecureStorage(this)
                     secureStorage.storeObject(SharedValues.SS_JWT, response.accessToken!!)
-                    startActivity(Intent(this, MainActivity::class.java))
-                    finish()
+                    if (notificationsEnabled) {
+                        val webhookResponse = GsonBuilder().create().fromJson(
+                            response.additionalParameters["webhook"],
+                            WebhookCreateResponse::class.java
+                        )
+                        handleWebhookResponse(webhookResponse)
+                    } else {
+                        redirectToMainActivity()
+                    }
+                } else {
+                    isLoading.postValue(false)
                 }
             }
+        }
+    }
+
+    private fun redirectToMainActivity() {
+        startActivity(Intent(this, MainActivity::class.java))
+        finish()
+    }
+
+    private fun handleWebhookResponse(webhook: WebhookCreateResponse) {
+        val endpoint = secureStorage.getObject(SharedValues.SS_UP_ENDPOINT, String::class.java)
+        if (endpoint != null) {
+            val webhookUser = WebhookUserCreateRequest(
+                webhook.id,
+                webhook.secret,
+                endpoint
+            )
+            loginViewModel.createWebhookUser(
+                webhookUser,
+                { id ->
+                    secureStorage.storeObject(SharedValues.SS_WEBHOOK_USER_ID, id)
+                    redirectToMainActivity()
+                },
+                {
+                    redirectToMainActivity()
+                }
+            )
         }
     }
 

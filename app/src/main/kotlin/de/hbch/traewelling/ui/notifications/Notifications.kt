@@ -29,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -202,8 +203,9 @@ private fun NotificationBody(
     modifier: Modifier = Modifier,
     onRead: () -> Unit = { }
 ) {
-    val headline = notification.type.getHeadline(notification = notification)
-    val body = notification.type.getBody(notification = notification)
+    val context = LocalContext.current
+    val headline = notification.type.getHeadline(context, notification)
+    val body = notification.type.getBody(context, notification)
 
     Column(
         modifier = modifier.fillMaxWidth(),
