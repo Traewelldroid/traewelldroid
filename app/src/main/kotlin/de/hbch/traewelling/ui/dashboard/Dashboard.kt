@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import de.hbch.traewelling.api.dtos.Status
 import de.hbch.traewelling.shared.LoggedInUserViewModel
+import de.hbch.traewelling.ui.composables.NotificationsAvailableHint
 import de.hbch.traewelling.ui.include.cardSearchStation.CardSearchStation
 import de.hbch.traewelling.ui.include.cardSearchStation.SearchStationCardViewModel
 import de.hbch.traewelling.ui.include.status.CheckInCardViewModel
@@ -36,7 +37,9 @@ fun Dashboard(
     userSelectedAction: (String) -> Unit = { },
     statusSelectedAction: (Int) -> Unit = { },
     statusDeletedAction: () -> Unit = { },
-    statusEditAction: (Status) -> Unit = { }
+    statusEditAction: (Status) -> Unit = { },
+    knowsAboutNotifications: Boolean = true,
+    notificationHintClosed: () -> Unit = { }
 ) {
     val dashboardViewModel: DashboardFragmentViewModel = viewModel()
     val searchStationCardViewModel: SearchStationCardViewModel = viewModel()
@@ -83,6 +86,14 @@ fun Dashboard(
                     homelandStationData = loggedInUserViewModel.home,
                     recentStationsData = loggedInUserViewModel.lastVisitedStations
                 )
+            }
+            if (!knowsAboutNotifications) {
+                item {
+                    NotificationsAvailableHint(
+                        loggedInUserViewModel = loggedInUserViewModel,
+                        onClose = notificationHintClosed
+                    )
+                }
             }
             checkInList(
                 checkIns,

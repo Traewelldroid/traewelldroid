@@ -176,6 +176,7 @@ class LoginActivity : ComponentActivity() {
             authorizationService.performTokenRequest(tokenExchangeRequest) { response, _ ->
                 if (response?.accessToken != null) {
                     secureStorage.storeObject(SharedValues.SS_JWT, response.accessToken!!)
+                    secureStorage.storeObject(SharedValues.SS_NOTIFICATIONS_ENABLED, notificationsEnabled)
                     if (notificationsEnabled) {
                         val webhookResponse = GsonBuilder().create().fromJson(
                             response.additionalParameters["webhook"],

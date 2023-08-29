@@ -9,9 +9,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material3.Card
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,15 +31,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState
 import de.hbch.traewelling.R
+import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.theme.AppTypography
+import de.hbch.traewelling.theme.MainTheme
 import org.unifiedpush.android.connector.UnifiedPush.getDistributor
 import org.unifiedpush.android.connector.UnifiedPush.getDistributors
 import org.unifiedpush.android.connector.UnifiedPush.registerApp
@@ -106,6 +116,64 @@ fun EnablePushNotificationsCard(
                     color = Color.Red,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun NotificationsAvailableHint(
+    loggedInUserViewModel: LoggedInUserViewModel,
+    modifier: Modifier = Modifier,
+    onClose: () -> Unit = { }
+) {
+    val context = LocalContext.current
+
+    ElevatedCard(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Box(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Column(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_notification),
+                    contentDescription = null,
+                    modifier = Modifier.size(48.dp)
+                )
+                Text(
+                    text = stringResource(id = R.string.push_hint_title),
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center,
+                    style = AppTypography.headlineSmall
+                )
+                Text(
+                    text = stringResource(id = R.string.push_hint_text),
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center,
+                    style = AppTypography.labelMedium
+                )
+                ButtonWithIconAndText(
+                    stringId = R.string.logout,
+                    onClick = {
+                        loggedInUserViewModel.logoutWithRestart(context)
+                    }
+                )
+            }
+            IconButton(
+                onClick = onClose,
+                modifier = Modifier.align(Alignment.TopEnd)
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Close,
+                    contentDescription = null
                 )
             }
         }
@@ -197,5 +265,18 @@ private fun UnifiedPushDistributorSelection(
                 }
             }
         }
+    }
+}
+
+@Preview
+@Composable
+private fun NotificationsAvailableHintPreview() {
+    MainTheme {
+        NotificationsAvailableHint(
+            loggedInUserViewModel = LoggedInUserViewModel(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        )
     }
 }

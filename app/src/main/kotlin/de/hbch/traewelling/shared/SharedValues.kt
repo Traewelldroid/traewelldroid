@@ -6,6 +6,8 @@ object SharedValues {
     const val SS_ORM_LAYER = "ORM_LAYER"
     const val SS_UP_ENDPOINT = "UP_ENDPOINT"
     const val SS_WEBHOOK_USER_ID = "WEBHOOK_USER_ID"
+    const val SS_NOTIFICATIONS_ENABLED = "NOTIFICATIONS_ENABLED"
+
 
     val AUTH_SCOPES = listOf(
         "read-statuses",

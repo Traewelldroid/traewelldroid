@@ -23,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,7 +38,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.notifications.Notification
+import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.theme.AppTypography
+import de.hbch.traewelling.ui.composables.NotificationsAvailableHint
 import de.hbch.traewelling.util.OnBottomReached
 import de.hbch.traewelling.util.getLocalDateTimeString
 
@@ -46,10 +49,13 @@ import de.hbch.traewelling.util.getLocalDateTimeString
 fun Notifications(
     notificationsViewModel: NotificationsViewModel,
     navHostController: NavHostController,
-    unreadNotificationsChanged: () -> Unit = { }
+    loggedInUserViewModel: LoggedInUserViewModel,
+    unreadNotificationsChanged: () -> Unit = { },
+    knowsAboutNotifications: Boolean = true,
+    notificationHintClosed: () -> Unit = { }
 ) {
     var isLoading by remember { mutableStateOf(false) }
-    var currentPage by remember { mutableStateOf(1) }
+    var currentPage by remember { mutableIntStateOf(1) }
     val notifications = remember { mutableStateListOf<Notification>() }
     val listState = rememberLazyListState()
     val pullRefreshState = rememberPullRefreshState(
@@ -81,6 +87,16 @@ fun Notifications(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             state = listState
         ) {
+
+            if (!knowsAboutNotifications) {
+                item {
+                    NotificationsAvailableHint(
+                        loggedInUserViewModel = loggedInUserViewModel,
+                        onClose = notificationHintClosed
+                    )
+                }
+            }
+
             items(notifications) {
                 Notification(
                     notification = it,
