@@ -1,0 +1,15 @@
+<manifest xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <application tools:ignore="MissingApplicationIcon">
+        <receiver
+            android:name=".push.EmbeddedFcmDistributor"
+            android:exported="false"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="org.unifiedpush.android.distributor.feature.BYTES_MESSAGE" />
+                <action android:name="org.unifiedpush.android.distributor.REGISTER" />
+                <action android:name="org.unifiedpush.android.distributor.UNREGISTER" />
+            </intent-filter>
+        </receiver>
+    </application>
+</manifest>

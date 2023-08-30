@@ -4,9 +4,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import com.auth0.android.jwt.JWT
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.trip.HafasTrip
+import java.lang.Exception
 import java.time.Duration
+import java.time.Instant
 import java.time.LocalDate
 import java.time.ZonedDateTime
 import java.time.ZoneId
@@ -89,4 +92,20 @@ private fun clarifyRingbahnBerlin(trip: HafasTrip): String {
     }
 
     return ""
+}
+
+@Composable
+fun getJwtExpiration(jwt: String): String {
+    var expiresAt = ZonedDateTime.now()
+    if (jwt != "") {
+        try {
+            expiresAt = ZonedDateTime
+                .ofInstant(
+                    JWT(jwt).expiresAt?.toInstant() ?: Instant.now(),
+                    ZoneId.systemDefault()
+                )
+        } catch (_: Exception) {
+        }
+    }
+    return getLocalDateTimeString(expiresAt)
 }

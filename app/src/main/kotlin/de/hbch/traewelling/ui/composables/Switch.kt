@@ -29,7 +29,8 @@ fun SwitchWithIconAndText(
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
     @DrawableRes drawableId: Int,
-    @StringRes stringId: Int
+    @StringRes stringId: Int,
+    enabled: Boolean = true
 ) {
     Row(
         modifier = modifier,
@@ -55,7 +56,8 @@ fun SwitchWithIconAndText(
             checked = checked,
             onCheckedChange = {
                 onCheckedChange(it)
-            }
+            },
+            enabled = enabled
         )
     }
 }

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1055496934710",
+    "project_id": "traewelldroid",
+    "storage_bucket": "traewelldroid.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1055496934710:android:2c0c7594736b530b6acf97",
+        "android_client_info": {
+          "package_name": "de.hbch.traewelling"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1055496934710-sh8abve7pjtm96r7d3hpucitb80o17d1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGYDbhfO74eFIfQmZD8uHfF6uiLPrhZ8E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1055496934710-sh8abve7pjtm96r7d3hpucitb80o17d1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

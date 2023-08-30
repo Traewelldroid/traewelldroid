@@ -176,3 +176,9 @@ fun Context.shareStatus(
     )
     startActivity(shareIntent)
 }
+
+fun TraewelldroidUriBuilder(): Uri.Builder {
+    return Uri.Builder()
+        .scheme("traewelldroid")
+        .authority("app.traewelldroid.de")
+}

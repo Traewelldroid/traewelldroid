@@ -7,6 +7,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -44,7 +45,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.auth0.android.jwt.JWT
 import com.jcloquell.androidsecurestorage.SecureStorage
 import de.c1710.filemojicompat_ui.views.picker.EmojiPackItemAdapter
 import de.hbch.traewelling.R
@@ -55,18 +55,13 @@ import de.hbch.traewelling.theme.LocalColorScheme
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
 import de.hbch.traewelling.ui.composables.OpenRailwayMapLayer
-import de.hbch.traewelling.util.getLocalDateTimeString
+import de.hbch.traewelling.util.getJwtExpiration
 import kotlinx.coroutines.launch
-import java.lang.Exception
-import java.time.Instant
-import java.time.ZonedDateTime
-import java.time.ZoneId
 
 @Composable
 fun Settings(
     loggedInUserViewModel: LoggedInUserViewModel? = null,
-    emojiPackItemAdapter: EmojiPackItemAdapter? = null,
-    traewellingLogoutAction: () -> Unit = { }
+    emojiPackItemAdapter: EmojiPackItemAdapter? = null
 ) {
     Column(
         modifier = Modifier
@@ -75,8 +70,7 @@ fun Settings(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         CheckInProviderSettings(
-            loggedInUserViewModel = loggedInUserViewModel,
-            traewellingLogoutAction = traewellingLogoutAction
+            loggedInUserViewModel = loggedInUserViewModel
         )
         HashtagSettings()
         MapViewSettings()
@@ -89,8 +83,7 @@ fun Settings(
 @Composable
 private fun CheckInProviderSettings(
     modifier: Modifier = Modifier,
-    loggedInUserViewModel: LoggedInUserViewModel? = null,
-    traewellingLogoutAction: () -> Unit = { }
+    loggedInUserViewModel: LoggedInUserViewModel? = null
 ) {
     SettingsCard(
         modifier = modifier,
@@ -100,8 +93,7 @@ private fun CheckInProviderSettings(
     ) {
         TraewellingProviderSettings(
             modifier = Modifier.fillMaxWidth(),
-            loggedInUserViewModel = loggedInUserViewModel,
-            logoutAction = traewellingLogoutAction
+            loggedInUserViewModel = loggedInUserViewModel
         )
     }
 }
@@ -109,16 +101,16 @@ private fun CheckInProviderSettings(
 @Composable
 private fun TraewellingProviderSettings(
     modifier: Modifier = Modifier,
-    loggedInUserViewModel: LoggedInUserViewModel? = null,
-    logoutAction: () -> Unit = { }
+    loggedInUserViewModel: LoggedInUserViewModel? = null
 ) {
     if (loggedInUserViewModel != null) {
         @Suppress("CanBeVal") var secureStorage: SecureStorage?
         var jwt by remember { mutableStateOf("") }
         val username by loggedInUserViewModel.username.observeAsState("")
+        val context = LocalContext.current
 
         if (!LocalView.current.isInEditMode) {
-            secureStorage = SecureStorage(LocalContext.current)
+            secureStorage = SecureStorage(context)
             jwt = secureStorage.getObject(SharedValues.SS_JWT, String::class.java) ?: ""
         }
         Column(
@@ -143,28 +135,16 @@ private fun TraewellingProviderSettings(
                 ButtonWithIconAndText(
                     modifier = Modifier.padding(top = 8.dp),
                     stringId = R.string.logout,
-                    onClick = logoutAction
+                    drawableId = R.drawable.ic_logout,
+                    onClick = {
+                        loggedInUserViewModel.logoutWithRestart(context)
+                    }
                 )
             }
         }
     }
 }
 
-@Composable
-private fun getJwtExpiration(jwt: String): String {
-    var expiresAt = ZonedDateTime.now()
-    if (jwt != "") {
-        try {
-            expiresAt = ZonedDateTime
-                .ofInstant(
-                    JWT(jwt).expiresAt?.toInstant() ?: Instant.now(),
-                    ZoneId.systemDefault()
-                )
-        } catch (_: Exception) {
-        }
-    }
-    return getLocalDateTimeString(expiresAt)
-}
 
 @Composable
 private fun HashtagSettings(
@@ -343,7 +323,7 @@ private fun SettingsCard(
     expandable: Boolean = false,
     @StringRes title: Int,
     @StringRes description: Int,
-    content: @Composable () -> Unit
+    content: @Composable (ColumnScope.() -> Unit)
 ) {
     var expanded by rememberSaveable { mutableStateOf(false) }
 
@@ -413,14 +393,13 @@ private fun SettingsCard(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 private fun SettingsCardPreview() {
     MainTheme {
         val title = R.string.hashtag
         val description = R.string.default_hashtag_text
-        val content = @Composable {
+        val content: @Composable ColumnScope.() -> Unit = {
             OutlinedTextField(
                 value = "Test",
                 onValueChange = { },

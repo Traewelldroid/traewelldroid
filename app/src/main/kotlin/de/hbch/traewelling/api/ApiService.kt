@@ -1,6 +1,8 @@
 package de.hbch.traewelling.api
 
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import de.hbch.traewelling.BuildConfig
 import de.hbch.traewelling.adapters.ZonedDateTimeGsonConverter
 import de.hbch.traewelling.adapters.ZonedDateTimeRetrofitConverterFactory
 import de.hbch.traewelling.api.interceptors.AuthInterceptor
@@ -20,6 +22,7 @@ import de.hbch.traewelling.api.models.status.Tag
 import de.hbch.traewelling.api.models.trip.HafasTrainTrip
 import de.hbch.traewelling.api.models.trip.HafasTripPage
 import de.hbch.traewelling.api.models.user.User
+import de.hbch.traewelling.api.models.webhook.WebhookUserCreateRequest
 import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Retrofit
@@ -30,7 +33,7 @@ import java.time.ZonedDateTime
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-private const val BASE_URL =
+private const val TRWL_BASE_URL =
     "https://traewelling.de/api/v1/"
 
 private val client = OkHttpClient.Builder().readTimeout(60, TimeUnit.SECONDS)
@@ -39,18 +42,27 @@ private val client = OkHttpClient.Builder().readTimeout(60, TimeUnit.SECONDS)
     .addInterceptor(ErrorInterceptor())
     .build()
 
-private val gson = GsonBuilder()
-    .setExclusionStrategies(ExcludeAnnotationExclusionStrategy())
-    .registerTypeAdapter(ZonedDateTime::class.java, ZonedDateTimeGsonConverter())
-    .serializeNulls()
-    .create()
+fun getGson(): Gson = GsonBuilder()
+        .setExclusionStrategies(ExcludeAnnotationExclusionStrategy())
+        .registerTypeAdapter(ZonedDateTime::class.java, ZonedDateTimeGsonConverter())
+        .serializeNulls()
+        .create()
 
-private val retrofit =
+val GSON: Gson = getGson()
+
+private val trwlRetrofit =
     Retrofit.Builder()
         .addConverterFactory(ZonedDateTimeRetrofitConverterFactory.create())
-        .addConverterFactory(GsonConverterFactory.create(gson))
-        .baseUrl(BASE_URL)
+        .addConverterFactory(GsonConverterFactory.create(GSON))
+        .baseUrl(TRWL_BASE_URL)
         .client(client)
+        .build()
+
+private val webhookRelayRetrofit =
+    Retrofit.Builder()
+        .baseUrl("${BuildConfig.WEBHOOK_URL}/api/")
+        .client(client)
+        .addConverterFactory(GsonConverterFactory.create(GSON))
         .build()
 
 interface AuthService {
@@ -67,6 +79,11 @@ interface AuthService {
 
     @GET("trains/station/history")
     fun getLastVisitedStations(): Call<Data<List<Station>>>
+
+    @DELETE("webhooks/{id}")
+    fun deleteWebhook(
+        @Path("id") id: Int
+    ): Call<Unit>
 }
 
 interface StatisticsService {
@@ -243,25 +260,43 @@ interface UserService {
     ): Call<Data<Unit>>
 }
 
+interface WebhookRelayService {
+    @POST("webhookUser")
+    fun createWebhookUser(
+        @Body webhookUser: WebhookUserCreateRequest
+    ): Call<String>
+
+    @DELETE("webhookUser/{id}")
+    fun deleteWebhookUser(
+        @Path("id") id: String
+    ): Call<Unit>
+}
+
 object TraewellingApi {
     var jwt: String = ""
 
     val userService: UserService by lazy {
-        retrofit.create(UserService::class.java)
+        trwlRetrofit.create(UserService::class.java)
     }
     val authService: AuthService by lazy {
-        retrofit.create(AuthService::class.java)
+        trwlRetrofit.create(AuthService::class.java)
     }
     val statisticsService: StatisticsService by lazy {
-        retrofit.create(StatisticsService::class.java)
+        trwlRetrofit.create(StatisticsService::class.java)
     }
     val checkInService: CheckInService by lazy {
-        retrofit.create(CheckInService::class.java)
+        trwlRetrofit.create(CheckInService::class.java)
     }
     val travelService: TravelService by lazy {
-        retrofit.create(TravelService::class.java)
+        trwlRetrofit.create(TravelService::class.java)
     }
     val notificationService: NotificationService by lazy {
-        retrofit.create(NotificationService::class.java)
+        trwlRetrofit.create(NotificationService::class.java)
+    }
+}
+
+object WebhookRelayApi {
+    val service: WebhookRelayService by lazy {
+        webhookRelayRetrofit.create(WebhookRelayService::class.java)
     }
 }

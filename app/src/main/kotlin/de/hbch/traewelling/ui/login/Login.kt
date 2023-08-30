@@ -6,11 +6,15 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -18,17 +22,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import de.hbch.traewelling.R
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.theme.Traewelldroid
 import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
+import de.hbch.traewelling.ui.composables.EnablePushNotificationsCard
 import de.hbch.traewelling.ui.composables.OutlinedButtonWithIconAndText
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
-    loginAction: () -> Unit = { },
+    loadingData: LiveData<Boolean> = MutableLiveData(false),
+    loginAction: (Boolean) -> Unit = { },
     informationAction: () -> Unit = { }
 ) {
     val systemUiController = rememberSystemUiController()
@@ -38,6 +45,9 @@ fun LoginScreen(
 
         onDispose {  }
     }
+    var notificationsEnabled by remember { mutableStateOf(false) }
+    val isLoading by loadingData.observeAsState(false)
+
     Scaffold(
         modifier = Modifier
             .fillMaxHeight()
@@ -59,15 +69,22 @@ fun LoginScreen(
                 color = Color.White,
                 modifier = horizontalPadding.padding(top = 32.dp)
             )
+            EnablePushNotificationsCard(
+                onNotificationsEnabledChange = {
+                    notificationsEnabled = it
+                },
+                modifier = horizontalPadding.padding(top = 32.dp)
+            )
             ButtonWithIconAndText(
                 stringId = R.string.login_oauth,
                 drawableId = R.drawable.ic_popup,
-                onClick = loginAction,
-                modifier = horizontalPadding.padding(top = 32.dp),
+                onClick = { loginAction(notificationsEnabled) },
+                modifier = horizontalPadding.padding(top = 16.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xFFC72730),
                     contentColor = Color.White
-                )
+                ),
+                isLoading = isLoading
             )
             Box(
                 modifier = Modifier

@@ -35,6 +35,7 @@ properties the main keys and URLs of the application can be set.
 | `PRIVACY_URL`        | URL to the privacy statement and imprint.   | Yes       |
 | `UNLEASH_URL`        | API URL to reach the Unleash API            | No        |
 | `UNLEASH_KEY`        | API Key for Unleash API                     | No        |
+| `WEBHOOK_URL`        | URL for accepting Träwelling webhooks       | No        |
 
 After that, open Android Studio and the project should setup itself automatically.
 

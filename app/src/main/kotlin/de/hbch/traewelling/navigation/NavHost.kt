@@ -1,11 +1,14 @@
 package de.hbch.traewelling.navigation
 
-import android.app.Activity
 import android.app.PendingIntent
 import android.content.Intent
 import android.content.pm.ShortcutManager
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -25,7 +28,6 @@ import de.hbch.traewelling.ui.checkIn.CheckIn
 import de.hbch.traewelling.ui.checkInResult.CheckInResultView
 import de.hbch.traewelling.ui.dashboard.Dashboard
 import de.hbch.traewelling.ui.info.InfoActivity
-import de.hbch.traewelling.ui.login.LoginActivity
 import de.hbch.traewelling.ui.main.MainActivity
 import de.hbch.traewelling.ui.notifications.Notifications
 import de.hbch.traewelling.ui.notifications.NotificationsViewModel
@@ -104,6 +106,16 @@ fun TraewelldroidNavHost(
         )
     }
 
+    val initKnowsAboutNotifications = secureStorage.getObject(
+        SharedValues.SS_NOTIFICATIONS_ENABLED,
+        Boolean::class.java
+    ) != null
+    var knowsAboutNotifications by rememberSaveable { mutableStateOf(initKnowsAboutNotifications) }
+    val closeNotificationHint: () -> Unit = {
+        secureStorage.storeObject(SharedValues.SS_NOTIFICATIONS_ENABLED, false)
+        knowsAboutNotifications = true
+    }
+
     NavHost(
         navController = navController,
         startDestination = Dashboard.route,
@@ -115,7 +127,9 @@ fun TraewelldroidNavHost(
                 searchConnectionsAction = navToSearchConnections,
                 statusSelectedAction = navToStatusDetails,
                 userSelectedAction = navToUserProfile,
-                statusEditAction = navToEditCheckIn
+                statusEditAction = navToEditCheckIn,
+                knowsAboutNotifications = knowsAboutNotifications,
+                notificationHintClosed = closeNotificationHint
             )
             onMenuChange(listOf())
             onResetFloatingActionButton()
@@ -131,9 +145,12 @@ fun TraewelldroidNavHost(
         }
         composable(Notifications.route) {
             Notifications(
+                loggedInUserViewModel = loggedInUserViewModel,
                 notificationsViewModel = notificationsViewModel,
                 navHostController = navController,
-                unreadNotificationsChanged = onNotificationCountChange
+                unreadNotificationsChanged = onNotificationCountChange,
+                knowsAboutNotifications = knowsAboutNotifications,
+                notificationHintClosed = closeNotificationHint
             )
             onMenuChange(listOf(
                 ComposeMenuItem(
@@ -225,14 +242,7 @@ fun TraewelldroidNavHost(
         composable(Settings.route) {
             Settings(
                 loggedInUserViewModel = loggedInUserViewModel,
-                emojiPackItemAdapter = (context as? MainActivity)?.emojiPackItemAdapter,
-                traewellingLogoutAction = {
-                    loggedInUserViewModel.logout( {
-                        secureStorage.removeObject(SharedValues.SS_JWT)
-                        context.startActivity(Intent(context, LoginActivity::class.java))
-                        (context as? Activity)?.finish()
-                    }, {})
-                }
+                emojiPackItemAdapter = (context as? MainActivity)?.emojiPackItemAdapter
             )
             onMenuChange(listOf())
             onResetFloatingActionButton()

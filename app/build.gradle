@@ -5,6 +5,7 @@ plugins {
     id "androidx.navigation.safeargs.kotlin"
     id "io.sentry.android.gradle" version "3.11.1"
     id "com.mikepenz.aboutlibraries.plugin"
+    id "com.google.gms.google-services"
 }
 
 def sentryDsn = ""
@@ -14,6 +15,8 @@ def repoUrl = ""
 def privacyUrl = ""
 def unleashUrl = ""
 def unleashKey = ""
+def webhookUrl = ""
+def upFcmProxy = ""
 
 ext.loadProperties = { String file ->
     def props = new Properties()
@@ -28,6 +31,8 @@ ext.loadProperties = { String file ->
     repoUrl = props.getProperty("REPO_URL", "")
     unleashUrl = props.getProperty("UNLEASH_URL", "")
     unleashKey = props.getProperty("UNLEASH_KEY", "")
+    webhookUrl = props.getProperty("WEBHOOK_URL", "")
+    upFcmProxy = props.getProperty("UP_FCM_PROXY", "")
 
     // Mandatory
     privacyUrl = props.getProperty("PRIVACY_URL")
@@ -70,6 +75,8 @@ android {
             buildConfigField "String", "PRIVACY_URL", "\"${privacyUrl}\""
             buildConfigField "String", "UNLEASH_URL", "\"${unleashUrl}\""
             buildConfigField "String", "UNLEASH_KEY", "\"${unleashKey}\""
+            buildConfigField "String", "WEBHOOK_URL", "\"${webhookUrl}\""
+            buildConfigField "String", "UP_FCM_PROXY", "\"${upFcmProxy}\""
             manifestPlaceholders["SENTRY_DSN"] = sentryDsn
         }
         debug {
@@ -80,6 +87,8 @@ android {
             buildConfigField "String", "PRIVACY_URL", "\"${privacyUrl}\""
             buildConfigField "String", "UNLEASH_URL", "\"${unleashUrl}\""
             buildConfigField "String", "UNLEASH_KEY", "\"${unleashKey}\""
+            buildConfigField "String", "WEBHOOK_URL", "\"${webhookUrl}\""
+            buildConfigField "String", "UP_FCM_PROXY", "\"${upFcmProxy}\""
             manifestPlaceholders["SENTRY_DSN"] = sentryDsn
         }
     }
@@ -104,6 +113,7 @@ android {
         play {
             dimension "libs"
             versionNameSuffix "-play"
+            apply plugin: "com.google.gms.google-services"
         }
         foss {
             dimension "libs"
@@ -150,7 +160,7 @@ dependencies {
     implementation "com.jcloquell:androidsecurestorage:0.1.3"
 
     // Navigation Component
-    def nav_version_ktx = "2.7.0"
+    def nav_version_ktx = "2.7.1"
     implementation "androidx.navigation:navigation-compose:$nav_version_ktx"
 
     // Retrofit
@@ -167,6 +177,14 @@ dependencies {
 
     // Feature flags
     implementation "io.getunleash:unleash-android-proxy-sdk:0.5.5"
+
+    // Unified Push
+    implementation 'com.github.UnifiedPush:android-connector:2.1.1'
+    playImplementation('com.github.UnifiedPush:android-embedded_fcm_distributor:2.2.0') {
+        exclude group: 'com.google.firebase', module: 'firebase-core'
+        exclude group: 'com.google.firebase', module: 'firebase-analytics'
+        exclude group: 'com.google.firebase', module: 'firebase-measurement-connector'
+    }
 }
 
 
