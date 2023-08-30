@@ -65,3 +65,8 @@ fun Context.publishStationShortcuts(
     }
     return false
 }
+
+fun Context.removeDynamicShortcuts() {
+    val shortcutManager: ShortcutManager? = getSystemService(ShortcutManager::class.java)
+    shortcutManager?.removeAllDynamicShortcuts()
+}

@@ -4,6 +4,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
+import android.content.pm.PackageManager
 import android.graphics.drawable.Icon
 import android.os.Build
 import android.util.Log
@@ -39,6 +40,16 @@ class PushNotificationReceiver : MessagingReceiver() {
     }
 
     private fun pushNotification(context: Context, notification: Notification) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val appHasPermission = context.packageManager.checkPermission(
+                android.Manifest.permission.POST_NOTIFICATIONS,
+                context.packageName
+            )
+            if (appHasPermission != PackageManager.PERMISSION_GRANTED) {
+                return
+            }
+        }
+
         val notificationManager
             = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager?
 

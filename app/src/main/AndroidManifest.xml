@@ -53,8 +53,7 @@
         <activity
             android:name=".ui.login.LoginActivity"
             android:theme="@style/Theme.Traewelling.Login"
-            android:exported="true"
-            android:windowSoftInputMode="stateVisible|adjustResize">
+            android:exported="true">
             <intent-filter>
                 <action android:name="de.hbch.traewelling.HANDLE_AUTHORIZATION_RESPONSE" />
                 <category android:name="android.intent.category.DEFAULT" />

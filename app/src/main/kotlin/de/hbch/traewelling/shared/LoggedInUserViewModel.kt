@@ -16,6 +16,7 @@ import de.hbch.traewelling.api.models.station.Station
 import de.hbch.traewelling.api.models.status.StatusVisibility
 import de.hbch.traewelling.api.models.user.User
 import de.hbch.traewelling.ui.login.LoginActivity
+import de.hbch.traewelling.util.removeDynamicShortcuts
 import io.sentry.Sentry
 import org.unifiedpush.android.connector.UnifiedPush
 import retrofit2.Call
@@ -115,6 +116,7 @@ class LoggedInUserViewModel : ViewModel() {
         secureStorage.removeObject(SharedValues.SS_REFRESH_TOKEN)
         secureStorage.removeObject(SharedValues.SS_TRWL_WEBHOOK_ID)
         UnifiedPush.unregisterApp(context)
+        context.removeDynamicShortcuts()
         context.startActivity(Intent(context, LoginActivity::class.java))
         (context as? Activity)?.finish()
     }
