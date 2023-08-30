@@ -135,6 +135,7 @@ private fun TraewellingProviderSettings(
                 ButtonWithIconAndText(
                     modifier = Modifier.padding(top = 8.dp),
                     stringId = R.string.logout,
+                    drawableId = R.drawable.ic_logout,
                     onClick = {
                         loggedInUserViewModel.logoutWithRestart(context)
                     }

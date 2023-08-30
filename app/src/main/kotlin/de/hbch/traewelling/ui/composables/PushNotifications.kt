@@ -59,6 +59,7 @@ fun EnablePushNotificationsCard(
     val context = LocalContext.current
     val unifiedPushDistributors = getDistributors(context)
     var upDistributorSelectionVisible by remember { mutableStateOf(false) }
+    var selectedDistributor by remember { mutableStateOf(getDistributor(context)) }
 
     if (upDistributorSelectionVisible) {
         Dialog(
@@ -71,12 +72,13 @@ fun EnablePushNotificationsCard(
                 modifier = Modifier.padding(8.dp)
             ) {
                 UnifiedPushDistributorSelection(
-                    selectedDistributor = getDistributor(context),
+                    selectedDistributor = selectedDistributor,
                     distributors = unifiedPushDistributors,
                     distributorSelected = {
                         saveDistributor(context, it)
                         registerApp(context)
                         upDistributorSelectionVisible = false
+                        selectedDistributor = it
                     }
                 )
             }
@@ -97,13 +99,16 @@ fun EnablePushNotificationsCard(
                     if (unifiedPushDistributors.isNotEmpty()) {
                         if (it) {
                             if (unifiedPushDistributors.size == 1) {
-                                saveDistributor(context, unifiedPushDistributors[0])
+                                val distributor = unifiedPushDistributors[0]
+                                saveDistributor(context, distributor)
                                 registerApp(context)
+                                selectedDistributor = distributor
                             } else {
                                 upDistributorSelectionVisible = true
                             }
                         } else {
                             unregisterApp(context)
+                            selectedDistributor = ""
                         }
                     }
                 },
@@ -116,6 +121,11 @@ fun EnablePushNotificationsCard(
                     color = Color.Red,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center
+                )
+            }
+            if (selectedDistributor.isNotBlank() && selectedDistributor != context.packageName) {
+                Text(
+                    text = stringResource(id = R.string.selected_up_distributor, selectedDistributor)
                 )
             }
         }
@@ -146,7 +156,7 @@ fun NotificationsAvailableHint(
                 Icon(
                     painter = painterResource(id = R.drawable.ic_notification),
                     contentDescription = null,
-                    modifier = Modifier.size(48.dp)
+                    modifier = Modifier.size(36.dp)
                 )
                 Text(
                     text = stringResource(id = R.string.push_hint_title),
@@ -162,6 +172,7 @@ fun NotificationsAvailableHint(
                 )
                 ButtonWithIconAndText(
                     stringId = R.string.logout,
+                    drawableId = R.drawable.ic_logout,
                     onClick = {
                         loggedInUserViewModel.logoutWithRestart(context)
                     }
@@ -231,6 +242,7 @@ private fun UnifiedPushDistributorSelection(
     distributors: List<String>,
     distributorSelected: (String) -> Unit
 ) {
+    val context = LocalContext.current
     var selection by remember { mutableStateOf(selectedDistributor) }
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -247,6 +259,11 @@ private fun UnifiedPushDistributorSelection(
                     selection = it
                     distributorSelected(it)
                 }
+                val distributorName =
+                    if (it == context.packageName)
+                        stringResource(id = R.string.embedded_up_distributor)
+                    else
+                        context.packageManager.getApplicationLabel(context.packageManager.getApplicationInfo(it, 0))
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -258,7 +275,7 @@ private fun UnifiedPushDistributorSelection(
                         onClick = selected
                     )
                     Text(
-                        text = it,
+                        text = distributorName.toString(),
                         style = AppTypography.labelLarge,
                         fontWeight = FontWeight.ExtraBold
                     )
@@ -276,7 +293,6 @@ private fun NotificationsAvailableHintPreview() {
             loggedInUserViewModel = LoggedInUserViewModel(),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
         )
     }
 }

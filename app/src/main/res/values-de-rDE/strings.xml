@@ -209,6 +209,8 @@
     <string name="channel_description_likes">Nutzer:innen, denen deine Check-Ins gefallen</string>
     <string name="select_up_distributor">Unified Push-Distributor wählen</string>
     <string name="no_up_distributor_found">Es wurde kein Unified Push Distributor gefunden. Bitte installiere einen deiner Wahl und starte die App neu.</string>
+    <string name="selected_up_distributor">Gewählter UnifiedPush Distributor: %1$s</string>
+    <string name="embedded_up_distributor">Eingebetteter FCM Distributor</string>
     <string name="push_hint_title">Erhalte Benachrichtigungen! 🎉</string>
     <string name="push_hint_text">Um Push-Benachrichtigungen zu erhalten, ist ein erneuter Login erforderlich. Bitte melde dich ab und aktiviere beim Login die Option für Push-Benachrichtigungen.</string>
 </resources>

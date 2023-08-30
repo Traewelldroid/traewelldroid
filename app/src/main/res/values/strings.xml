@@ -212,8 +212,10 @@
     <string name="channel_description_event_suggestions">Processed event suggestions</string>
     <string name="channel_likes">Likes</string>
     <string name="channel_description_likes">Users liking your check-ins</string>
-    <string name="select_up_distributor">Select Unified Push distributor</string>
-    <string name="no_up_distributor_found">No Unified Push distributor was found. Please install one of your choice and restart the app.</string>
+    <string name="select_up_distributor">Select UnifiedPush distributor</string>
+    <string name="no_up_distributor_found">No UnifiedPush distributor was found. Please install one of your choice and restart the app.</string>
+    <string name="selected_up_distributor">Selected UnifiedPush distributor: %1$s</string>
+    <string name="embedded_up_distributor">Embedded FCM distributor</string>
     <string name="push_hint_title">Get notified! 🎉</string>
     <string name="push_hint_text">To receive push notifications a re-login is needed. Please log out and activate the switch for notifications on log in.</string>
 </resources>
