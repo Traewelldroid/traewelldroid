@@ -56,6 +56,7 @@ import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
 import de.hbch.traewelling.ui.composables.OpenRailwayMapLayer
 import de.hbch.traewelling.util.getJwtExpiration
+import de.hbch.traewelling.util.refreshJwt
 import kotlinx.coroutines.launch
 
 @Composable
@@ -132,6 +133,14 @@ private fun TraewellingProviderSettings(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
             ) {
+                ButtonWithIconAndText(
+                    stringId = R.string.renew_login,
+                    onClick = {
+                        context.refreshJwt {
+                            jwt = it
+                        }
+                    }
+                )
                 ButtonWithIconAndText(
                     modifier = Modifier.padding(top = 8.dp),
                     stringId = R.string.logout,
