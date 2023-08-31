@@ -225,7 +225,7 @@ private fun DailyStatisticsView(
                         text = stringResource(id = R.string.map_view)
                     )
                 },
-                enabled = (statistics.featureCollection.features?.size?.compareTo(0) ?: -1) > 0
+                enabled = (statistics.featureCollection?.features?.size?.compareTo(0) ?: -1) > 0
             )
         }
         if (selectedTab == 0) {

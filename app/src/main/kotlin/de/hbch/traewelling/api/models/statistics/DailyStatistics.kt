@@ -9,7 +9,7 @@ data class DailyStatistics(
     @SerializedName("totalDistance") val distance: Int,
     @SerializedName("totalDuration") val duration: Int,
     @SerializedName("totalPoints") val points: Int,
-    @SerializedName("polylines") val featureCollection: FeatureCollection
+    @SerializedName("polylines") val featureCollection: FeatureCollection?
 ) {
     val count: Int get() = statuses.size
 }
