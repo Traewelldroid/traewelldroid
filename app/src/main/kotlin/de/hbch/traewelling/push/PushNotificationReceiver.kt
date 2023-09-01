@@ -21,8 +21,12 @@ class PushNotificationReceiver : MessagingReceiver() {
     override fun onMessage(context: Context, message: ByteArray, instance: String) {
         Log.d("PushReceiver", "Message received!")
         val json = String(message)
-        val notification = getGson().fromJson(json, Notification::class.java)
-        pushNotification(context, notification)
+        if (json.isNotBlank()) {
+            val notification = getGson().fromJson(json, Notification::class.java)
+            notification?.let {
+                pushNotification(context, it)
+            }
+        }
     }
 
     override fun onNewEndpoint(context: Context, endpoint: String, instance: String) {
