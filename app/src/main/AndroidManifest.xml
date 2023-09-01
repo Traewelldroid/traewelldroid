@@ -54,12 +54,17 @@
             android:name=".ui.login.LoginActivity"
             android:theme="@style/Theme.Traewelling.Login"
             android:exported="true">
+            <intent-filter>
+                <action android:name="de.hbch.traewelling.HANDLE_AUTHORIZATION_RESPONSE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
             <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="http" />
                 <data android:scheme="https" />
                 <data android:host="app.traewelldroid.de"/>
-                <action android:name="de.hbch.traewelling.HANDLE_AUTHORIZATION_RESPONSE" />
-                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
