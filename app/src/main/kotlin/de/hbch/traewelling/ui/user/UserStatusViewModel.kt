@@ -8,7 +8,7 @@ import de.hbch.traewelling.api.models.Data
 import de.hbch.traewelling.api.models.status.Status
 import de.hbch.traewelling.api.models.status.StatusPage
 import de.hbch.traewelling.api.models.user.User
-import io.sentry.Sentry
+import de.hbch.traewelling.logging.Logger
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -41,7 +41,7 @@ class UserStatusViewModel : ViewModel() {
 
                     override fun onFailure(call: Call<Data<User>>, t: Throwable) {
                         isRefreshing.postValue(false)
-                        Sentry.captureException(t)
+                        Logger.captureException(t)
                     }
                 })
         }
@@ -70,7 +70,7 @@ class UserStatusViewModel : ViewModel() {
 
                 override fun onFailure(call: Call<StatusPage>, t: Throwable) {
                     isRefreshing.postValue(false)
-                    Sentry.captureException(t)
+                    Logger.captureException(t)
                 }
 
             })
@@ -117,7 +117,7 @@ class UserStatusViewModel : ViewModel() {
                 }
 
                 override fun onFailure(call: Call<Data<Unit>>, t: Throwable) {
-                    Sentry.captureException(t)
+                    Logger.captureException(t)
                 }
             })
     }
@@ -133,7 +133,7 @@ class UserStatusViewModel : ViewModel() {
                 }
 
                 override fun onFailure(call: Call<Data<Unit>>, t: Throwable) {
-                    Sentry.captureException(t)
+                    Logger.captureException(t)
                 }
             })
     }
@@ -149,7 +149,7 @@ class UserStatusViewModel : ViewModel() {
                 }
 
                 override fun onFailure(call: Call<Data<Unit>>, t: Throwable) {
-                    Sentry.captureException(t)
+                    Logger.captureException(t)
                 }
             })
     }
@@ -165,7 +165,7 @@ class UserStatusViewModel : ViewModel() {
                 }
 
                 override fun onFailure(call: Call<Data<Unit>>, t: Throwable) {
-                    Sentry.captureException(t)
+                    Logger.captureException(t)
                 }
             })
     }

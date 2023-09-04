@@ -5,7 +5,7 @@ import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.api.models.Data
 import de.hbch.traewelling.api.models.notifications.Notification
 import de.hbch.traewelling.api.models.notifications.NotificationPage
-import io.sentry.Sentry
+import de.hbch.traewelling.logging.Logger
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -27,7 +27,7 @@ class NotificationsViewModel : ViewModel() {
                     }
 
                     override fun onFailure(call: Call<Data<Int>>, t: Throwable) {
-                        Sentry.captureException(t)
+                        Logger.captureException(t)
                     }
                 }
             )
@@ -50,7 +50,7 @@ class NotificationsViewModel : ViewModel() {
                     }
                 }
                 override fun onFailure(call: Call<NotificationPage>, t: Throwable) {
-                    Sentry.captureException(t)
+                    Logger.captureException(t)
                 }
             })
     }
@@ -73,7 +73,7 @@ class NotificationsViewModel : ViewModel() {
                 }
 
                 override fun onFailure(call: Call<Data<Notification>>, t: Throwable) {
-                    Sentry.captureException(t)
+                    Logger.captureException(t)
                 }
             })
     }
@@ -96,7 +96,7 @@ class NotificationsViewModel : ViewModel() {
                 }
 
                 override fun onFailure(call: Call<Data<Notification>>, t: Throwable) {
-                    Sentry.captureException(t)
+                    Logger.captureException(t)
                 }
             })
     }
@@ -113,7 +113,7 @@ class NotificationsViewModel : ViewModel() {
                 }
 
                 override fun onFailure(call: Call<Unit>, t: Throwable) {
-                    Sentry.captureException(t)
+                    Logger.captureException(t)
                 }
             })
     }

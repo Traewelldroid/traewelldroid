@@ -3,9 +3,15 @@ plugins {
     id "kotlin-android"
     id "kotlin-kapt"
     id "androidx.navigation.safeargs.kotlin"
-    id "io.sentry.android.gradle" version "3.11.1"
+    id "io.sentry.android.gradle" version "3.12.0"
     id "com.mikepenz.aboutlibraries.plugin"
     id "com.google.gms.google-services"
+}
+
+sentry {
+    autoInstallation {
+        enabled = false
+    }
 }
 
 def sentryDsn = ""
@@ -177,6 +183,9 @@ dependencies {
 
     // Feature flags
     implementation "io.getunleash:unleash-android-proxy-sdk:0.5.5"
+
+    // Sentry
+    playImplementation "io.sentry:sentry-android:6.28.0"
 
     // Unified Push
     implementation 'com.github.UnifiedPush:android-connector:2.1.1'

@@ -8,7 +8,7 @@ import de.hbch.traewelling.api.models.Data
 import de.hbch.traewelling.api.models.meta.Times
 import de.hbch.traewelling.api.models.station.Station
 import de.hbch.traewelling.api.models.trip.HafasTripPage
-import io.sentry.Sentry
+import de.hbch.traewelling.logging.Logger
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -48,7 +48,7 @@ class SearchConnectionViewModel: ViewModel() {
                 }
                 override fun onFailure(call: Call<HafasTripPage>, t: Throwable) {
                     failureCallback()
-                    Sentry.captureException(t)
+                    Logger.captureException(t)
                 }
             })
     }
@@ -76,7 +76,7 @@ class SearchConnectionViewModel: ViewModel() {
 
                 override fun onFailure(call: Call<Data<Station>>, t: Throwable) {
                     failureCallback()
-                    Sentry.captureException(t)
+                    Logger.captureException(t)
                 }
             })
     }

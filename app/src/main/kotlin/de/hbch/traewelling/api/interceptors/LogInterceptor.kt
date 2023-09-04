@@ -1,6 +1,6 @@
 package de.hbch.traewelling.api.interceptors
 
-import io.sentry.Sentry
+import de.hbch.traewelling.logging.Logger
 import okhttp3.Interceptor
 import okhttp3.Response
 import okio.Buffer
@@ -20,12 +20,14 @@ class LogInterceptor : Interceptor {
             val requestBody = buffer.readUtf8()
             buffer.close()
 
-            Sentry.captureMessage("[${response.code}] $path") { scope ->
-                scope.setExtra("path", path)
-                scope.setExtra("code", response.code.toString())
-                scope.setExtra("responseBody", response.body?.string() ?: "no body")
-                scope.setExtra("requestBody", requestBody)
-            }
+            val additionalInfo = mapOf(
+                Pair("path", path),
+                Pair("code", response.code.toString()),
+                Pair("responseBody", response.body?.string() ?: "no body"),
+                Pair("requestBody", requestBody)
+            )
+
+            Logger.captureMessage("[${response.code}] $path", additionalInfo)
         }
         return response
     }

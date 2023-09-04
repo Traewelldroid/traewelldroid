@@ -6,7 +6,7 @@ import de.hbch.traewelling.api.models.Data
 import de.hbch.traewelling.api.models.polyline.FeatureCollection
 import de.hbch.traewelling.api.models.status.Status
 import de.hbch.traewelling.api.models.user.User
-import io.sentry.Sentry
+import de.hbch.traewelling.logging.Logger
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -36,7 +36,7 @@ class StatusDetailViewModel: ViewModel() {
                 }
                 override fun onFailure(call: Call<Data<Status>>, t: Throwable) {
                     failureCallback()
-                    Sentry.captureException(t)
+                    Logger.captureException(t)
                 }
             })
     }
@@ -66,7 +66,7 @@ class StatusDetailViewModel: ViewModel() {
                     }
                     override fun onFailure(call: Call<Data<FeatureCollection>>, t: Throwable) {
                         failureCallback()
-                        Sentry.captureException(t)
+                        Logger.captureException(t)
                     }
                 }
             )
@@ -98,7 +98,7 @@ class StatusDetailViewModel: ViewModel() {
 
                     override fun onFailure(call: Call<Data<List<User>>>, t: Throwable) {
                         failureCallback()
-                        Sentry.captureException(t)
+                        Logger.captureException(t)
                     }
                 }
             )

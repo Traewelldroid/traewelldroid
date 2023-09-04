@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.api.models.status.Status
 import de.hbch.traewelling.api.models.status.StatusPage
-import io.sentry.Sentry
+import de.hbch.traewelling.logging.Logger
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -37,7 +37,7 @@ class ActiveCheckinsViewModel : ViewModel() {
                 }
                 override fun onFailure(call: Call<StatusPage>, t: Throwable) {
                     isRefreshing.postValue(false)
-                    Sentry.captureException(t)
+                    Logger.captureException(t)
                 }
             })
     }
