@@ -3,7 +3,7 @@ package de.hbch.traewelling.ui.login
 import androidx.lifecycle.ViewModel
 import de.hbch.traewelling.api.WebhookRelayApi
 import de.hbch.traewelling.api.models.webhook.WebhookUserCreateRequest
-import io.sentry.Sentry
+import de.hbch.traewelling.logging.Logger
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -29,7 +29,7 @@ class LoginViewModel : ViewModel() {
                 }
 
                 override fun onFailure(call: Call<String>, t: Throwable) {
-                    Sentry.captureException(t)
+                    Logger.captureException(t)
                 }
             })
     }

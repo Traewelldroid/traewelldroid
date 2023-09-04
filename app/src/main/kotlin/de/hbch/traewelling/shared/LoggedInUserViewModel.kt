@@ -17,7 +17,7 @@ import de.hbch.traewelling.api.models.status.StatusVisibility
 import de.hbch.traewelling.api.models.user.User
 import de.hbch.traewelling.ui.login.LoginActivity
 import de.hbch.traewelling.util.removeDynamicShortcuts
-import io.sentry.Sentry
+import de.hbch.traewelling.logging.Logger
 import org.unifiedpush.android.connector.UnifiedPush
 import retrofit2.Call
 import retrofit2.Callback
@@ -83,7 +83,7 @@ class LoggedInUserViewModel : ViewModel() {
 
                 override fun onFailure(call: Call<Unit>, t: Throwable) {
                     failureCallback()
-                    Sentry.captureException(t)
+                    Logger.captureException(t)
                 }
             })
     }
@@ -170,7 +170,7 @@ class LoggedInUserViewModel : ViewModel() {
                 }
 
                 override fun onFailure(call: Call<Data<List<Station>>>, t: Throwable) {
-                    Sentry.captureException(t)
+                    Logger.captureException(t)
                 }
             })
     }

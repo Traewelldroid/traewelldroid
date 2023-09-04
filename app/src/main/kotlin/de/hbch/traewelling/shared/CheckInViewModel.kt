@@ -13,8 +13,8 @@ import de.hbch.traewelling.api.models.status.StatusBusiness
 import de.hbch.traewelling.api.models.status.StatusVisibility
 import de.hbch.traewelling.api.models.status.UpdateStatusRequest
 import de.hbch.traewelling.api.models.trip.ProductType
+import de.hbch.traewelling.logging.Logger
 import de.hbch.traewelling.ui.checkInResult.CheckInResult
-import io.sentry.Sentry
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -112,7 +112,7 @@ class CheckInViewModel : ViewModel() {
                     onCheckedIn(checkInResult == CheckInResult.SUCCESSFUL)
                 }
                 override fun onFailure(call: Call<Data<CheckInResponse>>, t: Throwable) {
-                    Sentry.captureException(t)
+                    Logger.captureException(t)
                     checkInResult = CheckInResult.ERROR
                     onCheckedIn(false)
                 }

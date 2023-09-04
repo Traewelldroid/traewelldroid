@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.api.models.Data
 import de.hbch.traewelling.api.models.event.Event
-import io.sentry.Sentry
+import de.hbch.traewelling.logging.Logger
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -31,7 +31,7 @@ class EventViewModel : ViewModel() {
                 }
 
                 override fun onFailure(call: Call<Data<List<Event>>>, t: Throwable) {
-                    Sentry.captureException(t)
+                    Logger.captureException(t)
                 }
             })
     }
