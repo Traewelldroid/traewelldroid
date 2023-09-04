@@ -218,4 +218,6 @@
     <string name="embedded_up_distributor">Embedded FCM distributor</string>
     <string name="push_hint_title">Get notified! 🎉</string>
     <string name="push_hint_text">To receive push notifications a re-login is needed. Please log out and activate the switch for notifications on log in.</string>
+    <string name="no_browser_title">Supported Browsers</string>
+    <string name="no_browser_description">No supported browser for login could be detected on your system. If you are using Firefox as a main browser, please activate another browser since many users had problems in the past getting back to the app after logging in.</string>
 </resources>

@@ -213,4 +213,6 @@
     <string name="embedded_up_distributor">Eingebetteter FCM Distributor</string>
     <string name="push_hint_title">Erhalte Benachrichtigungen! 🎉</string>
     <string name="push_hint_text">Um Push-Benachrichtigungen zu erhalten, ist ein erneuter Login erforderlich. Bitte melde dich ab und aktiviere beim Login die Option für Push-Benachrichtigungen.</string>
+    <string name="no_browser_title">Unterstützte Browser</string>
+    <string name="no_browser_description">Es sind keine unterstützten Browser installiert. Wenn du Firefox nutzt, aktiviere bitte für den Login einen anderen Browser, da in der Vergangenheit einige Nutzer:innen von Firefox das Problem hatten, nach dem Login nicht zurück zur App zu gelangen.</string>
 </resources>
