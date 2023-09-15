@@ -3,7 +3,6 @@ package de.hbch.traewelling.ui.selectDestination
 import androidx.lifecycle.ViewModel
 import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.api.models.Data
-import de.hbch.traewelling.api.dtos.Trip
 import de.hbch.traewelling.api.models.trip.HafasTrainTrip
 import de.hbch.traewelling.logging.Logger
 import retrofit2.Call
@@ -16,7 +15,7 @@ class SelectDestinationViewModel : ViewModel() {
         tripId: String,
         lineName: String,
         start: Int,
-        successfulCallback: (Trip) -> Unit,
+        successfulCallback: (HafasTrainTrip) -> Unit,
         failureCallback: () -> Unit
     ) {
         TraewellingApi.travelService.getTrip(tripId, lineName, start)
@@ -28,7 +27,7 @@ class SelectDestinationViewModel : ViewModel() {
                     if (response.isSuccessful) {
                         val trip = response.body()?.data
                         if (trip != null) {
-                            successfulCallback(trip.toTrip())
+                            successfulCallback(trip)
                             return
                         }
                     }

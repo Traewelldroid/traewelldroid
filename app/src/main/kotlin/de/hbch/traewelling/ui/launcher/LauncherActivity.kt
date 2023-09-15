@@ -8,14 +8,22 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.jcloquell.androidsecurestorage.SecureStorage
 import de.hbch.traewelling.api.models.notifications.NotificationChannelType
+import de.hbch.traewelling.shared.LineIcons
 import de.hbch.traewelling.shared.SharedValues
 import de.hbch.traewelling.ui.login.LoginActivity
 import de.hbch.traewelling.ui.main.MainActivity
+import de.hbch.traewelling.util.readOrDownloadLineIcons
+import kotlinx.coroutines.runBlocking
 
 class LauncherActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen()
+
+        val icons = runBlocking {
+            readOrDownloadLineIcons()
+        }
+        LineIcons.getInstance().icons.addAll(icons)
 
         createNotificationChannels()
 

@@ -18,64 +18,31 @@ data class Status(
     var liked: Boolean?,
     @SerializedName("train") val journey: Journey,
     val event: Event?
-) {
-    fun toStatusDto(): de.hbch.traewelling.api.dtos.Status {
-        return de.hbch.traewelling.api.dtos.Status(
-            id,
-            journey.origin.name,
-            journey.origin.id,
-            journey.origin.evaIdentifier,
-            journey.origin.departurePlanned,
-            journey.origin.departureReal,
-            journey.departureManual,
-            journey.destination.name,
-            journey.destination.id,
-            journey.destination.evaIdentifier,
-            journey.destination.arrivalPlanned,
-            journey.destination.arrivalReal,
-            journey.arrivalManual,
-            journey.category,
-            journey.hafasTripId,
-            journey.line,
-            journey.journeyNumber,
-            journey.distance,
-            journey.duration,
-            business,
-            body ?: "",
-            liked,
-            likes,
-            userId,
-            username,
-            createdAt,
-            visibility,
-            event?.name
-        )
-    }
-}
+)
 
 enum class StatusVisibility() {
     @SerializedName("0")
-    PUBLIC() {
+    PUBLIC {
         override fun getIcon() = R.drawable.ic_public
         override fun getTitle() = R.string.visibility_public
     },
     @SerializedName("1")
-    UNLISTED() {
+    UNLISTED {
         override fun getIcon() = R.drawable.ic_lock_open
         override fun getTitle() = R.string.visibility_unlisted
     },
     @SerializedName("2")
-    FOLLOWERS() {
+    FOLLOWERS {
         override fun getIcon() = R.drawable.ic_people
         override fun getTitle() = R.string.visibility_followers
     },
     @SerializedName("3")
-    PRIVATE() {
+    PRIVATE {
         override fun getIcon() = R.drawable.ic_lock
         override fun getTitle() = R.string.visibility_private
     },
     @SerializedName("4")
-    ONLY_AUTHENTICATED() {
+    ONLY_AUTHENTICATED {
         override fun getIcon() = R.drawable.ic_authorized
         override fun getTitle() = R.string.visibility_only_authenticated
     };
