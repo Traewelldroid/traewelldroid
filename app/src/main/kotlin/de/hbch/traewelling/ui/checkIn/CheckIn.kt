@@ -32,12 +32,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import de.hbch.traewelling.R
-import de.hbch.traewelling.api.dtos.Trip
-import de.hbch.traewelling.api.dtos.TripStation
 import de.hbch.traewelling.api.models.event.Event
 import de.hbch.traewelling.api.models.status.StatusBusiness
 import de.hbch.traewelling.api.models.status.StatusVisibility
-import de.hbch.traewelling.api.models.trip.ProductType
 import de.hbch.traewelling.shared.CheckInViewModel
 import de.hbch.traewelling.shared.EventViewModel
 import de.hbch.traewelling.theme.AppTypography
@@ -50,9 +47,7 @@ import de.hbch.traewelling.ui.composables.OutlinedButtonWithIconAndText
 import de.hbch.traewelling.ui.composables.SwitchWithIconAndText
 import de.hbch.traewelling.ui.selectDestination.FromToTextRow
 import de.hbch.traewelling.util.getLocalDateString
-import java.time.Instant
 import java.time.ZonedDateTime
-import java.time.ZoneId
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -137,6 +132,8 @@ fun CheckIn(
                 modifier = Modifier.fillMaxWidth(),
                 category = checkInViewModel.category,
                 lineName = checkInViewModel.lineName,
+                lineId = checkInViewModel.lineId,
+                operatorCode = checkInViewModel.operatorCode,
                 destination = checkInViewModel.destination
             )
 
@@ -489,104 +486,6 @@ private fun ShareOptions(
                 },
                 drawableId = R.drawable.ic_chain,
                 stringId = R.string.chain_toot
-            )
-        }
-    }
-}
-
-@Preview
-@Composable
-private fun CheckInPreview() {
-    val viewModel = CheckInViewModel()
-    val station1 = TripStation(
-        id = 0,
-        name = "Bregenz",
-        rilIdentifier = null,
-        departurePlanned = Instant.ofEpochMilli(1685365200L * 1000).atZone(ZoneId.systemDefault()),
-        departureReal = Instant.ofEpochMilli(1685365200L * 1000).atZone(ZoneId.systemDefault()),
-        arrivalPlanned = Instant.ofEpochMilli(1685365200L * 1000).atZone(ZoneId.systemDefault()),
-        arrivalReal = Instant.ofEpochMilli(1685365200L * 1000).atZone(ZoneId.systemDefault()),
-        isCancelled = false
-    )
-    val station2 = TripStation(
-        id = 1,
-        name = "Lindau-Reutin",
-        rilIdentifier = "MLIR",
-        departurePlanned = Instant.ofEpochMilli(1685365680L * 1000).atZone(ZoneId.systemDefault()),
-        departureReal = Instant.ofEpochMilli(1685365800L * 1000).atZone(ZoneId.systemDefault()),
-        arrivalPlanned = Instant.ofEpochMilli(1685365680L * 1000).atZone(ZoneId.systemDefault()),
-        arrivalReal = Instant.ofEpochMilli(1685365800L * 1000).atZone(ZoneId.systemDefault()),
-        isCancelled = false
-    )
-    val station3 = TripStation(
-        id = 1,
-        name = "Memmingen",
-        rilIdentifier = "MM",
-        departurePlanned = Instant.ofEpochMilli(1685368680L * 1000).atZone(ZoneId.systemDefault()),
-        departureReal = Instant.ofEpochMilli(1685369280L * 1000).atZone(ZoneId.systemDefault()),
-        arrivalPlanned = Instant.ofEpochMilli(1685368680L * 1000).atZone(ZoneId.systemDefault()),
-        arrivalReal = Instant.ofEpochMilli(1685369280L * 1000).atZone(ZoneId.systemDefault()),
-        isCancelled = false
-    )
-    val station4 = TripStation(
-        id = 1,
-        name = "München Hbf Gl.27-36 langlanglanglang",
-        rilIdentifier = "MH N",
-        departurePlanned= Instant.ofEpochMilli(1685372640L * 1000).atZone(ZoneId.systemDefault()),
-        departureReal = null,
-        arrivalPlanned = Instant.ofEpochMilli(1685372640L * 1000).atZone(ZoneId.systemDefault()),
-        arrivalReal = null,
-        isCancelled = true
-    )
-    val stopoverList = listOf(
-        station1,
-        station2,
-        station3,
-        station4
-    )
-
-    val trip = Trip(
-        0,
-        ProductType.NATIONAL_EXPRESS,
-        "ECE 193",
-        "Zürich HB",
-        "Memmingen",
-        stopovers = stopoverList
-    )
-
-    viewModel.lineName = trip.lineName
-    viewModel.destination = trip.destination
-    viewModel.category = trip.category
-    viewModel.toot.value = true
-
-    val eventViewModel = EventViewModel()
-    eventViewModel.activeEvents.value = listOf(
-        Event(
-            0,
-            "Tolle Veranstaltung",
-            "tv",
-            "#toll",
-            "Host",
-            "url",
-            ZonedDateTime.now(),
-            ZonedDateTime.now(),
-            null
-        )
-    )
-
-    MainTheme {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            CheckIn(
-                checkInViewModel = viewModel,
-                isEditMode = false,
-                eventViewModel = eventViewModel
-            )
-            CheckIn(
-                checkInViewModel = viewModel,
-                isEditMode = true,
-                eventViewModel = eventViewModel
             )
         }
     }

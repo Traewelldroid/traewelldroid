@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -33,13 +34,14 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.lifecycle.viewmodel.compose.viewModel
 import de.hbch.traewelling.R
-import de.hbch.traewelling.api.dtos.Trip
-import de.hbch.traewelling.api.dtos.TripStation
+import de.hbch.traewelling.api.models.trip.HafasTrainTrip
+import de.hbch.traewelling.api.models.trip.HafasTrainTripStation
 import de.hbch.traewelling.api.models.trip.ProductType
 import de.hbch.traewelling.shared.CheckInViewModel
 import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.LocalColorScheme
 import de.hbch.traewelling.ui.composables.DataLoading
+import de.hbch.traewelling.ui.composables.LineIcon
 import de.hbch.traewelling.util.getDelayColor
 import de.hbch.traewelling.util.getLocalTimeString
 
@@ -47,10 +49,10 @@ import de.hbch.traewelling.util.getLocalTimeString
 fun SelectDestination(
     checkInViewModel: CheckInViewModel,
     modifier: Modifier = Modifier,
-    onStationSelected: (TripStation) -> Unit = { }
+    onStationSelected: (HafasTrainTripStation) -> Unit = { }
 ) {
     val selectDestinationViewModel: SelectDestinationViewModel = viewModel()
-    var trip by remember { mutableStateOf<Trip?>(null) }
+    var trip by remember { mutableStateOf<HafasTrainTrip?>(null) }
 
     LaunchedEffect(trip) {
         if (trip == null) {
@@ -77,7 +79,9 @@ fun SelectDestination(
 
     val scrollState = rememberScrollState()
     Column(
-        modifier = modifier.fillMaxWidth().verticalScroll(scrollState),
+        modifier = modifier
+            .fillMaxWidth()
+            .verticalScroll(scrollState),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         ElevatedCard {
@@ -90,7 +94,9 @@ fun SelectDestination(
                     FromToTextRow(
                         category = trip!!.category,
                         lineName = trip!!.lineName,
-                        destination = trip!!.destination
+                        lineId = checkInViewModel.lineId,
+                        operatorCode = checkInViewModel.operatorCode,
+                        destination = trip!!.destination.name
                     )
                     Column(
                         modifier = Modifier.padding(top = 16.dp)
@@ -122,10 +128,13 @@ fun FromToTextRow(
     modifier: Modifier = Modifier,
     category: ProductType?,
     lineName: String,
+    lineId: String?,
+    operatorCode: String?,
     destination: String
 ) {
     Row(
-        modifier = modifier
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         if (category != null) {
             Image(
@@ -134,13 +143,21 @@ fun FromToTextRow(
                 contentDescription = null
             )
         }
+        LineIcon(
+            lineName = lineName,
+            lineId = lineId,
+            operatorCode = operatorCode,
+            modifier = Modifier.padding(start = 8.dp),
+            defaultTextStyle = AppTypography.titleLarge
+        )
+        Icon(
+            painter = painterResource(id = R.drawable.ic_arrow_right),
+            contentDescription = null,
+            modifier = Modifier.padding(start = 8.dp)
+        )
         Text(
             modifier = Modifier.padding(start = 8.dp),
-            text = stringResource(
-                R.string.line_destination,
-                lineName,
-                destination
-            ),
+            text = destination,
             style = AppTypography.titleLarge,
             overflow = TextOverflow.Ellipsis,
             maxLines = 2
@@ -151,7 +168,7 @@ fun FromToTextRow(
 @Composable
 private fun TravelStopListItem(
     modifier: Modifier = Modifier,
-    station: TripStation,
+    station: HafasTrainTripStation,
     isLastStop: Boolean = false
 ) {
     ConstraintLayout(

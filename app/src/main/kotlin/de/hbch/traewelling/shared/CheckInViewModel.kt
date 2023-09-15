@@ -22,6 +22,8 @@ import java.time.ZonedDateTime
 
 class CheckInViewModel : ViewModel() {
     var lineName: String = ""
+    var lineId: String? = null
+    var operatorCode: String? = null
     var tripId: String = ""
     var startStationId: Int = 0
     var destinationStationId: Int = 0
@@ -53,6 +55,8 @@ class CheckInViewModel : ViewModel() {
         arrivalTime = null
         tripId = ""
         lineName = ""
+        operatorCode = null
+        lineId = null
         startStationId = 0
         departureTime = null
         message.value = ""

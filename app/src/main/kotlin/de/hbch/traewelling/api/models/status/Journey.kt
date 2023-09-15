@@ -19,5 +19,6 @@ data class Journey(
     val destination: HafasTrainTripStation,
     @SerializedName("manualDeparture") val departureManual: ZonedDateTime?,
     @SerializedName("manualArrival") val arrivalManual: ZonedDateTime?,
-    val operator: HafasOperator?
+    val operator: HafasOperator?,
+    @SerializedName("number") val lineId: String
 )

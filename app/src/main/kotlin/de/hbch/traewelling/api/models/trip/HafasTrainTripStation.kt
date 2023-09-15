@@ -1,6 +1,5 @@
 package de.hbch.traewelling.api.models.trip
 
-import de.hbch.traewelling.api.dtos.TripStation
 import java.time.ZonedDateTime
 
 data class HafasTrainTripStation(
@@ -24,17 +23,4 @@ data class HafasTrainTripStation(
     val isCancelled: Boolean
         // DB Rest also shows last stop as cancelled
         get() = cancelled && arrivalPlatformPlanned == null
-
-    fun toTripStation(): TripStation {
-        return TripStation(
-            id,
-            name,
-            rilIdentifier,
-            departurePlanned,
-            departureReal,
-            arrivalPlanned,
-            arrivalReal,
-            isCancelled
-        )
-    }
 }

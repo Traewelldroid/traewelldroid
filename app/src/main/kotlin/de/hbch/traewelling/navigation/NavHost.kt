@@ -18,7 +18,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.jcloquell.androidsecurestorage.SecureStorage
 import de.hbch.traewelling.R
-import de.hbch.traewelling.api.dtos.Status
+import de.hbch.traewelling.api.models.status.Status
 import de.hbch.traewelling.shared.CheckInViewModel
 import de.hbch.traewelling.shared.EventViewModel
 import de.hbch.traewelling.shared.LoggedInUserViewModel
@@ -85,21 +85,22 @@ fun TraewelldroidNavHost(
     }
 
     val navToEditCheckIn: (Status) -> Unit = {
-        checkInViewModel.lineName = it.line
-        checkInViewModel.message.postValue(it.message)
+        checkInViewModel.lineName = it.journey.line
+        checkInViewModel.lineId = it.journey.lineId
+        checkInViewModel.operatorCode = it.journey.operator?.id
+        checkInViewModel.message.postValue(it.body)
         checkInViewModel.statusVisibility.postValue(it.visibility)
         checkInViewModel.statusBusiness.postValue(it.business)
-        checkInViewModel.destination = it.destination
-        checkInViewModel.destinationStationId = it.destinationId
-        checkInViewModel.departureTime = it.departurePlanned
-        checkInViewModel.manualDepartureTime = it.departureManual
-        checkInViewModel.arrivalTime = it.arrivalPlanned
-        checkInViewModel.manualArrivalTime = it.arrivalManual
-        checkInViewModel.startStationId = it.originId
-        checkInViewModel.tripId = it.hafasTripId
-        checkInViewModel.editStatusId = it.statusId
-        checkInViewModel.departureTime = it.departurePlanned
-        checkInViewModel.category = it.productType
+        checkInViewModel.destination = it.journey.destination.name
+        checkInViewModel.destinationStationId = it.journey.destination.id
+        checkInViewModel.departureTime = it.journey.origin.departurePlanned
+        checkInViewModel.manualDepartureTime = it.journey.departureManual
+        checkInViewModel.arrivalTime = it.journey.destination.arrivalPlanned
+        checkInViewModel.manualArrivalTime = it.journey.arrivalManual
+        checkInViewModel.startStationId = it.journey.origin.id
+        checkInViewModel.tripId = it.journey.hafasTripId
+        checkInViewModel.editStatusId = it.id
+        checkInViewModel.category = it.journey.category
 
         navController.navigate(
             "check-in/?editMode=true"
@@ -278,14 +279,16 @@ fun TraewelldroidNavHost(
                                     R.string.title_also_check_in,
                                     R.drawable.ic_also_check_in
                                 ) {
-                                    checkInViewModel.lineName = status.line
-                                    checkInViewModel.tripId = status.hafasTripId
-                                    checkInViewModel.startStationId = status.originId
-                                    checkInViewModel.departureTime = status.departurePlanned
-                                    checkInViewModel.destinationStationId = status.destinationId
-                                    checkInViewModel.arrivalTime = status.arrivalPlanned
-                                    checkInViewModel.category = status.productType
-                                    checkInViewModel.destination = status.destination
+                                    checkInViewModel.lineName = status.journey.line
+                                    checkInViewModel.operatorCode = status.journey.operator?.id
+                                    checkInViewModel.lineId = status.journey.lineId
+                                    checkInViewModel.tripId = status.journey.hafasTripId
+                                    checkInViewModel.startStationId = status.journey.origin.id
+                                    checkInViewModel.departureTime = status.journey.origin.departurePlanned
+                                    checkInViewModel.destinationStationId = status.journey.destination.id
+                                    checkInViewModel.arrivalTime = status.journey.destination.arrivalPlanned
+                                    checkInViewModel.category = status.journey.category
+                                    checkInViewModel.destination = status.journey.destination.name
 
                                     navController.navigate(
                                         CheckIn.route

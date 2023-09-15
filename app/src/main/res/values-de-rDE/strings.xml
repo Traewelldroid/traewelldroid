@@ -215,4 +215,9 @@
     <string name="push_hint_text">Um Push-Benachrichtigungen zu erhalten, ist ein erneuter Login erforderlich. Bitte melde dich ab und aktiviere beim Login die Option für Push-Benachrichtigungen.</string>
     <string name="no_browser_title">Unterstützte Browser</string>
     <string name="no_browser_description">Es sind keine unterstützten Browser installiert. Wenn du Firefox nutzt, aktiviere bitte für den Login einen anderen Browser, da in der Vergangenheit einige Nutzer:innen von Firefox das Problem hatten, nach dem Login nicht zurück zur App zu gelangen.</string>
+    <string name="downloading_line_colors">Linienfarben herunterladen</string>
+    <string name="line_icons">Linien-Icons</string>
+    <string name="update_line_icons">Hier kannst du die Linien-Icons aktualisieren.</string>
+    <string name="last_updated">Zuletzt aktualisiert: %1$s</string>
+    <string name="refresh">Aktualisieren</string>
 </resources>
