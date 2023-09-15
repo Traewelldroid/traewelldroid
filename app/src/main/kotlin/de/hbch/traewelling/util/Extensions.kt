@@ -188,7 +188,7 @@ fun Context.shareStatus(
 suspend fun Context.readOrDownloadLineIcons(
     overwrite: Boolean = false
 ): List<LineIcon> {
-    val lineColorCsvUrl = URL("https://raw.githubusercontent.com/jheubuch/line-colors/main/line-colors.csv")
+    val lineColorCsvUrl = URL("https://raw.githubusercontent.com/Traewelling/line-colors/main/line-colors.csv")
     val file = File(filesDir, "line-colors.csv")
     val icons = withContext(Dispatchers.IO) {
         if (overwrite || !file.exists()) {
