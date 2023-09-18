@@ -40,6 +40,7 @@ import de.hbch.traewelling.ui.include.status.CheckInCardViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.io.InputStream
 import java.lang.Exception
 import java.net.URL
 import java.nio.file.Files
@@ -195,8 +196,9 @@ suspend fun Context.readOrDownloadLineIcons(
     val icons = try {
         withContext(Dispatchers.IO) {
             if (overwrite || !file.exists()) {
+                val inputStream: InputStream = lineColorCsvUrl.openStream()
                 Files.copy(
-                    lineColorCsvUrl.openStream(),
+                    inputStream,
                     file.toPath(),
                     StandardCopyOption.REPLACE_EXISTING
                 )
