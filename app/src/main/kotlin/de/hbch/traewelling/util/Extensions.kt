@@ -219,4 +219,8 @@ fun TraewelldroidUriBuilder(): Uri.Builder {
 }
 
 fun colorFromHex(color: String)
-    = Color(android.graphics.Color.parseColor(color))
+    = try {
+        Color(android.graphics.Color.parseColor(color))
+    } catch (_: Exception) {
+        null
+    }

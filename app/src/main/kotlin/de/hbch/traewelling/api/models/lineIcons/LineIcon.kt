@@ -10,10 +10,12 @@ data class LineIcon(
     val lineId: String,
     val backgroundColor: String,
     val textColor: String,
+    val borderColor: String,
     val shape: LineIconShape
 ) {
-    fun getBackgroundColor(): Color = colorFromHex(backgroundColor)
-    fun getTextColor(): Color = colorFromHex(textColor)
+    fun getBackgroundColor(): Color = colorFromHex(backgroundColor)!!
+    fun getTextColor(): Color = colorFromHex(textColor)!!
+    fun getBorderColor(): Color? = colorFromHex(borderColor)
 }
 
 enum class LineIconShape {
