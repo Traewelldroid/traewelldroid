@@ -152,7 +152,7 @@ fun SearchConnection(
                         },
                         onTripSelection = { trip ->
                             checkInViewModel.reset()
-                            checkInViewModel.lineName = trip.line?.name ?: trip.line?.travelId ?: ""
+                            checkInViewModel.lineName = trip.line?.name ?: trip.line?.journeyNumber?.toString() ?: ""
                             checkInViewModel.lineId = trip.line?.id
                             checkInViewModel.operatorCode = trip.line?.operator?.id
                             checkInViewModel.tripId = trip.tripId
@@ -398,6 +398,7 @@ fun ConnectionListItem(
     hafasLine: HafasLine?,
     modifier: Modifier = Modifier
 ) {
+    val journeyNumber = hafasLine?.journeyNumber
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(4.dp)
@@ -421,6 +422,13 @@ fun ConnectionListItem(
                     operatorCode = hafasLine?.operator?.id,
                     lineId = hafasLine?.id
                 )
+
+                if (journeyNumber != null && !hafasLine.name.contains(journeyNumber.toString())) {
+                    Text(
+                        text = "($journeyNumber)",
+                        style = AppTypography.bodySmall
+                    )
+                }
             }
             Column(
                 horizontalAlignment = Alignment.End
