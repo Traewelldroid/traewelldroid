@@ -31,6 +31,7 @@ import androidx.navigation.NavHostController
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.lineIcons.LineIcon
 import de.hbch.traewelling.api.models.status.Status
+import de.hbch.traewelling.logging.Logger
 import de.hbch.traewelling.shared.FeatureFlags
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.theme.AppTypography
@@ -39,6 +40,7 @@ import de.hbch.traewelling.ui.include.status.CheckInCardViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.lang.Exception
 import java.net.URL
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
@@ -190,15 +192,20 @@ suspend fun Context.readOrDownloadLineIcons(
 ): List<LineIcon> {
     val lineColorCsvUrl = URL("https://raw.githubusercontent.com/Traewelling/line-colors/main/line-colors.csv")
     val file = File(filesDir, "line-colors.csv")
-    val icons = withContext(Dispatchers.IO) {
-        if (overwrite || !file.exists()) {
-            Files.copy(
-                lineColorCsvUrl.openStream(),
-                file.toPath(),
-                StandardCopyOption.REPLACE_EXISTING
-            )
+    val icons = try {
+        withContext(Dispatchers.IO) {
+            if (overwrite || !file.exists()) {
+                Files.copy(
+                    lineColorCsvUrl.openStream(),
+                    file.toPath(),
+                    StandardCopyOption.REPLACE_EXISTING
+                )
+            }
+            return@withContext readCsv(file.inputStream())
         }
-        return@withContext readCsv(file.inputStream())
+    } catch (ex: Exception) {
+        Logger.captureException(ex)
+        listOf()
     }
     return icons
 }
