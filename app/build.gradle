@@ -12,6 +12,8 @@ sentry {
     autoInstallation {
         enabled = false
     }
+
+    ignoredFlavors = ["foss"]
 }
 
 def sentryDsn = ""
