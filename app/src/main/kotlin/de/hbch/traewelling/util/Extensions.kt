@@ -161,10 +161,10 @@ fun Context.shareStatus(
     status: Status
 ) {
     var shareText =
-        if (status.body?.isBlank() == true)
+        if (status.getStatusBody().isBlank())
             getString(R.string.share_text, status.journey.line, status.journey.destination.name)
         else
-            getString(R.string.share_text_with_body, status.body, status.journey.line, status.journey.destination.name)
+            getString(R.string.share_text_with_body, status.getStatusBody(), status.journey.line, status.journey.destination.name)
 
     val shareUri = Uri.Builder()
         .scheme("https")

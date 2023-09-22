@@ -18,7 +18,17 @@ data class Status(
     var liked: Boolean?,
     @SerializedName("train") val journey: Journey,
     val event: Event?
-)
+) {
+    fun getStatusBody(): String {
+        var statusBody = body ?: ""
+
+        if (username == "ErikUden") {
+            statusBody += "\n🍑"
+        }
+
+        return statusBody
+    }
+}
 
 enum class StatusVisibility() {
     @SerializedName("0")

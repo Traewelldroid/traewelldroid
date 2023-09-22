@@ -181,7 +181,7 @@ fun CheckInCard(
                         kilometers = status.journey.distance,
                         duration = status.journey.duration,
                         statusBusiness = status.business,
-                        message = status.body,
+                        message = status.getStatusBody(),
                         journeyNumber = status.journey.journeyNumber,
                         operatorCode = status.journey.operator?.id,
                         lineId = status.journey.lineId
