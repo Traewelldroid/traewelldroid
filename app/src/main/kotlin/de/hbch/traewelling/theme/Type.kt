@@ -25,3 +25,5 @@ val AppTypography = Typography(
     labelMedium = defaultTypography.labelMedium.copy(fontFamily = raleway),
     labelSmall = defaultTypography.labelSmall.copy(fontFamily = raleway)
 )
+
+val LineIconStyle = defaultTypography.bodyMedium

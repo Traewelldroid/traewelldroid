@@ -1,6 +1,7 @@
 package de.hbch.traewelling.ui.login
 
 import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.pm.PackageManager.ResolveInfoFlags
@@ -135,7 +136,17 @@ class LoginActivity : ComponentActivity() {
     private fun initiateOAuthPKCELogin() {
         if (appCanHandleLinks()) {
             initAuthRequest()
-            authorizationLauncher.launch(authIntent)
+            try {
+                authorizationLauncher.launch(authIntent)
+            } catch (exception: ActivityNotFoundException) {
+                val alertDialog = AlertDialog.Builder(this).create()
+                alertDialog.setTitle(getString(R.string.no_browser_title))
+                alertDialog.setMessage(getString(R.string.no_browser_description))
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok)) { _, _ ->
+                    alertDialog.dismiss()
+                }
+                alertDialog.show()
+            }
         } else {
             val alertDialog = AlertDialog.Builder(this).create()
             alertDialog.setTitle(getString(R.string.request_url_verification))

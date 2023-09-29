@@ -23,13 +23,9 @@ class FeatureFlags private constructor() {
             allowManualTimeDeletion.postValue(
                 it.isEnabled("AllowManualTimeDeletion", false)
             )
-            displayOperatorOnStatusDetails.postValue(
-                it.isEnabled("DisplayOperatorOnStatusDetails", false)
-            )
         }
     }
 
     // Add feature flags as LiveData so they can be state-subscribed in Compose
     val allowManualTimeDeletion = MutableLiveData(false)
-    val displayOperatorOnStatusDetails = MutableLiveData(false)
 }

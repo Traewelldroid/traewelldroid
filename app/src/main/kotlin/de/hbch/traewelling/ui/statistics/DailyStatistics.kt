@@ -69,7 +69,7 @@ fun DailyStatistics(
     date: LocalDate,
     loggedInUserViewModel: LoggedInUserViewModel,
     statusSelectedAction: (Int) -> Unit,
-    statusEditAction: (de.hbch.traewelling.api.dtos.Status) -> Unit,
+    statusEditAction: (Status) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val viewModel: StatisticsViewModel = viewModel()
@@ -129,7 +129,7 @@ private fun DailyStatisticsView(
     date: LocalDate,
     modifier: Modifier = Modifier,
     statusSelectedAction: (Int) -> Unit = { },
-    statusEditAction: (de.hbch.traewelling.api.dtos.Status) -> Unit = { },
+    statusEditAction: (Status) -> Unit = { },
     dateSelectedAction: (LocalDate) -> Unit = { }
 ) {
     val checkInCardViewModel: CheckInCardViewModel = viewModel()
@@ -225,7 +225,7 @@ private fun DailyStatisticsView(
                         text = stringResource(id = R.string.map_view)
                     )
                 },
-                enabled = (statistics.featureCollection.features?.size?.compareTo(0) ?: -1) > 0
+                enabled = (statistics.featureCollection?.features?.size?.compareTo(0) ?: -1) > 0
             )
         }
         if (selectedTab == 0) {
@@ -260,7 +260,7 @@ private fun DailyStatisticsView(
             checkIns.forEach { checkIn ->
                 CheckInCard(
                     checkInCardViewModel = checkInCardViewModel,
-                    status = checkIn.toStatusDto(),
+                    status = checkIn,
                     loggedInUserViewModel = loggedInUserViewModel,
                     statusSelected = statusSelectedAction,
                     handleEditClicked = statusEditAction

@@ -34,7 +34,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
@@ -43,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.station.Station
+import de.hbch.traewelling.api.models.trip.HafasLine
 import de.hbch.traewelling.api.models.trip.HafasTrip
 import de.hbch.traewelling.api.models.trip.ProductType
 import de.hbch.traewelling.shared.CheckInViewModel
@@ -53,6 +53,7 @@ import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
 import de.hbch.traewelling.ui.composables.DataLoading
 import de.hbch.traewelling.ui.composables.Dialog
 import de.hbch.traewelling.ui.composables.FilterChipGroup
+import de.hbch.traewelling.ui.composables.LineIcon
 import de.hbch.traewelling.ui.composables.OutlinedButtonWithIconAndText
 import de.hbch.traewelling.ui.include.cardSearchStation.CardSearchStation
 import de.hbch.traewelling.ui.include.cardSearchStation.SearchStationCardViewModel
@@ -151,7 +152,9 @@ fun SearchConnection(
                         },
                         onTripSelection = { trip ->
                             checkInViewModel.reset()
-                            checkInViewModel.lineName = trip.line?.name ?: trip.line?.travelId ?: ""
+                            checkInViewModel.lineName = trip.line?.name ?: trip.line?.journeyNumber?.toString() ?: ""
+                            checkInViewModel.lineId = trip.line?.id
+                            checkInViewModel.operatorCode = trip.line?.operator?.id
                             checkInViewModel.tripId = trip.tripId
                             checkInViewModel.startStationId = trip.station?.id ?: -1
                             checkInViewModel.departureTime = trip.plannedDeparture
@@ -345,7 +348,6 @@ fun SearchConnection(
                     }
                     .padding(vertical = 8.dp),
                 productType = trip.line?.product ?: ProductType.BUS,
-                line = trip.line?.name ?: trip.line?.travelId ?: "",
                 departurePlanned = trip.plannedDeparture ?: ZonedDateTime.now(),
                 departureReal = trip.departure ?: trip.plannedDeparture,
                 isCancelled = trip.isCancelled,
@@ -354,7 +356,8 @@ fun SearchConnection(
                     if (!trip.station?.name.isNullOrBlank() && stationId != null && trip.station?.id != stationId)
                         trip.station?.name
                     else
-                        null
+                        null,
+                hafasLine = trip.line
             )
 
             Divider(
@@ -387,14 +390,15 @@ fun SearchConnection(
 @Composable
 fun ConnectionListItem(
     productType: ProductType,
-    line: String,
     departurePlanned: ZonedDateTime,
     departureReal: ZonedDateTime?,
     isCancelled: Boolean,
     destination: String,
     departureStation: String?,
+    hafasLine: HafasLine?,
     modifier: Modifier = Modifier
 ) {
+    val journeyNumber = hafasLine?.journeyNumber
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(4.dp)
@@ -413,10 +417,18 @@ fun ConnectionListItem(
                     painter = painterResource(id = productType.getIcon()),
                     contentDescription = stringResource(id = productType.getString())
                 )
-                Text(
-                    text = line,
-                    fontWeight = FontWeight.ExtraBold
+                LineIcon(
+                    lineName = hafasLine?.name ?: "",
+                    operatorCode = hafasLine?.operator?.id,
+                    lineId = hafasLine?.id
                 )
+
+                if (journeyNumber != null && !hafasLine.name.contains(journeyNumber.toString())) {
+                    Text(
+                        text = "($journeyNumber)",
+                        style = AppTypography.bodySmall
+                    )
+                }
             }
             Column(
                 horizontalAlignment = Alignment.End
@@ -548,21 +560,21 @@ fun ConnectionListItemPreview() {
         ) {
             ConnectionListItem(
                 productType = ProductType.BUS,
-                line = "RE 75",
                 departurePlanned = ZonedDateTime.now(),
                 departureReal = ZonedDateTime.now(),
                 isCancelled = false,
                 destination = "Memmingen",
-                departureStation = null
+                departureStation = null,
+                hafasLine = null
             )
             ConnectionListItem(
                 productType = ProductType.TRAM,
-                line = "STB U3",
                 departurePlanned = ZonedDateTime.now(),
                 departureReal = ZonedDateTime.now(),
                 isCancelled = true,
                 destination = "S-Vaihingen über Dachswald, Panoramabahn etc pp",
-                departureStation = "Hauptbahnhof, Arnulf-Klett-Platz, einmal über den Fernwanderweg, rechts abbiegen, Treppe runter, dritter Bahnsteig rechts"
+                departureStation = "Hauptbahnhof, Arnulf-Klett-Platz, einmal über den Fernwanderweg, rechts abbiegen, Treppe runter, dritter Bahnsteig rechts",
+                hafasLine = null
             )
         }
     }

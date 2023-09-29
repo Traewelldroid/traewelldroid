@@ -23,6 +23,7 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -31,7 +32,9 @@ import com.jcloquell.androidsecurestorage.SecureStorage
 import de.hbch.traewelling.BuildConfig
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.TraewellingApi
+import de.hbch.traewelling.api.models.lineIcons.LineIcon
 import de.hbch.traewelling.api.models.status.Status
+import de.hbch.traewelling.logging.Logger
 import de.hbch.traewelling.shared.FeatureFlags
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.shared.SharedValues
@@ -42,6 +45,14 @@ import net.openid.appauth.AppAuthConfiguration
 import net.openid.appauth.AuthorizationService
 import net.openid.appauth.GrantTypeValues
 import net.openid.appauth.TokenRequest
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.io.File
+import java.io.InputStream
+import java.lang.Exception
+import java.net.URL
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
 import java.time.LocalDate
 import java.time.ZonedDateTime
 
@@ -64,7 +75,7 @@ fun LazyListScope.checkInList(
     loggedInUserViewModel: LoggedInUserViewModel,
     stationSelectedAction: (String, ZonedDateTime?) -> Unit = { _, _ -> },
     statusSelectedAction: (Int) -> Unit = { },
-    statusEditAction: (de.hbch.traewelling.api.dtos.Status) -> Unit = { },
+    statusEditAction: (Status) -> Unit = { },
     statusDeletedAction: () -> Unit = { },
     userSelectedAction: (String) -> Unit = { },
     showDailyStatisticsLink: Boolean = false,
@@ -115,13 +126,13 @@ fun LazyListScope.checkInList(
         }
         CheckInCard(
             checkInCardViewModel = checkInCardViewModel,
-            status = status.toStatusDto(),
+            status = status,
             loggedInUserViewModel = loggedInUserViewModel,
             stationSelected = stationSelectedAction,
             statusSelected = statusSelectedAction,
             handleEditClicked = statusEditAction,
             onDeleted = { statusValue ->
-                checkIns.removeIf { it.id == statusValue.statusId }
+                checkIns.removeIf { it.id == statusValue.id }
                 statusDeletedAction()
             },
             userSelected = userSelectedAction
@@ -155,19 +166,19 @@ fun LazyListState.OnBottomReached(
 }
 
 fun Context.shareStatus(
-    status: de.hbch.traewelling.api.dtos.Status
+    status: Status
 ) {
     var shareText =
-        if (status.message.isBlank())
-            getString(R.string.share_text, status.line, status.destination)
+        if (status.getStatusBody().isBlank())
+            getString(R.string.share_text, status.journey.line, status.journey.destination.name)
         else
-            getString(R.string.share_text_with_body, status.message, status.line, status.destination)
+            getString(R.string.share_text_with_body, status.getStatusBody(), status.journey.line, status.journey.destination.name)
 
     val shareUri = Uri.Builder()
         .scheme("https")
         .authority("traewelling.de")
         .appendPath("status")
-        .appendPath(status.statusId.toString())
+        .appendPath(status.id.toString())
         .build()
 
     shareText = shareText.plus("\n\n$shareUri")
@@ -185,11 +196,42 @@ fun Context.shareStatus(
     startActivity(shareIntent)
 }
 
+suspend fun Context.readOrDownloadLineIcons(
+    overwrite: Boolean = false
+): List<LineIcon> {
+    val lineColorCsvUrl = URL("https://raw.githubusercontent.com/Traewelling/line-colors/main/line-colors.csv")
+    val file = File(filesDir, "line-colors.csv")
+    val icons = try {
+        withContext(Dispatchers.IO) {
+            if (overwrite || !file.exists()) {
+                val inputStream: InputStream = lineColorCsvUrl.openStream()
+                Files.copy(
+                    inputStream,
+                    file.toPath(),
+                    StandardCopyOption.REPLACE_EXISTING
+                )
+            }
+            return@withContext readCsv(file.inputStream())
+        }
+    } catch (ex: Exception) {
+        Logger.captureException(ex)
+        listOf()
+    }
+    return icons
+}
+
 fun TraewelldroidUriBuilder(): Uri.Builder {
     return Uri.Builder()
         .scheme("traewelldroid")
         .authority("app.traewelldroid.de")
 }
+
+fun colorFromHex(color: String)
+    = try {
+        Color(android.graphics.Color.parseColor(color))
+    } catch (_: Exception) {
+        null
+    }
 
 
 

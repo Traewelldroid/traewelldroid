@@ -28,7 +28,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,10 +46,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import de.hbch.traewelling.R
-import de.hbch.traewelling.api.dtos.Status
+import de.hbch.traewelling.api.models.status.Status
 import de.hbch.traewelling.api.models.status.StatusVisibility
 import de.hbch.traewelling.api.models.user.User
-import de.hbch.traewelling.shared.FeatureFlags
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.MainTheme
@@ -81,19 +79,15 @@ fun StatusDetail(
     val checkInCardViewModel: CheckInCardViewModel = viewModel()
     var mapExpanded by remember { mutableStateOf(false) }
     var status by remember { mutableStateOf<Status?>(null) }
-    val displayOperator by FeatureFlags.getInstance().displayOperatorOnStatusDetails.observeAsState(
-        initial = false
-    )
     var operator by remember { mutableStateOf<String?>(null) }
     val context = LocalContext.current
 
     LaunchedEffect(status) {
         if (status == null) {
             statusDetailViewModel.getStatusById(statusId, {
-                val statusDto = it.toStatusDto()
                 operator = it.journey.operator?.name
-                status = statusDto
-                statusLoaded(statusDto)
+                status = it
+                statusLoaded(it)
             }, { })
         }
     }
@@ -154,7 +148,7 @@ fun StatusDetail(
                     isOwnStatus = (loggedInUserViewModel?.loggedInUser?.value?.id ?: -1) == status?.userId,
                     defaultVisibility = loggedInUserViewModel?.defaultStatusVisibility ?: StatusVisibility.PUBLIC
                 )
-                status?.likeCount?.let {
+                status?.likes?.let {
                     if (it > 0) {
                         StatusLikes(
                             statusId = statusId,
@@ -176,15 +170,15 @@ fun StatusDetail(
                                 .setShowTitle(false)
                                 .build()
 
-                            val isoDate = DateTimeFormatter.ISO_INSTANT.format(dStatus.departurePlanned)
+                            val isoDate = DateTimeFormatter.ISO_INSTANT.format(dStatus.journey.origin.departurePlanned)
 
                             val uri = Uri.Builder()
                                 .scheme("https")
                                 .authority("bahn.expert")
                                 .appendPath("details")
-                                .appendPath(dStatus.journeyNumber?.toString())
+                                .appendPath(dStatus.journey.journeyNumber.toString())
                                 .appendPath(isoDate)
-                                .appendQueryParameter("station", dStatus.originEvaId.toString())
+                                .appendQueryParameter("station", dStatus.journey.origin.evaIdentifier.toString())
                                 .build()
 
                             intent.launchUrl(
@@ -194,14 +188,12 @@ fun StatusDetail(
                         }
                     }
                 )
-                if (displayOperator && operator != null) {
-                    Text(
-                        text = operator ?: "",
-                        modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.End,
-                        style = AppTypography.labelMedium
-                    )
-                }
+                Text(
+                    text = operator ?: "",
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.End,
+                    style = AppTypography.labelMedium
+                )
             }
         }
     }

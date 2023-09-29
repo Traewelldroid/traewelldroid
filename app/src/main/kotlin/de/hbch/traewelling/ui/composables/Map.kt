@@ -145,10 +145,10 @@ fun OpenRailwayMapView(
     )
 }
 
-fun getPolyLinesFromFeatureCollection(featureCollection: FeatureCollection, color: Int): List<Polyline> {
+fun getPolyLinesFromFeatureCollection(featureCollection: FeatureCollection?, color: Int): List<Polyline> {
     val polyLines: MutableList<Polyline> = mutableListOf()
 
-    featureCollection.features?.forEach { feature ->
+    featureCollection?.features?.forEach { feature ->
         val polyline = Polyline()
         feature.geometry?.coordinates?.forEach { coordinate ->
             polyline.addPoint(

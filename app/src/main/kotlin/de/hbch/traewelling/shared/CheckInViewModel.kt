@@ -13,8 +13,8 @@ import de.hbch.traewelling.api.models.status.StatusBusiness
 import de.hbch.traewelling.api.models.status.StatusVisibility
 import de.hbch.traewelling.api.models.status.UpdateStatusRequest
 import de.hbch.traewelling.api.models.trip.ProductType
+import de.hbch.traewelling.logging.Logger
 import de.hbch.traewelling.ui.checkInResult.CheckInResult
-import io.sentry.Sentry
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -22,6 +22,8 @@ import java.time.ZonedDateTime
 
 class CheckInViewModel : ViewModel() {
     var lineName: String = ""
+    var lineId: String? = null
+    var operatorCode: String? = null
     var tripId: String = ""
     var startStationId: Int = 0
     var destinationStationId: Int = 0
@@ -53,6 +55,8 @@ class CheckInViewModel : ViewModel() {
         arrivalTime = null
         tripId = ""
         lineName = ""
+        operatorCode = null
+        lineId = null
         startStationId = 0
         departureTime = null
         message.value = ""
@@ -112,7 +116,7 @@ class CheckInViewModel : ViewModel() {
                     onCheckedIn(checkInResult == CheckInResult.SUCCESSFUL)
                 }
                 override fun onFailure(call: Call<Data<CheckInResponse>>, t: Throwable) {
-                    Sentry.captureException(t)
+                    Logger.captureException(t)
                     checkInResult = CheckInResult.ERROR
                     onCheckedIn(false)
                 }

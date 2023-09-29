@@ -7,7 +7,7 @@ import de.hbch.traewelling.api.models.Data
 import de.hbch.traewelling.api.models.statistics.DailyStatistics
 import de.hbch.traewelling.api.models.statistics.PersonalStatistics
 import de.hbch.traewelling.events.UnauthorizedEvent
-import io.sentry.Sentry
+import de.hbch.traewelling.logging.Logger
 import org.greenrobot.eventbus.EventBus
 import retrofit2.Call
 import retrofit2.Callback
@@ -58,7 +58,7 @@ class StatisticsViewModel : ViewModel() {
                 }
 
                 override fun onFailure(call: Call<Data<PersonalStatistics>>, t: Throwable) {
-                    Sentry.captureException(t)
+                    Logger.captureException(t)
                 }
             })
     }
@@ -84,7 +84,7 @@ class StatisticsViewModel : ViewModel() {
 
                 override fun onFailure(call: Call<Data<DailyStatistics>>, t: Throwable) {
                     onError()
-                    Sentry.captureException(t)
+                    Logger.captureException(t)
                 }
             })
     }

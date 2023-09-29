@@ -142,7 +142,7 @@ private fun SuccessfulCheckInResult(
                 stringId = R.string.title_share,
                 drawableId = R.drawable.ic_share,
                 onClick = {
-                    context.shareStatus(checkInResponse.status.toStatusDto())
+                    context.shareStatus(checkInResponse.status)
                 }
             )
             if (checkInResponse.coTravellers.isNotEmpty()) {

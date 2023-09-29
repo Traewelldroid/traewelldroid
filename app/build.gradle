@@ -3,9 +3,17 @@ plugins {
     id "kotlin-android"
     id "kotlin-kapt"
     id "androidx.navigation.safeargs.kotlin"
-    id "io.sentry.android.gradle" version "3.11.1"
+    id "io.sentry.android.gradle" version "3.12.0"
     id "com.mikepenz.aboutlibraries.plugin"
     id "com.google.gms.google-services"
+}
+
+sentry {
+    autoInstallation {
+        enabled = false
+    }
+
+    ignoredFlavors = ["foss"]
 }
 
 def sentryDsn = ""
@@ -46,8 +54,8 @@ ext.loadProperties = { String file ->
 
 android {
     def packageName = "de.hbch.traewelling"
-    def name = "1.25.2"
-    def code = 117
+    def name = "2.1.5"
+    def code = 127
 
     compileSdk 34
 
@@ -130,21 +138,21 @@ dependencies {
     implementation "androidx.compose.foundation:foundation:$composeVersion"
     implementation "androidx.compose.foundation:foundation-layout:$composeVersion"
     implementation "androidx.compose.material:material:$composeVersion"
-    implementation "androidx.compose.runtime:runtime-livedata:$composeVersion"
+    implementation "androidx.compose.runtime:runtime-livedata:1.5.2"
     implementation "androidx.compose.ui:ui-tooling:$composeVersion"
     implementation "com.google.accompanist:accompanist-themeadapter-material3:0.28.0"
     implementation "com.google.accompanist:accompanist-systemuicontroller:0.30.1"
     implementation "com.google.accompanist:accompanist-permissions:0.30.1"
-    implementation "androidx.compose.material3:material3:1.1.1"
+    implementation "androidx.compose.material3:material3:1.1.2"
     implementation "androidx.activity:activity-compose:1.7.2"
     implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
 
-    implementation "androidx.core:core-ktx:1.10.1"
+    implementation "androidx.core:core-ktx:1.12.0"
     implementation "androidx.appcompat:appcompat:1.6.1"
     implementation "com.google.android.material:material:1.9.0"
     implementation "androidx.constraintlayout:constraintlayout:2.1.4"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.6.1"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.6.2"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2"
     implementation "androidx.legacy:legacy-support-v4:1.0.0"
     implementation "androidx.browser:browser:1.6.0"
     implementation "androidx.core:core-splashscreen:1.0.1"
@@ -160,7 +168,7 @@ dependencies {
     implementation "com.jcloquell:androidsecurestorage:0.1.3"
 
     // Navigation Component
-    def nav_version_ktx = "2.7.1"
+    def nav_version_ktx = "2.7.3"
     implementation "androidx.navigation:navigation-compose:$nav_version_ktx"
 
     // Retrofit
@@ -178,6 +186,9 @@ dependencies {
     // Feature flags
     implementation "io.getunleash:unleash-android-proxy-sdk:0.5.5"
 
+    // Sentry
+    playImplementation "io.sentry:sentry-android:6.28.0"
+
     // Unified Push
     implementation 'com.github.UnifiedPush:android-connector:2.1.1'
     playImplementation('com.github.UnifiedPush:android-embedded_fcm_distributor:2.2.0') {
@@ -185,6 +196,9 @@ dependencies {
         exclude group: 'com.google.firebase', module: 'firebase-analytics'
         exclude group: 'com.google.firebase', module: 'firebase-measurement-connector'
     }
+
+    // CSV reader
+    implementation 'com.github.doyaaaaaken:kotlin-csv-jvm:1.9.2'
 }
 
 

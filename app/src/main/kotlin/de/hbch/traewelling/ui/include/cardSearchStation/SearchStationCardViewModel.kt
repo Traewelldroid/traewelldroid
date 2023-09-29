@@ -5,7 +5,7 @@ import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.api.models.Data
 import de.hbch.traewelling.api.models.station.Station
 import de.hbch.traewelling.api.models.station.StationData
-import io.sentry.Sentry
+import de.hbch.traewelling.logging.Logger
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -30,7 +30,7 @@ class SearchStationCardViewModel: ViewModel() {
                 }
                 override fun onFailure(call: Call<Data<List<Station>>>, t: Throwable) {
                     failureCallback()
-                    Sentry.captureException(t)
+                    Logger.captureException(t)
                 }
             })
     }
@@ -56,7 +56,7 @@ class SearchStationCardViewModel: ViewModel() {
 
                 override fun onFailure(call: Call<StationData>, t: Throwable) {
                     failureCallback()
-                    Sentry.captureException(t)
+                    Logger.captureException(t)
                 }
             })
     }

@@ -36,24 +36,21 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import de.hbch.traewelling.R
-import de.hbch.traewelling.api.dtos.Status
+import de.hbch.traewelling.api.models.status.Status
 import de.hbch.traewelling.api.models.status.StatusBusiness
-import de.hbch.traewelling.api.models.status.StatusVisibility
 import de.hbch.traewelling.api.models.trip.ProductType
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.LocalColorScheme
-import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.theme.StarYellow
+import de.hbch.traewelling.ui.composables.LineIcon
 import de.hbch.traewelling.ui.user.getDurationString
 import de.hbch.traewelling.util.getLocalDateTimeString
 import de.hbch.traewelling.util.getLocalTimeString
@@ -81,7 +78,7 @@ fun CheckInCard(
         ElevatedCard(
             modifier = modifier.fillMaxWidth(),
             onClick = {
-                statusSelected(status.statusId)
+                statusSelected(status.id)
             }
         ) {
             Column(
@@ -146,9 +143,9 @@ fun CheckInCard(
                             top.linkTo(parent.top)
                             width = Dimension.fillToConstraints
                         },
-                        stationName = status.origin,
-                        timePlanned = status.departurePlanned,
-                        timeReal = status.departureManual ?: status.departureReal,
+                        stationName = status.journey.origin.name,
+                        timePlanned = status.journey.origin.departurePlanned,
+                        timeReal = status.journey.departureManual ?: status.journey.origin.departureReal,
                         stationSelected = stationSelected
                     )
 
@@ -161,9 +158,9 @@ fun CheckInCard(
                                 bottom.linkTo(parent.bottom)
                                 width = Dimension.fillToConstraints
                             },
-                        stationName = status.destination,
-                        timePlanned = status.arrivalPlanned,
-                        timeReal = status.arrivalManual ?: status.arrivalReal,
+                        stationName = status.journey.destination.name,
+                        timePlanned = status.journey.destination.arrivalPlanned,
+                        timeReal = status.journey.arrivalManual ?: status.journey.destination.arrivalReal,
                         verticalAlignment = Alignment.Bottom,
                         stationSelected = stationSelected
                     )
@@ -179,18 +176,20 @@ fun CheckInCard(
                                 end.linkTo(stationRowTop.end)
                                 width = Dimension.fillToConstraints
                             },
-                        productType = status.productType,
-                        line = status.line,
-                        kilometers = status.distance,
-                        duration = status.duration,
+                        productType = status.journey.category,
+                        line = status.journey.line,
+                        kilometers = status.journey.distance,
+                        duration = status.journey.duration,
                         statusBusiness = status.business,
-                        message = status.message,
-                        journeyNumber = status.journeyNumber
+                        message = status.getStatusBody(),
+                        journeyNumber = status.journey.journeyNumber,
+                        operatorCode = status.journey.operator?.id,
+                        lineId = status.journey.lineId
                     )
                 }
                 val progress = calculateProgress(
-                    from = status.departureReal ?: status.departurePlanned,
-                    to = status.arrivalReal ?: status.arrivalPlanned
+                    from = status.journey.departureManual ?: status.journey.origin.departureReal ?: status.journey.origin.departurePlanned,
+                    to = status.journey.arrivalManual ?: status.journey.destination.arrivalReal ?: status.journey.destination.arrivalPlanned
                 )
                 LinearProgressIndicator(
                     modifier = Modifier
@@ -210,7 +209,7 @@ fun CheckInCard(
                         handleEditClicked(status)
                     },
                     handleDeleteClicked = {
-                        checkInCardViewModel.deleteStatus(status.statusId, {
+                        checkInCardViewModel.deleteStatus(status.id, {
                             onDeleted(status)
                         }, { })
                     }
@@ -302,7 +301,6 @@ private fun StationRow(
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun CheckInCardContent(
     modifier: Modifier = Modifier,
@@ -312,7 +310,9 @@ private fun CheckInCardContent(
     kilometers: Int,
     duration: Int,
     statusBusiness: StatusBusiness,
-    message: String?
+    message: String?,
+    operatorCode: String? = null,
+    lineId: String? = null
 ) {
     Column(
         modifier = modifier,
@@ -324,7 +324,9 @@ private fun CheckInCardContent(
             journeyNumber = journeyNumber,
             kilometers = kilometers,
             duration = duration,
-            statusBusiness = statusBusiness
+            statusBusiness = statusBusiness,
+            operatorCode = operatorCode,
+            lineId = lineId
         )
         if (!message.isNullOrEmpty()) {
             Row(
@@ -352,7 +354,9 @@ fun StatusDetailsRow(
     kilometers: Int,
     duration: Int,
     statusBusiness: StatusBusiness,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    operatorCode: String? = null,
+    lineId: String? = null
 ) {
     FlowRow(
         modifier = modifier
@@ -363,11 +367,11 @@ fun StatusDetailsRow(
             painter = painterResource(id = productType.getIcon()),
             contentDescription = null
         )
-        Text(
+        LineIcon(
+            lineName = line,
             modifier = alignmentModifier.padding(start = 4.dp),
-            text = line,
-            style = AppTypography.bodyLarge,
-            fontWeight = FontWeight.ExtraBold
+            operatorCode = operatorCode,
+            lineId = lineId
         )
         if (journeyNumber != null && !line.contains(journeyNumber.toString())) {
             Text(
@@ -407,7 +411,7 @@ private fun CheckInCardFooter(
     handleDeleteClicked: () -> Unit = { }
 ) {
     var likedState by remember { mutableStateOf(status.liked ?: false) }
-    var likeCountState by remember { mutableIntStateOf(status.likeCount ?: 0) }
+    var likeCountState by remember { mutableIntStateOf(status.likes ?: 0) }
 
     Row(
         modifier = modifier,
@@ -417,17 +421,17 @@ private fun CheckInCardFooter(
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            if (status.liked != null && status.likeCount != null) {
+            if (status.liked != null && status.likes != null) {
                 Row(
                     modifier = Modifier
                         .clickable {
                             if (likedState) {
-                                checkInCardViewModel.deleteFavorite(status.statusId) {
+                                checkInCardViewModel.deleteFavorite(status.id) {
                                     likedState = false
                                     likeCountState--
                                 }
                             } else {
-                                checkInCardViewModel.createFavorite(status.statusId) {
+                                checkInCardViewModel.createFavorite(status.id) {
                                     likedState = true
                                     likeCountState++
                                 }
@@ -561,7 +565,7 @@ private fun CheckInCardFooter(
     }
 
     // Event
-    if (!status.eventName.isNullOrEmpty()) {
+    if (!status.event?.name.isNullOrEmpty()) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
@@ -572,7 +576,7 @@ private fun CheckInCardFooter(
                 contentDescription = null
             )
             Text(
-                text = status.eventName,
+                text = status.event!!.name,
                 style = AppTypography.labelMedium
             )
         }
@@ -590,50 +594,4 @@ fun getFormattedDistance(distance: Int): String {
     return MeasureFormat
         .getInstance(Locale.getDefault(), MeasureFormat.FormatWidth.SHORT)
         .formatMeasures(roundedDistance)
-}
-
-@Preview
-@Composable
-private fun CheckInCardPreview() {
-    MainTheme {
-        val checkInCardViewModel = CheckInCardViewModel()
-        val status = Status(
-            0,
-            "Start Hbf",
-            123,
-            42,
-            ZonedDateTime.now(),
-            ZonedDateTime.now(),
-            ZonedDateTime.now(),
-            "Ende Hp",
-            123,
-            43,
-            ZonedDateTime.now(),
-            ZonedDateTime.now(),
-            ZonedDateTime.now(),
-            ProductType.TRAM,
-            "lalal",
-            "STB U1",
-            4711,
-            1234,
-            1234,
-            StatusBusiness.COMMUTE,
-            "Testnachricht 123456789",
-            true,
-            10,
-            0,
-            "username",
-            ZonedDateTime.now(),
-            StatusVisibility.PRIVATE,
-            "Tolle Veranstaltung!"
-        )
-        Column(
-            modifier = Modifier.padding(8.dp)
-        ) {
-            CheckInCard(
-                checkInCardViewModel = checkInCardViewModel,
-                status = status
-            )
-        }
-    }
 }
