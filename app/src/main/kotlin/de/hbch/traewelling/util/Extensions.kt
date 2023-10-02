@@ -243,7 +243,6 @@ fun Context.refreshJwt(onTokenReceived: (String) -> Unit = { }) {
     val secureStorage = SecureStorage(this)
     val refreshToken = secureStorage.getObject(SharedValues.SS_REFRESH_TOKEN, String::class.java)
     val tokenRequest = TokenRequest.Builder(SharedValues.AUTH_SERVICE_CONFIG, BuildConfig.OAUTH_CLIENT_ID)
-        //.setScopes(SharedValues.AUTH_SCOPES)
         .setGrantType(GrantTypeValues.REFRESH_TOKEN)
         .setRefreshToken(refreshToken)
         .build()

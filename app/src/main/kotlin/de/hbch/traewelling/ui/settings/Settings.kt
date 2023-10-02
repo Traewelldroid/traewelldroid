@@ -139,19 +139,22 @@ private fun TraewellingProviderSettings(
                 text = stringResource(id = R.string.jwt_expiration, getJwtExpiration(jwt = jwt))
             )
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End
+                modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 ButtonWithIconAndText(
                     stringId = R.string.renew_login,
+                    drawableId = R.drawable.ic_refresh,
                     onClick = {
                         context.refreshJwt {
                             jwt = it
                         }
-                    }
+                    },
+                    modifier = Modifier.weight(1f)
                 )
                 ButtonWithIconAndText(
-                    modifier = Modifier.padding(top = 8.dp),
+                    modifier = Modifier.weight(1f),
                     stringId = R.string.logout,
                     drawableId = R.drawable.ic_logout,
                     onClick = {
