@@ -48,6 +48,15 @@
                 <data android:pathPrefix="/stats/daily/" />
                 <data android:pathPrefix="/auth/login" />
             </intent-filter>
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+                <data android:host="app.traewelldroid.de" />
+                <data android:pathPrefix="/justToVerify" />
+            </intent-filter>
         </activity>
 
         <activity
@@ -57,14 +66,6 @@
             <intent-filter>
                 <action android:name="de.hbch.traewelling.HANDLE_AUTHORIZATION_RESPONSE" />
                 <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-            <intent-filter android:autoVerify="true">
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="http" />
-                <data android:scheme="https" />
-                <data android:host="app.traewelldroid.de"/>
             </intent-filter>
         </activity>
 

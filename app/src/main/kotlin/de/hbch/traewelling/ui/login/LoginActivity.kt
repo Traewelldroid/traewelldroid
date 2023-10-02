@@ -32,7 +32,6 @@ import net.openid.appauth.AppAuthConfiguration
 import net.openid.appauth.AuthorizationRequest
 import net.openid.appauth.AuthorizationResponse
 import net.openid.appauth.AuthorizationService
-import net.openid.appauth.AuthorizationServiceConfiguration
 import net.openid.appauth.ResponseTypeValues
 import net.openid.appauth.browser.BrowserDenyList
 import net.openid.appauth.browser.VersionedBrowserMatcher
@@ -42,7 +41,6 @@ import java.security.SecureRandom
 class LoginActivity : ComponentActivity() {
 
     private lateinit var secureStorage: SecureStorage
-    private lateinit var authorizationServiceConfig: AuthorizationServiceConfiguration
     private lateinit var authorizationLauncher: ActivityResultLauncher<Intent>
     private lateinit var authorizationService : AuthorizationService
     private lateinit var authIntent: Intent
@@ -71,11 +69,6 @@ class LoginActivity : ComponentActivity() {
     }
 
     private fun initAuthInitial() {
-        authorizationServiceConfig = AuthorizationServiceConfiguration(
-            Uri.parse(SharedValues.URL_AUTHORIZATION),
-            Uri.parse(SharedValues.URL_TOKEN_EXCHANGE)
-        )
-
         val appAuthConfiguration = AppAuthConfiguration.Builder()
             .setBrowserMatcher(
                 BrowserDenyList(
@@ -114,7 +107,7 @@ class LoginActivity : ComponentActivity() {
         val codeChallenge = Base64.encodeToString(hash, encoding)
 
         val builder = AuthorizationRequest.Builder(
-            authorizationServiceConfig,
+            SharedValues.AUTH_SERVICE_CONFIG,
             BuildConfig.OAUTH_CLIENT_ID,
             ResponseTypeValues.CODE,
             Uri.parse(BuildConfig.OAUTH_REDIRECT_URL)

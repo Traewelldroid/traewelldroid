@@ -1,5 +1,8 @@
 package de.hbch.traewelling.shared
 
+import android.net.Uri
+import net.openid.appauth.AuthorizationServiceConfiguration
+
 object SharedValues {
     const val SS_JWT = "JWT"
     const val SS_REFRESH_TOKEN = "REFRESH_TOKEN"
@@ -9,7 +12,6 @@ object SharedValues {
     const val SS_WEBHOOK_USER_ID = "WEBHOOK_USER_ID"
     const val SS_TRWL_WEBHOOK_ID = "TRWL_WEBHOOK_ID"
     const val SS_NOTIFICATIONS_ENABLED = "NOTIFICATIONS_ENABLED"
-
 
     val AUTH_SCOPES = listOf(
         "read-statuses",
@@ -37,4 +39,9 @@ object SharedValues {
 
     const val URL_AUTHORIZATION = "https://traewelling.de/oauth/authorize"
     const val URL_TOKEN_EXCHANGE = "https://traewelling.de/oauth/token"
+
+    val AUTH_SERVICE_CONFIG = AuthorizationServiceConfiguration(
+        Uri.parse(URL_AUTHORIZATION),
+        Uri.parse(URL_TOKEN_EXCHANGE)
+    )
 }

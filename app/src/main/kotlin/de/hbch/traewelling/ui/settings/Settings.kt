@@ -58,6 +58,7 @@ import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
 import de.hbch.traewelling.ui.composables.OpenRailwayMapLayer
 import de.hbch.traewelling.util.getJwtExpiration
+import de.hbch.traewelling.util.refreshJwt
 import de.hbch.traewelling.util.getLocalDateTimeString
 import de.hbch.traewelling.util.readOrDownloadLineIcons
 import kotlinx.coroutines.async
@@ -138,11 +139,22 @@ private fun TraewellingProviderSettings(
                 text = stringResource(id = R.string.jwt_expiration, getJwtExpiration(jwt = jwt))
             )
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End
+                modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 ButtonWithIconAndText(
-                    modifier = Modifier.padding(top = 8.dp),
+                    stringId = R.string.renew_login,
+                    drawableId = R.drawable.ic_refresh,
+                    onClick = {
+                        context.refreshJwt {
+                            jwt = it
+                        }
+                    },
+                    modifier = Modifier.weight(1f)
+                )
+                ButtonWithIconAndText(
+                    modifier = Modifier.weight(1f),
                     stringId = R.string.logout,
                     drawableId = R.drawable.ic_logout,
                     onClick = {
@@ -336,7 +348,7 @@ private fun LineIconsSettings(
         Instant.ofEpochMilli(file.lastModified()).atZone(ZoneId.systemDefault())
     } }
     var isLoading by remember { mutableStateOf(false) }
-    
+
     SettingsCard(
         title = R.string.line_icons,
         description = R.string.update_line_icons,

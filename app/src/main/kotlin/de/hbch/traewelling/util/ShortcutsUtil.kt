@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.pm.ShortcutInfo
 import android.content.pm.ShortcutManager
 import android.graphics.drawable.Icon
-import android.net.Uri
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.station.Station
 import java.lang.Exception
@@ -22,9 +21,7 @@ fun Station.toShortcut(context: Context, shortcutId: String, home: Boolean = fal
         .setIntent(
             Intent(
                 Intent.ACTION_VIEW,
-                Uri.Builder()
-                    .scheme("traewelldroid")
-                    .authority("app.traewelldroid.de")
+                TraewelldroidUriBuilder()
                     .appendPath("trains")
                     .appendPath("stationboard")
                     .appendQueryParameter("station", ibnr)
