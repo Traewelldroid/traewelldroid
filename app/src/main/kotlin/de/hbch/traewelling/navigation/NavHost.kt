@@ -368,13 +368,17 @@ fun TraewelldroidNavHost(
                 if (editMode) {
                     checkInViewModel.message.value ?: ""
                 } else {
+                    // Only set default visibility when a new check-in is created!
+                    checkInViewModel.statusVisibility.postValue(
+                        loggedInUserViewModel.defaultStatusVisibility
+                    )
+
                     val hashtag = secureStorage.getObject(SharedValues.SS_HASHTAG, String::class.java)
                     if (hashtag == null || hashtag == "")
                         ""
                     else
                         "\n#$hashtag"
                 }
-            checkInViewModel.statusVisibility.postValue(loggedInUserViewModel.defaultStatusVisibility)
             CheckIn(
                 checkInViewModel = checkInViewModel,
                 eventViewModel = eventViewModel,
