@@ -25,7 +25,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -66,6 +65,7 @@ import kotlinx.coroutines.launch
 import java.io.File
 import java.time.Instant
 import java.time.ZoneId
+import java.time.ZonedDateTime
 
 @Composable
 fun Settings(
@@ -344,9 +344,11 @@ private fun LineIconsSettings(
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val file by remember { mutableStateOf(File(context.filesDir, "line-colors.csv")) }
-    val lastChanged by remember { derivedStateOf {
-        Instant.ofEpochMilli(file.lastModified()).atZone(ZoneId.systemDefault())
-    } }
+    var lastChanged by remember {
+        mutableStateOf(
+            Instant.ofEpochMilli(file.lastModified()).atZone(ZoneId.systemDefault())
+        )
+    }
     var isLoading by remember { mutableStateOf(false) }
 
     SettingsCard(
@@ -379,6 +381,7 @@ private fun LineIconsSettings(
                         LineIcons.getInstance().icons.clear()
                         LineIcons.getInstance().icons.addAll(icons.await())
                         isLoading = false
+                        lastChanged = ZonedDateTime.now(ZoneId.systemDefault())
                     }
                 }
             )
