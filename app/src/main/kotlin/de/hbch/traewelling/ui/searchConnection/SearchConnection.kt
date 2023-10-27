@@ -423,7 +423,7 @@ fun ConnectionListItem(
                     lineId = hafasLine?.id
                 )
 
-                if (journeyNumber != null && !hafasLine.name.contains(journeyNumber.toString())) {
+                if (journeyNumber != null && hafasLine.name?.contains(journeyNumber.toString()) == false) {
                     Text(
                         text = "($journeyNumber)",
                         style = AppTypography.bodySmall
