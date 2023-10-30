@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -16,18 +15,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.user.User
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
+import de.hbch.traewelling.ui.composables.ProfilePicture
 
 @Composable
 fun UserCard(
@@ -68,14 +66,11 @@ private fun UserCardContent(
                 .padding(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            AsyncImage(
-                model = user.avatarUrl,
-                contentDescription = user.name,
+            ProfilePicture(
+                user = user,
                 modifier = Modifier
                     .width(150.dp)
                     .height(150.dp)
-                    .clip(CircleShape),
-                placeholder = painterResource(id = R.drawable.ic_new_user),
             )
             Column(
                 modifier = Modifier.padding(8.dp),

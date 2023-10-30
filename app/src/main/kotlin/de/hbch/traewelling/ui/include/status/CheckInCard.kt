@@ -13,8 +13,10 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
@@ -51,6 +53,7 @@ import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.LocalColorScheme
 import de.hbch.traewelling.theme.StarYellow
 import de.hbch.traewelling.ui.composables.LineIcon
+import de.hbch.traewelling.ui.composables.ProfilePicture
 import de.hbch.traewelling.ui.user.getDurationString
 import de.hbch.traewelling.util.getLocalDateTimeString
 import de.hbch.traewelling.util.getLocalTimeString
@@ -474,6 +477,14 @@ private fun CheckInCardFooter(
                         getLocalDateTimeString(date = status.createdAt)
                     else
                         getLocalTimeString(date = status.createdAt)
+                ProfilePicture(
+                    name = status.username,
+                    url = status.profilePicture ?: "",
+                    modifier = Modifier
+                        .height(24.dp)
+                        .width(24.dp)
+                        .padding(end = 2.dp)
+                )
                 Text(
                     modifier = alignmentModifier
                         .clickable { userSelected(status.username) }
