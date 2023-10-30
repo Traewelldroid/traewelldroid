@@ -10,14 +10,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -26,7 +24,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.status.Status
 import de.hbch.traewelling.shared.CheckInViewModel
@@ -34,6 +31,7 @@ import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.theme.StarYellow
 import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
 import de.hbch.traewelling.ui.composables.OutlinedButtonWithIconAndText
+import de.hbch.traewelling.ui.composables.ProfilePicture
 import de.hbch.traewelling.ui.include.status.StatusDetailsRow
 import de.hbch.traewelling.ui.tag.StatusTags
 import de.hbch.traewelling.util.shareStatus
@@ -184,14 +182,12 @@ private fun CoTraveller(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            AsyncImage(
-                model = status.profilePicture,
-                contentDescription = status.username,
+            ProfilePicture(
+                name = status.username,
+                url = status.profilePicture ?: "",
                 modifier = Modifier
                     .width(32.dp)
                     .height(32.dp)
-                    .clip(CircleShape),
-                placeholder = painterResource(id = R.drawable.ic_new_user),
             )
             Column {
                 Text(
