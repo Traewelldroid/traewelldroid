@@ -55,6 +55,13 @@ enum class TagType {
         override val key = "trwl:wagon_class"
         override val example = R.string.tag_wagon_class_example
     },
+    @SerializedName("trwl:role")
+    STAFF_ROLE {
+        override val icon = R.drawable.ic_business
+        override val title = R.string.tag_staff_role_title
+        override val key = "trwl:role"
+        override val example = R.string.tag_staff_role_example
+    },
     UNKNOWN {
         override val icon = R.drawable.ic_unknown
         override val title = R.string.unknown

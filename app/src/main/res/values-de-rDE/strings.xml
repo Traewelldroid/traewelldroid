@@ -191,6 +191,8 @@
     <string name="tag_wagon_class_title">Wagengattung</string>
     <string name="tag_wagon_class_example">z.B. Avmz, Bimmdzf, …</string>
     <string name="tag_unknown">Unbekannt</string>
+    <string name="tag_staff_role_title">Funktion im Dienst</string>
+    <string name="tag_staff_role_example">Tf, Zf, Gastro, …</string>
     <string name="add_tag">Tag hinzufügen</string>
     <string name="edit_tag">Tag bearbeiten</string>
     <string name="select_tag_type">Tagart auswählen</string>
