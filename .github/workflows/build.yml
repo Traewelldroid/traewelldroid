@@ -25,6 +25,7 @@ jobs:
         env:
           DEV_PROPERTIES: ${{ secrets.DEV_PROPERTIES }}
         run: |
+          cat $DEV_PROPERTIES
           echo $DEV_PROPERTIES > dev.properties
       - name: Assemble foss flavor
         run: ./gradlew assembleFossDebug
