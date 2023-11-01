@@ -21,7 +21,30 @@ jobs:
           java-version: '17'
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
+      - name: Decode Keystore
+        env:
+          ENCODED_KEYSTORE: ${{ secrets.SIGNING_KEY_STORE_BASE64 }}
+          KEYSTORE_PATH: ${{ secrets.SIGNING_KEY_STORE_PATH }}
+        run: |
+          echo $ENCODED_KEYSTORE > keystore-b64.txt
+          base64 -d keystore-b64.txt > $KEYSTORE_PATH
       - name: Assemble foss flavor
-        run: ./gradlew assembleFossDebug
+        env:
+          SIGNING_KEY_STORE_PATH: ${{ secrets.SIGNING_KEY_STORE_PATH }}
+          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+        run: ./gradlew assembleFossRelease
       - name: Assemble Google Play flavor
-        run: ./gradlew assemblePlayDebug
+        env:
+          SIGNING_KEY_STORE_PATH: ${{ secrets.SIGNING_KEY_STORE_PATH }}
+          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+        run: ./gradlew assemblePlayRelease
+      - name: Upload artifacts
+        with:
+          name: apks
+          path: |
+            app/foss/release/app-foss-release.apk
+            app/play/release/app-play-release.apk
