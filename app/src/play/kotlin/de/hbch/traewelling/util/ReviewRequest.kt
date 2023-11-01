@@ -2,7 +2,6 @@ package de.hbch.traewelling.util
 
 import android.app.Activity
 import android.content.Context
-import com.google.android.play.core.review.ReviewException
 import com.google.android.play.core.review.ReviewManagerFactory
 import de.hbch.traewelling.logging.ILogger
 
@@ -22,7 +21,9 @@ class ReviewRequest : IReviewRequest {
                     onContinue()
                 }
             } else {
-                logger.captureException(task.exception as ReviewException)
+                logger.captureException(
+                    task.exception ?: Exception("Not able to request review")
+                )
             }
         }
     }
