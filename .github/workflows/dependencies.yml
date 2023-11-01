@@ -1,0 +1,20 @@
+name: dependencies
+on:
+  push:
+    branches:
+      - dev
+jobs:
+  acquire-dependencies:
+    name: Dependencies
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Submit dependencies
+        uses: mikepenz/gradle-dependency-submission@{latest}
+        with:
+          use-gradlew: true
+          gradle-build-module: |-
+            :
+            :app
