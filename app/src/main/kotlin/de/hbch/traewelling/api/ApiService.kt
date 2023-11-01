@@ -14,7 +14,6 @@ import de.hbch.traewelling.api.models.notifications.Notification
 import de.hbch.traewelling.api.models.notifications.NotificationPage
 import de.hbch.traewelling.api.models.polyline.FeatureCollection
 import de.hbch.traewelling.api.models.station.Station
-import de.hbch.traewelling.api.models.station.StationData
 import de.hbch.traewelling.api.models.statistics.DailyStatistics
 import de.hbch.traewelling.api.models.statistics.PersonalStatistics
 import de.hbch.traewelling.api.models.status.*
@@ -192,10 +191,10 @@ interface TravelService {
     ): Call<Data<HafasTrainTrip>>
 
     @GET("trains/station/nearby")
-    fun getNearbyStation(
+    suspend fun getNearbyStation(
         @Query("latitude") latitude: Double,
         @Query("longitude") longitude: Double
-    ): Call<StationData>
+    ): Data<Station>
 
     @GET("trains/station/{station}/departures")
     fun getDeparturesAtStation(
@@ -205,9 +204,9 @@ interface TravelService {
     ): Call<HafasTripPage>
 
     @GET("trains/station/autocomplete/{station}")
-    fun autoCompleteStationSearch(
+    suspend fun autoCompleteStationSearch(
         @Path("station", encoded = false) station: String
-    ): Call<Data<List<Station>>>
+    ): Data<List<Station>>
 }
 
 interface NotificationService {
@@ -234,6 +233,12 @@ interface NotificationService {
 }
 
 interface UserService {
+    @GET("user/search/{query}")
+    suspend fun searchUsers(
+        @Path("query") query: String,
+        @Query("page") page: Int
+    ): Data<List<User>>
+
     @GET("user/{username}")
     fun getUser(
         @Path("username") username: String

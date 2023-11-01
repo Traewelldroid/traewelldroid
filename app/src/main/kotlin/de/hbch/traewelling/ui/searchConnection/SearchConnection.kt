@@ -55,8 +55,7 @@ import de.hbch.traewelling.ui.composables.Dialog
 import de.hbch.traewelling.ui.composables.FilterChipGroup
 import de.hbch.traewelling.ui.composables.LineIcon
 import de.hbch.traewelling.ui.composables.OutlinedButtonWithIconAndText
-import de.hbch.traewelling.ui.include.cardSearchStation.CardSearchStation
-import de.hbch.traewelling.ui.include.cardSearchStation.SearchStationCardViewModel
+import de.hbch.traewelling.ui.include.cardSearchStation.CardSearch
 import de.hbch.traewelling.util.getDelayColor
 import de.hbch.traewelling.util.getLastDestination
 import de.hbch.traewelling.util.getLocalTimeString
@@ -74,7 +73,6 @@ fun SearchConnection(
     onHomelandSelected: (Station) -> Unit = { }
 ) {
     val viewModel: SearchConnectionViewModel = viewModel()
-    val searchStationCardViewModel: SearchStationCardViewModel = viewModel()
     var stationName by remember { mutableStateOf(station) }
     val scrollState = rememberScrollState()
     val trips = remember { mutableStateListOf<HafasTrip>() }
@@ -109,14 +107,14 @@ fun SearchConnection(
             .verticalScroll(scrollState),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        CardSearchStation(
-            searchAction = { station ->
+        CardSearch(
+            onStationSelected = { station ->
                 stationName = station
                 searchConnections = true
             },
-            searchStationCardViewModel = searchStationCardViewModel,
             homelandStationData = loggedInUserViewModel.home,
-            recentStationsData = loggedInUserViewModel.lastVisitedStations
+            recentStationsData = loggedInUserViewModel.lastVisitedStations,
+            queryUsers = false
         )
         ElevatedCard {
             Column {

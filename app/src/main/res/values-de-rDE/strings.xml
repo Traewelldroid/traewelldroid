@@ -220,4 +220,13 @@
     <string name="update_line_icons">Hier kannst du die Linien-Icons aktualisieren.</string>
     <string name="last_updated">Zuletzt aktualisiert: %1$s</string>
     <string name="refresh">Aktualisieren</string>
+    <string name="greeting_morning">Guten Morgen! ☕</string>
+    <string name="greeting_day">Guten Tag! 🌞</string>
+    <string name="greeting_evening">Guten Abend!</string>
+    <string name="greeting_night">Na, noch wach? 😴</string>
+    <string name="stops">Haltestellen</string>
+    <string name="users">Benutzer</string>
+    <string name="search_stop_users">Haltestelle oder Benutzer suchen</string>
+    <string name="search_users">Benutzer suchen</string>
+    <string name="search_stops">Haltestelle / RL 100 suchen</string>
 </resources>

@@ -16,9 +16,13 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
@@ -41,11 +45,14 @@ import de.hbch.traewelling.shared.SharedValues
 import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.ui.include.status.CheckInCard
 import de.hbch.traewelling.ui.include.status.CheckInCardViewModel
+import kotlinx.coroutines.CoroutineScope
 import net.openid.appauth.AppAuthConfiguration
 import net.openid.appauth.AuthorizationService
 import net.openid.appauth.GrantTypeValues
 import net.openid.appauth.TokenRequest
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.InputStream
@@ -255,4 +262,25 @@ fun Context.refreshJwt(onTokenReceived: (String) -> Unit = { }) {
             onTokenReceived(response.accessToken!!)
         }
     }
+}
+
+@Composable
+fun <T> T.useDebounce(
+    delayMillis: Long = 300L,
+    coroutineScope: CoroutineScope = rememberCoroutineScope(),
+    onChange: (T) -> Unit
+): T{
+    val state by rememberUpdatedState(this)
+
+    DisposableEffect(state){
+        val job = coroutineScope.launch {
+            delay(delayMillis)
+            onChange(state)
+        }
+        onDispose {
+            job.cancel()
+        }
+    }
+
+    return state
 }
