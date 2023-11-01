@@ -444,11 +444,13 @@ fun TraewelldroidNavHost(
                             }
                         }
                     } else {
+                        val checkInCount = secureStorage.getObject(SharedValues.SS_CHECK_IN_COUNT, Long::class.java) ?: 0L
                         checkInViewModel.checkIn { succeeded ->
                             navController.navigate(
                                 CheckInResult.route
                             ) {
                                 if (succeeded) {
+                                    secureStorage.storeObject(SharedValues.SS_CHECK_IN_COUNT, checkInCount + 1)
                                     popUpTo(navController.graph.findStartDestination().id) {
                                         inclusive = false
                                     }

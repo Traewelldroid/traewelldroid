@@ -199,6 +199,10 @@ dependencies {
 
     // CSV reader
     implementation 'com.github.doyaaaaaken:kotlin-csv-jvm:1.9.2'
+
+    // Reviews
+    playImplementation 'com.google.android.play:review:2.0.1'
+    playImplementation 'com.google.android.play:review-ktx:2.0.1'
 }
 
 
