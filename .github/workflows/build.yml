@@ -26,7 +26,7 @@ jobs:
           DEV_PROPERTIES: ${{ secrets.DEV_PROPERTIES }}
         run: |
           echo $DEV_PROPERTIES > dev.properties
-          echo dev.properties
+          cat dev.properties
       - name: Assemble foss flavor
         run: ./gradlew assembleFossDebug
       - name: Assemble Google Play flavor
