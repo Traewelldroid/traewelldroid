@@ -47,7 +47,8 @@ fun CardSearch(
                 onStationSelected = onStationSelected,
                 onUserSelected = onUserSelected,
                 queryStations = queryStations,
-                queryUsers = queryUsers
+                queryUsers = queryUsers,
+                modifier = Modifier.fillMaxWidth()
             )
         }
     }
