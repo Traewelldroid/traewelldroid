@@ -54,8 +54,8 @@ ext.loadProperties = { String file ->
 
 android {
     def packageName = "de.hbch.traewelling"
-    def name = "2.2.0"
-    def code = 130
+    def name = "2.3.0"
+    def code = 131
 
     compileSdk 34
 
