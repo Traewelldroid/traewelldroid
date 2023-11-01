@@ -43,6 +43,7 @@ jobs:
           SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
         run: ./gradlew assemblePlayRelease
       - name: Upload artifacts
+        uses: actions/upload-artifact@v3
         with:
           name: apks
           path: |
