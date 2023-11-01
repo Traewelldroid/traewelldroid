@@ -5,8 +5,9 @@ on:
     branches:
       - main
       - dev
-  tags:
-    - v*
+  push:
+    tags:
+      - 'v*'
 
 jobs:
   build:
