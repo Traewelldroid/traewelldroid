@@ -22,7 +22,6 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
       - name: Assemble foss flavor
-        env:
         run: ./gradlew assembleFossDebug
       - name: Assemble Google Play flavor
         run: ./gradlew assemblePlayDebug
