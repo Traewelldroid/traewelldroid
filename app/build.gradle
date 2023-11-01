@@ -36,20 +36,16 @@ ext.loadProperties = { String file ->
     }
 
     sentryDsn = props.getProperty("SENTRY_DSN", "")
-    repoUrl = props.getProperty("REPO_URL", "")
+    repoUrl = props.getProperty("REPO_URL", "https://github.com/Traewelldroid/traewelldroid")
     unleashUrl = props.getProperty("UNLEASH_URL", "")
     unleashKey = props.getProperty("UNLEASH_KEY", "")
     webhookUrl = props.getProperty("WEBHOOK_URL", "")
     upFcmProxy = props.getProperty("UP_FCM_PROXY", "")
 
     // Mandatory
-    privacyUrl = props.getProperty("PRIVACY_URL")
-    oauthClientId = props.getProperty("OAUTH_CLIENT_ID")
-    oauthRedirectUrl = props.getProperty("OAUTH_REDIRECT_URL")
-
-    if (privacyUrl == null || oauthClientId == null || oauthRedirectUrl == null) {
-        throw new GradleException("Mandatory property missing!")
-    }
+    privacyUrl = props.getProperty("PRIVACY_URL", "")
+    oauthClientId = props.getProperty("OAUTH_CLIENT_ID", "")
+    oauthRedirectUrl = props.getProperty("OAUTH_REDIRECT_URL", "")
 }
 
 android {
@@ -89,15 +85,15 @@ android {
         }
         debug {
             loadProperties("dev.properties")
-            buildConfigField "String", "OAUTH_REDIRECT_URL", "\"${oauthRedirectUrl}\""
-            buildConfigField "String", "OAUTH_CLIENT_ID", "\"${oauthClientId}\""
-            buildConfigField "String", "REPO_URL", "\"${repoUrl}\""
-            buildConfigField "String", "PRIVACY_URL", "\"${privacyUrl}\""
-            buildConfigField "String", "UNLEASH_URL", "\"${unleashUrl}\""
-            buildConfigField "String", "UNLEASH_KEY", "\"${unleashKey}\""
-            buildConfigField "String", "WEBHOOK_URL", "\"${webhookUrl}\""
-            buildConfigField "String", "UP_FCM_PROXY", "\"${upFcmProxy}\""
-            manifestPlaceholders["SENTRY_DSN"] = sentryDsn
+            buildConfigField "String", "OAUTH_REDIRECT_URL", "\"https://app.traewelldroid.de/oauth2redirect\""
+            buildConfigField "String", "OAUTH_CLIENT_ID", "\"63\""
+            buildConfigField "String", "REPO_URL", "\"https://github.com/Traewelldroid/traewelldroid\""
+            buildConfigField "String", "PRIVACY_URL", "\"https://traewelldroid.de/privacy\""
+            buildConfigField "String", "UNLEASH_URL", "\"https://unleash.traewelldroid.de/api/frontend\""
+            buildConfigField "String", "UNLEASH_KEY", "\"*:development.ce069ae01e960f412f694c4a3afc3bd3e4dccbb21102c8eb36e99781\""
+            buildConfigField "String", "WEBHOOK_URL", "\"https://webhooktest.traewelldroid.de\""
+            buildConfigField "String", "UP_FCM_PROXY", "\"https://push.traewelldroid.de/FCM\""
+            manifestPlaceholders["SENTRY_DSN"] = "https://8421286d211d475cb0343fd1aff3fc06@sentry.traewelldroid.de/2"
         }
     }
     buildFeatures {
