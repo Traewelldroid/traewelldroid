@@ -16,42 +16,6 @@ sentry {
     ignoredFlavors = ["foss"]
 }
 
-def sentryDsn = ""
-def oauthClientId = ""
-def oauthRedirectUrl = ""
-def repoUrl = ""
-def privacyUrl = ""
-def unleashUrl = ""
-def unleashKey = ""
-def webhookUrl = ""
-def upFcmProxy = ""
-
-ext.loadProperties = { String file ->
-    def props = new Properties()
-    def _file = rootProject.file(file)
-    if (_file.exists()) {
-        _file.withReader("UTF-8") {
-            props.load(it)
-        }
-    }
-
-    sentryDsn = props.getProperty("SENTRY_DSN", "")
-    repoUrl = props.getProperty("REPO_URL", "")
-    unleashUrl = props.getProperty("UNLEASH_URL", "")
-    unleashKey = props.getProperty("UNLEASH_KEY", "")
-    webhookUrl = props.getProperty("WEBHOOK_URL", "")
-    upFcmProxy = props.getProperty("UP_FCM_PROXY", "")
-
-    // Mandatory
-    privacyUrl = props.getProperty("PRIVACY_URL")
-    oauthClientId = props.getProperty("OAUTH_CLIENT_ID")
-    oauthRedirectUrl = props.getProperty("OAUTH_REDIRECT_URL")
-
-    if (privacyUrl == null || oauthClientId == null || oauthRedirectUrl == null) {
-        throw new GradleException("Mandatory property missing!")
-    }
-}
-
 android {
     def packageName = "de.hbch.traewelling"
     def name = "2.3.1"
@@ -76,28 +40,26 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             minifyEnabled false
 
-            loadProperties("key.properties")
-            buildConfigField "String", "OAUTH_REDIRECT_URL", "\"${oauthRedirectUrl}\""
-            buildConfigField "String", "OAUTH_CLIENT_ID", "\"${oauthClientId}\""
-            buildConfigField "String", "REPO_URL", "\"${repoUrl}\""
-            buildConfigField "String", "PRIVACY_URL", "\"${privacyUrl}\""
-            buildConfigField "String", "UNLEASH_URL", "\"${unleashUrl}\""
-            buildConfigField "String", "UNLEASH_KEY", "\"${unleashKey}\""
-            buildConfigField "String", "WEBHOOK_URL", "\"${webhookUrl}\""
-            buildConfigField "String", "UP_FCM_PROXY", "\"${upFcmProxy}\""
-            manifestPlaceholders["SENTRY_DSN"] = sentryDsn
+            buildConfigField "String", "OAUTH_REDIRECT_URL", "\"https://app.traewelldroid.de/oauth2redirect\""
+            buildConfigField "String", "OAUTH_CLIENT_ID", "\"43\""
+            buildConfigField "String", "REPO_URL", "\"https://github.com/Traewelldroid/traewelldroid\""
+            buildConfigField "String", "PRIVACY_URL", "\"https://traewelldroid.de/privacy\""
+            buildConfigField "String", "UNLEASH_URL", "\"https://unleash.traewelldroid.de/api/frontend\""
+            buildConfigField "String", "UNLEASH_KEY", "\"*:production.35c591bf9e4fd8eada44bc1d51fe5261e407779280ddf3dec0e00d68\""
+            buildConfigField "String", "WEBHOOK_URL", "\"https://webhook.traewelldroid.de\""
+            buildConfigField "String", "UP_FCM_PROXY", "\"https://push.traewelldroid.de/FCM\""
+            manifestPlaceholders["SENTRY_DSN"] = "https://9664595fcad94b6c90fe2021ab1ec3f0@sentry.traewelldroid.de/3"
         }
         debug {
-            loadProperties("dev.properties")
-            buildConfigField "String", "OAUTH_REDIRECT_URL", "\"${oauthRedirectUrl}\""
-            buildConfigField "String", "OAUTH_CLIENT_ID", "\"${oauthClientId}\""
-            buildConfigField "String", "REPO_URL", "\"${repoUrl}\""
-            buildConfigField "String", "PRIVACY_URL", "\"${privacyUrl}\""
-            buildConfigField "String", "UNLEASH_URL", "\"${unleashUrl}\""
-            buildConfigField "String", "UNLEASH_KEY", "\"${unleashKey}\""
-            buildConfigField "String", "WEBHOOK_URL", "\"${webhookUrl}\""
-            buildConfigField "String", "UP_FCM_PROXY", "\"${upFcmProxy}\""
-            manifestPlaceholders["SENTRY_DSN"] = sentryDsn
+            buildConfigField "String", "OAUTH_REDIRECT_URL", "\"https://app.traewelldroid.de/oauth2redirect\""
+            buildConfigField "String", "OAUTH_CLIENT_ID", "\"63\""
+            buildConfigField "String", "REPO_URL", "\"https://github.com/Traewelldroid/traewelldroid\""
+            buildConfigField "String", "PRIVACY_URL", "\"https://traewelldroid.de/privacy\""
+            buildConfigField "String", "UNLEASH_URL", "\"https://unleash.traewelldroid.de/api/frontend\""
+            buildConfigField "String", "UNLEASH_KEY", "\"*:development.ce069ae01e960f412f694c4a3afc3bd3e4dccbb21102c8eb36e99781\""
+            buildConfigField "String", "WEBHOOK_URL", "\"https://webhooktest.traewelldroid.de\""
+            buildConfigField "String", "UP_FCM_PROXY", "\"https://push.traewelldroid.de/FCM\""
+            manifestPlaceholders["SENTRY_DSN"] = "https://8421286d211d475cb0343fd1aff3fc06@sentry.traewelldroid.de/2"
         }
     }
     buildFeatures {
@@ -126,6 +88,14 @@ android {
         foss {
             dimension "libs"
             versionNameSuffix "-foss"
+        }
+    }
+    signingConfigs {
+        release {
+            storeFile file("keystore.jks")
+            storePassword System.getenv("SIGNING_STORE_PASSWORD")
+            keyAlias System.getenv("SIGNING_KEY_ALIAS")
+            keyPassword System.getenv("SIGNING_KEY_PASSWORD")
         }
     }
 }
