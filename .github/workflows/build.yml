@@ -1,0 +1,24 @@
+name: build
+
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
+  tags:
+    - v*
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'corretto'
+          java-version: '11'
+      - name: Assemble foss flavor
+        run: ./gradlew assembleFossDebug
+      - name: Assemble Google Play flavor
+        run: ./gradlew assemblePlayDebug
