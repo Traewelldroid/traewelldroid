@@ -196,6 +196,8 @@
     <string name="tag_wagon_class_title">Wagon class</string>
     <string name="tag_wagon_class_example">i.e. Avmz, Bimmdzf, …</string>
     <string name="tag_unknown">Unknown</string>
+    <string name="tag_staff_role_title">Staff role</string>
+    <string name="tag_staff_role_example">Driver, conductor, …</string>
     <string name="add_tag">Add tag</string>
     <string name="edit_tag">Edit tag</string>
     <string name="select_tag_type">Select tag type</string>
