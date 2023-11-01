@@ -6,11 +6,13 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import com.auth0.android.jwt.JWT
 import de.hbch.traewelling.R
+import de.hbch.traewelling.api.models.station.Station
 import de.hbch.traewelling.api.models.trip.HafasTrip
 import java.lang.Exception
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.ZonedDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -108,4 +110,26 @@ fun getJwtExpiration(jwt: String): String {
         }
     }
     return getLocalDateTimeString(expiresAt)
+}
+
+fun getStationNameWithRL100(station: Station): String =
+    station.name.let {
+        var stationName = it
+        if (station.ds100 != null) {
+            stationName = stationName.plus(" [${station.ds100}]")
+        }
+        stationName
+    }
+
+@Composable
+fun getGreeting(): String {
+    val time = LocalDateTime.now()
+
+    return when (time.hour) {
+        in 5..11 -> stringResource(id = R.string.greeting_morning)
+        in 12..17 -> stringResource(id = R.string.greeting_day)
+        in 18..22 -> stringResource(id = R.string.greeting_evening)
+        23, in 0..4 -> stringResource(id = R.string.greeting_night)
+        else -> "WTF"
+    }
 }

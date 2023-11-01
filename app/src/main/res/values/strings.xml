@@ -225,4 +225,13 @@
     <string name="update_line_icons">Here you can update the line icons.</string>
     <string name="last_updated">Last updated: %1$s</string>
     <string name="refresh">Refresh</string>
+    <string name="greeting_morning">Good morning! ☕</string>
+    <string name="greeting_day">Have a nice day! 🌞</string>
+    <string name="greeting_evening">Good evening!</string>
+    <string name="greeting_night">Still awake? 😴</string>
+    <string name="stops">Stops</string>
+    <string name="users">Users</string>
+    <string name="search_stop_users">Find stops or users</string>
+    <string name="search_users">Search users</string>
+    <string name="search_stops">Search stops / RL 100</string>
 </resources>
