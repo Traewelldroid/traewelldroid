@@ -14,6 +14,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,16 +29,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.jcloquell.androidsecurestorage.SecureStorage
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.status.Status
+import de.hbch.traewelling.logging.Logger
 import de.hbch.traewelling.shared.CheckInViewModel
 import de.hbch.traewelling.shared.LoggedInUserViewModel
+import de.hbch.traewelling.shared.SharedValues
 import de.hbch.traewelling.theme.StarYellow
 import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
 import de.hbch.traewelling.ui.composables.OutlinedButtonWithIconAndText
 import de.hbch.traewelling.ui.composables.ProfilePicture
 import de.hbch.traewelling.ui.include.status.StatusDetailsRow
 import de.hbch.traewelling.ui.tag.StatusTags
+import de.hbch.traewelling.util.ReviewRequest
 import de.hbch.traewelling.util.shareStatus
 
 @Composable
@@ -103,6 +112,25 @@ private fun SuccessfulCheckInResult(
 ) {
     val context = LocalContext.current
     val checkInResponse = checkInViewModel.checkInResponse
+
+    val reviewRequest = remember { ReviewRequest() }
+    var reviewRequested by remember { mutableStateOf(false) }
+
+    LaunchedEffect(reviewRequested) {
+        if (!reviewRequested) {
+            reviewRequested = true
+
+            val checkInCount = SecureStorage(context)
+                .getObject(SharedValues.SS_CHECK_IN_COUNT, Long::class.java) ?: 0L
+            if (checkInCount.mod(10) == 2) {
+                reviewRequest.request(
+                    context,
+                    Logger.getInstance()
+                ) { }
+            }
+        }
+    }
+
     if (checkInResponse != null) {
         val journey = checkInResponse.status.journey
         Column(

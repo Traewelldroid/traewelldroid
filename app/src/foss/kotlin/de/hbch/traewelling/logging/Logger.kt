@@ -8,7 +8,7 @@ class Logger private constructor(): ILogger {
         @Volatile
         private var instance: Logger? = null
 
-        private fun getInstance() = instance ?: synchronized(this) {
+        fun getInstance() = instance ?: synchronized(this) {
             instance ?: Logger().also {
                 instance = it
             }
