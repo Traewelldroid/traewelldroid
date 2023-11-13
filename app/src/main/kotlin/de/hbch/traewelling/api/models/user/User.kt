@@ -11,7 +11,6 @@ data class User(
     @SerializedName("profilePicture") val avatarUrl: String,
     @SerializedName("trainDistance") val distance: Int,
     @SerializedName("trainDuration") val duration: Int,
-    @SerializedName("trainSpeed") val averageSpeed: Double,
     @SerializedName("points") val points: Int,
     @SerializedName("twitterUrl") val twitterUrl: String?,
     @SerializedName("mastodonUrl") val mastodonUrl: String?,
@@ -22,4 +21,6 @@ data class User(
     @SerializedName("followPending") val followRequestPending: Boolean,
     @SerializedName("muted") val muted: Boolean,
     val defaultStatusVisibility: StatusVisibility?
-)
+) {
+    val averageSpeed: Double get() = (distance / 1000.0) / (duration / 60.0)
+}

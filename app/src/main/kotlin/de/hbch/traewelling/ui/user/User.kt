@@ -142,7 +142,7 @@ private fun UserCardContent(
                 ) {
                     Text(
                         modifier = Modifier.padding(end = 8.dp),
-                        text = stringResource(id = R.string.display_average_speed, user.averageSpeed / 1000.0)
+                        text = stringResource(id = R.string.display_average_speed, user.averageSpeed)
                     )
                     Icon(
                         painterResource(id = R.drawable.ic_speed),
@@ -266,7 +266,6 @@ private fun UserCardPreview() {
         "urlurl",
         1234567890,
         10241024,
-        12345678.9,
         4711,
         null,
         null,
@@ -285,7 +284,6 @@ private fun UserCardPreview() {
         "urlurl",
         56789,
         4568,
-        3456.9856,
         42,
         null,
         null,
