@@ -232,4 +232,6 @@
     <string name="search_users">Benutzer suchen</string>
     <string name="search_stops">Haltestelle / RL 100 suchen</string>
     <string name="auto_check_in">Check-In standardmäßig aktivieren</string>
+    <string name="check_in_trwl">Bei Träwelling einchecken</string>
+    <string name="check_in_travelynx">Bei travelynx einchecken</string>
 </resources>

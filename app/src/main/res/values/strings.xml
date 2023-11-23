@@ -237,4 +237,6 @@
     <string name="search_users">Search users</string>
     <string name="search_stops">Search stops / RL 100</string>
     <string name="auto_check_in">Enable check-in by default</string>
+    <string name="check_in_trwl">Check-in with Träwelling</string>
+    <string name="check_in_travelynx">Check-in with travelynx</string>
 </resources>

@@ -18,11 +18,11 @@ import retrofit2.http.POST
 class TravelynxCheckInProvider: CheckInProvider<Unit>() {
 
     private interface CheckInService {
-        @POST
+        @POST("travel")
         suspend fun checkIn(
             @Body checkInData: CheckInData
         ): Response<Unit>
-        @POST
+        @POST("travel")
         suspend fun update(
             @Body updateRequest: TravelynxCheckInUpdateRequest
         ): Response<Unit>

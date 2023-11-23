@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Card
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -25,18 +26,21 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.jcloquell.androidsecurestorage.SecureStorage
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.event.Event
 import de.hbch.traewelling.api.models.status.StatusBusiness
 import de.hbch.traewelling.api.models.status.StatusVisibility
 import de.hbch.traewelling.shared.CheckInViewModel
 import de.hbch.traewelling.shared.EventViewModel
+import de.hbch.traewelling.shared.SharedValues
 import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.LocalColorScheme
 import de.hbch.traewelling.theme.MainTheme
@@ -60,6 +64,12 @@ fun CheckIn(
     isEditMode: Boolean = false,
     changeDestinationAction: () -> Unit = { }
 ) {
+    val secureStorage = SecureStorage(LocalContext.current)
+
+    var enableTrwlCheckIn by rememberSaveable { mutableStateOf(secureStorage.getObject(SharedValues.SS_TRWL_AUTO_LOGIN, Boolean::class.java) ?: true) }
+    val travelynxConfigured = secureStorage.getObject(SharedValues.SS_TRAVELYNX_TOKEN, String::class.java)?.isNotBlank() ?: false
+    var enableTravelynxCheckIn by rememberSaveable { mutableStateOf(secureStorage.getObject(SharedValues.SS_TRAVELYNX_AUTO_CHECKIN, Boolean::class.java) ?: false) }
+
     var businessSelectionVisible by remember { mutableStateOf(false) }
     var visibilitySelectionVisible by remember { mutableStateOf(false) }
     var eventSelectionVisible by remember { mutableStateOf(false) }
@@ -119,159 +129,201 @@ fun CheckIn(
         }
     }
 
-    ElevatedCard(
+    Column(
         modifier = modifier
             .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalAlignment = Alignment.End
+        ElevatedCard(
+            modifier = modifier
+                .fillMaxWidth()
         ) {
-            FromToTextRow(
-                modifier = Modifier.fillMaxWidth(),
-                category = checkInViewModel.category,
-                lineName = checkInViewModel.lineName,
-                lineId = checkInViewModel.lineId,
-                operatorCode = checkInViewModel.operatorCode,
-                destination = checkInViewModel.destination
-            )
-
-            // Text field
             Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
                 horizontalAlignment = Alignment.End
             ) {
-                OutlinedTextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .widthIn(
-                            min = 72.dp,
-                            max = Dp.Unspecified
-                        ),
-                    value = statusText,
-                    onValueChange = {
-                        if (it.count() > 280)
-                            return@OutlinedTextField
-                        statusText = it
-                        checkInViewModel.message.postValue(it)
-                    },
-                    label = {
-                        Text(
-                            text = stringResource(id = R.string.status_message)
+                FromToTextRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    category = checkInViewModel.category,
+                    lineName = checkInViewModel.lineName,
+                    lineId = checkInViewModel.lineId,
+                    operatorCode = checkInViewModel.operatorCode,
+                    destination = checkInViewModel.destination
+                )
+
+                // Text field
+                Column(
+                    horizontalAlignment = Alignment.End
+                ) {
+                    OutlinedTextField(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .widthIn(
+                                min = 72.dp,
+                                max = Dp.Unspecified
+                            ),
+                        value = statusText,
+                        onValueChange = {
+                            if (it.count() > 280)
+                                return@OutlinedTextField
+                            statusText = it
+                            checkInViewModel.message.postValue(it)
+                        },
+                        label = {
+                            Text(
+                                text = stringResource(id = R.string.status_message)
+                            )
+                        }
+                    )
+                    Text(
+                        modifier = Modifier.padding(4.dp),
+                        text = "${statusText.count()}/280",
+                        style = AppTypography.labelSmall
+                    )
+                }
+
+                if (travelynxConfigured) {
+                    Card(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(horizontal = 4.dp)
+                        ) {
+                            SwitchWithIconAndText(
+                                checked = enableTrwlCheckIn,
+                                onCheckedChange = {
+                                    enableTrwlCheckIn = it
+                                },
+                                drawableId = R.drawable.ic_train,
+                                stringId = R.string.check_in_trwl
+                            )
+                            SwitchWithIconAndText(
+                                checked = enableTravelynxCheckIn,
+                                onCheckedChange = {
+                                    enableTravelynxCheckIn = it
+                                },
+                                drawableId = R.drawable.ic_travelynx,
+                                stringId = R.string.check_in_travelynx
+                            )
+                        }
+                    }
+                }
+
+                AnimatedVisibility(enableTrwlCheckIn) {
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        horizontalAlignment = Alignment.End
+                    ) {
+                        // Option buttons
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            val optionButtonModifier = Modifier
+                                .weight(1f)
+
+                            if (selectedVisibility != null) {
+                                OutlinedButtonWithIconAndText(
+                                    modifier = optionButtonModifier,
+                                    stringId = selectedVisibility!!.getTitle(),
+                                    drawableId = selectedVisibility!!.getIcon(),
+                                    onClick = {
+                                        visibilitySelectionVisible = true
+                                    }
+                                )
+                            }
+                            if (selectedBusiness != null) {
+                                OutlinedButtonWithIconAndText(
+                                    modifier = optionButtonModifier,
+                                    stringId = selectedBusiness!!.getTitle(),
+                                    drawableId = selectedBusiness!!.getIcon(),
+                                    onClick = {
+                                        businessSelectionVisible = true
+                                    }
+                                )
+                            }
+                        }
+
+                        // Event button
+                        if (!isEditMode && activeEvents?.isNotEmpty() == true) {
+                            OutlinedButtonWithIconAndText(
+                                modifier = Modifier.fillMaxWidth(),
+                                drawableId = if (selectedEvent == null)
+                                    R.drawable.ic_calendar
+                                else
+                                    R.drawable.ic_calendar_checked,
+                                text = selectedEvent?.name
+                                    ?: stringResource(id = R.string.title_select_event),
+                                onClick = {
+                                    eventSelectionVisible = true
+                                }
+                            )
+                        }
+
+                        // Share options
+                        if (!isEditMode) {
+                            ShareOptions(
+                                modifier = Modifier.fillMaxWidth(),
+                                checkInViewModel = checkInViewModel
+                            )
+                        }
+                    }
+                }
+
+                // Manual time overwrites
+                if (isEditMode) {
+                    val currentDateTime = ZonedDateTime.now()
+                    val plannedDeparture = checkInViewModel.departureTime
+                    if (plannedDeparture != null && currentDateTime.isAfter(plannedDeparture)) {
+                        DateTimeSelection(
+                            initDate = checkInViewModel.manualDepartureTime,
+                            plannedDate = checkInViewModel.departureTime,
+                            label = R.string.manual_departure,
+                            modifier = Modifier.fillMaxWidth(),
+                            dateSelected = { checkInViewModel.manualDepartureTime = it }
                         )
                     }
-                )
-                Text(
-                    modifier = Modifier.padding(4.dp),
-                    text = "${statusText.count()}/280",
-                    style = AppTypography.labelSmall
-                )
-            }
-
-            // Option buttons
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                val optionButtonModifier = Modifier
-                    .weight(1f)
-
-                if (selectedVisibility != null) {
-                    OutlinedButtonWithIconAndText(
-                        modifier = optionButtonModifier,
-                        stringId = selectedVisibility!!.getTitle(),
-                        drawableId = selectedVisibility!!.getIcon(),
-                        onClick = {
-                            visibilitySelectionVisible = true
-                        }
-                    )
-                }
-                if (selectedBusiness != null) {
-                    OutlinedButtonWithIconAndText(
-                        modifier = optionButtonModifier,
-                        stringId = selectedBusiness!!.getTitle(),
-                        drawableId = selectedBusiness!!.getIcon(),
-                        onClick = {
-                            businessSelectionVisible = true
-                        }
-                    )
-                }
-            }
-
-            // Event button
-            if (!isEditMode && activeEvents?.isNotEmpty() == true) {
-                OutlinedButtonWithIconAndText(
-                    modifier = Modifier.fillMaxWidth(),
-                    drawableId = if (selectedEvent == null)
-                            R.drawable.ic_calendar
-                        else
-                            R.drawable.ic_calendar_checked,
-                    text = selectedEvent?.name ?: stringResource(id = R.string.title_select_event),
-                    onClick = {
-                        eventSelectionVisible = true
+                    val plannedArrival = checkInViewModel.arrivalTime
+                    if (plannedArrival != null && currentDateTime.isAfter(plannedArrival)) {
+                        DateTimeSelection(
+                            initDate = checkInViewModel.manualArrivalTime,
+                            plannedDate = checkInViewModel.arrivalTime,
+                            label = R.string.manual_arrival,
+                            modifier = Modifier.fillMaxWidth(),
+                            dateSelected = { checkInViewModel.manualArrivalTime = it }
+                        )
                     }
-                )
-            }
+                }
 
-            // Share options
-            if (!isEditMode) {
-                ShareOptions(
+                Row(
                     modifier = Modifier.fillMaxWidth(),
-                    checkInViewModel = checkInViewModel
-                )
-            }
-
-            // Manual time overwrites
-            if (isEditMode) {
-                val currentDateTime = ZonedDateTime.now()
-                val plannedDeparture = checkInViewModel.departureTime
-                if (plannedDeparture != null && currentDateTime.isAfter(plannedDeparture)) {
-                    DateTimeSelection(
-                        initDate = checkInViewModel.manualDepartureTime,
-                        plannedDate = checkInViewModel.departureTime,
-                        label = R.string.manual_departure,
-                        modifier = Modifier.fillMaxWidth(),
-                        dateSelected = { checkInViewModel.manualDepartureTime = it }
-                    )
-                }
-                val plannedArrival = checkInViewModel.arrivalTime
-                if (plannedArrival != null && currentDateTime.isAfter(plannedArrival)) {
-                    DateTimeSelection(
-                        initDate = checkInViewModel.manualArrivalTime,
-                        plannedDate = checkInViewModel.arrivalTime,
-                        label = R.string.manual_arrival,
-                        modifier = Modifier.fillMaxWidth(),
-                        dateSelected = { checkInViewModel.manualArrivalTime = it }
-                    )
-                }
-            }
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                if (isEditMode) {
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    if (isEditMode) {
+                        ButtonWithIconAndText(
+                            stringId = R.string.change_destination,
+                            drawableId = R.drawable.ic_edit,
+                            onClick = changeDestinationAction
+                        )
+                    } else {
+                        Box {}
+                    }
+                    var isCheckingIn by remember { mutableStateOf(false) }
                     ButtonWithIconAndText(
-                        stringId = R.string.change_destination,
-                        drawableId = R.drawable.ic_edit,
-                        onClick = changeDestinationAction
+                        stringId = if (isEditMode) R.string.save else R.string.check_in,
+                        drawableId = R.drawable.ic_check_in,
+                        onClick = {
+                            checkInViewModel.message.postValue(statusText)
+                            checkInAction()
+                            isCheckingIn = true
+                        },
+                        isLoading = isCheckingIn,
+                        isEnabled = (enableTrwlCheckIn || enableTravelynxCheckIn)
                     )
-                } else {
-                    Box {}
                 }
-                var isCheckingIn by remember { mutableStateOf(false) }
-                ButtonWithIconAndText(
-                    stringId = if (isEditMode) R.string.save else R.string.check_in,
-                    drawableId = R.drawable.ic_check_in,
-                    onClick = {
-                        checkInViewModel.message.postValue(statusText)
-                        checkInAction()
-                        isCheckingIn = true
-                    },
-                    isLoading = isCheckingIn
-                )
             }
         }
     }
