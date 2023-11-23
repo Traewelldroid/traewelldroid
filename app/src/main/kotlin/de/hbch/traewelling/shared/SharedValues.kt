@@ -16,6 +16,7 @@ object SharedValues {
     const val SS_TRWL_WEBHOOK_ID = "TRWL_WEBHOOK_ID"
     const val SS_NOTIFICATIONS_ENABLED = "NOTIFICATIONS_ENABLED"
     const val SS_CHECK_IN_COUNT = "CHECK_IN_COUNT"
+    var TRAVELYNX_TOKEN = ""
 
     val AUTH_SCOPES = listOf(
         "read-statuses",

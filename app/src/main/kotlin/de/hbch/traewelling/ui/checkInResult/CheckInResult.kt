@@ -36,6 +36,7 @@ import de.hbch.traewelling.providers.checkin.CheckInResult
 import de.hbch.traewelling.shared.CheckInViewModel
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.shared.SharedValues
+import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.StarYellow
 import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
 import de.hbch.traewelling.ui.composables.OutlinedButtonWithIconAndText
@@ -55,28 +56,38 @@ fun CheckInResultView(
     onFloatingActionButtonChange: (Int, Int) -> Unit = { _, _ -> }
 ) {
     val scrollState = rememberScrollState()
-    val checkInResult = checkInViewModel.checkInResult
-    if (checkInResult != null) {
-        Column(
-            modifier = modifier
-                .fillMaxWidth()
-                .verticalScroll(scrollState),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Icon(
-                modifier = Modifier.size(75.dp),
-                painter = painterResource(id = checkInResult.getIcon()),
-                tint = checkInResult.getColor(),
-                contentDescription = null
-            )
+    val traewellingResponse = checkInViewModel.trwlCheckInResponse
+    val travelynxResponse = checkInViewModel.travelynxCheckInResponse
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .verticalScroll(scrollState),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        if (traewellingResponse != null) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    painter = painterResource(id = traewellingResponse.result.getIcon()),
+                    tint = traewellingResponse.result.getColor(),
+                    contentDescription = stringResource(traewellingResponse.result.getString()),
+                    modifier = Modifier.size(36.dp)
+                )
+                Text(
+                    text = "Träwelling",
+                    modifier = Modifier.padding(start = 24.dp),
+                    style = AppTypography.titleLarge
+                )
+            }
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = stringResource(id = checkInResult.getString()),
+                text = stringResource(id = traewellingResponse.result.getString()),
                 textAlign = TextAlign.Center
             )
 
-            when (checkInResult) {
+            when (traewellingResponse.result) {
                 // Show row with status details and users also in connection
                 CheckInResult.SUCCESSFUL -> {
                     onFloatingActionButtonChange(R.drawable.ic_check_in, R.string.finish)
@@ -99,6 +110,30 @@ fun CheckInResultView(
                 CheckInResult.ERROR -> {
                     onFloatingActionButtonChange(R.drawable.ic_cancel, R.string.abort)
                 }
+            }
+        }
+        if (travelynxResponse != null) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    painter = painterResource(id = travelynxResponse.result.getIcon()),
+                    tint = travelynxResponse.result.getColor(),
+                    contentDescription = stringResource(travelynxResponse.result.getString()),
+                    modifier = Modifier.size(36.dp)
+                )
+                Text(
+                    text = "travelynx",
+                    modifier = Modifier.padding(start = 24.dp),
+                    style = AppTypography.titleLarge
+                )
+            }
+            if (travelynxResponse.result == CheckInResult.ERROR) {
+                Text(
+                    text = stringResource(id = R.string.please_use_website),
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center
+                )
             }
         }
     }
@@ -131,8 +166,8 @@ private fun SuccessfulCheckInResult(
         }
     }
 
-    if (checkInResponse != null) {
-        val journey = checkInResponse.status.journey
+    if (checkInResponse?.data != null) {
+        val journey = checkInResponse.data.status.journey
         Column(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -144,18 +179,18 @@ private fun SuccessfulCheckInResult(
                 journeyNumber = journey.journeyNumber,
                 kilometers = journey.distance,
                 duration = journey.duration,
-                statusBusiness = checkInResponse.status.business
+                statusBusiness = checkInResponse.data.status.business
             )
             Text(
-                text = stringResource(id = R.string.display_points, checkInResponse.points.points),
+                text = stringResource(id = R.string.display_points, checkInResponse.data.points.points),
                 fontWeight = FontWeight.ExtraBold
             )
             StatusTags(
-                statusId = checkInResponse.status.id,
+                statusId = checkInResponse.data.status.id,
                 isOwnStatus = true,
                 defaultVisibility = loggedInUserViewModel.defaultStatusVisibility
             )
-            val pointReasonText = checkInResponse.points.calculation.reason.getExplanation()
+            val pointReasonText = checkInResponse.data.points.calculation.reason.getExplanation()
             if (pointReasonText != null) {
                 Text(
                     modifier = Modifier.fillMaxWidth(),
@@ -168,10 +203,10 @@ private fun SuccessfulCheckInResult(
                 stringId = R.string.title_share,
                 drawableId = R.drawable.ic_share,
                 onClick = {
-                    context.shareStatus(checkInResponse.status)
+                    context.shareStatus(checkInResponse.data.status)
                 }
             )
-            if (checkInResponse.coTravellers.isNotEmpty()) {
+            if (checkInResponse.data.coTravellers.isNotEmpty()) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -183,7 +218,7 @@ private fun SuccessfulCheckInResult(
                         modifier = Modifier.padding(bottom = 8.dp),
                         text = stringResource(id = R.string.co_travellers)
                     )
-                    checkInResponse.coTravellers.forEach { status ->
+                    checkInResponse.data.coTravellers.forEach { status ->
                         CoTraveller(
                             status = status,
                             modifier = Modifier.clickable { onStatusSelected(status.id) }

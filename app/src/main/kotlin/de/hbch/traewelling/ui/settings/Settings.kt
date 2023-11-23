@@ -41,6 +41,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -194,6 +195,7 @@ private fun TravelynxProviderSettings(
     var defaultCheckIn by remember { mutableStateOf(secureStorage.getObject(SharedValues.SS_TRAVELYNX_AUTO_CHECKIN, Boolean::class.java) ?: false) }
     val saveTokenAction: () -> Unit = {
         secureStorage.storeObject(SharedValues.SS_TRAVELYNX_TOKEN, token)
+        SharedValues.TRAVELYNX_TOKEN = token
     }
 
     Column(
@@ -235,6 +237,12 @@ private fun TravelynxProviderSettings(
                 )
             }
         }
+        Text(
+            text = stringResource(id = R.string.travelynx_limited_functionality),
+            style = AppTypography.labelSmall,
+            textAlign = TextAlign.Justify,
+            modifier = Modifier.fillMaxWidth()
+        )
         SwitchWithIconAndText(
             checked = defaultCheckIn,
             onCheckedChange = {

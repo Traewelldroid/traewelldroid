@@ -436,7 +436,7 @@ fun TraewelldroidNavHost(
                 checkInViewModel = checkInViewModel,
                 eventViewModel = eventViewModel,
                 initText = initText,
-                checkInAction = {
+                checkInAction = { trwl, travelynx ->
                     if (editMode) {
                         checkInViewModel.updateCheckIn { status ->
                             navController.navigate(
@@ -452,7 +452,7 @@ fun TraewelldroidNavHost(
                         val checkInCount = secureStorage.getObject(SharedValues.SS_CHECK_IN_COUNT, Long::class.java) ?: 0L
 
                         coroutineScope.launch {
-                            checkInViewModel.checkIn { succeeded ->
+                            checkInViewModel.checkIn(trwl, travelynx) { succeeded ->
                                 navController.navigate(
                                     CheckInResult.route
                                 ) {

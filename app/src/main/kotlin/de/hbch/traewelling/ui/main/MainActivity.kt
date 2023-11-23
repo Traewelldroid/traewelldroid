@@ -116,6 +116,7 @@ class MainActivity : ComponentActivity()
         secureStorage = SecureStorage(this)
         emojiPackItemAdapter = EmojiPackItemAdapter.get(this)
         TraewellingApi.jwt = secureStorage.getObject(SharedValues.SS_JWT, String::class.java)!!
+        SharedValues.TRAVELYNX_TOKEN = secureStorage.getObject(SharedValues.SS_TRAVELYNX_TOKEN, String::class.java) ?: ""
         eventViewModel.activeEvents()
 
         WindowCompat.setDecorFitsSystemWindows(window, false)

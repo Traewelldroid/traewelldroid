@@ -59,7 +59,7 @@ fun CheckIn(
     modifier: Modifier = Modifier,
     checkInViewModel: CheckInViewModel,
     eventViewModel: EventViewModel,
-    checkInAction: () -> Unit = { },
+    checkInAction: (Boolean, Boolean) -> Unit = { _, _ -> },
     initText: String = "",
     isEditMode: Boolean = false,
     changeDestinationAction: () -> Unit = { }
@@ -183,7 +183,7 @@ fun CheckIn(
                     )
                 }
 
-                if (travelynxConfigured) {
+                if (travelynxConfigured && !isEditMode) {
                     Card(
                         modifier = Modifier.fillMaxWidth()
                     ) {
@@ -317,7 +317,7 @@ fun CheckIn(
                         drawableId = R.drawable.ic_check_in,
                         onClick = {
                             checkInViewModel.message.postValue(statusText)
-                            checkInAction()
+                            checkInAction(enableTrwlCheckIn, enableTravelynxCheckIn)
                             isCheckingIn = true
                         },
                         isLoading = isCheckingIn,

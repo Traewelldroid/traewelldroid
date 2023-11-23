@@ -13,8 +13,11 @@ import de.hbch.traewelling.api.models.status.StatusBusiness
 import de.hbch.traewelling.api.models.status.StatusVisibility
 import de.hbch.traewelling.api.models.status.TrwlCheckInUpdateRequest
 import de.hbch.traewelling.api.models.trip.ProductType
+import de.hbch.traewelling.providers.checkin.CheckInResponse
 import de.hbch.traewelling.providers.checkin.CheckInResult
 import de.hbch.traewelling.providers.checkin.traewelling.TrwlCheckInProvider
+import de.hbch.traewelling.providers.checkin.travelynx.TravelynxCheckInProvider
+import de.hbch.traewelling.providers.checkin.travelynx.models.TravelynxCheckInRequest
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -22,6 +25,7 @@ import java.time.ZonedDateTime
 
 class CheckInViewModel : ViewModel() {
     val trwlProvider: TrwlCheckInProvider
+    val travelynxProvider: TravelynxCheckInProvider
 
     var lineName: String = ""
     var lineId: String? = null
@@ -40,14 +44,16 @@ class CheckInViewModel : ViewModel() {
     val statusBusiness = MutableLiveData(StatusBusiness.PRIVATE)
     val event = MutableLiveData<Event?>()
     var category: ProductType = ProductType.ALL
+    var origin: String = ""
     var destination: String = ""
-    var checkInResult: CheckInResult? = null
-    var trwlCheckInResponse: TrwlCheckInResponse? = null
+    var trwlCheckInResponse: CheckInResponse<TrwlCheckInResponse>? = null
+    var travelynxCheckInResponse: CheckInResponse<Unit>? = null
     var forceCheckIn: Boolean = false
     var editStatusId: Int = 0
 
     init {
         trwlProvider = TrwlCheckInProvider()
+        travelynxProvider = TravelynxCheckInProvider()
         reset()
     }
 
@@ -63,14 +69,15 @@ class CheckInViewModel : ViewModel() {
         startStationId = 0
         departureTime = null
         message.value = ""
+        origin = ""
         destination = ""
         toot.value = false
         chainToot.value = false
         statusVisibility.postValue(StatusVisibility.PUBLIC)
         statusBusiness.postValue(StatusBusiness.PRIVATE)
         event.postValue(null)
-        checkInResult = null
         trwlCheckInResponse = null
+        travelynxCheckInResponse = null
         forceCheckIn = false
         editStatusId = 0
         category = ProductType.ALL
@@ -80,56 +87,47 @@ class CheckInViewModel : ViewModel() {
         onCheckedIn: (Boolean) -> Unit = { }
     ) {
         forceCheckIn = true
-        checkIn(onCheckedIn)
+        checkIn(onCheckedIn = onCheckedIn)
     }
 
     suspend fun checkIn(
+        checkInTrwl: Boolean = true,
+        checkInTravelynx: Boolean = false,
         onCheckedIn: (Boolean) -> Unit = { }
     ) {
-        val trwlCheckInRequest = TrwlCheckInRequest(
-            message.value ?: "",
-            statusBusiness.value ?: StatusBusiness.PRIVATE,
-            statusVisibility.value ?: StatusVisibility.PUBLIC,
-            event.value?.id,
-            toot.value ?: false,
-            chainToot.value ?: false,
-            tripId,
-            lineName,
-            startStationId,
-            destinationStationId,
-            departureTime ?: ZonedDateTime.now(),
-             arrivalTime ?: ZonedDateTime.now(),
-            forceCheckIn
-        )
 
-        val result = trwlProvider.checkIn(trwlCheckInRequest)
-        checkInResult = result.result
-        trwlCheckInResponse = result.data
+        if (checkInTrwl) {
+            val trwlCheckInRequest = TrwlCheckInRequest(
+                message.value ?: "",
+                statusBusiness.value ?: StatusBusiness.PRIVATE,
+                statusVisibility.value ?: StatusVisibility.PUBLIC,
+                event.value?.id,
+                toot.value ?: false,
+                chainToot.value ?: false,
+                tripId,
+                lineName,
+                startStationId,
+                destinationStationId,
+                departureTime ?: ZonedDateTime.now(),
+                arrivalTime ?: ZonedDateTime.now(),
+                forceCheckIn
+            )
+            val result = trwlProvider.checkIn(trwlCheckInRequest)
+            trwlCheckInResponse = result
+        }
 
-        onCheckedIn(result.result == CheckInResult.SUCCESSFUL)
-        /*TraewellingApi.checkInService.checkIn(trwlCheckInRequest)
-            .enqueue(object: Callback<Data<TrwlCheckInResponse>> {
-                override fun onResponse(
-                    call: Call<Data<TrwlCheckInResponse>>,
-                    response: Response<Data<TrwlCheckInResponse>>
-                ) {
-                    if (response.isSuccessful) {
-                        checkInResult = CheckInResult.SUCCESSFUL
-                        trwlCheckInResponse = response.body()?.data
-                    } else {
-                        checkInResult = when (response.code()) {
-                            409 -> CheckInResult.CONFLICTED
-                            else -> CheckInResult.ERROR
-                        }
-                    }
-                    onCheckedIn(checkInResult == CheckInResult.SUCCESSFUL)
-                }
-                override fun onFailure(call: Call<Data<TrwlCheckInResponse>>, t: Throwable) {
-                    Logger.captureException(t)
-                    checkInResult = CheckInResult.ERROR
-                    onCheckedIn(false)
-                }
-            })*/
+        if (checkInTravelynx) {
+            val request = TravelynxCheckInRequest(
+                SharedValues.TRAVELYNX_TOKEN,
+                tripId,
+                origin,
+                destination,
+                message.value ?: ""
+            )
+            travelynxCheckInResponse = travelynxProvider.checkIn(request)
+        }
+
+        onCheckedIn(trwlCheckInResponse?.result == CheckInResult.SUCCESSFUL)
     }
 
     fun updateCheckIn(successfulCallback: (Status) -> Unit) {
