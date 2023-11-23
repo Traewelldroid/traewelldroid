@@ -16,6 +16,10 @@ sentry {
     ignoredFlavors = ["foss"]
 }
 
+aboutLibraries {
+    excludeFields = ["generated"]
+}
+
 android {
     def packageName = "de.hbch.traewelling"
     def name = "2.3.2"
