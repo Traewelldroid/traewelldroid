@@ -11,20 +11,21 @@ This is a community app for the open source project
 - <a href="https://zug.network/@traewelldroid" rel="nofollow me">Mastodon</a>
 - [Twitter](https://twitter.com/@traewelldroid)
 
+## Download the app
+
+[![Download on Google Play](https://raw.githubusercontent.com/Traewelldroid/traewelldroid/dev/assets/badges/google-play-badge.png)](https://play.google.com/store/apps/details?id=de.hbch.traewelling)
+
+
 ## How it is developed
 
-The app is using the official AndroidX framework by Google. Crashes of the app are detected and
-transmitted by [Sentry](https://sentry.io). For the production version of the app a self-hosted
-Sentry instance is used.
-
-At the moment the app is available on Google Play. You can download the app there:
-[Google Play Store](https://play.google.com/store/apps/details?id=de.hbch.traewelling)
+The app is using the official Jetpack Compose framework by Google. Crashes of the app are detected
+and transmitted by [Sentry](https://sentry.io). For the production version of the app deployed to
+Google Play, a self-hosted Sentry instance is used. Feature Flags are possible and implemented via
+a self-hosted Unleash instance.
 
 ## Setup
 
-First of all you should copy the `key.properties.example` file in the root directory and copy the
-contents into a `key.properties` (for release) or a `dev.properties` (for debug) file. With those 
-properties the main keys and URLs of the application can be set.
+Personalised properties can be configured in the app-level `build.gradle` file.
 
 | Property name        | Usage                                       | Mandatory |
 |----------------------|---------------------------------------------|-----------|
@@ -37,13 +38,6 @@ properties the main keys and URLs of the application can be set.
 | `UNLEASH_KEY`        | API Key for Unleash API                     | No        |
 | `WEBHOOK_URL`        | URL for accepting Träwelling webhooks       | No        |
 
-After that, open Android Studio and the project should setup itself automatically.
-
-### Unleash
-
-Träwelldroid uses feature toggles with [Unleash](https://getunleash.io) so that features already can
-be implemented although they aren't rolled out on depending APIs yet. The official Träwelldroid
-build uses a self-hosted Unleash variant hosted in Germany.
 
 ## Contributions
 
