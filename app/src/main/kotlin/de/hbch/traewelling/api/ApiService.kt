@@ -32,13 +32,12 @@ import java.time.ZonedDateTime
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-private const val TRWL_BASE_URL =
-    "https://traewelling.de/api/v1/"
+const val TRWL_BASE_URL = "https://traewelling.de/api/v1/"
 
-private val client = OkHttpClient.Builder().readTimeout(60, TimeUnit.SECONDS)
+val HTTP_CLIENT = OkHttpClient.Builder().readTimeout(60, TimeUnit.SECONDS)
     .addInterceptor(LogInterceptor())
-    .addInterceptor(AuthInterceptor())
     .addInterceptor(ErrorInterceptor())
+    .addInterceptor(AuthInterceptor(TraewellingApi.jwt))
     .build()
 
 fun getGson(): Gson = GsonBuilder()
@@ -54,13 +53,13 @@ private val trwlRetrofit =
         .addConverterFactory(ZonedDateTimeRetrofitConverterFactory.create())
         .addConverterFactory(GsonConverterFactory.create(GSON))
         .baseUrl(TRWL_BASE_URL)
-        .client(client)
+        .client(HTTP_CLIENT)
         .build()
 
 private val webhookRelayRetrofit =
     Retrofit.Builder()
         .baseUrl("${BuildConfig.WEBHOOK_URL}/api/")
-        .client(client)
+        .client(HTTP_CLIENT)
         .addConverterFactory(GsonConverterFactory.create(GSON))
         .build()
 
@@ -157,15 +156,10 @@ interface CheckInService {
         @Path("statusId") statusId: Int
     ): Call<Any>
 
-    @POST("trains/checkin")
-    fun checkIn(
-        @Body checkIn: CheckInRequest
-    ): Call<Data<CheckInResponse>>
-
     @PUT("status/{statusId}")
     fun updateCheckIn(
         @Path("statusId") statusId: Int,
-        @Body update: UpdateStatusRequest
+        @Body update: TrwlCheckInUpdateRequest
     ): Call<Data<Status>>
 
     @POST("status/{statusId}/like")

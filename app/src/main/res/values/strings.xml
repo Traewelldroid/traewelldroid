@@ -236,4 +236,5 @@
     <string name="search_stop_users">Find stops or users</string>
     <string name="search_users">Search users</string>
     <string name="search_stops">Search stops / RL 100</string>
+    <string name="auto_check_in">Enable check-in by default</string>
 </resources>

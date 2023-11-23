@@ -16,6 +16,7 @@ import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
@@ -56,6 +57,7 @@ import de.hbch.traewelling.theme.LocalColorScheme
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
 import de.hbch.traewelling.ui.composables.OpenRailwayMapLayer
+import de.hbch.traewelling.ui.composables.SwitchWithIconAndText
 import de.hbch.traewelling.util.getJwtExpiration
 import de.hbch.traewelling.util.refreshJwt
 import de.hbch.traewelling.util.getLocalDateTimeString
@@ -105,6 +107,14 @@ private fun CheckInProviderSettings(
             modifier = Modifier.fillMaxWidth(),
             loggedInUserViewModel = loggedInUserViewModel
         )
+        Divider(
+            modifier = Modifier.padding(top = 8.dp)
+        )
+        TravelynxProviderSettings(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp)
+        )
     }
 }
 
@@ -114,15 +124,12 @@ private fun TraewellingProviderSettings(
     loggedInUserViewModel: LoggedInUserViewModel? = null
 ) {
     if (loggedInUserViewModel != null) {
-        @Suppress("CanBeVal") var secureStorage: SecureStorage?
-        var jwt by remember { mutableStateOf("") }
-        val username by loggedInUserViewModel.username.observeAsState("")
         val context = LocalContext.current
+        val secureStorage = SecureStorage(context)
+        var jwt by remember { mutableStateOf(secureStorage.getObject(SharedValues.SS_JWT, String::class.java) ?: "") }
+        var defaultCheckIn by remember { mutableStateOf(secureStorage.getObject(SharedValues.SS_TRWL_AUTO_LOGIN, Boolean::class.java) ?: true) }
+        val username by loggedInUserViewModel.username.observeAsState("")
 
-        if (!LocalView.current.isInEditMode) {
-            secureStorage = SecureStorage(context)
-            jwt = secureStorage.getObject(SharedValues.SS_JWT, String::class.java) ?: ""
-        }
         Column(
             modifier = modifier
         ) {
@@ -138,8 +145,19 @@ private fun TraewellingProviderSettings(
             Text(
                 text = stringResource(id = R.string.jwt_expiration, getJwtExpiration(jwt = jwt))
             )
+            SwitchWithIconAndText(
+                checked = defaultCheckIn,
+                onCheckedChange = {
+                    defaultCheckIn = it
+                    secureStorage.storeObject(SharedValues.SS_TRWL_AUTO_LOGIN, it)
+                },
+                drawableId = R.drawable.ic_check_in,
+                stringId = R.string.auto_check_in
+            )
             Row(
-                modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -163,6 +181,69 @@ private fun TraewellingProviderSettings(
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun TravelynxProviderSettings(
+    modifier: Modifier = Modifier
+) {
+    val context = LocalContext.current
+    val secureStorage = SecureStorage(context)
+    var token by remember { mutableStateOf(secureStorage.getObject(SharedValues.SS_TRAVELYNX_TOKEN, String::class.java) ?: "") }
+    var defaultCheckIn by remember { mutableStateOf(secureStorage.getObject(SharedValues.SS_TRAVELYNX_AUTO_CHECKIN, Boolean::class.java) ?: false) }
+    val saveTokenAction: () -> Unit = {
+        secureStorage.storeObject(SharedValues.SS_TRAVELYNX_TOKEN, token)
+    }
+
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Text(
+            text = "travelynx",
+            style = AppTypography.titleLarge
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            OutlinedTextField(
+                modifier = Modifier
+                    .padding(end = 8.dp)
+                    .weight(1f),
+                value = token,
+                singleLine = true,
+                onValueChange = {
+                    token = it
+                },
+                label = {
+                    Text(
+                        text = "travelynx Travel-Token"
+                    )
+                },
+                placeholder = {
+                    Text("1079-")
+                }
+            )
+            FilledIconButton(
+                onClick = saveTokenAction
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_check_in),
+                    contentDescription = stringResource(id = R.string.store_hashtag)
+                )
+            }
+        }
+        SwitchWithIconAndText(
+            checked = defaultCheckIn,
+            onCheckedChange = {
+                defaultCheckIn = it
+                secureStorage.storeObject(SharedValues.SS_TRAVELYNX_AUTO_CHECKIN, it)
+            },
+            drawableId = R.drawable.ic_check_in,
+            stringId = R.string.auto_check_in
+        )
     }
 }
 
@@ -505,13 +586,5 @@ private fun SettingsCardPreview() {
                 content = content
             )
         }
-    }
-}
-
-@Preview
-@Composable
-private fun SettingsPreview() {
-    MainTheme {
-        Settings()
     }
 }

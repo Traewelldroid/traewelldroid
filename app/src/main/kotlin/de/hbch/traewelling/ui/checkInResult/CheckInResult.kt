@@ -21,7 +21,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -33,6 +32,7 @@ import com.jcloquell.androidsecurestorage.SecureStorage
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.status.Status
 import de.hbch.traewelling.logging.Logger
+import de.hbch.traewelling.providers.checkin.CheckInResult
 import de.hbch.traewelling.shared.CheckInViewModel
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.shared.SharedValues
@@ -111,7 +111,7 @@ private fun SuccessfulCheckInResult(
     onStatusSelected: (Int) -> Unit = { }
 ) {
     val context = LocalContext.current
-    val checkInResponse = checkInViewModel.checkInResponse
+    val checkInResponse = checkInViewModel.trwlCheckInResponse
 
     val reviewRequest = remember { ReviewRequest() }
     var reviewRequested by remember { mutableStateOf(false) }
@@ -234,26 +234,4 @@ private fun CoTraveller(
             contentDescription = null
         )
     }
-}
-
-enum class CheckInResult {
-    SUCCESSFUL {
-        override fun getIcon() = R.drawable.ic_check_in
-        override fun getString() = R.string.check_in_successful
-        override fun getColor() = Color.Green
-    },
-    CONFLICTED {
-        override fun getIcon() = R.drawable.ic_error
-        override fun getString() = R.string.check_in_conflict
-        override fun getColor() = Color.Red
-    },
-    ERROR {
-        override fun getIcon() = R.drawable.ic_error
-        override fun getString() = R.string.check_in_failure
-        override fun getColor() = Color.Red
-    };
-
-    abstract fun getIcon(): Int
-    abstract fun getString(): Int
-    abstract fun getColor(): Color
 }

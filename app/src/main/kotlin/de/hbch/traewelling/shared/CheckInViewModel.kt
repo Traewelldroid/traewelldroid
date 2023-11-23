@@ -6,21 +6,23 @@ import androidx.lifecycle.ViewModel
 import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.api.models.Data
 import de.hbch.traewelling.api.models.event.Event
-import de.hbch.traewelling.api.models.status.CheckInRequest
-import de.hbch.traewelling.api.models.status.CheckInResponse
+import de.hbch.traewelling.api.models.status.TrwlCheckInRequest
+import de.hbch.traewelling.api.models.status.TrwlCheckInResponse
 import de.hbch.traewelling.api.models.status.Status
 import de.hbch.traewelling.api.models.status.StatusBusiness
 import de.hbch.traewelling.api.models.status.StatusVisibility
-import de.hbch.traewelling.api.models.status.UpdateStatusRequest
+import de.hbch.traewelling.api.models.status.TrwlCheckInUpdateRequest
 import de.hbch.traewelling.api.models.trip.ProductType
-import de.hbch.traewelling.logging.Logger
-import de.hbch.traewelling.ui.checkInResult.CheckInResult
+import de.hbch.traewelling.providers.checkin.CheckInResult
+import de.hbch.traewelling.providers.checkin.traewelling.TrwlCheckInProvider
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.time.ZonedDateTime
 
 class CheckInViewModel : ViewModel() {
+    val trwlProvider: TrwlCheckInProvider
+
     var lineName: String = ""
     var lineId: String? = null
     var operatorCode: String? = null
@@ -40,11 +42,12 @@ class CheckInViewModel : ViewModel() {
     var category: ProductType = ProductType.ALL
     var destination: String = ""
     var checkInResult: CheckInResult? = null
-    var checkInResponse: CheckInResponse? = null
+    var trwlCheckInResponse: TrwlCheckInResponse? = null
     var forceCheckIn: Boolean = false
     var editStatusId: Int = 0
 
     init {
+        trwlProvider = TrwlCheckInProvider()
         reset()
     }
 
@@ -67,23 +70,23 @@ class CheckInViewModel : ViewModel() {
         statusBusiness.postValue(StatusBusiness.PRIVATE)
         event.postValue(null)
         checkInResult = null
-        checkInResponse = null
+        trwlCheckInResponse = null
         forceCheckIn = false
         editStatusId = 0
         category = ProductType.ALL
     }
 
-    fun forceCheckIn(
+    suspend fun forceCheckIn(
         onCheckedIn: (Boolean) -> Unit = { }
     ) {
         forceCheckIn = true
         checkIn(onCheckedIn)
     }
 
-    fun checkIn(
+    suspend fun checkIn(
         onCheckedIn: (Boolean) -> Unit = { }
     ) {
-        val checkInRequest = CheckInRequest(
+        val trwlCheckInRequest = TrwlCheckInRequest(
             message.value ?: "",
             statusBusiness.value ?: StatusBusiness.PRIVATE,
             statusVisibility.value ?: StatusVisibility.PUBLIC,
@@ -98,15 +101,21 @@ class CheckInViewModel : ViewModel() {
              arrivalTime ?: ZonedDateTime.now(),
             forceCheckIn
         )
-        TraewellingApi.checkInService.checkIn(checkInRequest)
-            .enqueue(object: Callback<Data<CheckInResponse>> {
+
+        val result = trwlProvider.checkIn(trwlCheckInRequest)
+        checkInResult = result.result
+        trwlCheckInResponse = result.data
+
+        onCheckedIn(result.result == CheckInResult.SUCCESSFUL)
+        /*TraewellingApi.checkInService.checkIn(trwlCheckInRequest)
+            .enqueue(object: Callback<Data<TrwlCheckInResponse>> {
                 override fun onResponse(
-                    call: Call<Data<CheckInResponse>>,
-                    response: Response<Data<CheckInResponse>>
+                    call: Call<Data<TrwlCheckInResponse>>,
+                    response: Response<Data<TrwlCheckInResponse>>
                 ) {
                     if (response.isSuccessful) {
                         checkInResult = CheckInResult.SUCCESSFUL
-                        checkInResponse = response.body()?.data
+                        trwlCheckInResponse = response.body()?.data
                     } else {
                         checkInResult = when (response.code()) {
                             409 -> CheckInResult.CONFLICTED
@@ -115,18 +124,18 @@ class CheckInViewModel : ViewModel() {
                     }
                     onCheckedIn(checkInResult == CheckInResult.SUCCESSFUL)
                 }
-                override fun onFailure(call: Call<Data<CheckInResponse>>, t: Throwable) {
+                override fun onFailure(call: Call<Data<TrwlCheckInResponse>>, t: Throwable) {
                     Logger.captureException(t)
                     checkInResult = CheckInResult.ERROR
                     onCheckedIn(false)
                 }
-            })
+            })*/
     }
 
     fun updateCheckIn(successfulCallback: (Status) -> Unit) {
         TraewellingApi.checkInService.updateCheckIn(
             editStatusId,
-            UpdateStatusRequest(
+            TrwlCheckInUpdateRequest(
                 message.value,
                 statusBusiness.value ?: error("Invalid data"),
                 statusVisibility.value ?: error("Invalid data"),

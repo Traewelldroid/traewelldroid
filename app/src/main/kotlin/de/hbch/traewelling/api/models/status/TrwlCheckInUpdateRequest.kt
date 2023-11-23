@@ -1,8 +1,9 @@
 package de.hbch.traewelling.api.models.status
 
+import de.hbch.traewelling.providers.checkin.CheckInUpdateRequest
 import java.time.ZonedDateTime
 
-data class UpdateStatusRequest(
+data class TrwlCheckInUpdateRequest(
     val body: String?,
     val business: StatusBusiness,
     val visibility: StatusVisibility,
@@ -10,4 +11,4 @@ data class UpdateStatusRequest(
     val destinationArrivalPlanned: ZonedDateTime? = null,
     val manualDeparture: ZonedDateTime? = null,
     val manualArrival: ZonedDateTime? = null
-)
+): CheckInUpdateRequest()
