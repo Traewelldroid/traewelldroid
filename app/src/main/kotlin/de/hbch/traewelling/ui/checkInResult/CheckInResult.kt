@@ -58,6 +58,13 @@ fun CheckInResultView(
     val scrollState = rememberScrollState()
     val traewellingResponse = checkInViewModel.trwlCheckInResponse
     val travelynxResponse = checkInViewModel.travelynxCheckInResponse
+
+    if (traewellingResponse?.result == CheckInResult.SUCCESSFUL || travelynxResponse?.result == CheckInResult.SUCCESSFUL) {
+        onFloatingActionButtonChange(R.drawable.ic_check_in, R.string.finish)
+    } else {
+        onFloatingActionButtonChange(R.drawable.ic_cancel, R.string.abort)
+    }
+
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -90,7 +97,6 @@ fun CheckInResultView(
             when (traewellingResponse.result) {
                 // Show row with status details and users also in connection
                 CheckInResult.SUCCESSFUL -> {
-                    onFloatingActionButtonChange(R.drawable.ic_check_in, R.string.finish)
                     SuccessfulCheckInResult(
                         checkInViewModel = checkInViewModel,
                         onStatusSelected = onStatusSelected,
@@ -99,7 +105,6 @@ fun CheckInResultView(
                 }
                 // Show button with enforcing check-in
                 CheckInResult.CONFLICTED -> {
-                    onFloatingActionButtonChange(R.drawable.ic_cancel, R.string.abort)
                     OutlinedButtonWithIconAndText(
                         modifier = Modifier.fillMaxWidth(),
                         stringId = R.string.force_check_in,
@@ -107,9 +112,7 @@ fun CheckInResultView(
                     )
                 }
                 // Display error message
-                CheckInResult.ERROR -> {
-                    onFloatingActionButtonChange(R.drawable.ic_cancel, R.string.abort)
-                }
+                CheckInResult.ERROR -> { }
             }
         }
         if (travelynxResponse != null) {

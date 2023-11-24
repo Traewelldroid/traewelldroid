@@ -317,11 +317,11 @@ fun CheckIn(
                         drawableId = R.drawable.ic_check_in,
                         onClick = {
                             checkInViewModel.message.postValue(statusText)
-                            checkInAction(enableTrwlCheckIn, enableTravelynxCheckIn)
+                            checkInAction(enableTrwlCheckIn, (travelynxConfigured && enableTravelynxCheckIn))
                             isCheckingIn = true
                         },
                         isLoading = isCheckingIn,
-                        isEnabled = (enableTrwlCheckIn || enableTravelynxCheckIn)
+                        isEnabled = (enableTrwlCheckIn || (travelynxConfigured && enableTravelynxCheckIn))
                     )
                 }
             }

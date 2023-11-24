@@ -21,7 +21,7 @@ class TravelynxCheckInProvider: CheckInProvider<Unit>() {
         @POST("travel")
         suspend fun checkIn(
             @Body checkInData: CheckInData
-        ): Response<Unit>
+        ): Response<CheckInState>
         @POST("travel")
         suspend fun update(
             @Body updateRequest: TravelynxCheckInUpdateRequest
@@ -39,6 +39,10 @@ class TravelynxCheckInProvider: CheckInProvider<Unit>() {
         @SerializedName("fromStation") val origin: String,
         @SerializedName("toStation") val destination: String,
         @SerializedName("comment") val message: String
+    )
+
+    private data class CheckInState(
+        val success: Boolean
     )
 
     override val client = httpClientBuilder.build()
@@ -69,7 +73,7 @@ class TravelynxCheckInProvider: CheckInProvider<Unit>() {
             try {
                 val response = service.checkIn(checkInData)
 
-                return if (response.isSuccessful) {
+                return if (response.isSuccessful && response.body()?.success == true) {
                     CheckInResponse(
                         null,
                         CheckInResult.SUCCESSFUL
