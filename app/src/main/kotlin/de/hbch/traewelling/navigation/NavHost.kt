@@ -4,6 +4,7 @@ import android.app.PendingIntent
 import android.content.Intent
 import android.content.pm.ShortcutManager
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -55,6 +56,7 @@ fun TraewelldroidNavHost(
     eventViewModel: EventViewModel,
     checkInViewModel: CheckInViewModel,
     notificationsViewModel: NotificationsViewModel,
+    snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
     onFloatingActionButtonChange: (Int, Int, () -> Unit) -> Unit = { _, _, _ -> },
     onResetFloatingActionButton: () -> Unit = { },
@@ -274,6 +276,7 @@ fun TraewelldroidNavHost(
                 initialized = true
             }
             Settings(
+                snackbarHostState = snackbarHostState,
                 loggedInUserViewModel = loggedInUserViewModel,
                 emojiPackItemAdapter = (context as? MainActivity)?.emojiPackItemAdapter
             )

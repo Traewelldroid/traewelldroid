@@ -27,6 +27,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
@@ -204,6 +206,8 @@ fun TraewelldroidApp(
         }
         var lastNotificationRequest by remember { mutableStateOf<LocalDateTime>(LocalDateTime.MIN) }
 
+        val snackbarHostState = remember { SnackbarHostState() }
+
         navController.addOnDestinationChangedListener { _, _, _ ->
             val lastRequest = lastNotificationRequest
             val duration = Duration.between(lastRequest, LocalDateTime.now())
@@ -369,6 +373,9 @@ fun TraewelldroidApp(
                         }
                     }
                 }
+            },
+            snackbarHost = {
+                SnackbarHost(hostState = snackbarHostState)
             }
         ) { innerPadding ->
             TraewelldroidNavHost(
@@ -377,6 +384,7 @@ fun TraewelldroidApp(
                 eventViewModel = eventViewModel,
                 checkInViewModel = checkInViewModel,
                 notificationsViewModel = notificationsViewModel,
+                snackbarHostState = snackbarHostState,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(innerPadding)
