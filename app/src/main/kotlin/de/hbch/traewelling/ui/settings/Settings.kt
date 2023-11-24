@@ -142,11 +142,20 @@ private fun TraewellingProviderSettings(
         Column(
             modifier = modifier
         ) {
-            Text(
-                text = "Träwelling",
-                style = AppTypography.titleLarge,
-                fontWeight = FontWeight.Bold
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_trwl),
+                    contentDescription = null
+                )
+                Text(
+                    text = "Träwelling",
+                    style = AppTypography.titleLarge,
+                    fontWeight = FontWeight.Bold
+                )
+            }
             Text(
                 modifier = Modifier.padding(top = 12.dp),
                 text = stringResource(id = R.string.signed_in_as, username)
@@ -221,10 +230,20 @@ private fun TravelynxProviderSettings(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Text(
-            text = "travelynx",
-            style = AppTypography.titleLarge
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_travelynx),
+                contentDescription = null
+            )
+            Text(
+                text = "travelynx",
+                style = AppTypography.titleLarge,
+                fontWeight = FontWeight.Bold
+            )
+        }
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically

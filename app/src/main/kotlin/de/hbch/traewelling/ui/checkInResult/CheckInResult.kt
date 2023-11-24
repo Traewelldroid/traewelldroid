@@ -84,7 +84,7 @@ fun CheckInResultView(
                 )
                 Text(
                     text = "Träwelling",
-                    modifier = Modifier.padding(start = 24.dp),
+                    modifier = Modifier.padding(start = 12.dp),
                     style = AppTypography.titleLarge
                 )
             }
@@ -127,7 +127,7 @@ fun CheckInResultView(
                 )
                 Text(
                     text = "travelynx",
-                    modifier = Modifier.padding(start = 24.dp),
+                    modifier = Modifier.padding(start = 12.dp),
                     style = AppTypography.titleLarge
                 )
             }

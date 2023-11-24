@@ -195,7 +195,7 @@ fun CheckIn(
                                 onCheckedChange = {
                                     enableTrwlCheckIn = it
                                 },
-                                drawableId = R.drawable.ic_train,
+                                drawableId = R.drawable.ic_trwl,
                                 stringId = R.string.check_in_trwl
                             )
                             SwitchWithIconAndText(
@@ -326,6 +326,7 @@ fun CheckIn(
                 }
             }
         }
+        Box(modifier = Modifier.padding(top = 4.dp))
     }
 }
 
