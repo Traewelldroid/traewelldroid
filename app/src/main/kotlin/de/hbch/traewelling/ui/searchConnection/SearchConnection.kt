@@ -157,6 +157,7 @@ fun SearchConnection(
                             checkInViewModel.startStationId = trip.station?.id ?: -1
                             checkInViewModel.departureTime = trip.plannedDeparture
                             checkInViewModel.category = trip.line?.product ?: ProductType.ALL
+                            checkInViewModel.origin = trip.station?.name ?: ""
 
                             onTripSelected()
                         },

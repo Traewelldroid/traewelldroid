@@ -1,9 +1,7 @@
 package de.hbch.traewelling.ui.settings
 
 import androidx.annotation.StringRes
-import androidx.compose.animation.Animatable
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,13 +14,14 @@ import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -33,13 +32,15 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -56,6 +57,7 @@ import de.hbch.traewelling.theme.LocalColorScheme
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
 import de.hbch.traewelling.ui.composables.OpenRailwayMapLayer
+import de.hbch.traewelling.ui.composables.SwitchWithIconAndText
 import de.hbch.traewelling.util.getJwtExpiration
 import de.hbch.traewelling.util.refreshJwt
 import de.hbch.traewelling.util.getLocalDateTimeString
@@ -69,6 +71,7 @@ import java.time.ZonedDateTime
 
 @Composable
 fun Settings(
+    snackbarHostState: SnackbarHostState,
     loggedInUserViewModel: LoggedInUserViewModel? = null,
     emojiPackItemAdapter: EmojiPackItemAdapter? = null
 ) {
@@ -79,9 +82,12 @@ fun Settings(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         CheckInProviderSettings(
+            snackbarHostState = snackbarHostState,
             loggedInUserViewModel = loggedInUserViewModel
         )
-        HashtagSettings()
+        HashtagSettings(
+            snackbarHostState = snackbarHostState
+        )
         MapViewSettings()
         LineIconsSettings()
         EmojiSettings(
@@ -92,6 +98,7 @@ fun Settings(
 
 @Composable
 private fun CheckInProviderSettings(
+    snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
     loggedInUserViewModel: LoggedInUserViewModel? = null
 ) {
@@ -102,35 +109,53 @@ private fun CheckInProviderSettings(
         expandable = true
     ) {
         TraewellingProviderSettings(
+            snackbarHostState = snackbarHostState,
             modifier = Modifier.fillMaxWidth(),
             loggedInUserViewModel = loggedInUserViewModel
+        )
+        Divider(
+            modifier = Modifier.padding(top = 8.dp)
+        )
+        TravelynxProviderSettings(
+            snackbarHostState = snackbarHostState,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp)
         )
     }
 }
 
 @Composable
 private fun TraewellingProviderSettings(
+    snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
     loggedInUserViewModel: LoggedInUserViewModel? = null
 ) {
     if (loggedInUserViewModel != null) {
-        @Suppress("CanBeVal") var secureStorage: SecureStorage?
-        var jwt by remember { mutableStateOf("") }
-        val username by loggedInUserViewModel.username.observeAsState("")
         val context = LocalContext.current
+        val secureStorage = SecureStorage(context)
+        var jwt by remember { mutableStateOf(secureStorage.getObject(SharedValues.SS_JWT, String::class.java) ?: "") }
+        var defaultCheckIn by remember { mutableStateOf(secureStorage.getObject(SharedValues.SS_TRWL_AUTO_LOGIN, Boolean::class.java) ?: true) }
+        val username by loggedInUserViewModel.username.observeAsState("")
+        val coroutineScope = rememberCoroutineScope()
 
-        if (!LocalView.current.isInEditMode) {
-            secureStorage = SecureStorage(context)
-            jwt = secureStorage.getObject(SharedValues.SS_JWT, String::class.java) ?: ""
-        }
         Column(
             modifier = modifier
         ) {
-            Text(
-                text = "Träwelling",
-                style = AppTypography.titleLarge,
-                fontWeight = FontWeight.Bold
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_trwl),
+                    contentDescription = null
+                )
+                Text(
+                    text = "Träwelling",
+                    style = AppTypography.titleLarge,
+                    fontWeight = FontWeight.Bold
+                )
+            }
             Text(
                 modifier = Modifier.padding(top = 12.dp),
                 text = stringResource(id = R.string.signed_in_as, username)
@@ -138,8 +163,19 @@ private fun TraewellingProviderSettings(
             Text(
                 text = stringResource(id = R.string.jwt_expiration, getJwtExpiration(jwt = jwt))
             )
+            SwitchWithIconAndText(
+                checked = defaultCheckIn,
+                onCheckedChange = {
+                    defaultCheckIn = it
+                    secureStorage.storeObject(SharedValues.SS_TRWL_AUTO_LOGIN, it)
+                },
+                drawableId = R.drawable.ic_check_in,
+                stringId = R.string.auto_check_in
+            )
             Row(
-                modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -149,6 +185,9 @@ private fun TraewellingProviderSettings(
                     onClick = {
                         context.refreshJwt {
                             jwt = it
+                            coroutineScope.launch {
+                                snackbarHostState.showSnackbar(context.getString(R.string.renew_login_success))
+                            }
                         }
                     },
                     modifier = Modifier.weight(1f)
@@ -166,25 +205,116 @@ private fun TraewellingProviderSettings(
     }
 }
 
-
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
-private fun HashtagSettings(
+private fun TravelynxProviderSettings(
+    snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val secureStorage = SecureStorage(context)
+    var token by remember { mutableStateOf(secureStorage.getObject(SharedValues.SS_TRAVELYNX_TOKEN, String::class.java) ?: "") }
+    var defaultCheckIn by remember { mutableStateOf(secureStorage.getObject(SharedValues.SS_TRAVELYNX_AUTO_CHECKIN, Boolean::class.java) ?: false) }
+    val saveTokenAction: () -> Unit = {
+        keyboardController?.hide()
+        secureStorage.storeObject(SharedValues.SS_TRAVELYNX_TOKEN, token)
+        SharedValues.TRAVELYNX_TOKEN = token
+        coroutineScope.launch {
+            snackbarHostState.showSnackbar(context.getString(R.string.changes_saved))
+        }
+    }
+
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_travelynx),
+                contentDescription = null
+            )
+            Text(
+                text = "travelynx",
+                style = AppTypography.titleLarge,
+                fontWeight = FontWeight.Bold
+            )
+        }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            OutlinedTextField(
+                modifier = Modifier
+                    .padding(end = 8.dp)
+                    .weight(1f),
+                value = token,
+                singleLine = true,
+                onValueChange = {
+                    token = it
+                },
+                label = {
+                    Text(
+                        text = stringResource(id = R.string.travelynx_token)
+                    )
+                },
+                placeholder = {
+                    Text("1079-")
+                }
+            )
+            FilledIconButton(
+                onClick = saveTokenAction
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_check_in),
+                    contentDescription = null
+                )
+            }
+        }
+        SwitchWithIconAndText(
+            checked = defaultCheckIn,
+            onCheckedChange = {
+                defaultCheckIn = it
+                secureStorage.storeObject(SharedValues.SS_TRAVELYNX_AUTO_CHECKIN, it)
+            },
+            drawableId = R.drawable.ic_check_in,
+            stringId = R.string.auto_check_in
+        )
+        Text(
+            text = stringResource(id = R.string.travelynx_limited_functionality),
+            style = AppTypography.labelSmall,
+            textAlign = TextAlign.Justify,
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
+}
+
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+private fun HashtagSettings(
+    snackbarHostState: SnackbarHostState,
+    modifier: Modifier = Modifier
+) {
+    val context = LocalContext.current
     var hashtagText by remember { mutableStateOf("") }
     @Suppress("CanBeVal") var secureStorage: SecureStorage?
     var saveHashtagAction: () -> Unit = { }
-    val defaultColor = LocalColorScheme.current.primary
-    val buttonColor = remember { Animatable(defaultColor) }
     val coroutineScope = rememberCoroutineScope()
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     if (!LocalView.current.isInEditMode) {
-        secureStorage = SecureStorage(LocalContext.current)
+        secureStorage = SecureStorage(context)
         hashtagText = secureStorage.getObject(SharedValues.SS_HASHTAG, String::class.java) ?: ""
         saveHashtagAction = {
+            keyboardController?.hide()
             secureStorage.storeObject(SharedValues.SS_HASHTAG, hashtagText)
             coroutineScope.launch {
-                buttonColor.animateTo(Color.hsl(150f, 1f, 0.25f), animationSpec = tween(500))
+                snackbarHostState.showSnackbar(context.getString(R.string.changes_saved))
             }
         }
     }
@@ -207,9 +337,6 @@ private fun HashtagSettings(
                 singleLine = true,
                 onValueChange = {
                     hashtagText = it
-                    coroutineScope.launch {
-                        buttonColor.animateTo(defaultColor, animationSpec = tween(500))
-                    }
                 },
                 leadingIcon = {
                     Icon(
@@ -224,11 +351,7 @@ private fun HashtagSettings(
                 }
             )
             FilledIconButton(
-                onClick = saveHashtagAction,
-                colors = IconButtonDefaults.filledIconButtonColors(
-                    containerColor = buttonColor.value,
-                    contentColor = Color.White
-                )
+                onClick = saveHashtagAction
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_check_in),
@@ -505,13 +628,5 @@ private fun SettingsCardPreview() {
                 content = content
             )
         }
-    }
-}
-
-@Preview
-@Composable
-private fun SettingsPreview() {
-    MainTheme {
-        Settings()
     }
 }

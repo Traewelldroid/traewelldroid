@@ -236,4 +236,11 @@
     <string name="search_stop_users">Find stops or users</string>
     <string name="search_users">Search users</string>
     <string name="search_stops">Search stops / RL 100</string>
+    <string name="auto_check_in">Enable check-in by default</string>
+    <string name="check_in_trwl">Check-in with Träwelling</string>
+    <string name="check_in_travelynx">Check-in with travelynx</string>
+    <string name="please_use_website">An error occurred. Please use the website to check in.</string>
+    <string name="travelynx_limited_functionality">At the moment, it is only possible to create check-ins with travelynx. If you want to edit them, please use the website for that. Consider turning off your Träwelling sync to prevent issues.</string>
+    <string name="travelynx_token">travelynx travel token</string>
+    <string name="changes_saved">Changes have been saved</string>
 </resources>

@@ -231,4 +231,11 @@
     <string name="search_stop_users">Haltestelle oder Benutzer suchen</string>
     <string name="search_users">Benutzer suchen</string>
     <string name="search_stops">Haltestelle / RL 100 suchen</string>
+    <string name="auto_check_in">Check-In standardmäßig aktivieren</string>
+    <string name="check_in_trwl">Bei Träwelling einchecken</string>
+    <string name="check_in_travelynx">Bei travelynx einchecken</string>
+    <string name="please_use_website">Ein Fehler ist aufgetreten. Bitte nutze die Website, um einzuchecken.</string>
+    <string name="travelynx_limited_functionality">Aktuell ist es nur möglich, Check-Ins für travelynx zu erstellen. Wenn du diese bearbeiten möchtest, nutze bitte die Website. Ziehe in Betracht, deine Träwelling-Synchronisation abzuschalten, um Fehler zu vermeiden.</string>
+    <string name="travelynx_token">travelynx Travel-Token</string>
+    <string name="changes_saved">Änderungen wurden gespeichert</string>
 </resources>

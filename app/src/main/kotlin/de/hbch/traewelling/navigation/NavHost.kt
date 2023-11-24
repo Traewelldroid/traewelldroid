@@ -4,10 +4,12 @@ import android.app.PendingIntent
 import android.content.Intent
 import android.content.pm.ShortcutManager
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -42,6 +44,7 @@ import de.hbch.traewelling.util.HOME
 import de.hbch.traewelling.util.popBackStackAndNavigate
 import de.hbch.traewelling.util.shareStatus
 import de.hbch.traewelling.util.toShortcut
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -53,6 +56,7 @@ fun TraewelldroidNavHost(
     eventViewModel: EventViewModel,
     checkInViewModel: CheckInViewModel,
     notificationsViewModel: NotificationsViewModel,
+    snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
     onFloatingActionButtonChange: (Int, Int, () -> Unit) -> Unit = { _, _, _ -> },
     onResetFloatingActionButton: () -> Unit = { },
@@ -272,6 +276,7 @@ fun TraewelldroidNavHost(
                 initialized = true
             }
             Settings(
+                snackbarHostState = snackbarHostState,
                 loggedInUserViewModel = loggedInUserViewModel,
                 emojiPackItemAdapter = (context as? MainActivity)?.emojiPackItemAdapter
             )
@@ -427,11 +432,14 @@ fun TraewelldroidNavHost(
                 onMenuChange(listOf())
                 initialized = true
             }
+
+            val coroutineScope = rememberCoroutineScope()
+
             CheckIn(
                 checkInViewModel = checkInViewModel,
                 eventViewModel = eventViewModel,
                 initText = initText,
-                checkInAction = {
+                checkInAction = { trwl, travelynx ->
                     if (editMode) {
                         checkInViewModel.updateCheckIn { status ->
                             navController.navigate(
@@ -445,18 +453,24 @@ fun TraewelldroidNavHost(
                         }
                     } else {
                         val checkInCount = secureStorage.getObject(SharedValues.SS_CHECK_IN_COUNT, Long::class.java) ?: 0L
-                        checkInViewModel.checkIn { succeeded ->
-                            navController.navigate(
-                                CheckInResult.route
-                            ) {
-                                if (succeeded) {
-                                    secureStorage.storeObject(SharedValues.SS_CHECK_IN_COUNT, checkInCount + 1)
-                                    popUpTo(navController.graph.findStartDestination().id) {
-                                        inclusive = false
-                                    }
-                                }
 
-                                launchSingleTop = true
+                        coroutineScope.launch {
+                            checkInViewModel.checkIn(trwl, travelynx) { succeeded ->
+                                navController.navigate(
+                                    CheckInResult.route
+                                ) {
+                                    if (succeeded) {
+                                        secureStorage.storeObject(
+                                            SharedValues.SS_CHECK_IN_COUNT,
+                                            checkInCount + 1
+                                        )
+                                        popUpTo(navController.graph.findStartDestination().id) {
+                                            inclusive = false
+                                        }
+                                    }
+
+                                    launchSingleTop = true
+                                }
                             }
                         }
                     }
@@ -478,6 +492,8 @@ fun TraewelldroidNavHost(
                 onMenuChange(listOf())
                 initialized = true
             }
+            val coroutineScope = rememberCoroutineScope()
+
             CheckInResultView(
                 checkInViewModel = checkInViewModel,
                 loggedInUserViewModel = loggedInUserViewModel,
@@ -489,11 +505,13 @@ fun TraewelldroidNavHost(
                     }
                 },
                 onCheckInForced = {
-                    checkInViewModel.forceCheckIn {
-                        navController.navigate(
-                            CheckInResult.route
-                        ) {
-                            launchSingleTop = true
+                    coroutineScope.launch {
+                        checkInViewModel.forceCheckIn {
+                            navController.navigate(
+                                CheckInResult.route
+                            ) {
+                                launchSingleTop = true
+                            }
                         }
                     }
                 }

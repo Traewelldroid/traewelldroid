@@ -7,12 +7,16 @@ object SharedValues {
     const val SS_JWT = "JWT"
     const val SS_REFRESH_TOKEN = "REFRESH_TOKEN"
     const val SS_HASHTAG = "HASHTAG"
+    const val SS_TRAVELYNX_TOKEN = "TRAVELYNX_TOKEN"
+    const val SS_TRAVELYNX_AUTO_CHECKIN = "TRAVELYNX_AUTO_CHECKIN"
+    const val SS_TRWL_AUTO_LOGIN = "TRWL_AUTO_LOGIN"
     const val SS_ORM_LAYER = "ORM_LAYER"
     const val SS_UP_ENDPOINT = "UP_ENDPOINT"
     const val SS_WEBHOOK_USER_ID = "WEBHOOK_USER_ID"
     const val SS_TRWL_WEBHOOK_ID = "TRWL_WEBHOOK_ID"
     const val SS_NOTIFICATIONS_ENABLED = "NOTIFICATIONS_ENABLED"
     const val SS_CHECK_IN_COUNT = "CHECK_IN_COUNT"
+    var TRAVELYNX_TOKEN = ""
 
     val AUTH_SCOPES = listOf(
         "read-statuses",
