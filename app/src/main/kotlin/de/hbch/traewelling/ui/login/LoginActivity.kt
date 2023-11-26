@@ -21,6 +21,7 @@ import androidx.lifecycle.MutableLiveData
 import com.jcloquell.androidsecurestorage.SecureStorage
 import de.hbch.traewelling.BuildConfig
 import de.hbch.traewelling.R
+import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.api.getGson
 import de.hbch.traewelling.api.models.webhook.WebhookCreateResponse
 import de.hbch.traewelling.api.models.webhook.WebhookUserCreateRequest
@@ -182,6 +183,7 @@ class LoginActivity : ComponentActivity() {
                     secureStorage.storeObject(SharedValues.SS_JWT, response.accessToken!!)
                     secureStorage.storeObject(SharedValues.SS_REFRESH_TOKEN, response.refreshToken ?: "")
                     secureStorage.storeObject(SharedValues.SS_NOTIFICATIONS_ENABLED, notificationsEnabled)
+                    TraewellingApi.jwt = response.accessToken!!
                     if (notificationsEnabled) {
                         val webhookResponse = getGson().fromJson(
                             response.additionalParameters["webhook"],
