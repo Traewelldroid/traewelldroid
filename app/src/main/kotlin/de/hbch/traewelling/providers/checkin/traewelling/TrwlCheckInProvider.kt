@@ -3,7 +3,6 @@ package de.hbch.traewelling.providers.checkin.traewelling
 import de.hbch.traewelling.adapters.ZonedDateTimeRetrofitConverterFactory
 import de.hbch.traewelling.api.GSON
 import de.hbch.traewelling.api.TRWL_BASE_URL
-import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.api.interceptors.AuthInterceptor
 import de.hbch.traewelling.api.interceptors.ErrorInterceptor
 import de.hbch.traewelling.api.models.Data
@@ -40,7 +39,7 @@ class TrwlCheckInProvider: CheckInProvider<TrwlCheckInResponse>() {
 
     override val client = httpClientBuilder
         .addInterceptor(ErrorInterceptor())
-        .addInterceptor(AuthInterceptor(TraewellingApi.jwt))
+        .addInterceptor(AuthInterceptor())
         .build()
     override val retrofit: Retrofit = Retrofit.Builder()
         .addConverterFactory(ZonedDateTimeRetrofitConverterFactory.create())
