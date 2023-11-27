@@ -37,7 +37,7 @@ const val TRWL_BASE_URL = "https://traewelling.de/api/v1/"
 val HTTP_CLIENT = OkHttpClient.Builder().readTimeout(60, TimeUnit.SECONDS)
     .addInterceptor(LogInterceptor())
     .addInterceptor(ErrorInterceptor())
-    .addInterceptor(AuthInterceptor(TraewellingApi.jwt))
+    .addInterceptor(AuthInterceptor())
     .build()
 
 fun getGson(): Gson = GsonBuilder()
