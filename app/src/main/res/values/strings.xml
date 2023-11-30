@@ -192,12 +192,16 @@
     <string name="tag_seat_title">Seat</string>
     <string name="tag_seat_example">i.e. 142</string>
     <string name="tag_locomotive_class_title">Vehicle class</string>
-    <string name="tag_locomotive_class_example">i.e. BR 412, Tz 304 🌈, …</string>
+    <string name="tag_locomotive_class_example">i.e. BR 412, 101, …</string>
+    <string name="tag_vehicle_number_title">Vehicle number</string>
+    <string name="tag_vehicle_number_example">i.e. Tz 304 🌈, 633 032/532, …</string>
     <string name="tag_wagon_class_title">Wagon class</string>
     <string name="tag_wagon_class_example">i.e. Avmz, Bimmdzf, …</string>
     <string name="tag_unknown">Unknown</string>
     <string name="tag_staff_role_title">Staff role</string>
     <string name="tag_staff_role_example">Driver, conductor, …</string>
+    <string name="tag_passenger_rights_title">Passenger rights claim</string>
+    <string name="tag_passenger_rights_example">i.e. Requested, paid out, ID of claim, …</string>
     <string name="add_tag">Add tag</string>
     <string name="edit_tag">Edit tag</string>
     <string name="select_tag_type">Select tag type</string>
