@@ -22,8 +22,8 @@ aboutLibraries {
 
 android {
     def packageName = "de.hbch.traewelling"
-    def name = "2.4.1"
-    def code = 136
+    def name = "2.4.2"
+    def code = 137
 
     compileSdk 34
 
@@ -91,7 +91,7 @@ android {
         }
         foss {
             dimension "libs"
-            versionNameSuffix "-foss"
+            // versionNameSuffix "-foss"
         }
     }
     signingConfigs {
