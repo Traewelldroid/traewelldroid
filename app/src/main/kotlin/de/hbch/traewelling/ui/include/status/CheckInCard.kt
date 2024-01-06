@@ -424,7 +424,7 @@ private fun CheckInCardFooter(
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            if (status.liked != null && status.likes != null) {
+            if (status.liked != null && status.likes != null && status.likeable == true) {
                 Row(
                     modifier = Modifier
                         .clickable {

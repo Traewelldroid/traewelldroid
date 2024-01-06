@@ -16,6 +16,7 @@ data class Status(
     val business: StatusBusiness,
     var likes: Int?,
     var liked: Boolean?,
+    @SerializedName("isLikable") val likeable: Boolean?,
     @SerializedName("train") val journey: Journey,
     val event: Event?
 ) {
