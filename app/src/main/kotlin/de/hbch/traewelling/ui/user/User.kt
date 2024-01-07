@@ -1,5 +1,6 @@
 package de.hbch.traewelling.ui.user
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,6 +28,7 @@ import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.ui.composables.ButtonWithIconAndText
 import de.hbch.traewelling.ui.composables.ProfilePicture
+import de.hbch.traewelling.util.openLink
 
 @Composable
 fun UserCard(
@@ -57,6 +60,7 @@ private fun UserCardContent(
     followAction: () -> Unit = { },
     muteAction: () -> Unit = { }
 ) {
+    val context = LocalContext.current
     ElevatedCard(
         modifier = modifier.fillMaxWidth()
     ) {
@@ -90,10 +94,19 @@ private fun UserCardContent(
                             modifier = Modifier.padding(start = 8.dp)
                         )
                     }
+                    if (user.mastodonUrl != null) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_mastodon),
+                            contentDescription = null,
+                            modifier = Modifier.padding(start = 8.dp).clickable {
+                                context.openLink(user.mastodonUrl)
+                            }
+                        )
+                    }
                 }
                 Text(
                     style = AppTypography.titleMedium,
-                    text = user.username
+                    text = "@${user.username}"
                 )
             }
             Row(
@@ -268,7 +281,6 @@ private fun UserCardPreview() {
         10241024,
         4711,
         null,
-        null,
         false,
         null,
         null,
@@ -285,7 +297,6 @@ private fun UserCardPreview() {
         56789,
         4568,
         42,
-        null,
         null,
         true,
         null,
