@@ -12,7 +12,6 @@ data class User(
     @SerializedName("trainDistance") val distance: Int,
     @SerializedName("trainDuration") val duration: Int,
     @SerializedName("points") val points: Int,
-    @SerializedName("twitterUrl") val twitterUrl: String?,
     @SerializedName("mastodonUrl") val mastodonUrl: String?,
     @SerializedName("privateProfile") val privateProfile: Boolean,
     @SerializedName("home") var home: Station?,

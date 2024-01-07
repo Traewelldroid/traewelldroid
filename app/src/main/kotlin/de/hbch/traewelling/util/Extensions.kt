@@ -264,6 +264,13 @@ fun Context.refreshJwt(onTokenReceived: (String) -> Unit = { }) {
     }
 }
 
+fun Context.openLink(url: String) {
+    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+    try {
+        startActivity(intent)
+    } catch (_: Exception) { }
+}
+
 @Composable
 fun <T> T.useDebounce(
     delayMillis: Long = 300L,
