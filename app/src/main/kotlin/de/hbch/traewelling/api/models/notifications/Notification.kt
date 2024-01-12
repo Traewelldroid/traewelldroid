@@ -287,12 +287,15 @@ enum class NotificationType {
         override val channel = NotificationChannelType.MastodonError
         override val category = android.app.Notification.CATEGORY_ERROR
         override fun getHeadline(context: Context, notification: Notification): String  {
+            return context.getString(R.string.mastodon_share_error)
+        }
+        override fun getBody(context: Context, notification: Notification): String {
             val obj = getData(notification)
-            var headline = ""
+            var body = ""
             if (obj != null) {
-                headline = context.getString(R.string.status_not_shared_on_mastodon, obj.status.id)
+                body = context.getString(R.string.status_not_shared_on_mastodon, obj.httpResponseCode)
             }
-            return headline
+            return body
         }
         override fun getOnClick(notification: Notification): (NavHostController) -> Unit {
             val data = getData(notification)
@@ -322,7 +325,7 @@ enum class NotificationType {
         private fun getData(notification: Notification): MastodonNotSentData? {
             val gson = Gson()
             val data = notification.data
-            val targetType = object: TypeToken<UserFollowedData>() {}.type
+            val targetType = object: TypeToken<MastodonNotSentData>() {}.type
             return gson.fromJson<Any>(gson.toJson(data), targetType) as? MastodonNotSentData
         }
     };
