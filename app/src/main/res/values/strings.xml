@@ -68,6 +68,7 @@
     <string name="product_type_subway">Subway</string>
     <string name="product_type_tram">Tram</string>
     <string name="product_type_ferry">Ferry</string>
+    <string name="product_type_taxi">Taxi</string>
     <string name="product_type_regional_express">Regional express</string>
     <string name="product_type_national_express">National express</string>
     <string name="product_type_national">Regional express</string>
