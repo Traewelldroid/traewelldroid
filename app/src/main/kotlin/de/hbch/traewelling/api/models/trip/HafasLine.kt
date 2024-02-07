@@ -21,6 +21,10 @@ enum class ProductType {
         override fun getIcon() = R.drawable.ic_ferry
         override fun getString() = R.string.product_type_ferry
     },
+    @SerializedName("taxi")
+    TAXI {
+        override fun getIcon() = R.drawable.ic_taxi
+    },
     @SerializedName("bus")
     BUS {
         override fun getIcon() = R.drawable.ic_bus
