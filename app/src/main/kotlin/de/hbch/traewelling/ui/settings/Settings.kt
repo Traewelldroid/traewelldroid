@@ -14,9 +14,9 @@ import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.OutlinedTextField
@@ -113,7 +113,7 @@ private fun CheckInProviderSettings(
             modifier = Modifier.fillMaxWidth(),
             loggedInUserViewModel = loggedInUserViewModel
         )
-        Divider(
+        HorizontalDivider(
             modifier = Modifier.padding(top = 8.dp)
         )
         TravelynxProviderSettings(

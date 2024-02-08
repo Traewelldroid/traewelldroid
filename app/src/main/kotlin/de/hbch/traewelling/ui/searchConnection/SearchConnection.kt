@@ -12,9 +12,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DatePicker
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -125,7 +125,7 @@ fun SearchConnection(
                     text = stringResource(id = R.string.departures_at, stationName),
                     style = AppTypography.headlineSmall
                 )
-                Divider(
+                HorizontalDivider(
                     modifier = Modifier.fillMaxWidth()
                 )
                 if (loading) {
@@ -305,7 +305,7 @@ fun SearchConnection(
                 )
             }
         }
-        Divider(
+        HorizontalDivider(
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -320,7 +320,7 @@ fun SearchConnection(
             selectionRequired = false,
             onSelectionChanged = onFilter
         )
-        Divider(
+        HorizontalDivider(
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -331,7 +331,7 @@ fun SearchConnection(
             nextSelected = onNextTime,
             previousSelected = onPreviousTime
         )
-        Divider(
+        HorizontalDivider(
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -359,7 +359,7 @@ fun SearchConnection(
                 hafasLine = trip.line
             )
 
-            Divider(
+            HorizontalDivider(
                 modifier = Modifier.fillMaxWidth()
             )
         }
@@ -371,7 +371,7 @@ fun SearchConnection(
                 textAlign = TextAlign.Center
             )
 
-            Divider(
+            HorizontalDivider(
                 modifier = Modifier.fillMaxWidth()
             )
         }

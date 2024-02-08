@@ -17,9 +17,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.PlainTooltipBox
-import androidx.compose.material3.PlainTooltipState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TooltipBox
+import androidx.compose.material3.TooltipDefaults
+import androidx.compose.material3.TooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -150,16 +151,17 @@ fun StatusTag(
     isOwnTag: Boolean = false,
     onClick: () -> Unit = { }
 ) {
-    val tooltipState = remember { PlainTooltipState() }
+    val tooltipState = remember { TooltipState() }
     val scope = rememberCoroutineScope()
 
-    PlainTooltipBox(
+    TooltipBox(
         tooltip = {
             Text(
                 text = stringResource(id = tag.safeKey.title)
             )
         },
-        tooltipState = tooltipState
+        state = tooltipState,
+        positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider()
     ) {
         AssistChip(
             onClick = {
@@ -176,7 +178,7 @@ fun StatusTag(
                     text = tag.value
                 )
             },
-            modifier = modifier.tooltipAnchor(),
+            modifier = modifier,
             leadingIcon = {
                 Icon(
                     painter = painterResource(id = tag.safeKey.icon),
@@ -223,7 +225,9 @@ fun TagForm(
         )
         if (isCreationMode && availableTagsToAdd.isEmpty()) {
             Text(
-                modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),
                 text = stringResource(R.string.all_tags_already_added),
                 textAlign = TextAlign.Center
             )

@@ -121,7 +121,7 @@ fun DailyStatistics(
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 private fun DailyStatisticsView(
     statistics: DailyStatistics,
@@ -141,7 +141,7 @@ private fun DailyStatisticsView(
     var datePickerVisible by remember { mutableStateOf(false) }
     val datePickerState = rememberDatePickerState()
     val ms = date.atTime(12, 0).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
-    datePickerState.setSelection(ms)
+    datePickerState.selectedDateMillis = ms
 
     if (datePickerVisible) {
         DatePickerDialog(

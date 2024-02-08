@@ -2,8 +2,8 @@ package de.hbch.traewelling.ui.composables
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AlertDialogDefaults
+import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -19,9 +19,9 @@ fun Dialog(
     onDismissRequest: () -> Unit,
     content: @Composable () -> Unit
 ) {
-    AlertDialog(
-        modifier = modifier,
+    BasicAlertDialog(
         onDismissRequest = onDismissRequest,
+        modifier = modifier,
         properties = DialogProperties(
             usePlatformDefaultWidth = false
         )

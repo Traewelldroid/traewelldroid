@@ -254,7 +254,7 @@ fun Context.refreshJwt(onTokenReceived: (String) -> Unit = { }) {
         .setRefreshToken(refreshToken)
         .build()
 
-    authorizationService.performTokenRequest(tokenRequest) { response, exception ->
+    authorizationService.performTokenRequest(tokenRequest) { response, _ ->
         if (response?.accessToken != null && response.refreshToken != null) {
             secureStorage.storeObject(SharedValues.SS_JWT, response.accessToken!!)
             secureStorage.storeObject(SharedValues.SS_REFRESH_TOKEN, response.refreshToken!!)
