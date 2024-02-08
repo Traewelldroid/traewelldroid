@@ -196,10 +196,12 @@ fun CheckInCard(
                     to = status.journey.arrivalManual ?: status.journey.destination.arrivalReal ?: status.journey.destination.arrivalPlanned
                 )
                 LinearProgressIndicator(
+                    progress = {
+                        if (progress.isNaN()) 1f else progress
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 4.dp),
-                    progress = if (progress.isNaN()) 1f else progress
                 )
                 CheckInCardFooter(
                     modifier = Modifier.fillMaxWidth(),
