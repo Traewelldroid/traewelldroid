@@ -192,6 +192,27 @@ fun StatusDetail(
                     textAlign = TextAlign.End,
                     style = AppTypography.labelMedium
                 )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    if (status?.isTraewelldroidCheckIn == true) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_logo),
+                            contentDescription = null,
+                            modifier = Modifier.padding(end = 4.dp)
+                        )
+                    }
+                    Text(
+                        text = stringResource(
+                            id = R.string.checked_in_with,
+                            status?.client?.name ?: "Träwelling"
+                        ),
+                        style = AppTypography.labelMedium,
+                        maxLines = 2
+                    )
+                }
             }
         }
     }
