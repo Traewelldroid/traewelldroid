@@ -304,8 +304,8 @@ fun TagForm(
                                     enabled = !(saving || deleting)
                                 ) {
                                     Icon(
-                                        painter = painterResource(id = tagVisibility.getIcon()),
-                                        contentDescription = stringResource(id = tagVisibility.getTitle())
+                                        painter = painterResource(id = tagVisibility.icon),
+                                        contentDescription = stringResource(id = tagVisibility.title)
                                     )
                                 }
                                 DropdownMenu(
@@ -316,12 +316,12 @@ fun TagForm(
                                         DropdownMenuItem(
                                             text = {
                                                 Text(
-                                                    text = stringResource(id = it.getTitle())
+                                                    text = stringResource(id = it.title)
                                                 )
                                             },
                                             leadingIcon = {
                                                 Icon(
-                                                    painter = painterResource(id = it.getIcon()),
+                                                    painter = painterResource(id = it.icon),
                                                     contentDescription = null
                                                 )
                                             },

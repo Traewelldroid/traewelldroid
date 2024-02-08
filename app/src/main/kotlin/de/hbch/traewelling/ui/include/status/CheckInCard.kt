@@ -395,7 +395,7 @@ fun StatusDetailsRow(
         )
         Icon(
             modifier = alignmentModifier.padding(start = 8.dp),
-            painter = painterResource(id = statusBusiness.getIcon()),
+            painter = painterResource(id = statusBusiness.icon),
             contentDescription = null
         )
     }
@@ -499,7 +499,7 @@ private fun CheckInCardFooter(
                 )
                 Icon(
                     modifier = alignmentModifier.padding(horizontal = 8.dp),
-                    painter = painterResource(id = status.visibility.getIcon()),
+                    painter = painterResource(id = status.visibility.icon),
                     contentDescription = null
                 )
             }

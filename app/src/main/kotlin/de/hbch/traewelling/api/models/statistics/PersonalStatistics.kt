@@ -42,7 +42,7 @@ data class PurposeStatistics(
     @SerializedName("count") override val checkInCount: Int,
     @SerializedName("duration") override val duration: Int
 ) : AbstractStatistics() {
-    override fun getLabel(context: Context) = context.getString(businessType.getTitle())
+    override fun getLabel(context: Context) = context.getString(businessType.title)
 }
 
 @Suppress("unused")
