@@ -50,6 +50,7 @@ import de.hbch.traewelling.api.models.status.StatusBusiness
 import de.hbch.traewelling.api.models.trip.ProductType
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.theme.AppTypography
+import de.hbch.traewelling.theme.HeartRed
 import de.hbch.traewelling.theme.LocalColorScheme
 import de.hbch.traewelling.theme.StarYellow
 import de.hbch.traewelling.ui.composables.LineIcon
@@ -448,11 +449,15 @@ private fun CheckInCardFooter(
                         targetState = likedState,
                         label = "FavoriteAnimation"
                     ) {
-                        val icon = if (it) R.drawable.ic_faved else R.drawable.ic_not_faved
+                        val color = if (status.isTraewelldroidCheckIn) HeartRed else StarYellow
+                        val icon = when (status.isTraewelldroidCheckIn) {
+                            true -> if (it) R.drawable.ic_heart_filled else R.drawable.ic_heart
+                            false -> if (it) R.drawable.ic_faved else R.drawable.ic_not_faved
+                        }
                         Icon(
                             painterResource(id = icon),
                             contentDescription = null,
-                            tint = StarYellow
+                            tint = color
                         )
                     }
                     Text(

@@ -18,7 +18,8 @@ data class Status(
     var liked: Boolean?,
     @SerializedName("isLikable") val likeable: Boolean?,
     @SerializedName("train") val journey: Journey,
-    val event: Event?
+    val event: Event?,
+    val client: ApiClient?
 ) {
     fun getStatusBody(): String {
         var statusBody = body ?: ""
@@ -29,6 +30,8 @@ data class Status(
 
         return statusBody
     }
+
+    val isTraewelldroidCheckIn get() = client?.id == 43
 }
 
 enum class StatusVisibility() {

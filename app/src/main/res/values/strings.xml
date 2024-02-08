@@ -249,4 +249,5 @@
     <string name="travelynx_limited_functionality">At the moment, it is only possible to create check-ins with travelynx. If you want to edit them, please use the website for that. Consider turning off your Träwelling sync to prevent issues.</string>
     <string name="travelynx_token">travelynx travel token</string>
     <string name="changes_saved">Changes have been saved</string>
+    <string name="checked_in_with">Checked in with %1$s</string>
 </resources>
