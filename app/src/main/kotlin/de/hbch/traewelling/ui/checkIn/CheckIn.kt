@@ -228,8 +228,8 @@ fun CheckIn(
                             if (selectedVisibility != null) {
                                 OutlinedButtonWithIconAndText(
                                     modifier = optionButtonModifier,
-                                    stringId = selectedVisibility!!.getTitle(),
-                                    drawableId = selectedVisibility!!.getIcon(),
+                                    stringId = selectedVisibility!!.title,
+                                    drawableId = selectedVisibility!!.icon,
                                     onClick = {
                                         visibilitySelectionVisible = true
                                     }
@@ -238,8 +238,8 @@ fun CheckIn(
                             if (selectedBusiness != null) {
                                 OutlinedButtonWithIconAndText(
                                     modifier = optionButtonModifier,
-                                    stringId = selectedBusiness!!.getTitle(),
-                                    drawableId = selectedBusiness!!.getIcon(),
+                                    stringId = selectedBusiness!!.title,
+                                    drawableId = selectedBusiness!!.icon,
                                     onClick = {
                                         businessSelectionVisible = true
                                     }
@@ -357,11 +357,11 @@ private fun SelectStatusVisibilityDialog(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    painter = painterResource(id = visibility.getIcon()),
+                    painter = painterResource(id = visibility.icon),
                     contentDescription = null
                 )
                 Text(
-                    text = stringResource(id = visibility.getTitle()),
+                    text = stringResource(id = visibility.title),
                     style = AppTypography.titleLarge
                 )
             }
@@ -398,11 +398,11 @@ private fun SelectStatusBusinessDialog(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    painter = painterResource(id = business.getIcon()),
+                    painter = painterResource(id = business.icon),
                     contentDescription = null
                 )
                 Text(
-                    text = stringResource(id = business.getTitle()),
+                    text = stringResource(id = business.title),
                     style = AppTypography.titleLarge
                 )
             }
