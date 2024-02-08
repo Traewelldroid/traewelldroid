@@ -6,7 +6,7 @@ data class HafasTrainTripStation(
     val id: Int,
     val name: String,
     val rilIdentifier: String?,
-    val evaIdentifier: Int,
+    val evaIdentifier: Long?,
     val arrival: ZonedDateTime?,
     val arrivalPlanned: ZonedDateTime,
     val arrivalReal: ZonedDateTime?,
