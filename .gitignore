@@ -22,5 +22,6 @@ local.properties
 /key.properties
 /sentry.properties
 /dev.properties
+/keystore.properties
 /**/release/*
 *.jks
