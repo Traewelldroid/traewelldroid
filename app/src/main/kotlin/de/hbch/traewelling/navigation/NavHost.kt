@@ -242,7 +242,8 @@ fun TraewelldroidNavHost(
                 dailyStatisticsSelectedAction = { date ->
                     val formatted = DateTimeFormatter.ISO_DATE.format(date)
                     navController.navigate("daily-statistics/$formatted")
-                }
+                },
+                userSelectedAction = navToUserProfile
             )
 
             onResetFloatingActionButton()
@@ -343,7 +344,7 @@ fun TraewelldroidNavHost(
                 statusDeleted = {
                     navController.popBackStack()
                 },
-                likerSelected = navToUserProfile
+                userSelected = navToUserProfile
             )
         }
         composable(

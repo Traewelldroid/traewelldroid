@@ -1,8 +1,13 @@
 package de.hbch.traewelling.api.models.status
 
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.font.FontWeight
 import com.google.gson.annotations.SerializedName
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.event.Event
+import de.hbch.traewelling.util.extractUsernames
 import java.time.ZonedDateTime
 
 data class Status(
@@ -19,9 +24,10 @@ data class Status(
     @SerializedName("isLikable") val likeable: Boolean?,
     @SerializedName("train") val journey: Journey,
     val event: Event?,
-    val client: ApiClient?
+    val client: ApiClient?,
+    @SerializedName("bodyMentions") val mentions: List<UserMention>
 ) {
-    fun getStatusBody(): String {
+    fun getStatusText(): String {
         var statusBody = body ?: ""
 
         if (username == "ErikUden") {
@@ -29,6 +35,29 @@ data class Status(
         }
 
         return statusBody
+    }
+
+    fun getStatusBody(mentionColor: Color): AnnotatedString {
+        val statusBody = getStatusText()
+
+        val usernames = statusBody.extractUsernames()
+        val builder = AnnotatedString.Builder(statusBody)
+
+        val usernameStyle = SpanStyle(fontWeight = FontWeight.ExtraBold, color = mentionColor)
+        usernames.forEach { match ->
+            val username = match.groupValues.getOrElse(1) { "" }
+            if (mentions.any { it.user.username == username }) {
+                builder.addStyle(usernameStyle, match.range.first, match.range.last + 1)
+                builder.addStringAnnotation(
+                    "userMention",
+                    username,
+                    match.range.first,
+                    match.range.last + 1
+                )
+            }
+        }
+
+        return builder.toAnnotatedString()
     }
 
     val isTraewelldroidCheckIn get() = client?.id == 43
