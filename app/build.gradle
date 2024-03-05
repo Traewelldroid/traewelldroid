@@ -87,6 +87,7 @@ android {
         dataBinding = true
         viewBinding = true
         compose = true
+        buildConfig true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -121,7 +122,7 @@ dependencies {
     implementation "androidx.compose.foundation:foundation:$composeVersion"
     implementation "androidx.compose.foundation:foundation-layout:$composeVersion"
     implementation "androidx.compose.material:material:$composeVersion"
-    implementation "androidx.compose.runtime:runtime-livedata:1.6.1"
+    implementation "androidx.compose.runtime:runtime-livedata:1.6.2"
     implementation "androidx.compose.ui:ui-tooling:$composeVersion"
     implementation "com.google.accompanist:accompanist-themeadapter-material3:0.28.0"
     implementation "com.google.accompanist:accompanist-systemuicontroller:0.30.1"
