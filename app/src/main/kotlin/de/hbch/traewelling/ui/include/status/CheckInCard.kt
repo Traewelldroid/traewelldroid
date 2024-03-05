@@ -17,12 +17,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -38,6 +40,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
@@ -63,7 +66,6 @@ import java.time.Duration
 import java.time.ZonedDateTime
 import java.util.Locale
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CheckInCard(
     modifier: Modifier = Modifier,
@@ -79,11 +81,12 @@ fun CheckInCard(
 ) {
     val primaryColor = LocalColorScheme.current.primary
     if(status != null) {
+        val statusClickedAction: () -> Unit = {
+            statusSelected(status.id)
+        }
         ElevatedCard(
             modifier = modifier.fillMaxWidth(),
-            onClick = {
-                statusSelected(status.id)
-            }
+            onClick = statusClickedAction
         ) {
             Column(
                 modifier = Modifier.padding(12.dp),
@@ -185,10 +188,12 @@ fun CheckInCard(
                         kilometers = status.journey.distance,
                         duration = status.journey.duration,
                         statusBusiness = status.business,
-                        message = status.getStatusBody(),
+                        message = status.getStatusBody(LocalColorScheme.current.primary),
                         journeyNumber = status.journey.journeyNumber,
                         operatorCode = status.journey.operator?.id,
-                        lineId = status.journey.lineId
+                        lineId = status.journey.lineId,
+                        userSelected = userSelected,
+                        textClicked = statusClickedAction
                     )
                 }
                 val progress = calculateProgress(
@@ -316,9 +321,11 @@ private fun CheckInCardContent(
     kilometers: Int,
     duration: Int,
     statusBusiness: StatusBusiness,
-    message: String?,
+    message: AnnotatedString?,
     operatorCode: String? = null,
-    lineId: String? = null
+    lineId: String? = null,
+    userSelected: (String) -> Unit = { },
+    textClicked: () -> Unit = { }
 ) {
     Column(
         modifier = modifier,
@@ -342,9 +349,18 @@ private fun CheckInCardContent(
                     painter = painterResource(id = R.drawable.ic_quote),
                     contentDescription = null
                 )
-                Text(
+                ClickableText(
                     modifier = Modifier.padding(horizontal = 8.dp),
                     text = message,
+                    onClick = {
+                        val annotations = message.getStringAnnotations(it - 1, it + 1)
+                        if (annotations.isNotEmpty()) {
+                            userSelected(annotations.first().item)
+                        } else {
+                            textClicked()
+                        }
+                    },
+                    style = LocalTextStyle.current.copy(color = LocalContentColor.current)
                 )
             }
         }

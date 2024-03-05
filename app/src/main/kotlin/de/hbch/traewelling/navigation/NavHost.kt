@@ -21,6 +21,7 @@ import androidx.navigation.compose.composable
 import com.jcloquell.androidsecurestorage.SecureStorage
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.status.Status
+import de.hbch.traewelling.shared.BottomSearchViewModel
 import de.hbch.traewelling.shared.CheckInViewModel
 import de.hbch.traewelling.shared.EventViewModel
 import de.hbch.traewelling.shared.LoggedInUserViewModel
@@ -56,6 +57,7 @@ fun TraewelldroidNavHost(
     eventViewModel: EventViewModel,
     checkInViewModel: CheckInViewModel,
     notificationsViewModel: NotificationsViewModel,
+    bottomSearchViewModel: BottomSearchViewModel,
     snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
     onFloatingActionButtonChange: (Int, Int, () -> Unit) -> Unit = { _, _, _ -> },
@@ -135,6 +137,7 @@ fun TraewelldroidNavHost(
 
             Dashboard(
                 loggedInUserViewModel = loggedInUserViewModel,
+                bottomSearchViewModel = bottomSearchViewModel,
                 searchConnectionsAction = navToSearchConnections,
                 statusSelectedAction = navToStatusDetails,
                 userSelectedAction = navToUserProfile,
@@ -242,7 +245,8 @@ fun TraewelldroidNavHost(
                 dailyStatisticsSelectedAction = { date ->
                     val formatted = DateTimeFormatter.ISO_DATE.format(date)
                     navController.navigate("daily-statistics/$formatted")
-                }
+                },
+                userSelectedAction = navToUserProfile
             )
 
             onResetFloatingActionButton()
@@ -343,7 +347,7 @@ fun TraewelldroidNavHost(
                 statusDeleted = {
                     navController.popBackStack()
                 },
-                likerSelected = navToUserProfile
+                userSelected = navToUserProfile
             )
         }
         composable(
@@ -387,7 +391,8 @@ fun TraewelldroidNavHost(
                         )
                         shortcutManager.requestPinShortcut(shortcut, successCallback.intentSender)
                     }
-                }
+                },
+                bottomSearchViewModel = bottomSearchViewModel
             )
             onResetFloatingActionButton()
         }
@@ -482,7 +487,8 @@ fun TraewelldroidNavHost(
                     ) {
                         launchSingleTop = true
                     }
-                }
+                },
+                bottomSearchViewModel = bottomSearchViewModel
             )
             onResetFloatingActionButton()
         }

@@ -245,4 +245,5 @@
     <string name="travelynx_token">travelynx Travel-Token</string>
     <string name="changes_saved">Änderungen wurden gespeichert</string>
     <string name="checked_in_with">Eingecheckt mit %1$s</string>
+    <string name="no_results_found">Keine Ergebnisse gefunden.</string>
 </resources>

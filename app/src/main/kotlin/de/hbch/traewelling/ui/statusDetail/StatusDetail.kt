@@ -71,7 +71,7 @@ fun StatusDetail(
     statusDeleted: (Status) -> Unit = { },
     statusEdit: (Status) -> Unit = { },
     loggedInUserViewModel: LoggedInUserViewModel? = null,
-    likerSelected: (String) -> Unit = { }
+    userSelected: (String) -> Unit = { }
 ) {
     val statusDetailViewModel: StatusDetailViewModel = viewModel()
     val checkInCardViewModel: CheckInCardViewModel = viewModel()
@@ -138,7 +138,8 @@ fun StatusDetail(
                     loggedInUserViewModel = loggedInUserViewModel,
                     onDeleted = statusDeleted,
                     handleEditClicked = statusEdit,
-                    displayLongDate = true
+                    displayLongDate = true,
+                    userSelected = userSelected
                 )
                 StatusTags(
                     statusId = statusId,
@@ -153,7 +154,7 @@ fun StatusDetail(
                             likes = it,
                             statusDetailViewModel = statusDetailViewModel,
                             modifier = Modifier.fillMaxWidth(),
-                            userSelected = likerSelected
+                            userSelected = userSelected
                         )
                     }
                 }

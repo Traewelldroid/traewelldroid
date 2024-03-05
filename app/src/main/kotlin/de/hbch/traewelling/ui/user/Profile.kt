@@ -38,7 +38,8 @@ fun Profile(
     statusSelectedAction: (Int) -> Unit = { },
     statusDeletedAction: () -> Unit = { },
     statusEditAction: (Status) -> Unit = { },
-    dailyStatisticsSelectedAction: (LocalDate) -> Unit = { }
+    dailyStatisticsSelectedAction: (LocalDate) -> Unit = { },
+    userSelectedAction: (String) -> Unit = { }
 ) {
     val user = username ?: loggedInUserViewModel.loggedInUser.value?.username
     var currentPage by remember { mutableStateOf(1) }
@@ -98,7 +99,8 @@ fun Profile(
                 statusEditAction,
                 statusDeletedAction,
                 showDailyStatisticsLink = userState?.id == loggedInUserState?.id,
-                dailyStatisticsSelectedAction = dailyStatisticsSelectedAction
+                dailyStatisticsSelectedAction = dailyStatisticsSelectedAction,
+                userSelectedAction = userSelectedAction
             )
         }
         PullRefreshIndicator(
