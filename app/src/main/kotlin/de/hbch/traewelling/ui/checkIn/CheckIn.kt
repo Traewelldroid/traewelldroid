@@ -18,10 +18,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -29,6 +31,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -38,6 +42,7 @@ import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.event.Event
 import de.hbch.traewelling.api.models.status.StatusBusiness
 import de.hbch.traewelling.api.models.status.StatusVisibility
+import de.hbch.traewelling.shared.BottomSearchViewModel
 import de.hbch.traewelling.shared.CheckInViewModel
 import de.hbch.traewelling.shared.EventViewModel
 import de.hbch.traewelling.shared.SharedValues
@@ -50,7 +55,10 @@ import de.hbch.traewelling.ui.composables.Dialog
 import de.hbch.traewelling.ui.composables.OutlinedButtonWithIconAndText
 import de.hbch.traewelling.ui.composables.SwitchWithIconAndText
 import de.hbch.traewelling.ui.selectDestination.FromToTextRow
+import de.hbch.traewelling.util.checkAnyUsernames
 import de.hbch.traewelling.util.getLocalDateString
+import de.hbch.traewelling.util.useDebounce
+import kotlinx.coroutines.launch
 import java.time.ZonedDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -59,12 +67,14 @@ fun CheckIn(
     modifier: Modifier = Modifier,
     checkInViewModel: CheckInViewModel,
     eventViewModel: EventViewModel,
+    bottomSearchViewModel: BottomSearchViewModel,
     checkInAction: (Boolean, Boolean) -> Unit = { _, _ -> },
     initText: String = "",
     isEditMode: Boolean = false,
     changeDestinationAction: () -> Unit = { }
 ) {
     val secureStorage = SecureStorage(LocalContext.current)
+    val coroutineScope = rememberCoroutineScope()
 
     var enableTrwlCheckIn by rememberSaveable { mutableStateOf(secureStorage.getObject(SharedValues.SS_TRWL_AUTO_LOGIN, Boolean::class.java) ?: true) }
     val travelynxConfigured = secureStorage.getObject(SharedValues.SS_TRAVELYNX_TOKEN, String::class.java)?.isNotBlank() ?: false
@@ -73,7 +83,32 @@ fun CheckIn(
     var businessSelectionVisible by remember { mutableStateOf(false) }
     var visibilitySelectionVisible by remember { mutableStateOf(false) }
     var eventSelectionVisible by remember { mutableStateOf(false) }
-    var statusText by rememberSaveable { mutableStateOf(initText) }
+
+    var statusText by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue(text = initText)) }
+    val userSearchQuery by remember { derivedStateOf {
+        val matches = statusText.text.checkAnyUsernames()
+        matches.firstOrNull { it.range.contains(statusText.selection.min - 1) || it.range.contains(statusText.selection.max + 1) }?.value?.replace("@", "")
+    } }
+    userSearchQuery.useDebounce(
+        onChange = { query ->
+            if (query == null) {
+                bottomSearchViewModel.reset()
+            } else {
+                bottomSearchViewModel.registerClickHandler { selection ->
+                    val firstMatch = statusText.text.checkAnyUsernames().first { it.range.contains(statusText.selection.min - 1) || it.range.contains(statusText.selection.max + 1) }
+                    statusText = statusText.copy(
+                        text = statusText.text.replaceRange(firstMatch.range.first, firstMatch.range.last + 1, selection),
+                        selection = TextRange(firstMatch.range.first + selection.length)
+                    )
+                }
+                coroutineScope.launch {
+                    bottomSearchViewModel.searchUsers(query)
+                }
+            }
+        },
+        delayMillis = 500L
+    )
+
     val selectedVisibility by checkInViewModel.statusVisibility.observeAsState()
     val selectedBusiness by checkInViewModel.statusBusiness.observeAsState()
     val activeEvents by eventViewModel.activeEvents.observeAsState()
@@ -165,10 +200,10 @@ fun CheckIn(
                             ),
                         value = statusText,
                         onValueChange = {
-                            if (it.count() > 280)
+                            if (it.text.count() > 280)
                                 return@OutlinedTextField
                             statusText = it
-                            checkInViewModel.message.postValue(it)
+                            checkInViewModel.message.postValue(it.text)
                         },
                         label = {
                             Text(
@@ -178,7 +213,7 @@ fun CheckIn(
                     )
                     Text(
                         modifier = Modifier.padding(4.dp),
-                        text = "${statusText.count()}/280",
+                        text = "${statusText.text.count()}/280",
                         style = AppTypography.labelSmall
                     )
                 }
@@ -316,7 +351,7 @@ fun CheckIn(
                         stringId = if (isEditMode) R.string.save else R.string.check_in,
                         drawableId = R.drawable.ic_check_in,
                         onClick = {
-                            checkInViewModel.message.postValue(statusText)
+                            checkInViewModel.message.value = statusText.text
                             checkInAction(enableTrwlCheckIn, (travelynxConfigured && enableTravelynxCheckIn))
                             isCheckingIn = true
                         },
@@ -345,7 +380,7 @@ private fun SelectStatusVisibilityDialog(
             style = AppTypography.titleLarge,
             color = LocalColorScheme.current.primary
         )
-        StatusVisibility.values().forEach { visibility ->
+        StatusVisibility.entries.forEach { visibility ->
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -386,7 +421,7 @@ private fun SelectStatusBusinessDialog(
             style = AppTypography.titleLarge,
             color = LocalColorScheme.current.primary
         )
-        StatusBusiness.values().forEach { business ->
+        StatusBusiness.entries.forEach { business ->
             Row(
                 modifier = Modifier
                     .fillMaxWidth()

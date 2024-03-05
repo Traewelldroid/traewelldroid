@@ -29,7 +29,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
 import java.time.LocalDate
 import java.time.ZonedDateTime
-import java.util.*
 import java.util.concurrent.TimeUnit
 
 const val TRWL_BASE_URL = "https://traewelling.de/api/v1/"
@@ -230,7 +229,7 @@ interface UserService {
     @GET("user/search/{query}")
     suspend fun searchUsers(
         @Path("query") query: String,
-        @Query("page") page: Int
+        @Query("page") page: Int = 1
     ): Data<List<User>>
 
     @GET("user/{username}")

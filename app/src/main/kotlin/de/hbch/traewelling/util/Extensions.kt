@@ -293,3 +293,4 @@ fun <T> T.useDebounce(
 }
 
 fun String.extractUsernames() = "@(\\S*\\w)".toRegex().findAll(this).toList()
+fun String.checkAnyUsernames() = "@(\\S*|$)".toRegex().findAll(this).toList()
