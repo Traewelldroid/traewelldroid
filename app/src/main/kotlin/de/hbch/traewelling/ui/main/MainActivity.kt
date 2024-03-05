@@ -339,11 +339,13 @@ fun TraewelldroidApp(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 if (userResults == null) {
-                                    Text("Ergebnisse werden geladen...")
+                                    Text(
+                                        text = stringResource(id = R.string.data_loading)
+                                    )
                                 } else {
                                     if (userResults.isEmpty()) {
                                         Text(
-                                            text = "Keine Ergebnisse."
+                                            text = stringResource(id = R.string.no_results_found)
                                         )
                                     }
                                     userResults.forEach {

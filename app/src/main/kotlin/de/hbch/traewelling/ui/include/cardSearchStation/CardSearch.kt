@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import de.hbch.traewelling.api.models.station.Station
 import de.hbch.traewelling.api.models.user.User
+import de.hbch.traewelling.shared.BottomSearchViewModel
 import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.ui.search.Search
 import de.hbch.traewelling.util.getGreeting
@@ -22,6 +23,7 @@ fun CardSearch(
     modifier: Modifier = Modifier,
     homelandStationData: LiveData<Station?>,
     recentStationsData: LiveData<List<Station>?>,
+    bottomSearchViewModel: BottomSearchViewModel,
     onStationSelected: (String) -> Unit = { },
     onUserSelected: (User) -> Unit = { },
     queryStations: Boolean = true,
@@ -48,7 +50,8 @@ fun CardSearch(
                 onUserSelected = onUserSelected,
                 queryStations = queryStations,
                 queryUsers = queryUsers,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                bottomSearchViewModel = bottomSearchViewModel
             )
         }
     }

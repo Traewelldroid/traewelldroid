@@ -48,6 +48,7 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.station.Station
 import de.hbch.traewelling.api.models.user.User
+import de.hbch.traewelling.shared.BottomSearchViewModel
 import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.ui.composables.ProfilePicture
 import de.hbch.traewelling.util.getStationNameWithRL100
@@ -57,6 +58,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Search(
+    bottomSearchViewModel: BottomSearchViewModel,
     modifier: Modifier = Modifier,
     initQuery: String = "",
     queryStations: Boolean = true,
@@ -66,6 +68,7 @@ fun Search(
     onStationSelected: (String) -> Unit = { },
     onUserSelected: (User) -> Unit = { }
 ) {
+    bottomSearchViewModel.reset()
     val searchInstruction =
         if (queryStations && queryUsers)
             stringResource(id = R.string.search_stop_users)

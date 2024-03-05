@@ -137,6 +137,7 @@ fun TraewelldroidNavHost(
 
             Dashboard(
                 loggedInUserViewModel = loggedInUserViewModel,
+                bottomSearchViewModel = bottomSearchViewModel,
                 searchConnectionsAction = navToSearchConnections,
                 statusSelectedAction = navToStatusDetails,
                 userSelectedAction = navToUserProfile,
@@ -390,7 +391,8 @@ fun TraewelldroidNavHost(
                         )
                         shortcutManager.requestPinShortcut(shortcut, successCallback.intentSender)
                     }
-                }
+                },
+                bottomSearchViewModel = bottomSearchViewModel
             )
             onResetFloatingActionButton()
         }
