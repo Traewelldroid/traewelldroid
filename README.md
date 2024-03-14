@@ -7,14 +7,15 @@ This is a community app for the open source project
 [![Gitmoji](https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg)](https://gitmoji.dev)
 
 ## Find us on
+
 - [traewelldroid.de](https://traewelldroid.de)
 - <a href="https://zug.network/@traewelldroid" rel="nofollow me">Mastodon</a>
 - [Twitter](https://twitter.com/@traewelldroid)
 
 ## Download the app
 
-[![Download on Google Play](https://raw.githubusercontent.com/Traewelldroid/traewelldroid/dev/assets/badges/google-play-badge.png)](https://play.google.com/store/apps/details?id=de.hbch.traewelling)
-
+[<img src="https://raw.githubusercontent.com/Traewelldroid/traewelldroid/dev/assets/badges/google-play-badge.png" alt="Download on Google Play" width="240">](https://play.google.com/store/apps/details?id=de.hbch.traewelling)
+[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Download on F-Droid" width="240">](https://f-droid.org/packages/de.hbch.traewelling)
 
 ## How it is developed
 
@@ -28,7 +29,7 @@ a self-hosted Unleash instance.
 Personalised properties can be configured in the app-level `build.gradle` file.
 
 | Property name        | Usage                                       | Mandatory |
-|----------------------|---------------------------------------------|-----------|
+| -------------------- | ------------------------------------------- | --------- |
 | `SENTRY_DSN`         | The DSN used for error logging with Sentry. | No        |
 | `OAUTH_CLIENT_ID`    | The OAuth client id                         | Yes       |
 | `OAUTH_REDIRECT_URL` | The OAuth redirect URL                      | Yes       |
@@ -37,7 +38,6 @@ Personalised properties can be configured in the app-level `build.gradle` file.
 | `UNLEASH_URL`        | API URL to reach the Unleash API            | No        |
 | `UNLEASH_KEY`        | API Key for Unleash API                     | No        |
 | `WEBHOOK_URL`        | URL for accepting Träwelling webhooks       | No        |
-
 
 ## Contributions
 
