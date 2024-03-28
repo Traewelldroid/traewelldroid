@@ -20,12 +20,12 @@ class FeatureFlags private constructor() {
 
     fun flagsUpdated() {
         unleashClient?.let {
-            allowManualTimeDeletion.postValue(
-                it.isEnabled("AllowManualTimeDeletion", false)
+            userTest.postValue(
+                it.isEnabled("UserTest", false)
             )
         }
     }
 
     // Add feature flags as LiveData so they can be state-subscribed in Compose
-    val allowManualTimeDeletion = MutableLiveData(false)
+    val userTest = MutableLiveData(false)
 }

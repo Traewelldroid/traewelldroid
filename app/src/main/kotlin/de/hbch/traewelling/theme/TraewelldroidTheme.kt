@@ -10,11 +10,14 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import de.hbch.traewelling.shared.FeatureFlags
 
 private val DarkColorScheme = darkColorScheme(
     primary = TraewelldroidDark,
@@ -44,10 +47,11 @@ fun MainTheme(
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
+    val userTest by FeatureFlags.getInstance().userTest.observeAsState(false)
     val view = LocalView.current
     val context = LocalContext.current
     val systemUiController = rememberSystemUiController()
-    val darkTheme = isSystemInDarkTheme()
+    val darkTheme = if (userTest) !isSystemInDarkTheme() else isSystemInDarkTheme()
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
         // Set polyline color to default primary light color

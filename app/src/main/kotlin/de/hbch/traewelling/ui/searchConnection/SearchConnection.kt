@@ -47,6 +47,7 @@ import de.hbch.traewelling.api.models.trip.HafasTrip
 import de.hbch.traewelling.api.models.trip.ProductType
 import de.hbch.traewelling.shared.BottomSearchViewModel
 import de.hbch.traewelling.shared.CheckInViewModel
+import de.hbch.traewelling.shared.FeatureFlags
 import de.hbch.traewelling.shared.LoggedInUserViewModel
 import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.MainTheme
@@ -83,6 +84,7 @@ fun SearchConnection(
     var loading by remember { mutableStateOf(false) }
     var searchConnections by remember { mutableStateOf(true) }
     var selectedFilter by remember { mutableStateOf<FilterType?>(null) }
+    val userTest by FeatureFlags.getInstance().userTest.observeAsState(false)
 
     LaunchedEffect(searchConnections, selectedFilter) {
         if (searchConnections) {
@@ -95,7 +97,7 @@ fun SearchConnection(
                     loading = false
                     searchConnections = false
                     trips.clear()
-                    trips.addAll(it.data)
+                    trips.addAll(if (userTest) it.data.shuffled() else it.data)
                     stationName = it.meta.station.name
                 },
                 { }

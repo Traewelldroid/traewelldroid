@@ -1,6 +1,8 @@
 package de.hbch.traewelling.util
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -8,6 +10,7 @@ import com.auth0.android.jwt.JWT
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.models.station.Station
 import de.hbch.traewelling.api.models.trip.HafasTrip
+import de.hbch.traewelling.shared.FeatureFlags
 import java.lang.Exception
 import java.time.Duration
 import java.time.Instant
@@ -124,6 +127,9 @@ fun getStationNameWithRL100(station: Station): String =
 @Composable
 fun getGreeting(): String {
     val time = LocalDateTime.now()
+    val userTest by FeatureFlags.getInstance().userTest.observeAsState(false)
+
+    if (userTest) return "April, April! 🤡😜😏"
 
     return when (time.hour) {
         in 5..11 -> stringResource(id = R.string.greeting_morning)
