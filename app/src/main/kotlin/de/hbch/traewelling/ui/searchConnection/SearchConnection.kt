@@ -403,6 +403,7 @@ fun ConnectionListItem(
     modifier: Modifier = Modifier
 ) {
     val journeyNumber = hafasLine?.journeyNumber
+    val userTest by FeatureFlags.getInstance().userTest.observeAsState(false)
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(4.dp)
@@ -472,7 +473,7 @@ fun ConnectionListItem(
                 verticalArrangement = Arrangement.spacedBy(2.dp)
             ) {
                 Text(
-                    text = destination,
+                    text = if (userTest && "\\w*RE\\s?1\$".toRegex().matches(hafasLine?.name ?: "")) "London St Pancras Intl" else destination,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )

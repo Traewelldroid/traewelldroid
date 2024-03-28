@@ -37,6 +37,7 @@ import de.hbch.traewelling.BuildConfig
 import de.hbch.traewelling.R
 import de.hbch.traewelling.api.TraewellingApi
 import de.hbch.traewelling.api.models.lineIcons.LineIcon
+import de.hbch.traewelling.api.models.lineIcons.LineIconShape
 import de.hbch.traewelling.api.models.status.Status
 import de.hbch.traewelling.logging.Logger
 import de.hbch.traewelling.shared.FeatureFlags
@@ -218,7 +219,7 @@ suspend fun Context.readOrDownloadLineIcons(
                     StandardCopyOption.REPLACE_EXISTING
                 )
             }
-            return@withContext readCsv(file.inputStream())
+            return@withContext listOf(readCsv(file.inputStream()), listOf(LineIcon("eurex", "EUREx", "eurex", "eurex", "#db0000", "#ffffff", "", LineIconShape.rectangle))).flatten()
         }
     } catch (ex: Exception) {
         Logger.captureException(ex)
