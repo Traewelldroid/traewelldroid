@@ -19,7 +19,6 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -32,7 +31,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import de.hbch.traewelling.R
-import de.hbch.traewelling.shared.FeatureFlags
 import de.hbch.traewelling.theme.AppTypography
 import de.hbch.traewelling.theme.MainTheme
 import de.hbch.traewelling.util.getLocalDateTimeString
@@ -50,8 +48,6 @@ fun DateTimeSelection(
     dateSelected: (ZonedDateTime?) -> Unit = { }
 ) {
     val initDateTime = initDate ?: plannedDate ?: ZonedDateTime.now()
-    val allowManualTimeDeletion by
-        FeatureFlags.getInstance().allowManualTimeDeletion.observeAsState(false)
 
     var dateTime by remember { mutableStateOf(initDate) }
     val dateTimeText = dateTime?.let { getLocalDateTimeString(it) } ?: ""
@@ -151,7 +147,7 @@ fun DateTimeSelection(
                 )
             },
             trailingIcon = {
-                if (allowManualTimeDeletion && dateTime != null) {
+                if (dateTime != null) {
                     IconButton(onClick = {
                         dateTime = null
                         dateSelected(null)
